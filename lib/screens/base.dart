@@ -36,13 +36,18 @@ class _BaseState extends State<Base> {
         screenFab: Fab(
           icon: const Icon(Icons.verified_user_rounded), 
           color: Colors.green, 
-          onTap: () => openEnableDisableBottomSheet(context)
+          onTap: () => openModalBottomSheet(context, 'enableDisable')
         )
       ),
-      const AppScreen(
-        screenIcon: Icon(Icons.storage_rounded), 
+      AppScreen(
+        screenIcon: const Icon(Icons.storage_rounded), 
         screenName: "Servers", 
-        screenWidget: Servers()
+        screenWidget: const Servers(),
+        screenFab: Fab(
+          icon: const Icon(Icons.add), 
+          color: Theme.of(context).primaryColor, 
+          onTap: () => openModalBottomSheet(context, 'addServer')
+        )
       ),
       const AppScreen(
         screenIcon: Icon(Icons.settings), 

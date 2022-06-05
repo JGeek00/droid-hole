@@ -49,8 +49,7 @@ class Servers extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          height: height-143,
+        Expanded(
           child: ListView.builder(
             itemCount: servers.length,
             itemBuilder: (context, index) => Padding(
