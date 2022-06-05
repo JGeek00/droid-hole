@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:droid_hole/models/server.dart';
+
 class AddServerModal extends StatefulWidget {
   final void Function() onCancel;
-  final void Function(int) onConfirm;
+  final void Function(Server) onConfirm;
 
   const AddServerModal({
     Key? key,
@@ -57,7 +59,7 @@ class _AddServerModalState extends State<AddServerModal> {
       padding: mediaQueryData.viewInsets,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        height: 368,
+        height: 390,
         curve: Curves.easeInOut,
         padding: const EdgeInsets.all(20),
         margin: const EdgeInsets.all(10),
@@ -160,7 +162,13 @@ class _AddServerModalState extends State<AddServerModal> {
                       ),
                       TextButton(
                         onPressed: _isDataValid() == true 
-                          ? () => widget.onConfirm(1)
+                          ? () => widget.onConfirm(
+                            Server(
+                              ipAddress: ipFieldController.text,
+                              alias: aliasFieldController.text,
+                              token: tokenFieldController.text,
+                            ),
+                          )
                           : null,
                         style: ButtonStyle(
                           overlayColor: MaterialStateProperty.all(

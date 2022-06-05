@@ -1,9 +1,22 @@
+import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:droid_hole/screens/base.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const DroidHole());
+  WidgetsFlutterBinding.ensureInitialized();
+  ServersProvider serversProvider = ServersProvider();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: ((context) => serversProvider),
+        )
+      ],
+      child: const DroidHole(),
+    )
+  );
 }
 
 class DroidHole extends StatefulWidget {

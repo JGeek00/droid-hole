@@ -1,37 +1,17 @@
-import 'package:droid_hole/models/server.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:droid_hole/models/server.dart';
+import 'package:droid_hole/providers/servers_provider.dart';
 
 class Servers extends StatelessWidget {
   const Servers({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    List servers = [
-      Server(ipAddress: '192.168.1.100', alias: 'Home', token: '123456'),
-      Server(ipAddress: '192.168.1.101', alias: 'Office', token: '123456'),
-      Server(ipAddress: '192.168.1.102', alias: 'Other', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-      Server(ipAddress: '192.168.1.103', alias: 'Server', token: '123456'),
-    ];
+    final serversProvider = Provider.of<ServersProvider>(context);
+    List<Server> servers = serversProvider.getServersList;
+
     return Column(
       children: [
         const Padding(
@@ -50,55 +30,73 @@ class Servers extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: servers.length,
-            itemBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 5
-              ),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+          child: servers.isNotEmpty ? 
+            ListView.builder(
+              itemCount: servers.length,
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(
-                        width: 48,
-                        child: Icon(Icons.storage_rounded),
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            servers[index].ipAddress,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(
+                          width: 48,
+                          child: Icon(Icons.storage_rounded),
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              servers[index].ipAddress,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            servers[index].alias,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontStyle: FontStyle.italic
-                            ),
-                          )
-                        ],
-                      ),
-                      IconButton(
-                        onPressed: () => {}, 
-                        icon: const Icon(Icons.chevron_right)
-                      ),
-                    ],
+                            if (servers[index].alias != null) Column(
+                              children: [
+                                const SizedBox(height: 10),
+                                Text(
+                                  servers[index].alias!,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontStyle: FontStyle.italic
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () => {}, 
+                          icon: const Icon(Icons.chevron_right)
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              )
             )
-          ),
+            : const SizedBox(
+                height: double.maxFinite,
+                child: Center(
+                  child: Text(
+                    "No saved servers",
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              )
         ),
       ],
     );
