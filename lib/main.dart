@@ -1,17 +1,24 @@
-import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/connected_server_provider.dart';
 
 import 'package:droid_hole/screens/base.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ServersProvider serversProvider = ServersProvider();
+  ConnectedServerProvider connectedServerProvider = ConnectedServerProvider();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: ((context) => serversProvider),
+          create: ((context) => connectedServerProvider)
+        ),
+        ChangeNotifierProxyProvider<ConnectedServerProvider, ServersProvider>(
+          create: ((context) => serversProvider), 
+          update: (context, connectedServerProvider, serversProvider) => serversProvider!..update(connectedServerProvider),
         )
       ],
       child: const DroidHole(),
