@@ -45,7 +45,7 @@ class _AddServerModalState extends State<AddServerModal> {
       padding: mediaQueryData.viewInsets,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        height: 390,
+        height: 368,
         curve: Curves.easeInOut,
         padding: const EdgeInsets.all(20),
         margin: const EdgeInsets.all(10),
