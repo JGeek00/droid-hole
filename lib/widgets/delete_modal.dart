@@ -22,8 +22,13 @@ class DeleteModal extends StatelessWidget {
         borderRadius: BorderRadius.circular(10)
       ),
       child: Container(
-        padding: const EdgeInsets.all(20),
-        height: 210,
+        padding: const EdgeInsets.only(
+          top: 20,
+          left: 10,
+          right: 10,
+          bottom: 10
+        ),
+        height: 200,
         child: Column(
           children: [
             const Text(
@@ -33,20 +38,29 @@ class DeleteModal extends StatelessWidget {
                 fontSize: 20
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              "Are you sure you want to remove this PiHole server?"
-            ),
-            const SizedBox(height: 10),
-            Center(
-              child: Text(
-                serverToDelete.address,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Are you sure you want to remove this PiHole server?"
+                  ),
+                  const SizedBox(height: 10),
+                  Center(
+                    child: Text(
+                      serverToDelete.address,
+                      style: const TextStyle(
+                        fontStyle: FontStyle.italic
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
