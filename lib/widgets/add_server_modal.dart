@@ -37,20 +37,6 @@ class _AddServerModalState extends State<AddServerModal> {
     }
   }
 
-  void _validateIpField(value) {
-    RegExp regex = RegExp(r'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$');
-    if (regex.hasMatch(value)) {
-      setState(() {
-        isIpFieldValid = true;
-      });
-    }
-    else {
-      setState(() {
-        isIpFieldValid = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -85,18 +71,24 @@ class _AddServerModalState extends State<AddServerModal> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: TextField(
-                        onChanged: _validateIpField,
+                        onChanged: (value) {
+                          setState(() {
+                            if (value != '') {
+                              isIpFieldValid = true;
+                            }
+                            else {
+                              isIpFieldValid = false;
+                            }
+                          });
+                        },
                         controller: ipFieldController,
-                        decoration: InputDecoration(
-                          errorText: !isIpFieldValid && ipFieldController.text != ''
-                            ? "IP address is not valid" 
-                            : null,
-                          border: const OutlineInputBorder(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(10)
                             )
                           ),
-                          labelText: 'IP address',
+                          labelText: 'Server address',
                         ),
                       ),
                     ),
@@ -164,9 +156,10 @@ class _AddServerModalState extends State<AddServerModal> {
                         onPressed: _isDataValid() == true 
                           ? () => widget.onConfirm(
                             Server(
-                              ipAddress: ipFieldController.text,
+                              address: ipFieldController.text,
                               alias: aliasFieldController.text,
                               token: tokenFieldController.text,
+                              defaultServer: false,
                             ),
                           )
                           : null,

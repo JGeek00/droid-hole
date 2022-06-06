@@ -12,6 +12,8 @@ class Servers extends StatelessWidget {
     final serversProvider = Provider.of<ServersProvider>(context);
     List<Server> servers = serversProvider.getServersList;
 
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         const Padding(
@@ -38,47 +40,56 @@ class Servers extends StatelessWidget {
                   horizontal: 10,
                   vertical: 5
                 ),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const SizedBox(
-                          width: 48,
-                          child: Icon(Icons.storage_rounded),
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              servers[index].ipAddress,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            if (servers[index].alias != null) Column(
+                child: SizedBox(
+                  width: width-20,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 48,
+                            margin: const EdgeInsets.only(right: 12),
+                            child: const Icon(Icons.storage_rounded),
+                          ),
+                          SizedBox(
+                            width: width-156,
+                            child: Column(
                               children: [
-                                const SizedBox(height: 10),
                                 Text(
-                                  servers[index].alias!,
+                                  servers[index].address,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    fontSize: 14,
-                                    fontStyle: FontStyle.italic
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold
                                   ),
+                                ),
+                                if (servers[index].alias != null) Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      servers[index].alias!,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontStyle: FontStyle.italic
+                                      ),
+                                    )
+                                  ],
                                 )
                               ],
-                            )
-                          ],
-                        ),
-                        IconButton(
-                          onPressed: () => {}, 
-                          icon: const Icon(Icons.chevron_right)
-                        ),
-                      ],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => {}, 
+                            icon: const Icon(Icons.chevron_right)
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
