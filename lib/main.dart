@@ -3,14 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
-import 'package:droid_hole/providers/connected_server_provider.dart';
 
 import 'package:droid_hole/screens/base.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ServersProvider serversProvider = ServersProvider();
-  ConnectedServerProvider connectedServerProvider = ConnectedServerProvider();
 
   Map<String, dynamic> dbData = await loadDb();
   serversProvider.setDbInstance(dbData['dbInstance']);
@@ -20,11 +18,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: ((context) => connectedServerProvider)
-        ),
-        ChangeNotifierProxyProvider<ConnectedServerProvider, ServersProvider>(
-          create: ((context) => serversProvider), 
-          update: (context, connectedServerProvider, serversProvider) => serversProvider!..update(connectedServerProvider),
+          create: ((context) => serversProvider)
         )
       ],
       child: const DroidHole(),

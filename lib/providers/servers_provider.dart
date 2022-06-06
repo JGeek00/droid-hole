@@ -2,24 +2,20 @@ import 'package:droid_hole/functions/conversions.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
 
-import 'package:droid_hole/providers/connected_server_provider.dart';
-
 import 'package:droid_hole/models/server.dart';
 
 class ServersProvider with ChangeNotifier {
-  ConnectedServerProvider? _connectedServerProvider;
-
-  update(ConnectedServerProvider? connectedServerProvider) {
-    if (connectedServerProvider != null) {
-      _connectedServerProvider = connectedServerProvider;
-    }
-  }
-
   List<Server> _serversList = [];
   Database? _dbInstance;
 
+  Server? _connectedServer;
+
   List<Server> get getServersList {
     return _serversList;
+  }
+
+  Server? get connectedServer {
+    return _connectedServer;
   }
 
   void addServer(Server server) {
@@ -29,6 +25,7 @@ class ServersProvider with ChangeNotifier {
   }
 
   void removeServer(String serverAddress) {
+    _connectedServer = null;
     List<Server> newServers = _serversList.where((server) => server.address != serverAddress).toList();
     _serversList = newServers;
     removeFromDb(serverAddress);
@@ -73,6 +70,11 @@ class ServersProvider with ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  void setConnectedServer(Server server) {
+    _connectedServer = server;
+    notifyListeners();
   }
 
   void setDbInstance(Database db) {

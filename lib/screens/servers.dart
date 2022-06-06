@@ -1,7 +1,10 @@
-import 'package:droid_hole/widgets/delete_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/connecting_modal.dart';
+import 'package:droid_hole/widgets/delete_modal.dart';
+
+import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
@@ -50,6 +53,36 @@ class _ServersState extends State<Servers> {
         ),
         barrierDismissible: false
       );
+    }
+
+    void _connectToServer(Server server) async {
+      showDialog(
+        context: context, 
+        builder: (context) => const ConnectingModal(),
+        barrierDismissible: false
+      );
+      final result = await login(server);
+      if (result == 'success') {
+        serversProvider.setConnectedServer(server);
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Connected to server successfully."),
+            backgroundColor: Colors.green,
+          )
+        );
+      }
+      else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Cannot connect to server."),
+            backgroundColor: Colors.red,
+          )
+        );
+      }
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
     }
 
     return Column(
@@ -103,7 +136,11 @@ class _ServersState extends State<Servers> {
                                   Container(
                                     width: 48,
                                     margin: const EdgeInsets.only(right: 12),
-                                    child: const Icon(Icons.storage_rounded),
+                                    child: Icon(
+                                      Icons.storage_rounded,
+                                      color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == servers[index].address
+                                        ? Colors.green : Colors.red,
+                                    ),
                                   ),
                                   SizedBox(
                                     width: width-156,
@@ -151,18 +188,54 @@ class _ServersState extends State<Servers> {
                                         label: const Text("Remove"),
                                         style: ButtonStyle(
                                           foregroundColor: MaterialStateProperty.all(Colors.red),
-                                          overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1))
+                                          overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1)),
+                                          shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              side: const BorderSide(
+                                                color: Colors.red,
+                                                width: 1
+                                              )
+                                            )
+                                          )
                                         ),
                                       ),
-                                      TextButton.icon(
-                                        onPressed: () => {}, 
-                                        icon: const Icon(Icons.login), 
-                                        label: const Text("Connect"),
-                                        style: ButtonStyle(
-                                          foregroundColor: MaterialStateProperty.all(Colors.green),
-                                          overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
-                                        ),
-                                      ),
+                                      SizedBox(
+                                        child: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == servers[index].address
+                                          ? Row(
+                                            children: const [
+                                              Icon(
+                                                Icons.check,
+                                                color: Colors.green,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                "Connected",
+                                                style: TextStyle(
+                                                  color: Colors.green
+                                                ),
+                                              )
+                                            ],
+                                            )
+                                          : TextButton.icon(
+                                              onPressed: () => _connectToServer(servers[index]), 
+                                              icon: const Icon(Icons.login), 
+                                              label: const Text("Connect"),
+                                              style: ButtonStyle(
+                                                foregroundColor: MaterialStateProperty.all(Colors.green),
+                                                overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1)),
+                                                shape: MaterialStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    side: const BorderSide(
+                                                      color: Colors.green,
+                                                      width: 1
+                                                    )
+                                                  )
+                                                )
+                                              ),
+                                            ),
+                                      )
                                     ],
                                   )
                                 ],
