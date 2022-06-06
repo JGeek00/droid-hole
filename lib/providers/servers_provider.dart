@@ -31,6 +31,7 @@ class ServersProvider with ChangeNotifier {
   void removeServer(String serverAddress) {
     List<Server> newServers = _serversList.where((server) => server.address != serverAddress).toList();
     _serversList = newServers;
+    removeFromDb(serverAddress);
     notifyListeners();
   }
 
@@ -55,6 +56,18 @@ class ServersProvider with ChangeNotifier {
       await _dbInstance!.transaction((txn) async {
         await txn.rawInsert(
           'INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.token}", 0)',
+        );
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void removeFromDb(String address) async {
+    try {
+      await _dbInstance!.transaction((txn) async {
+        await txn.rawDelete(
+          'DELETE FROM servers WHERE address = "$address"',
         );
       });
     } catch (e) {
