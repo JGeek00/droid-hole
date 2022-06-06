@@ -20,19 +20,22 @@ dynamic login(Server server) async {
       final response2 = await httpClient('${server.address}/admin/api.php?auth=${server.token}&${body['status'] == 'enabled' ? 'enable' : 'disable'}');
       final body2 = jsonDecode(response2.body);
       if (body2.runtimeType != List && body2['status'] != null) {
-        return 'success';
+        return {
+          'result': 'success',
+          'status': body['status']
+        };
       }
       else {
-        return 'token_invalid';
+        return {'result': 'token_invalid'};
       }
     }
   } on SocketException {
-    return 'no_connection';
+    return {'result': 'no_connection'};
   } on TimeoutException {
-    return 'no_connection';
+    return {'result': 'no_connection'};
   }
   catch (e) {
     print(e);
-    return 'error';
+    return {'result': 'error'};
   }
 }

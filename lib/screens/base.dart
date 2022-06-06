@@ -1,4 +1,3 @@
-import 'package:droid_hole/functions/modal_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 import 'package:droid_hole/screens/home.dart';
@@ -7,8 +6,11 @@ import 'package:droid_hole/screens/settings.dart';
 
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
+import 'package:droid_hole/functions/modal_bottom_sheet.dart';
+import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/models/app_screen.dart';
 import 'package:droid_hole/models/fab.dart';
+import 'package:provider/provider.dart';
 
 class Base extends StatefulWidget {
   const Base({Key? key}) : super(key: key);
@@ -28,16 +30,20 @@ class _BaseState extends State<Base> {
 
   @override
   Widget build(BuildContext context) {
+    final serversProvider = Provider.of<ServersProvider>(context);
+
     List<AppScreen> appScreens = [
       AppScreen(
         screenIcon: const Icon(Icons.home), 
         screenName: "Home", 
         screenWidget: const Home(),
-        screenFab: Fab(
-          icon: const Icon(Icons.verified_user_rounded), 
-          color: Colors.green, 
-          onTap: () => openModalBottomSheet(context, 'enableDisable')
-        )
+        screenFab: serversProvider.connectedServer != null
+          ? Fab(
+              icon: const Icon(Icons.verified_user_rounded), 
+              color: Colors.green, 
+              onTap: () => openModalBottomSheet(context, 'enableDisable')
+            )
+          : null
       ),
       AppScreen(
         screenIcon: const Icon(Icons.storage_rounded), 

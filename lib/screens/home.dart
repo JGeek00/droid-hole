@@ -1,63 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:droid_hole/providers/servers_provider.dart';
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Material(
-              elevation: 5.0,
-              borderRadius: BorderRadius.circular(8.0),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          "192.168.1.100",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.green,
-                              ),
+    final serversProvider = Provider.of<ServersProvider>(context);
+
+    if (serversProvider.connectedServer != null) {
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Material(
+                elevation: 5.0,
+                borderRadius: BorderRadius.circular(8.0),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            serversProvider.connectedServer!.address,
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
                             ),
-                            SizedBox(width: 10),
-                            Text("Enabled"),
-                          ],
-                        )
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () => {}, 
-                      icon: const Icon(Icons.info),
-                    ),
-                  ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: serversProvider.connectedServer!.enabled == true
+                                    ? Colors.green
+                                    : Colors.red
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                serversProvider.connectedServer!.enabled == true
+                                  ? "Enabled"
+                                  : "Disabled"
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      IconButton(
+                        onPressed: () => {}, 
+                        icon: const Icon(Icons.info),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+            )
+          ],
+        ),
+      );
+    }
+    else {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.link_off,
+              size: 70,
+              color: Colors.grey,
             ),
-          )
-        ],
-      ),
-    );
+            SizedBox(height: 50),
+            Text(
+              "No server is connected",
+              style: TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+                fontSize: 24
+              ),
+            ),
+            SizedBox(height: 30),
+            Text(
+              "Go to Servers tab and connect to one",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 18
+              ),
+            )
+          ],
+        ),
+      );
+    }
   }
 }

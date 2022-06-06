@@ -52,23 +52,29 @@ class _AddServerModalState extends State<AddServerModal> {
         defaultServer: false,
       );
       final result = await login(serverObj);
-      if (result == 'success') {
+      if (result['result'] == 'success') {
         setState(() {
           height = 200;
           status = 'success';
         });
         await Future.delayed(const Duration(seconds: 3), (() {
           Navigator.pop(context);
-          serversProvider.addServer(serverObj);
+          serversProvider.addServer(Server(
+            address: serverObj.address,
+            alias: serverObj.alias,
+            token: serverObj.token,
+            defaultServer: serverObj.defaultServer,
+            enabled: result['status'] == 'enabled' ? true : false
+          ));
         }));
       }
       else {
-        if (result == 'no_connection') {
+        if (result['result'] == 'no_connection') {
           setState(() {
             errorMessage = "Failed. Check address.";
           });
         }
-        else if (result == 'token_invalid') {
+        else if (result['result'] == 'token_invalid') {
           setState(() {
             errorMessage = "Failed. Check token.";
           });
@@ -160,7 +166,7 @@ class _AddServerModalState extends State<AddServerModal> {
         ),
         SizedBox(height: 40),
         Text(
-          "Success",
+          "Saved",
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,

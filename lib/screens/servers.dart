@@ -53,8 +53,14 @@ class _ServersState extends State<Servers> {
         barrierDismissible: false
       );
       final result = await login(server);
-      if (result == 'success') {
-        serversProvider.setConnectedServer(server);
+      if (result['result'] == 'success') {
+        serversProvider.setConnectedServer(Server(
+          address: server.address,
+          alias: server.alias,
+          token: server.token,
+          defaultServer: server.defaultServer,
+          enabled: result['status'] == 'enabled' ? true : false
+        ));
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
