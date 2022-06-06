@@ -283,19 +283,14 @@ class _AddServerModalState extends State<AddServerModal> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextButton(
+                  TextButton.icon(
                     onPressed: (() => {
                       Navigator.pop(context)
                     }),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.cancel),
-                        SizedBox(width: 10),
-                        Text("Cancel")
-                      ],
-                    ),
+                    label: const Text("Cancel"),
+                    icon: const Icon(Icons.cancel)
                   ),
-                  TextButton(
+                  TextButton.icon(
                     onPressed: _isDataValid() == true 
                       ? () => connect()
                       : null,
@@ -309,13 +304,8 @@ class _AddServerModalState extends State<AddServerModal> {
                           : Colors.grey,
                       ),
                     ), 
-                    child: Row(
-                      children: const [
-                        Icon(Icons.check),
-                        SizedBox(width: 10),
-                        Text("Connect")
-                      ],
-                    ),
+                    label: const Text("Connect"),
+                    icon: const Icon(Icons.login),
                   ),
                 ],
               ),

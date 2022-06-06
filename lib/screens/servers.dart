@@ -1,18 +1,56 @@
+import 'package:droid_hole/widgets/delete_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
-class Servers extends StatelessWidget {
+class Servers extends StatefulWidget {
   const Servers({Key? key}) : super(key: key);
 
+  @override
+  State<Servers> createState() => _ServersState();
+}
+
+class _ServersState extends State<Servers> {
+  List<int> expandedCards = [];
+  List<int> showButtons = [];
+
+  void _expandOrContract(int index) async {
+    if (expandedCards.contains(index) && showButtons.contains(index)) {
+      setState(() {
+        showButtons.removeWhere((i) => i == index);
+        expandedCards.removeWhere((i) => i == index);
+      });
+    }
+    else if (!expandedCards.contains(index) && !showButtons.contains(index)) {
+      setState(() => {
+        expandedCards.add(index)
+      });
+      await Future.delayed(const Duration(milliseconds: 250), (() => {
+        setState(() => {
+          showButtons.add(index)
+        })
+      }));
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     List<Server> servers = serversProvider.getServersList;
 
     final width = MediaQuery.of(context).size.width;
+
+    void _showDeleteModal(Server server) {
+      showDialog(
+        context: context, 
+        builder: (context) => DeleteModal(
+          serverToDelete: server,
+        ),
+        barrierDismissible: false
+      );
+    }
 
     return Column(
       children: [
@@ -42,53 +80,96 @@ class Servers extends StatelessWidget {
                 ),
                 child: SizedBox(
                   width: width-20,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 48,
-                            margin: const EdgeInsets.only(right: 12),
-                            child: const Icon(Icons.storage_rounded),
-                          ),
-                          SizedBox(
-                            width: width-156,
-                            child: Column(
-                              children: [
-                                Text(
-                                  servers[index].address,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold
+                  child: Material(
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(10),
+                    child: InkWell(
+                      onTap: () => _expandOrContract(index),
+                      borderRadius: BorderRadius.circular(10),
+                      child: AnimatedContainer(
+                        height: expandedCards.contains(index) ? 136 : 68,
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeInOut,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 48,
+                                    margin: const EdgeInsets.only(right: 12),
+                                    child: const Icon(Icons.storage_rounded),
                                   ),
-                                ),
-                                if (servers[index].alias != null) Column(
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      servers[index].alias!,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.italic
+                                  SizedBox(
+                                    width: width-156,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          servers[index].address,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                        if (servers[index].alias != null) Column(
+                                          children: [
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              servers[index].alias!,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontStyle: FontStyle.italic
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () => _expandOrContract(index),
+                                    icon: const Icon(Icons.arrow_drop_down)
+                                  ),
+                                ],
+                              ),
+                              if (showButtons.contains(index)) Column(
+                                children: [
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TextButton.icon(
+                                        onPressed: () => _showDeleteModal(servers[index]), 
+                                        icon: const Icon(Icons.delete), 
+                                        label: const Text("Remove"),
+                                        style: ButtonStyle(
+                                          foregroundColor: MaterialStateProperty.all(Colors.red),
+                                          overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1))
+                                        ),
                                       ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
+                                      TextButton.icon(
+                                        onPressed: () => {}, 
+                                        icon: const Icon(Icons.login), 
+                                        label: const Text("Connect"),
+                                        style: ButtonStyle(
+                                          foregroundColor: MaterialStateProperty.all(Colors.green),
+                                          overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
                           ),
-                          IconButton(
-                            onPressed: () => {}, 
-                            icon: const Icon(Icons.chevron_right)
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
