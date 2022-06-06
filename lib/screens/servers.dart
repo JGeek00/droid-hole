@@ -87,15 +87,25 @@ class _ServersState extends State<Servers> {
 
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(
+        Container(
+          width: double.maxFinite,
+          padding: const EdgeInsets.only(
             top: 20,
             left: 20,
             right: 20,
             bottom: 15
           ),
-          child: Text(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black12,
+                width: 1
+              )
+            )
+          ),
+          child: const Text(
             "PiHole servers",
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold
@@ -106,142 +116,137 @@ class _ServersState extends State<Servers> {
           child: servers.isNotEmpty ? 
             ListView.builder(
               itemCount: servers.length,
-              itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5
-                ),
-                child: SizedBox(
-                  width: width-20,
-                  child: Material(
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(10),
-                    child: InkWell(
-                      onTap: () => _expandOrContract(index),
-                      borderRadius: BorderRadius.circular(10),
-                      child: AnimatedContainer(
-                        height: expandedCards.contains(index) ? 136 : 68,
-                        duration: const Duration(milliseconds: 250),
-                        curve: Curves.easeInOut,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: 48,
-                                    margin: const EdgeInsets.only(right: 12),
-                                    child: Icon(
-                                      Icons.storage_rounded,
-                                      color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == servers[index].address
-                                        ? Colors.green : Colors.red,
-                                    ),
+              itemBuilder: (context, index) => Center(
+                child: Material(
+                  child: InkWell(
+                    onTap: () => _expandOrContract(index),
+                    child: AnimatedContainer(
+                      height: expandedCards.contains(index) ? 137 : 69,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOut,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.black12,
+                            width: 1
+                          )
+                        )
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 48,
+                                  margin: const EdgeInsets.only(right: 12),
+                                  child: Icon(
+                                    Icons.storage_rounded,
+                                    color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == servers[index].address
+                                      ? Colors.green : null,
                                   ),
-                                  SizedBox(
-                                    width: width-156,
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          servers[index].address,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
-                                          ),
+                                ),
+                                SizedBox(
+                                  width: width-156,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        servers[index].address,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold
                                         ),
-                                        if (servers[index].alias != null) Column(
-                                          children: [
-                                            const SizedBox(height: 10),
+                                      ),
+                                      if (servers[index].alias != null) Column(
+                                        children: [
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            servers[index].alias!,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontStyle: FontStyle.italic
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () => _expandOrContract(index),
+                                  icon: const Icon(Icons.arrow_drop_down)
+                                ),
+                              ],
+                            ),
+                            if (showButtons.contains(index)) Column(
+                              children: [
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton.icon(
+                                      onPressed: () => _showDeleteModal(servers[index]), 
+                                      icon: const Icon(Icons.delete), 
+                                      label: const Text("Remove"),
+                                      style: ButtonStyle(
+                                        foregroundColor: MaterialStateProperty.all(Colors.red),
+                                        overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1)),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                            side: const BorderSide(
+                                              color: Colors.red,
+                                              width: 1
+                                            )
+                                          )
+                                        )
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      child: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == servers[index].address
+                                        ? Row(
+                                          children: const [
+                                            Icon(
+                                              Icons.check,
+                                              color: Colors.green,
+                                            ),
+                                            SizedBox(width: 10),
                                             Text(
-                                              servers[index].alias!,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontStyle: FontStyle.italic
+                                              "Connected",
+                                              style: TextStyle(
+                                                color: Colors.green
                                               ),
                                             )
                                           ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () => _expandOrContract(index),
-                                    icon: const Icon(Icons.arrow_drop_down)
-                                  ),
-                                ],
-                              ),
-                              if (showButtons.contains(index)) Column(
-                                children: [
-                                  const SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      TextButton.icon(
-                                        onPressed: () => _showDeleteModal(servers[index]), 
-                                        icon: const Icon(Icons.delete), 
-                                        label: const Text("Remove"),
-                                        style: ButtonStyle(
-                                          foregroundColor: MaterialStateProperty.all(Colors.red),
-                                          overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1)),
-                                          shape: MaterialStateProperty.all(
-                                              RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10),
-                                              side: const BorderSide(
-                                                color: Colors.red,
-                                                width: 1
-                                              )
-                                            )
                                           )
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        child: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == servers[index].address
-                                          ? Row(
-                                            children: const [
-                                              Icon(
-                                                Icons.check,
-                                                color: Colors.green,
-                                              ),
-                                              SizedBox(width: 10),
-                                              Text(
-                                                "Connected",
-                                                style: TextStyle(
-                                                  color: Colors.green
-                                                ),
-                                              )
-                                            ],
-                                            )
-                                          : TextButton.icon(
-                                              onPressed: () => _connectToServer(servers[index]), 
-                                              icon: const Icon(Icons.login), 
-                                              label: const Text("Connect"),
-                                              style: ButtonStyle(
-                                                foregroundColor: MaterialStateProperty.all(Colors.green),
-                                                overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1)),
-                                                shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(10),
-                                                    side: const BorderSide(
-                                                      color: Colors.green,
-                                                      width: 1
-                                                    )
+                                        : TextButton.icon(
+                                            onPressed: () => _connectToServer(servers[index]), 
+                                            icon: const Icon(Icons.login), 
+                                            label: const Text("Connect"),
+                                            style: ButtonStyle(
+                                              foregroundColor: MaterialStateProperty.all(Colors.green),
+                                              overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1)),
+                                              shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  side: const BorderSide(
+                                                    color: Colors.green,
+                                                    width: 1
                                                   )
                                                 )
-                                              ),
+                                              )
                                             ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+                                          ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
                         ),
                       ),
                     ),
