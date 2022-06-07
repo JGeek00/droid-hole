@@ -83,7 +83,7 @@ class _DisableModalState extends State<DisableModal> {
         return 0;
 
       case 5:
-        return int.parse(customTimeController.text);
+        return int.parse(customTimeController.text)*60;
 
       default:
         return 0;
