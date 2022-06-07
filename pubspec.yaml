@@ -38,6 +38,7 @@ dependencies:
   sqflite: ^2.0.2+1
   http: ^0.13.4
   expandable: ^5.0.1
+  flutter_web_browser: ^0.17.1
 
 dev_dependencies:
   flutter_test:

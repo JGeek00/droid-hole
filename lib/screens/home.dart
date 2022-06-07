@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 class Home extends StatelessWidget {
@@ -9,61 +10,99 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
+    void _openWebPanel() {
+      if (serversProvider.connectedServer != null) {
+        FlutterWebBrowser.openWebPage(
+          url: '${serversProvider.connectedServer!.address}/admin/',
+          customTabsOptions: const CustomTabsOptions(
+            instantAppsEnabled: true,
+            showTitle: true,
+            urlBarHidingEnabled: false,
+          ),
+          safariVCOptions: const SafariViewControllerOptions(
+            barCollapsingEnabled: true,
+            dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
+            modalPresentationCapturesStatusBarAppearance: true,
+          )
+        );
+      }
+    }
+
     if (serversProvider.connectedServer != null) {
       return SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Material(
-                elevation: 5.0,
-                borderRadius: BorderRadius.circular(8.0),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            serversProvider.connectedServer!.address,
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+            Material(
+              elevation: 5.0,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(width: 40),
+                    Column(
+                      children: [
+                        Text(
+                          serversProvider.connectedServer!.alias 
+                            ?? serversProvider.connectedServer!.address,
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: serversProvider.connectedServer!.enabled == true
-                                    ? Colors.green
-                                    : Colors.red
-                                ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: serversProvider.connectedServer!.enabled == true
+                                  ? Colors.green
+                                  : Colors.red
                               ),
-                              const SizedBox(width: 10),
-                              Text(
-                                serversProvider.connectedServer!.enabled == true
-                                  ? "Enabled"
-                                  : "Disabled"
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              serversProvider.connectedServer!.enabled == true
+                                ? "Enabled"
+                                : "Disabled",
+                              style: const TextStyle(
+                                fontSize: 12
                               ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Row(
+                            children: const [
+                              Icon(Icons.refresh),
+                              SizedBox(width: 15),
+                              Text("Refresh")
                             ],
                           )
-                        ],
-                      ),
-                      IconButton(
-                        onPressed: () => {}, 
-                        icon: const Icon(Icons.info),
-                      ),
-                    ],
-                  ),
+                        ),
+                        PopupMenuItem(
+                          onTap: _openWebPanel,
+                          child: Row(
+                            children: const [
+                              Icon(Icons.web),
+                              SizedBox(width: 15),
+                              Text("Open web panel")
+                            ],
+                          )
+                        ),
+                      ]
+                    )
+                  ],
                 ),
               ),
             )
