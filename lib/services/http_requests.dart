@@ -12,6 +12,27 @@ Future<Response> httpClient(String url) {
   );
 }
 
+dynamic status(Server server) async {
+  try {
+    final response = await httpClient('${server.address}/admin/api.php');
+    final body = jsonDecode(response.body);
+    if (body['status'] != null) {
+      return {
+        'result': 'success',
+        'data': body
+      };
+    }
+  } on SocketException {
+    return {'result': 'no_connection'};
+  } on TimeoutException {
+    return {'result': 'no_connection'};
+  }
+  catch (e) {
+    print(e);
+    return {'result': 'error'};
+  }
+}
+
 dynamic login(Server server) async {
   try {
     final response = await httpClient('${server.address}/admin/api.php');

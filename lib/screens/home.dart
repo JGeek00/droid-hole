@@ -1,3 +1,4 @@
+import 'package:droid_hole/services/http_requests.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
@@ -25,6 +26,17 @@ class Home extends StatelessWidget {
             modalPresentationCapturesStatusBarAppearance: true,
           )
         );
+      }
+    }
+
+    void _refresh() async {
+      if (serversProvider.connectedServer != null) {
+        final result = await status(serversProvider.connectedServer!);
+        if (result['result'] == "success") {
+          serversProvider.updateConnectedServerStatus(
+            result['data']['status'] == 'enabled' ? true : false
+          );
+        }
       }
     }
 
@@ -82,6 +94,7 @@ class Home extends StatelessWidget {
                     PopupMenuButton(
                       itemBuilder: (context) => [
                         PopupMenuItem(
+                          onTap: _refresh,
                           child: Row(
                             children: const [
                               Icon(Icons.refresh),
