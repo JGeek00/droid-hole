@@ -1,3 +1,4 @@
+import 'package:droid_hole/functions/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +32,12 @@ class Home extends StatelessWidget {
 
     void _refresh() async {
       if (serversProvider.connectedServer != null) {
+        await Future.delayed(const Duration(seconds: 0), () => {
+          openProcessModal(context, "Refreshing data...")
+        });
         final result = await status(serversProvider.connectedServer!);
+        // ignore: use_build_context_synchronously
+        closeProcessModal(context);
         if (result['result'] == "success") {
           serversProvider.updateConnectedServerStatus(
             result['data']['status'] == 'enabled' ? true : false

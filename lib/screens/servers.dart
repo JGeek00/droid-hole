@@ -1,3 +1,4 @@
+import 'package:droid_hole/functions/process_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expandable/expandable.dart';
@@ -47,12 +48,10 @@ class _ServersState extends State<Servers> {
     }
 
     void _connectToServer(Server server) async {
-      showDialog(
-        context: context, 
-        builder: (context) => const ConnectingModal(),
-        barrierDismissible: false
-      );
+      openProcessModal(context, 'Connecting...');
       final result = await login(server);
+      // ignore: use_build_context_synchronously
+      closeProcessModal(context);
       if (result['result'] == 'success') {
         serversProvider.setConnectedServer(Server(
           address: server.address,
@@ -78,8 +77,6 @@ class _ServersState extends State<Servers> {
           )
         );
       }
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
     }
 
     Widget _topRow(Server server, int index) {

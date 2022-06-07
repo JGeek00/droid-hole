@@ -1,3 +1,4 @@
+import 'package:droid_hole/functions/process_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,10 @@ class _BaseState extends State<Base> {
     final serversProvider = Provider.of<ServersProvider>(context);
 
     void _disableServer(int time) async {
+      openProcessModal(context, 'Disabling server...');
       final result = await disableServer(serversProvider.connectedServer!, time);
+      // ignore: use_build_context_synchronously
+      closeProcessModal(context);
       if (result['result'] == 'success') {
         serversProvider.updateConnectedServerStatus(false);
         // ignore: use_build_context_synchronously
@@ -82,7 +86,10 @@ class _BaseState extends State<Base> {
     }
 
     void _enableServer() async {
+      openProcessModal(context, 'Enabling server...');
       final result = await enableServer(serversProvider.connectedServer!);
+      // ignore: use_build_context_synchronously
+      closeProcessModal(context);
       if (result['result'] == 'success') {
         serversProvider.updateConnectedServerStatus(true);
         // ignore: use_build_context_synchronously
