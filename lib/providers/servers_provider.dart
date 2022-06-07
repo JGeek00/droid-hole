@@ -77,6 +77,11 @@ class ServersProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateConnectedServerStatus(bool enabled) {
+    _connectedServer!.enabled = enabled;
+    notifyListeners();
+  }
+
   void setDbInstance(Database db) {
     _dbInstance = db;
   }

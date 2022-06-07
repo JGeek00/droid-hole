@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:droid_hole/screens/home.dart';
 import 'package:droid_hole/screens/servers.dart';
 import 'package:droid_hole/screens/settings.dart';
 
+import 'package:droid_hole/widgets/add_server_modal.dart';
+import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
-import 'package:droid_hole/functions/modal_bottom_sheet.dart';
+import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/models/app_screen.dart';
 import 'package:droid_hole/models/fab.dart';
-import 'package:provider/provider.dart';
 
 class Base extends StatefulWidget {
   const Base({Key? key}) : super(key: key);
@@ -32,17 +34,96 @@ class _BaseState extends State<Base> {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
+    void _disableServer(int time) async {
+      final result = await disableServer(serversProvider.connectedServer!, time);
+      if (result['result'] == 'success') {
+        serversProvider.updateConnectedServerStatus(false);
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Server disabled successfully."),
+            backgroundColor: Colors.green,
+          )
+        );
+      }
+      else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Couldn't disable server."),
+            backgroundColor: Colors.red,
+          )
+        );
+      }
+    }
+
+    void _openDisableBottomSheet() {
+      showModalBottomSheet(
+        context: context, 
+        isScrollControlled: true,
+        builder: (context) => DisableModal(
+          onDisable: _disableServer 
+        ),
+        backgroundColor: Colors.transparent,
+        isDismissible: false,
+        enableDrag: false,
+      );
+    }
+
+    void _openAddServerBottomSheet() {
+      showModalBottomSheet(
+        context: context, 
+        isScrollControlled: true,
+        builder: (context) => const AddServerModal(),
+        backgroundColor: Colors.transparent,
+        isDismissible: false,
+        enableDrag: false,
+      );
+    }
+
+    void _enableServer() async {
+      final result = await enableServer(serversProvider.connectedServer!);
+      if (result['result'] == 'success') {
+        serversProvider.updateConnectedServerStatus(true);
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Server enabled successfully."),
+            backgroundColor: Colors.green,
+          )
+        );
+      }
+      else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Couldn't enable server."),
+            backgroundColor: Colors.red,
+          )
+        );
+      }
+    }
+
     List<AppScreen> appScreens = [
       AppScreen(
         screenIcon: const Icon(Icons.home), 
         screenName: "Home", 
         screenWidget: const Home(),
         screenFab: serversProvider.connectedServer != null
-          ? Fab(
-              icon: const Icon(Icons.verified_user_rounded), 
-              color: Colors.green, 
-              onTap: () => openModalBottomSheet(context, 'enableDisable')
-            )
+          ? serversProvider.connectedServer!.enabled == true 
+            ? Fab(
+                icon: const Icon(Icons.verified_user_rounded), 
+                color: Colors.green, 
+                onTap: _openDisableBottomSheet
+              ) 
+            : Fab(
+                icon: const Icon(
+                  Icons.gpp_bad_rounded,
+                  size: 30,
+                ), 
+                color: Colors.red, 
+                onTap: _enableServer
+              )
           : null
       ),
       AppScreen(
@@ -52,7 +133,7 @@ class _BaseState extends State<Base> {
         screenFab: Fab(
           icon: const Icon(Icons.add), 
           color: Theme.of(context).primaryColor, 
-          onTap: () => openModalBottomSheet(context, 'addServer')
+          onTap: _openAddServerBottomSheet
         )
       ),
       const AppScreen(

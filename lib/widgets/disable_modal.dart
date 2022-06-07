@@ -1,23 +1,23 @@
+import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:droid_hole/widgets/option_box.dart';
+import 'package:provider/provider.dart';
 
-class EnableDisableModal extends StatefulWidget {
-  final void Function() onCancel;
-  final void Function(int) onConfirm;
+class DisableModal extends StatefulWidget {
+  final void Function(int) onDisable;
 
-  const EnableDisableModal({
+  const DisableModal({
     Key? key,
-    required this.onCancel,
-    required this.onConfirm,
+    required this.onDisable
   }) : super(key: key);
 
   @override
-  State<EnableDisableModal> createState() => _EnableDisableModalState();
+  State<DisableModal> createState() => _DisableModalState();
 }
 
-class _EnableDisableModalState extends State<EnableDisableModal> {
+class _DisableModalState extends State<DisableModal> {
   int? selectedOption;
   TextEditingController customTimeController = TextEditingController();
   bool showCustomDurationInput = false;
@@ -65,9 +65,34 @@ class _EnableDisableModalState extends State<EnableDisableModal> {
     }
   }
 
+  int _getTime() {
+    switch (selectedOption) {
+      case 0:
+        return 30;
+
+      case 1:
+        return 60;
+
+      case 2:
+        return 120;
+
+      case 3:
+        return 300;
+
+      case 4:
+        return 0;
+
+      case 5:
+        return int.parse(customTimeController.text);
+
+      default:
+        return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);   
 
     return Padding(
       padding: mediaQueryData.viewInsets,
@@ -300,7 +325,7 @@ class _EnableDisableModalState extends State<EnableDisableModal> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: widget.onCancel, 
+                        onPressed: () => Navigator.pop(context), 
                         child: Row(
                           children: const [
                             Icon(Icons.cancel),
@@ -311,7 +336,10 @@ class _EnableDisableModalState extends State<EnableDisableModal> {
                       ),
                       TextButton(
                         onPressed: _selectionIsValid() == true 
-                          ? () => widget.onConfirm(1)
+                          ? () {
+                            Navigator.pop(context);
+                            widget.onDisable(_getTime());
+                          }
                           : null,
                         style: ButtonStyle(
                           overlayColor: MaterialStateProperty.all(

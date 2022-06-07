@@ -3,9 +3,9 @@ class Server {
   final String? alias;
   final String token;
   final bool defaultServer;
-  final bool? enabled;
+  bool? enabled;
 
-  const Server({
+  Server({
     required this.address,
     this.alias,
     required this.token,

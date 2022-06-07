@@ -39,3 +39,45 @@ dynamic login(Server server) async {
     return {'result': 'error'};
   }
 }
+
+dynamic disableServer(Server server, int time) async {
+  try {
+    final response = await httpClient('${server.address}/admin/api.php?auth=${server.token}&disable=$time');
+    final body = jsonDecode(response.body);
+    if (body.runtimeType != List && body['status'] != null) {
+      return {
+        'result': 'success',
+        'status': body['status']
+      };
+    }
+  } on SocketException {
+    return {'result': 'no_connection'};
+  } on TimeoutException {
+    return {'result': 'no_connection'};
+  }
+  catch (e) {
+    print(e);
+    return {'result': 'error'};
+  }
+}
+
+dynamic enableServer(Server server) async {
+  try {
+    final response = await httpClient('${server.address}/admin/api.php?auth=${server.token}&enable');
+    final body = jsonDecode(response.body);
+    if (body.runtimeType != List && body['status'] != null) {
+      return {
+        'result': 'success',
+        'status': body['status']
+      };
+    }
+  } on SocketException {
+    return {'result': 'no_connection'};
+  } on TimeoutException {
+    return {'result': 'no_connection'};
+  }
+  catch (e) {
+    print(e);
+    return {'result': 'error'};
+  }
+}
