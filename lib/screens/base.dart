@@ -1,5 +1,6 @@
 import 'package:droid_hole/functions/process_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/screens/home.dart';
@@ -156,7 +157,10 @@ class _BaseState extends State<Base> {
         selectedScreen: selectedScreen,
         onChange: _changeScreen,
       ),
-      body: SafeArea(child: appScreens[selectedScreen].screenWidget),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,      
+        child: SafeArea(child: appScreens[selectedScreen].screenWidget),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: appScreens[selectedScreen].screenFab != null 
         ? FloatingActionButton(

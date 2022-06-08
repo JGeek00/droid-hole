@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,13 @@ void main() async {
   PackageInfo appInfo = await loadAppInfo();
   configProvider.setAppInfo(appInfo);
 
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: const Color.fromRGBO(250, 250, 250, 1),
+    statusBarColor: Colors.transparent, 
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarDividerColor: Colors.black.withOpacity(0.05),
+    systemNavigationBarIconBrightness: Brightness.dark
+  ));
   runApp(
     MultiProvider(
       providers: [
