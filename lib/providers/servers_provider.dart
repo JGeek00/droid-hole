@@ -85,4 +85,18 @@ class ServersProvider with ChangeNotifier {
   void setDbInstance(Database db) {
     _dbInstance = db;
   }
+
+  Future deleteDbData() async {
+    _serversList = [];
+    _connectedServer = null;
+    try {
+      await _dbInstance!.transaction((txn) async {
+        await txn.rawDelete(
+          'DELETE FROM servers',
+        );
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 }

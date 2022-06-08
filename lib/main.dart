@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 import 'package:droid_hole/screens/base.dart';
@@ -9,19 +12,26 @@ import 'package:droid_hole/screens/base.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ServersProvider serversProvider = ServersProvider();
+  AppConfigProvider configProvider = AppConfigProvider();
 
   Map<String, dynamic> dbData = await loadDb();
   serversProvider.setDbInstance(dbData['dbInstance']);
   serversProvider.saveFromDb(dbData['servers']);
+
+  PackageInfo appInfo = await loadAppInfo();
+  configProvider.setAppInfo(appInfo);
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: ((context) => serversProvider)
-        )
+        ),
+        ChangeNotifierProvider(
+          create: ((context) => configProvider)
+        ),
       ],
-      child: const DroidHole(),
+      child: Phoenix(child: const DroidHole()),
     )
   );
 }
@@ -49,6 +59,10 @@ Future<Map<String, dynamic>> loadDb() async {
     "dbInstance": db,
   };
 }
+
+Future<PackageInfo> loadAppInfo() async {
+  return await PackageInfo.fromPlatform();
+} 
 
 class DroidHole extends StatefulWidget {
   const DroidHole({Key? key}) : super(key: key);
