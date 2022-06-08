@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class ResetModal extends StatelessWidget {
@@ -13,26 +15,33 @@ class ResetModal extends StatelessWidget {
     return Dialog(
       child: Container(
         height: 205,
-        padding: const EdgeInsets.only(
+        padding: EdgeInsets.only(
           top: 20,
-          left: 20,
-          right: 20,
-          bottom: 10
+          left: 10,
+          right: 10,
+          bottom: Platform.isIOS ? 5 : 10
         ),
         child: Column(
           children: [
-            const Text(
-              "Reset application data",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: const [
+                  Text(
+                    "Reset application data",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Warning! This action will reset the application and remove all it's data.\n\nAre you sure you want to continue?"
+                  ),
+                  SizedBox(height: 20),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              "Warning! This action will reset the application and remove all it's data.\n\nAre you sure you want to continue?"
-            ),
-            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,11 +24,11 @@ class DeleteModal extends StatelessWidget {
         borderRadius: BorderRadius.circular(10)
       ),
       child: Container(
-        padding: const EdgeInsets.only(
+        padding: EdgeInsets.only(
           top: 20,
           left: 10,
           right: 10,
-          bottom: 10
+          bottom: Platform.isIOS ? 7 : 10
         ),
         height: 200,
         child: Column(

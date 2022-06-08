@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +24,7 @@ class _AddServerModalState extends State<AddServerModal> {
   bool isTokenFieldValid = false;
 
   String status = 'form';
-  double height = 368;
+  double height = 370;
   String errorMessage = 'Failed';
 
   bool _isDataValid() {
@@ -122,17 +124,22 @@ class _AddServerModalState extends State<AddServerModal> {
 
     return Padding(
       padding: mediaQueryData.viewInsets,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        height: height,
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(20),
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: Platform.isIOS ? 20 : 0
         ),
-        child: _statusWidget()
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          height: height,
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.all(20),
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: _statusWidget()
+        ),
       ),
     );
   }
