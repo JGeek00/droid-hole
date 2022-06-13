@@ -1,4 +1,5 @@
 import 'package:droid_hole/functions/process_modal.dart';
+import 'package:droid_hole/widgets/add_server_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expandable/expandable.dart';
@@ -36,14 +37,29 @@ class _ServersState extends State<Servers> {
 
     final width = MediaQuery.of(context).size.width;
 
-    void _showDeleteModal(Server server) {
-      showDialog(
-        context: context, 
-        builder: (context) => DeleteModal(
-          serverToDelete: server,
-        ),
-        barrierDismissible: false
-      );
+    void _showDeleteModal(Server server) async {
+      await Future.delayed(const Duration(seconds: 0), () => {
+        showDialog(
+          context: context, 
+          builder: (context) => DeleteModal(
+            serverToDelete: server,
+          ),
+          barrierDismissible: false
+        )
+      });
+    }
+
+    void _openAddServerBottomSheet(Server server) async {
+      await Future.delayed(const Duration(seconds: 0), (() => {
+        showModalBottomSheet(
+          context: context, 
+          isScrollControlled: true,
+          builder: (context) => AddServerModal(server: server),
+          backgroundColor: Colors.transparent,
+          isDismissible: false,
+          enableDrag: false,
+        )
+      }));
     }
 
     void _connectToServer(Server server) async {
@@ -78,6 +94,71 @@ class _ServersState extends State<Servers> {
       }
     }
 
+    void _setDefaultServer(Server server) async {
+      final result = await serversProvider.setDefaultServer(server);
+      if (result == true) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Server set as default successfully."),
+            backgroundColor: Colors.green,
+          )
+        );
+      }
+      else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Server could not be set as default."),
+            backgroundColor: Colors.red,
+          )
+        );
+      }
+    }
+
+    Widget _leadingIcon(Server server) {
+      if (server.defaultServer == true) {
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(
+              Icons.storage_rounded,
+              color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == server.address
+                ? Colors.green : null,
+            ),
+            SizedBox(
+              width: 25,
+              height: 25,
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: const Icon(
+                      Icons.star,
+                      color: Colors.white,
+                      size: 10,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+      }
+      else {
+        return Icon(
+          Icons.storage_rounded,
+          color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == server.address
+            ? Colors.green : null,
+        );
+      }
+    }
+
     Widget _topRow(Server server, int index) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -85,11 +166,7 @@ class _ServersState extends State<Servers> {
           Container(
             width: 48,
             margin: const EdgeInsets.only(right: 12),
-            child: Icon(
-              Icons.storage_rounded,
-              color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == servers[index].address
-                ? Colors.green : null,
-            ),
+            child: _leadingIcon(servers[index]),
           ),
           SizedBox(
             width: width-156,
@@ -135,25 +212,48 @@ class _ServersState extends State<Servers> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: (() => _showDeleteModal(server)), 
-                    icon: const Icon(Icons.delete),
-                    color: Colors.red,
-                    splashColor: Colors.red.withOpacity(0.1),
-                    highlightColor: Colors.red.withOpacity(0.1),
-                    splashRadius: 20,
+              PopupMenuButton(
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    enabled: server.defaultServer == false 
+                      ? true
+                      : false,
+                    onTap: server.defaultServer == false 
+                      ? (() => _setDefaultServer(server))
+                      : null, 
+                    child: Row(
+                      children: [
+                        const Icon(Icons.star),
+                        const SizedBox(width: 15),
+                        Text(
+                          server.defaultServer == true 
+                            ? "This is the default server"
+                            : "Set as default server"
+                        )
+                      ],
+                    )
                   ),
-                  IconButton(
-                    onPressed: (() => {}), 
-                    icon: const Icon(Icons.edit),
-                    color: Theme.of(context).primaryColor,
-                    splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                    highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                    splashRadius: 20,
+                  PopupMenuItem(
+                    onTap: (() => _openAddServerBottomSheet(server)), 
+                    child: Row(
+                      children: const [
+                        Icon(Icons.edit),
+                        SizedBox(width: 15),
+                        Text("Edit")
+                      ],
+                    )
                   ),
-                ],
+                  PopupMenuItem(
+                    onTap: (() => _showDeleteModal(server)), 
+                    child: Row(
+                      children: const [
+                        Icon(Icons.delete),
+                        SizedBox(width: 15),
+                        Text("Delete")
+                      ],
+                    )
+                  ),
+                ]
               ),
               SizedBox(
                 child: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == servers[index].address

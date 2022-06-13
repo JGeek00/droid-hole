@@ -2,7 +2,7 @@ class Server {
   final String address;
   final String? alias;
   final String token;
-  final bool defaultServer;
+  bool defaultServer;
   bool? enabled;
 
   Server({

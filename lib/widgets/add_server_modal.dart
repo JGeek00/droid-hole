@@ -8,7 +8,12 @@ import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/server.dart';
 
 class AddServerModal extends StatefulWidget {
-  const AddServerModal({Key? key}) : super(key: key);
+  final Server? server;
+
+  const AddServerModal({
+    Key? key,
+    this.server,
+  }) : super(key: key);
 
   @override
   State<AddServerModal> createState() => _AddServerModalState();
@@ -19,26 +24,44 @@ class _AddServerModalState extends State<AddServerModal> {
   TextEditingController ipFieldController = TextEditingController();
   TextEditingController aliasFieldController = TextEditingController();
   TextEditingController tokenFieldController = TextEditingController();
+  bool defaultCheckbox = false;
 
-  String? errorUrl = null;
+  String? errorUrl;
 
-  bool isIpFieldValid = false;
-  bool isTokenFieldValid = false;
+  bool allDataValid = false;
 
   String status = 'form';
-  double height = 370;
+  double height = 406;
   String errorMessage = 'Failed';
 
-  bool _isDataValid() {
+  void _checkDataValid() {
     if (
       ipFieldController.text != '' &&
-      isTokenFieldValid == true &&
-      isIpFieldValid == true
+      tokenFieldController.text != ''
     ) {
-      return true;
+      setState(() {
+        allDataValid = true;
+      });
     }
     else {
-      return false;
+      allDataValid = false;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.server != null) {
+      ipFieldController.text = widget.server!.address;
+      aliasFieldController.text = widget.server!.alias!;
+      tokenFieldController.text = widget.server!.token;
+      setState(() {
+        defaultCheckbox = widget.server!.defaultServer;
+      });
+      
+      setState(() {
+        allDataValid = true;
+      });
     }
   }
 
@@ -46,11 +69,13 @@ class _AddServerModalState extends State<AddServerModal> {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
-    void _connect() async {
-      final exists = await serversProvider.checkUrlExists(ipFieldController.text);
-      if (exists['result'] == 'success' && exists['exists'] == true) {
+    void _done() async {
+      final exists = widget.server == null
+        ? await serversProvider.checkUrlExists(ipFieldController.text)
+        : {};
+      if (widget.server == null && exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
-          height = 390;
+          height = 428;
         });
         await Future.delayed(const Duration(milliseconds: 300), () {
           setState(() {
@@ -58,7 +83,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
         });
       }
-      else if (exists['result'] == 'fail') {
+      else if (widget.server == null && exists['result'] == 'fail') {
         setState(() {
           errorUrl = null;
         });
@@ -71,7 +96,7 @@ class _AddServerModalState extends State<AddServerModal> {
         });
         await Future.delayed(const Duration(seconds: 3), (() {
           setState(() {
-            height = 368;
+            height = 406;
           });
         }));
         await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -91,7 +116,7 @@ class _AddServerModalState extends State<AddServerModal> {
           address: ipFieldController.text, 
           alias: aliasFieldController.text,
           token: tokenFieldController.text, 
-          defaultServer: false,
+          defaultServer: defaultCheckbox,
         );
         final result = await login(serverObj);
         if (result['result'] == 'success') {
@@ -142,7 +167,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 368;
+              height = 406;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -159,7 +184,7 @@ class _AddServerModalState extends State<AddServerModal> {
     Widget _statusWidget() {
       switch (status) {
         case 'form':
-          return _form(_connect);
+          return _form(_done);
          
         case 'connecting':
           return _connecting();
@@ -260,7 +285,7 @@ class _AddServerModalState extends State<AddServerModal> {
     );
   }
 
-  Widget _form(Function connect) {
+  Widget _form(Function done) {
     return Column(
       children: [
         const Text(
@@ -279,17 +304,9 @@ class _AddServerModalState extends State<AddServerModal> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != '') {
-                          isIpFieldValid = true;
-                        }
-                        else {
-                          isIpFieldValid = false;
-                        }
-                      });
-                    },
+                    onChanged: (value) => _checkDataValid(),
                     controller: ipFieldController,
+                    enabled: widget.server != null ? false : true,
                     decoration: InputDecoration(
                       errorText: errorUrl,
                       border: const OutlineInputBorder(
@@ -319,16 +336,7 @@ class _AddServerModalState extends State<AddServerModal> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
                     controller: tokenFieldController,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != '') {
-                          isTokenFieldValid = true;
-                        }
-                        else {
-                          isTokenFieldValid = false;
-                        }
-                      });
-                    },
+                    onChanged: (value) => _checkDataValid(),
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
@@ -339,11 +347,41 @@ class _AddServerModalState extends State<AddServerModal> {
                     ),
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                      value: defaultCheckbox,
+                      onChanged: widget.server == null ? (value) => {
+                        setState(() => {
+                          defaultCheckbox = !defaultCheckbox
+                        })
+                      } : null,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: widget.server == null ? (() => {
+                        setState(() => {
+                          defaultCheckbox = !defaultCheckbox
+                        })
+                      }) : null,
+                      child: Text(
+                        "Default server",
+                        style: TextStyle(
+                          color: widget.server != null 
+                            ? Colors.grey
+                            : null
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ),
         ),
-        const SizedBox(height: 10),
         Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -359,21 +397,25 @@ class _AddServerModalState extends State<AddServerModal> {
                     icon: const Icon(Icons.cancel)
                   ),
                   TextButton.icon(
-                    onPressed: _isDataValid() == true 
-                      ? () => connect()
+                    onPressed: allDataValid == true 
+                      ? () => done()
                       : null,
                     style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(
                         Colors.green.withOpacity(0.1)
                       ),
                       foregroundColor: MaterialStateProperty.all(
-                        _isDataValid() == true 
+                        allDataValid == true 
                           ? Colors.green
                           : Colors.grey,
                       ),
                     ), 
-                    label: const Text("Connect"),
-                    icon: const Icon(Icons.login),
+                    label: Text(
+                      widget.server != null ? "Save" : "Login"
+                    ),
+                    icon: Icon(
+                      widget.server != null ? Icons.save : Icons.login
+                    ),
                   ),
                 ],
               ),

@@ -23,9 +23,22 @@ class ServersProvider with ChangeNotifier {
   Future<bool> addServer(Server server) async {
     final saved = await saveToDb(server);
     if (saved == true) {
-      _serversList.add(server);
-      notifyListeners();
-      return true;
+      if (server.defaultServer == true) {
+        final defaultServer = await setDefaultServer(server);
+        if (defaultServer == true) {
+          _serversList.add(server);
+          notifyListeners();
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+      else {
+        _serversList.add(server);
+        notifyListeners();
+        return true;
+      }
     }
     else {
       return false;
@@ -37,6 +50,27 @@ class ServersProvider with ChangeNotifier {
     if (result == true) {
       _connectedServer = null;
       List<Server> newServers = _serversList.where((server) => server.address != serverAddress).toList();
+      _serversList = newServers;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  Future<bool> setDefaultServer(Server server) async {
+    final updated = await setDefaultServerDb(server.address);
+    if (updated == true) {
+      List<Server> newServers = _serversList.map((s) {
+        if (s.address == server.address) {
+          s.defaultServer = true;
+          return s;
+        }
+        else {
+          return s;
+        }
+      }).toList();
       _serversList = newServers;
       notifyListeners();
       return true;
@@ -98,6 +132,22 @@ class ServersProvider with ChangeNotifier {
       return {
         'result': 'fail'
       };
+    }
+  }
+
+  Future<bool> setDefaultServerDb(String url) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE servers SET isDefaultServer = 0 WHERE isDefaultServer = 1',
+        );
+        await txn.rawUpdate(
+          'UPDATE servers SET isDefaultServer = 1 WHERE address = "$url"',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
     }
   }
 
