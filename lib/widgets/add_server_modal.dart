@@ -20,6 +20,8 @@ class _AddServerModalState extends State<AddServerModal> {
   TextEditingController aliasFieldController = TextEditingController();
   TextEditingController tokenFieldController = TextEditingController();
 
+  String? errorUrl = null;
+
   bool isIpFieldValid = false;
   bool isTokenFieldValid = false;
 
@@ -43,47 +45,26 @@ class _AddServerModalState extends State<AddServerModal> {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+
     void _connect() async {
-      setState(() {
-        status = 'connecting';
-      });
-      final serverObj = Server(
-        address: ipFieldController.text, 
-        alias: aliasFieldController.text,
-        token: tokenFieldController.text, 
-        defaultServer: false,
-      );
-      final result = await login(serverObj);
-      if (result['result'] == 'success') {
+      final exists = await serversProvider.checkUrlExists(ipFieldController.text);
+      if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
-          height = 200;
-          status = 'success';
+          height = 390;
         });
-        await Future.delayed(const Duration(seconds: 3), (() {
-          Navigator.pop(context);
-          serversProvider.addServer(Server(
-            address: serverObj.address,
-            alias: serverObj.alias,
-            token: serverObj.token,
-            defaultServer: serverObj.defaultServer,
-            enabled: result['status'] == 'enabled' ? true : false
-          ));
-        }));
+        await Future.delayed(const Duration(milliseconds: 300), () {
+          setState(() {
+            errorUrl = "This URL already exists";
+          });
+        });
       }
-      else {
-        if (result['result'] == 'no_connection') {
-          setState(() {
-            errorMessage = "Failed. Check address.";
-          });
-        }
-        else if (result['result'] == 'token_invalid') {
-          setState(() {
-            errorMessage = "Failed. Check token.";
-          });
-        }
-        else {
-          errorMessage = "Failed. Unknown error.";
-        }
+      else if (exists['result'] == 'fail') {
+        setState(() {
+          errorUrl = null;
+        });
+        setState(() {
+          errorMessage = "Cannot check if this URL is already saved.";
+        });
         setState(() {
           status = 'failed';
           height = 200;
@@ -98,6 +79,66 @@ class _AddServerModalState extends State<AddServerModal> {
             status = 'form';
           })
         }));
+      }
+      else {
+        setState(() {
+          errorUrl = null;
+        });
+        setState(() {
+          status = 'connecting';
+        });
+        final serverObj = Server(
+          address: ipFieldController.text, 
+          alias: aliasFieldController.text,
+          token: tokenFieldController.text, 
+          defaultServer: false,
+        );
+        final result = await login(serverObj);
+        if (result['result'] == 'success') {
+          setState(() {
+            height = 200;
+            status = 'success';
+          });
+          await Future.delayed(const Duration(seconds: 3), (() {
+            Navigator.pop(context);
+            serversProvider.addServer(Server(
+              address: serverObj.address,
+              alias: serverObj.alias,
+              token: serverObj.token,
+              defaultServer: serverObj.defaultServer,
+              enabled: result['status'] == 'enabled' ? true : false
+            ));
+          }));
+        }
+        else {
+          if (result['result'] == 'no_connection') {
+            setState(() {
+              errorMessage = "Failed. Check address.";
+            });
+          }
+          else if (result['result'] == 'token_invalid') {
+            setState(() {
+              errorMessage = "Failed. Check token.";
+            });
+          }
+          else {
+            errorMessage = "Failed. Unknown error.";
+          }
+          setState(() {
+            status = 'failed';
+            height = 200;
+          });
+          await Future.delayed(const Duration(seconds: 3), (() {
+            setState(() {
+              height = 368;
+            });
+          }));
+          await Future.delayed(const Duration(milliseconds: 300), (() => {
+            setState(() {
+              status = 'form';
+            })
+          }));
+        }
       }
     }
     
@@ -196,6 +237,7 @@ class _AddServerModalState extends State<AddServerModal> {
         const SizedBox(height: 40),
         Text(
           errorMessage,
+          textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -236,8 +278,9 @@ class _AddServerModalState extends State<AddServerModal> {
                       });
                     },
                     controller: ipFieldController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
+                    decoration: InputDecoration(
+                      errorText: errorUrl,
+                      border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(10)
                         )

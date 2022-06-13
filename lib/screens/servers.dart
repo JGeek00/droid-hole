@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expandable/expandable.dart';
 
-import 'package:droid_hole/widgets/connecting_modal.dart';
 import 'package:droid_hole/widgets/delete_modal.dart';
 
 import 'package:droid_hole/services/http_requests.dart';

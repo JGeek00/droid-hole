@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -57,6 +60,32 @@ class ServersProvider with ChangeNotifier {
       });
     } catch (e) {
       print(e);
+    }
+  }
+
+  FutureOr<Map<String, dynamic>> checkUrlExists(String url) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        final result = await txn.rawQuery(
+          'SELECT count(address) as quantity FROM servers WHERE address = "$url"',
+        );
+        if (result[0]['quantity'] == 0) {
+          return {
+            'result': 'success',
+            'exists': false
+          };
+        }
+        else {
+          return {
+            'result': 'success',
+            'exists': true
+          };
+        }
+      });
+    } catch (e) {
+      return {
+        'result': 'fail'
+      };
     }
   }
 
