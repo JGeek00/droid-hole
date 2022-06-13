@@ -95,20 +95,32 @@ class _AddServerModalState extends State<AddServerModal> {
         );
         final result = await login(serverObj);
         if (result['result'] == 'success') {
-          setState(() {
-            height = 200;
-            status = 'success';
-          });
-          await Future.delayed(const Duration(seconds: 3), (() {
-            Navigator.pop(context);
-            serversProvider.addServer(Server(
-              address: serverObj.address,
-              alias: serverObj.alias,
-              token: serverObj.token,
-              defaultServer: serverObj.defaultServer,
-              enabled: result['status'] == 'enabled' ? true : false
-            ));
-          }));
+          final saved = await serversProvider.addServer(Server(
+            address: serverObj.address,
+            alias: serverObj.alias,
+            token: serverObj.token,
+            defaultServer: serverObj.defaultServer,
+            enabled: result['status'] == 'enabled' ? true : false
+          ));
+          if (saved == true) {
+            setState(() {
+              height = 200;
+              status = 'success';
+            });
+            await Future.delayed(const Duration(seconds: 3), (() async {
+              Navigator.pop(context);
+            }));
+          }
+          else {
+            setState(() {
+              errorMessage = "Server cannot be saved.";
+              status = 'failed';
+              height = 200;
+            });
+            await Future.delayed(const Duration(seconds: 3), (() async {
+              Navigator.pop(context);
+            }));
+          }
         }
         else {
           if (result['result'] == 'no_connection') {

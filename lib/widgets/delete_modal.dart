@@ -18,6 +18,30 @@ class DeleteModal extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
+    void _removeServer() async {
+      final deleted = await serversProvider.removeServer(serverToDelete.address);
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+      if (deleted == true) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Connection removed successfully."),
+            backgroundColor: Colors.green,
+          )
+        );
+      }
+      else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Connection cannot be removed."),
+            backgroundColor: Colors.red,
+          )
+        );
+      }
+    }
+
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -74,10 +98,7 @@ class DeleteModal extends StatelessWidget {
                   label: const Text("Cancel")
                 ),
                 TextButton.icon(
-                  onPressed: () {
-                    serversProvider.removeServer(serverToDelete.address);
-                    Navigator.pop(context);
-                  }, 
+                  onPressed: _removeServer, 
                   icon: const Icon(Icons.delete), 
                   label: const Text("Remove"),
                   style: ButtonStyle(

@@ -28,7 +28,6 @@ dynamic status(Server server) async {
     return {'result': 'no_connection'};
   }
   catch (e) {
-    print(e);
     return {'result': 'error'};
   }
 }
@@ -56,7 +55,6 @@ dynamic login(Server server) async {
     return {'result': 'no_connection'};
   }
   catch (e) {
-    print(e);
     return {'result': 'error'};
   }
 }
@@ -77,7 +75,6 @@ dynamic disableServer(Server server, int time) async {
     return {'result': 'no_connection'};
   }
   catch (e) {
-    print(e);
     return {'result': 'error'};
   }
 }
@@ -98,7 +95,6 @@ dynamic enableServer(Server server) async {
     return {'result': 'no_connection'};
   }
   catch (e) {
-    print(e);
     return {'result': 'error'};
   }
 }

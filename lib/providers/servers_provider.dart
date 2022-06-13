@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:flutter/material.dart';
@@ -21,18 +20,30 @@ class ServersProvider with ChangeNotifier {
     return _connectedServer;
   }
 
-  void addServer(Server server) {
-    _serversList.add(server);
-    saveToDb(server);
-    notifyListeners();
+  Future<bool> addServer(Server server) async {
+    final saved = await saveToDb(server);
+    if (saved == true) {
+      _serversList.add(server);
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
-  void removeServer(String serverAddress) {
-    _connectedServer = null;
-    List<Server> newServers = _serversList.where((server) => server.address != serverAddress).toList();
-    _serversList = newServers;
-    removeFromDb(serverAddress);
-    notifyListeners();
+  Future<bool> removeServer(String serverAddress) async {
+    final result = await removeFromDb(serverAddress);
+    if (result == true) {
+      _connectedServer = null;
+      List<Server> newServers = _serversList.where((server) => server.address != serverAddress).toList();
+      _serversList = newServers;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   void saveFromDb(List<Map<String, dynamic>>? servers) {
@@ -51,15 +62,16 @@ class ServersProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void saveToDb(Server server) async {
+  Future<bool> saveToDb(Server server) async {
     try {
-      await _dbInstance!.transaction((txn) async {
+      return await _dbInstance!.transaction((txn) async {
         await txn.rawInsert(
           'INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.token}", 0)',
         );
+        return true;
       });
     } catch (e) {
-      print(e);
+      return false;
     }
   }
 
@@ -89,15 +101,16 @@ class ServersProvider with ChangeNotifier {
     }
   }
 
-  void removeFromDb(String address) async {
+  Future<bool> removeFromDb(String address) async {
     try {
-      await _dbInstance!.transaction((txn) async {
+      return await _dbInstance!.transaction((txn) async {
         await txn.rawDelete(
           'DELETE FROM servers WHERE address = "$address"',
         );
+        return true;
       });
     } catch (e) {
-      print(e);
+      return false;
     }
   }
 
@@ -115,17 +128,18 @@ class ServersProvider with ChangeNotifier {
     _dbInstance = db;
   }
 
-  Future deleteDbData() async {
+  Future<bool> deleteDbData() async {
     _serversList = [];
     _connectedServer = null;
     try {
-      await _dbInstance!.transaction((txn) async {
+      return await _dbInstance!.transaction((txn) async {
         await txn.rawDelete(
           'DELETE FROM servers',
         );
+        return true;
       });
     } catch (e) {
-      print(e);
+      return false;
     }
   }
 }
