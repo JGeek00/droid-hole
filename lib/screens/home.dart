@@ -12,8 +12,10 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
+    final height = MediaQuery.of(context).size.height;
+
     void _openWebPanel() {
-      if (serversProvider.connectedServer != null) {
+      if (serversProvider.isServerConnected == true) {
         FlutterWebBrowser.openWebPage(
           url: '${serversProvider.connectedServer!.address}/admin/',
           customTabsOptions: const CustomTabsOptions(
@@ -31,7 +33,7 @@ class Home extends StatelessWidget {
     }
 
     void _refresh() async {
-      if (serversProvider.connectedServer != null) {
+      if (serversProvider.isServerConnected  == true) {
         await Future.delayed(const Duration(seconds: 0), () => {
           openProcessModal(context, "Refreshing data...")
         });
@@ -44,6 +46,56 @@ class Home extends StatelessWidget {
           );
         }
       }
+    }
+
+    Widget _serverStatus() {
+      Color _dotColor() {
+        if (serversProvider.isServerConnected == true) {
+          if (serversProvider.connectedServer!.enabled == true) {
+            return Colors.green;
+          }
+          else {
+            return Colors.red;
+          }
+        }
+        else {
+          return Colors.grey;
+        }
+      }
+
+      String _stringText() {
+        if (serversProvider.isServerConnected == true) {
+          if (serversProvider.connectedServer!.enabled == true) {
+            return "Enabled";
+          }
+          else {
+            return "Disabled";
+          }
+        }
+        else {
+          return "Disconnected";
+        }
+      }
+
+      return Row(
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: _dotColor()
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            _stringText(),
+            style: const TextStyle(
+              fontSize: 12
+            ),
+          ),
+        ],
+      );
     }
 
     if (serversProvider.connectedServer != null) {
@@ -72,59 +124,66 @@ class Home extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: serversProvider.connectedServer!.enabled == true
-                                  ? Colors.green
-                                  : Colors.red
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              serversProvider.connectedServer!.enabled == true
-                                ? "Enabled"
-                                : "Disabled",
-                              style: const TextStyle(
-                                fontSize: 12
-                              ),
-                            ),
-                          ],
-                        )
+                        _serverStatus()
                       ],
                     ),
                     PopupMenuButton(
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          onTap: _refresh,
-                          child: Row(
-                            children: const [
-                              Icon(Icons.refresh),
-                              SizedBox(width: 15),
-                              Text("Refresh")
-                            ],
-                          )
-                        ),
-                        PopupMenuItem(
-                          onTap: _openWebPanel,
-                          child: Row(
-                            children: const [
-                              Icon(Icons.web),
-                              SizedBox(width: 15),
-                              Text("Open web panel")
-                            ],
-                          )
-                        ),
-                      ]
+                      itemBuilder: (context) => 
+                        serversProvider.isServerConnected == true 
+                          ? [
+                              PopupMenuItem(
+                                onTap: _refresh,
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.refresh),
+                                    SizedBox(width: 15),
+                                    Text("Refresh")
+                                  ],
+                                )
+                              ),
+                              PopupMenuItem(
+                                onTap: _openWebPanel,
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.web),
+                                    SizedBox(width: 15),
+                                    Text("Open web panel")
+                                  ],
+                                )
+                              ),
+                            ]
+                          : [
+                            PopupMenuItem(
+                              onTap: () => {},
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.refresh_rounded),
+                                  SizedBox(width: 15),
+                                  Text("Try reconnect")
+                                ],
+                              )
+                            ),
+                          ]
                     )
                   ],
                 ),
               ),
-            )
+            ),
+            serversProvider.isServerConnected == true 
+              ? const SizedBox()
+              : SizedBox(
+                  height: height-130,
+                  child: const Center(
+                    child: Text(
+                      "Selected server is disconnected",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24
+                      ),
+                    ),
+                  ),
+                )
           ],
         ),
       );
@@ -141,7 +200,7 @@ class Home extends StatelessWidget {
             ),
             SizedBox(height: 50),
             Text(
-              "No server is connected",
+              "No server is selected",
               style: TextStyle(
                 color: Colors.grey,
                 fontWeight: FontWeight.bold,
@@ -150,7 +209,7 @@ class Home extends StatelessWidget {
             ),
             SizedBox(height: 30),
             Text(
-              "Go to Servers tab and connect to one",
+              "Go to Servers tab and select a connection",
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 18

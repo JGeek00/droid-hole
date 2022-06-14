@@ -124,7 +124,10 @@ class _ServersState extends State<Servers> {
             Icon(
               Icons.storage_rounded,
               color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == server.address
-                ? Colors.green : null,
+                ? serversProvider.isServerConnected == true 
+                  ? Colors.green
+                  : Colors.orange
+                : null,
             ),
             SizedBox(
               width: 25,
@@ -154,7 +157,10 @@ class _ServersState extends State<Servers> {
         return Icon(
           Icons.storage_rounded,
           color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == server.address
-            ? Colors.green : null,
+            ? serversProvider.isServerConnected == true 
+              ? Colors.green
+              : Colors.orange
+            : null,
         );
       }
     }
@@ -261,19 +267,25 @@ class _ServersState extends State<Servers> {
                     margin: const EdgeInsets.only(right: 12),
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: serversProvider.isServerConnected == true
+                        ? Colors.green
+                        : Colors.orange,
                       borderRadius: BorderRadius.circular(30)
                     ),
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(
-                          Icons.check,
+                          serversProvider.isServerConnected == true
+                            ? Icons.check
+                            : Icons.warning,
                           color: Colors.white,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Text(
-                          "Connected",
-                          style: TextStyle(
+                          serversProvider.isServerConnected == true
+                            ? "Connected"
+                            : "Selected but disconnected",
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold
                           ),

@@ -12,7 +12,7 @@ class ServersProvider with ChangeNotifier {
   Database? _dbInstance;
 
   Server? _connectedServer;
-  bool? _isDefaultServerConnected;
+  bool? _isServerConnected;
 
   List<Server> get getServersList {
     return _serversList;
@@ -20,6 +20,10 @@ class ServersProvider with ChangeNotifier {
 
   Server? get connectedServer {
     return _connectedServer;
+  }
+
+  bool? get isServerConnected {
+    return _isServerConnected;
   }
 
   Future<bool> addServer(Server server) async {
@@ -117,11 +121,11 @@ class ServersProvider with ChangeNotifier {
           final result = await login(serverObj);
           if (result['result'] == 'success') {
             serverObj.enabled = result['status'] == 'enabled' ? true : false;
-            _isDefaultServerConnected = true;
+            _isServerConnected = true;
             _connectedServer = serverObj;
           }
           else {
-            _isDefaultServerConnected = false;
+            _isServerConnected = false;
           }
         }
       }
@@ -212,6 +216,7 @@ class ServersProvider with ChangeNotifier {
 
   void setConnectedServer(Server server) {
     _connectedServer = server;
+    _isServerConnected = true;
     notifyListeners();
   }
 

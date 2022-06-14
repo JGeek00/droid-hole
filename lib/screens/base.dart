@@ -117,22 +117,23 @@ class _BaseState extends State<Base> {
         screenIcon: const Icon(Icons.home), 
         screenName: "Home", 
         screenWidget: const Home(),
-        screenFab: serversProvider.connectedServer != null
-          ? serversProvider.connectedServer!.enabled == true 
-            ? Fab(
-                icon: const Icon(Icons.verified_user_rounded), 
-                color: Colors.green, 
-                onTap: _openDisableBottomSheet
-              ) 
-            : Fab(
-                icon: const Icon(
-                  Icons.gpp_bad_rounded,
-                  size: 30,
-                ), 
-                color: Colors.red, 
-                onTap: _enableServer
-              )
-          : null
+        screenFab: serversProvider.isServerConnected == true 
+          && serversProvider.connectedServer != null
+            ? serversProvider.connectedServer!.enabled == true 
+              ? Fab(
+                  icon: const Icon(Icons.verified_user_rounded), 
+                  color: Colors.green, 
+                  onTap: _openDisableBottomSheet
+                ) 
+              : Fab(
+                  icon: const Icon(
+                    Icons.gpp_bad_rounded,
+                    size: 30,
+                  ), 
+                  color: Colors.red, 
+                  onTap: _enableServer
+                )
+            : null
       ),
       AppScreen(
         screenIcon: const Icon(Icons.storage_rounded), 
