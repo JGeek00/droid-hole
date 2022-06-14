@@ -17,7 +17,7 @@ void main() async {
 
   Map<String, dynamic> dbData = await loadDb();
   serversProvider.setDbInstance(dbData['dbInstance']);
-  serversProvider.saveFromDb(dbData['servers']);
+  await serversProvider.saveFromDb(dbData['servers']);
 
   PackageInfo appInfo = await loadAppInfo();
   configProvider.setAppInfo(appInfo);

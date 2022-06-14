@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:droid_hole/functions/conversions.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
 
+import 'package:droid_hole/functions/conversions.dart';
+import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/server.dart';
 
 class ServersProvider with ChangeNotifier {
@@ -11,6 +12,7 @@ class ServersProvider with ChangeNotifier {
   Database? _dbInstance;
 
   Server? _connectedServer;
+  bool? _isDefaultServerConnected;
 
   List<Server> get getServersList {
     return _serversList;
@@ -101,17 +103,27 @@ class ServersProvider with ChangeNotifier {
     }
   }
 
-  void saveFromDb(List<Map<String, dynamic>>? servers) {
+  Future saveFromDb(List<Map<String, dynamic>>? servers) async {
     if (servers != null) {
       for (var server in servers) {
-        _serversList.add(
-          Server(
-            address: server['address'], 
-            alias: server['alias'],
-            token: server['token'], 
-            defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
-          )
+        final Server serverObj = Server(
+          address: server['address'], 
+          alias: server['alias'],
+          token: server['token'], 
+          defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
         );
+        _serversList.add(serverObj);
+        if (convertFromIntToBool(server['isDefaultServer']) == true) {
+          final result = await login(serverObj);
+          if (result['result'] == 'success') {
+            serverObj.enabled = result['status'] == 'enabled' ? true : false;
+            _isDefaultServerConnected = true;
+            _connectedServer = serverObj;
+          }
+          else {
+            _isDefaultServerConnected = false;
+          }
+        }
       }
     }
     notifyListeners();
