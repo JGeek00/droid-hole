@@ -45,6 +45,26 @@ class ServersProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> editServer(Server server) async {
+    final result = await editServerDb(server);
+    if (result == true) {
+      List<Server> newServers = _serversList.map((s) {
+        if (s.address == server.address) {
+          return server;
+        }
+        else {
+          return s;
+        }
+      }).toList();
+      _serversList = newServers;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   Future<bool> removeServer(String serverAddress) async {
     final result = await removeFromDb(serverAddress);
     if (result == true) {
@@ -101,6 +121,19 @@ class ServersProvider with ChangeNotifier {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawInsert(
           'INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.token}", 0)',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> editServerDb(Server server) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE servers SET alias = "${server.alias}", token = "${server.token}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)} WHERE address = "${server.address}"',
         );
         return true;
       });

@@ -1,7 +1,7 @@
 class Server {
   final String address;
-  final String? alias;
-  final String token;
+  String? alias;
+  String token;
   bool defaultServer;
   bool? enabled;
 

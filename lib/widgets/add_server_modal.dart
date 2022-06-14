@@ -33,7 +33,7 @@ class _AddServerModalState extends State<AddServerModal> {
   String status = 'form';
   double height = 406;
   String errorMessage = 'Failed';
-
+  
   void _checkDataValid() {
     if (
       ipFieldController.text != '' &&
@@ -69,11 +69,9 @@ class _AddServerModalState extends State<AddServerModal> {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
-    void _done() async {
-      final exists = widget.server == null
-        ? await serversProvider.checkUrlExists(ipFieldController.text)
-        : {};
-      if (widget.server == null && exists['result'] == 'success' && exists['exists'] == true) {
+    void _connect() async {
+      final exists = await serversProvider.checkUrlExists(ipFieldController.text);
+      if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
           height = 428;
         });
@@ -83,7 +81,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
         });
       }
-      else if (widget.server == null && exists['result'] == 'fail') {
+      else if (exists['result'] == 'fail') {
         setState(() {
           errorUrl = null;
         });
@@ -116,36 +114,24 @@ class _AddServerModalState extends State<AddServerModal> {
           address: ipFieldController.text, 
           alias: aliasFieldController.text,
           token: tokenFieldController.text, 
-          defaultServer: defaultCheckbox,
+          defaultServer: false,
         );
         final result = await login(serverObj);
         if (result['result'] == 'success') {
-          final saved = await serversProvider.addServer(Server(
-            address: serverObj.address,
-            alias: serverObj.alias,
-            token: serverObj.token,
-            defaultServer: serverObj.defaultServer,
-            enabled: result['status'] == 'enabled' ? true : false
-          ));
-          if (saved == true) {
-            setState(() {
-              height = 200;
-              status = 'success';
-            });
-            await Future.delayed(const Duration(seconds: 3), (() async {
-              Navigator.pop(context);
-            }));
-          }
-          else {
-            setState(() {
-              errorMessage = "Server cannot be saved.";
-              status = 'failed';
-              height = 200;
-            });
-            await Future.delayed(const Duration(seconds: 3), (() async {
-              Navigator.pop(context);
-            }));
-          }
+          setState(() {
+            height = 200;
+            status = 'success';
+          });
+          await Future.delayed(const Duration(seconds: 3), (() {
+            Navigator.pop(context);
+            serversProvider.addServer(Server(
+              address: serverObj.address,
+              alias: serverObj.alias,
+              token: serverObj.token,
+              defaultServer: serverObj.defaultServer,
+              enabled: result['status'] == 'enabled' ? true : false
+            ));
+          }));
         }
         else {
           if (result['result'] == 'no_connection') {
@@ -178,13 +164,89 @@ class _AddServerModalState extends State<AddServerModal> {
         }
       }
     }
+
+    void _save() async {
+      setState(() {
+        errorUrl = null;
+      });
+      setState(() {
+        status = 'connecting';
+      });
+      final serverObj = Server(
+        address: ipFieldController.text, 
+        alias: aliasFieldController.text,
+        token: tokenFieldController.text, 
+        defaultServer: false,
+      );
+      final result = await login(serverObj);
+      if (result['result'] == 'success') {
+        setState(() {
+          height = 200;
+          status = 'success';
+        });
+        await Future.delayed(const Duration(seconds: 3), (() async {
+          Navigator.pop(context);
+          Server server = Server(
+            address: widget.server!.address, 
+            alias: aliasFieldController.text,
+            token: tokenFieldController.text, 
+            defaultServer: defaultCheckbox,
+          );
+          final result = await serversProvider.editServer(server);
+          if (result == true) {
+            setState(() {
+              height = 200;
+              status = 'success';
+            });
+          }
+          else {
+            setState(() {
+              errorMessage = "Server data couldn't be saved";
+              status = 'failed';
+              height = 200;
+            });
+          }
+        }));
+      }
+      else {
+        if (result['result'] == 'no_connection') {
+          setState(() {
+            errorMessage = "Failed. Check address.";
+          });
+        }
+        else if (result['result'] == 'token_invalid') {
+          setState(() {
+            errorMessage = "Failed. Check token.";
+          });
+        }
+        else {
+          errorMessage = "Failed. Unknown error.";
+        }
+        setState(() {
+          status = 'failed';
+          height = 200;
+        });
+        await Future.delayed(const Duration(seconds: 3), (() {
+          setState(() {
+            height = 406;
+          });
+        }));
+        await Future.delayed(const Duration(milliseconds: 300), (() => {
+          setState(() {
+            status = 'form';
+          })
+        }));
+      }
+    }
     
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     Widget _statusWidget() {
       switch (status) {
         case 'form':
-          return _form(_done);
+          return _form(
+            widget.server != null ? _save : _connect
+          );
          
         case 'connecting':
           return _connecting();
