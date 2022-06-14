@@ -88,6 +88,7 @@ class ServersProvider with ChangeNotifier {
           return s;
         }
         else {
+          s.defaultServer = false;
           return s;
         }
       }).toList();
