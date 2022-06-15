@@ -20,7 +20,11 @@ import 'package:droid_hole/models/app_screen.dart';
 import 'package:droid_hole/models/fab.dart';
 
 class Base extends StatefulWidget {
-  const Base({Key? key}) : super(key: key);
+  final int refreshTime;
+  const Base({
+    Key? key,
+    required this.refreshTime
+  }) : super(key: key);
 
   @override
   State<Base> createState() => _BaseState();
@@ -37,9 +41,20 @@ class _BaseState extends State<Base> {
     });
   }
 
+  int? previousRefreshTime;
   void update(ServersProvider serversProvider, int refreshTime) {
-    bool isRunning = false;
-    timer = Timer.periodic(Duration(seconds: refreshTime), (timer) async {
+    // Sets previousRefreshTime when is not initialized
+    previousRefreshTime ??= widget.refreshTime;
+
+    bool isRunning = false; // Prevents async request from being executed when last one is not completed yet
+    timer = Timer.periodic(Duration(seconds: widget.refreshTime), (timer) async {
+      // Restarts the timer when time changes
+      if (widget.refreshTime != previousRefreshTime) {
+        timer.cancel();
+        previousRefreshTime = widget.refreshTime;
+        update(serversProvider, widget.refreshTime);
+      }
+
       if (isRunning == false) {
         isRunning = true;
         if (serversProvider.connectedServer != null) {

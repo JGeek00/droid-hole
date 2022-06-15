@@ -92,13 +92,17 @@ class DroidHole extends StatefulWidget {
 class _DroidHoleState extends State<DroidHole> {
   @override
   Widget build(BuildContext context) {
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
+
     return MaterialApp(
       title: 'Droid Hole',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Base()
+      home: Base(
+        refreshTime: appConfigProvider.getAutoRefreshTime!,
+      )
     );
   }
 }
