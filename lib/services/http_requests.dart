@@ -12,7 +12,7 @@ Future<Response> httpClient(String url) {
   );
 }
 
-dynamic status(Server server) async {
+Future status(Server server) async {
   try {
     final response = await httpClient('${server.address}/admin/api.php');
     final body = jsonDecode(response.body);

@@ -1,4 +1,5 @@
-import 'package:droid_hole/functions/process_modal.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +12,10 @@ import 'package:droid_hole/widgets/add_server_modal.dart';
 import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
+import 'package:droid_hole/functions/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/models/app_screen.dart';
 import 'package:droid_hole/models/fab.dart';
 
@@ -26,15 +29,44 @@ class Base extends StatefulWidget {
 class _BaseState extends State<Base> {
   int selectedScreen = 0;
 
+  Timer? timer;
+
   void _changeScreen(screeenIndex) {
     setState(() {
       selectedScreen = screeenIndex;
     });
   }
 
+  void update(ServersProvider serversProvider, int refreshTime) {
+    bool isRunning = false;
+    timer = Timer.periodic(Duration(seconds: refreshTime), (timer) async {
+      if (isRunning == false) {
+        isRunning = true;
+        final statusResult = await status(serversProvider.connectedServer!);
+        if (statusResult['result'] == 'success') {
+          serversProvider.updateConnectedServerStatus(
+            statusResult['data']['status'] == 'enabled' ? true : false
+          );
+        }
+        isRunning = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
+
+    if (serversProvider.isServerConnected == true && timer == null) {
+      update(serversProvider, appConfigProvider.getAutoRefreshTime!);
+    }
+    else if (serversProvider.isServerConnected == true && timer != null && timer!.isActive == false) {
+      update(serversProvider, appConfigProvider.getAutoRefreshTime!);
+    }
+    else if (serversProvider.isServerConnected == false && timer != null) {
+      timer!.cancel();
+    }
 
     void _disableServer(int time) async {
       openProcessModal(context, 'Disabling server...');

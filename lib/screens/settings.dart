@@ -99,7 +99,27 @@ class Settings extends StatelessWidget {
         isScrollControlled: true,
         builder: (context) => AutoRefreshTimeModal(
           time: appConfigProvider.getAutoRefreshTime,
-          onChange: (time) => appConfigProvider.setAutoRefreshTime(time),
+          onChange: (time) async {
+            final result = await appConfigProvider.setAutoRefreshTime(time);
+            if (result == true) {
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Update time changed successfully."),
+                  backgroundColor: Colors.green,
+                )
+              );
+            }
+            else {
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Cannot change update time"),
+                  backgroundColor: Colors.red,
+                )
+              );
+            }
+          },
         ),
         backgroundColor: Colors.transparent,
         isDismissible: false,

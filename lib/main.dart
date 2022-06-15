@@ -18,6 +18,7 @@ void main() async {
   Map<String, dynamic> dbData = await loadDb();
   serversProvider.setDbInstance(dbData['dbInstance']);
   await serversProvider.saveFromDb(dbData['servers']);
+  configProvider.saveFromDb(dbData['dbInstance'], dbData['appConfig']);
 
   PackageInfo appInfo = await loadAppInfo();
   configProvider.setAppInfo(appInfo);
@@ -46,12 +47,15 @@ void main() async {
 
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
+  List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 1,
+    version: 2,
     onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, token TEXT, isDefaultServer NUMERIC)");
+      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC)");
+      await db.execute("INSERT INTO appConfig (autoRefreshTime) VALUES (5)");
     },
     onOpen: (Database db) async {
       await db.transaction((txn) async{
@@ -59,11 +63,17 @@ Future<Map<String, dynamic>> loadDb() async {
           'SELECT * FROM servers',
         );
       });
+      await db.transaction((txn) async{
+        appConfig = await txn.rawQuery(
+          'SELECT * FROM appConfig',
+        );
+      });
     }
   );
-  
+
   return {
     "servers": servers,
+    "appConfig": appConfig![0],
     "dbInstance": db,
   };
 }
