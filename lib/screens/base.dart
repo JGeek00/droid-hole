@@ -42,13 +42,18 @@ class _BaseState extends State<Base> {
     timer = Timer.periodic(Duration(seconds: refreshTime), (timer) async {
       if (isRunning == false) {
         isRunning = true;
-        final statusResult = await status(serversProvider.connectedServer!);
-        if (statusResult['result'] == 'success') {
-          serversProvider.updateConnectedServerStatus(
-            statusResult['data']['status'] == 'enabled' ? true : false
-          );
+        if (serversProvider.connectedServer != null) {
+          final statusResult = await status(serversProvider.connectedServer!);
+          if (statusResult['result'] == 'success') {
+            serversProvider.updateConnectedServerStatus(
+              statusResult['data']['status'] == 'enabled' ? true : false
+            );
+          }
+          isRunning = false;
         }
-        isRunning = false;
+        else {
+          timer.cancel();
+        }
       }
     });
   }
