@@ -102,71 +102,72 @@ class Home extends StatelessWidget {
       return SingleChildScrollView(
         child: Column(
           children: [
-            Material(
-              elevation: 5.0,
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(width: 40),
-                    Column(
-                      children: [
-                        Text(
-                          serversProvider.connectedServer!.alias 
-                            ?? serversProvider.connectedServer!.address,
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.black12
+                  )
+                )
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(width: 40),
+                  Column(
+                    children: [
+                      Text(
+                        serversProvider.connectedServer!.alias 
+                          ?? serversProvider.connectedServer!.address,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 10),
-                        _serverStatus()
-                      ],
-                    ),
-                    PopupMenuButton(
-                      itemBuilder: (context) => 
-                        serversProvider.isServerConnected == true 
-                          ? [
-                              PopupMenuItem(
-                                onTap: _refresh,
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.refresh),
-                                    SizedBox(width: 15),
-                                    Text("Refresh")
-                                  ],
-                                )
-                              ),
-                              PopupMenuItem(
-                                onTap: _openWebPanel,
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.web),
-                                    SizedBox(width: 15),
-                                    Text("Open web panel")
-                                  ],
-                                )
-                              ),
-                            ]
-                          : [
+                      ),
+                      const SizedBox(height: 10),
+                      _serverStatus()
+                    ],
+                  ),
+                  PopupMenuButton(
+                    itemBuilder: (context) => 
+                      serversProvider.isServerConnected == true 
+                        ? [
                             PopupMenuItem(
-                              onTap: () => {},
+                              onTap: _refresh,
                               child: Row(
                                 children: const [
-                                  Icon(Icons.refresh_rounded),
+                                  Icon(Icons.refresh),
                                   SizedBox(width: 15),
-                                  Text("Try reconnect")
+                                  Text("Refresh")
+                                ],
+                              )
+                            ),
+                            PopupMenuItem(
+                              onTap: _openWebPanel,
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.web),
+                                  SizedBox(width: 15),
+                                  Text("Open web panel")
                                 ],
                               )
                             ),
                           ]
-                    )
-                  ],
-                ),
+                        : [
+                          PopupMenuItem(
+                            onTap: () => {},
+                            child: Row(
+                              children: const [
+                                Icon(Icons.refresh_rounded),
+                                SizedBox(width: 15),
+                                Text("Try reconnect")
+                              ],
+                            )
+                          ),
+                        ]
+                  )
+                ],
               ),
             ),
             serversProvider.isServerConnected == true 
