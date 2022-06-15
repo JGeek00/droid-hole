@@ -221,8 +221,10 @@ class ServersProvider with ChangeNotifier {
   }
 
   void updateConnectedServerStatus(bool enabled) {
-    _connectedServer!.enabled = enabled;
-    notifyListeners();
+    if (_connectedServer != null) {
+      _connectedServer!.enabled = enabled;
+      notifyListeners();
+    }
   }
 
   void setDbInstance(Database db) {

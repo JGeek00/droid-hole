@@ -21,19 +21,40 @@ class _ServersState extends State<Servers> {
   List<int> expandedCards = [];
   List<int> showButtons = [];
 
+  List<ExpandableController> expandableControllerList = [];
+
+  void _expandOrContract(int index) async {
+    expandableControllerList[index].expanded = !expandableControllerList[index].expanded;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final serversProvider = Provider.of<ServersProvider>(context);
+    for (var i = 0; i < serversProvider.getServersList.length; i++) {
+      expandableControllerList.add(ExpandableController());
+    }
+
+    return ServersList(
+      controllers: expandableControllerList,
+      onChange: _expandOrContract
+    );    
+  }
+}
+
+class ServersList extends StatelessWidget {
+  final List<ExpandableController> controllers;
+  final Function(int) onChange;
+
+  const ServersList({
+    Key? key,
+    required this.controllers,
+    required this.onChange
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     List<Server> servers = serversProvider.getServersList;
-
-    List<ExpandableController> expandableControllerList = [];
-    for (var i = 0; i < servers.length; i++) {
-      expandableControllerList.add(ExpandableController());
-    }
-
-    void _expandOrContract(int index) async {
-      expandableControllerList[index].expanded = !expandableControllerList[index].expanded;
-    }
 
     final width = MediaQuery.of(context).size.width;
 
@@ -203,7 +224,7 @@ class _ServersState extends State<Servers> {
             ),
           ),
           IconButton(
-            onPressed: () => _expandOrContract(index),
+            onPressed: () => onChange(index),
             icon: const Icon(Icons.arrow_drop_down),
             splashRadius: 20,
           ),
@@ -353,13 +374,13 @@ class _ServersState extends State<Servers> {
                   )
                 ),
                 child: ExpandableNotifier(
-                  controller: expandableControllerList[index],
+                  controller: controllers[index],
                   child: Column(
                     children: [
                       Expandable(
                         collapsed: Material(
                           child: InkWell(
-                            onTap: () => _expandOrContract(index),
+                            onTap: () => onChange(index),
                             child: Padding(
                               padding: const EdgeInsets.all(10),
                               child: _topRow(servers[index], index),
@@ -368,7 +389,7 @@ class _ServersState extends State<Servers> {
                         ),
                         expanded: Material(
                           child: InkWell(
-                            onTap: () => _expandOrContract(index),
+                            onTap: () => onChange(index),
                             child: Padding(
                               padding: const EdgeInsets.all(10),
                               child: Column(
