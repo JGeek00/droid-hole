@@ -3,6 +3,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/widgets/reset_modal.dart';
+import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
 import 'package:droid_hole/functions/process_modal.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -92,6 +93,20 @@ class Settings extends StatelessWidget {
       );
     }
 
+    void _openAutoRefreshTimeModal() {
+      showModalBottomSheet(
+        context: context, 
+        isScrollControlled: true,
+        builder: (context) => AutoRefreshTimeModal(
+          time: appConfigProvider.getAutoRefreshTime,
+          onChange: (time) => appConfigProvider.setAutoRefreshTime(time),
+        ),
+        backgroundColor: Colors.transparent,
+        isDismissible: false,
+        enableDrag: false,
+      );
+    }
+
     return Column(
       children: [
         Container(
@@ -152,6 +167,12 @@ class Settings extends StatelessWidget {
                         ],
                       ),
                       _listItem(
+                        leadingIcon: Icons.update,
+                        label: "Auto refresh time", 
+                        description: "${appConfigProvider.getAutoRefreshTime.toString()} seconds",
+                        onTap: _openAutoRefreshTimeModal
+                      ),
+                      _listItem(
                         leadingIcon: Icons.delete,
                         label: "Reset application", 
                         description: "Deletes all application data",
@@ -190,7 +211,11 @@ class Settings extends StatelessWidget {
                         _listItem(
                           label: "App version", 
                           description: appConfigProvider.getAppInfo!.version
-                        )
+                        ),
+                        _listItem(
+                          label: "Created by", 
+                          description: "JGeek00"
+                        ),
                     ],
                   ),
                 ),
