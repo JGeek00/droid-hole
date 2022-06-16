@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jgeek00.droid_hole">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="DroidHole"
         android:name="${applicationName}"

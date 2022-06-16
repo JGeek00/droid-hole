@@ -173,6 +173,9 @@ class _QrModalState extends State<QrModal> {
     }
       
     return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Container(
         height: 441,
         padding: const EdgeInsets.only(

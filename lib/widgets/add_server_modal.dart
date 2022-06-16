@@ -154,9 +154,14 @@ class _AddServerModalState extends State<AddServerModal> {
           }));
         }
         else {
-          if (result['result'] == 'no_connection') {
+          if (result['result'] == 'socket') {
             setState(() {
               errorMessage = "Failed. Check address.";
+            });
+          }
+          if (result['result'] == 'timeout') {
+            setState(() {
+              errorMessage = "Failed. Connection timeout.";
             });
           }
           else if (result['result'] == 'token_invalid') {

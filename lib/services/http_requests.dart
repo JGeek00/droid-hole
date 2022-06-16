@@ -23,9 +23,9 @@ Future status(Server server) async {
       };
     }
   } on SocketException {
-    return {'result': 'no_connection'};
+    return {'result': 'socket'};
   } on TimeoutException {
-    return {'result': 'no_connection'};
+    return {'result': 'timeout'};
   }
   catch (e) {
     return {'result': 'error'};
