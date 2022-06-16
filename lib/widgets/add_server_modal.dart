@@ -226,7 +226,7 @@ class _AddServerModalState extends State<AddServerModal> {
           }
           else {
             setState(() {
-              errorMessage = "Server data couldn't be saved";
+              errorMessage = "Connection data couldn't be saved";
               status = 'failed';
               height = 200;
             });
@@ -378,7 +378,7 @@ class _AddServerModalState extends State<AddServerModal> {
     return Column(
       children: [
         const Text(
-          "Add server",
+          "Add server connection",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -467,7 +467,7 @@ class _AddServerModalState extends State<AddServerModal> {
                         })
                       }) : null,
                       child: Text(
-                        "Default server",
+                        "Default connection",
                         style: TextStyle(
                           color: widget.server != null 
                             ? Colors.grey
@@ -510,7 +510,7 @@ class _AddServerModalState extends State<AddServerModal> {
                       ),
                     ), 
                     label: Text(
-                      widget.server != null ? "Save" : "Login"
+                      widget.server != null ? "Save" : "Connect"
                     ),
                     icon: Icon(
                       widget.server != null ? Icons.save : Icons.login

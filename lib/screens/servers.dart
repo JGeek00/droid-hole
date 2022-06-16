@@ -121,7 +121,7 @@ class ServersList extends StatelessWidget {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Server set as default successfully."),
+            content: Text("Connection set as default successfully."),
             backgroundColor: Colors.green,
           )
         );
@@ -130,7 +130,7 @@ class ServersList extends StatelessWidget {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Server could not be set as default."),
+            content: Text("Connection could not be set as default."),
             backgroundColor: Colors.red,
           )
         );
@@ -254,8 +254,8 @@ class ServersList extends StatelessWidget {
                         const SizedBox(width: 15),
                         Text(
                           server.defaultServer == true 
-                            ? "This is the default server"
-                            : "Set as default server"
+                            ? "Default connection"
+                            : "Set as default connection"
                         )
                       ],
                     )
@@ -410,7 +410,7 @@ class ServersList extends StatelessWidget {
                 height: double.maxFinite,
                 child: Center(
                   child: Text(
-                    "No saved servers",
+                    "No saved connections",
                     style: TextStyle(
                       fontSize: 24,
                       color: Colors.grey,
