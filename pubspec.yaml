@@ -41,6 +41,7 @@ dependencies:
   flutter_web_browser: ^0.17.1
   package_info_plus: ^1.4.2
   flutter_phoenix: ^1.0.0
+  flutter_displaymode: ^0.3.2
 
 dev_dependencies:
   flutter_test:

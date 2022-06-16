@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -90,6 +92,31 @@ class DroidHole extends StatefulWidget {
 }
 
 class _DroidHoleState extends State<DroidHole> {
+  List<DisplayMode> modes = <DisplayMode>[];
+  DisplayMode? active;
+  DisplayMode? preferred;
+
+  Future<void> displayMode() async {
+    try {
+      modes = await FlutterDisplayMode.supported;
+    } on PlatformException catch (_) {
+      // --- //
+    }
+
+    preferred = await FlutterDisplayMode.preferred;
+    active = await FlutterDisplayMode.active;
+    await FlutterDisplayMode.setHighRefreshRate();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      displayMode();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
