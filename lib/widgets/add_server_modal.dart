@@ -75,6 +75,7 @@ class _AddServerModalState extends State<AddServerModal> {
 
     void _onQrScanned(String value) {
       tokenFieldController.text = value;
+      _checkDataValid();
     }
 
     void _openQrModal() {
