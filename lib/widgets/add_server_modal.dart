@@ -148,7 +148,7 @@ class _AddServerModalState extends State<AddServerModal> {
               address: serverObj.address,
               alias: serverObj.alias,
               token: serverObj.token,
-              defaultServer: serverObj.defaultServer,
+              defaultServer: defaultCheckbox,
               enabled: result['status'] == 'enabled' ? true : false
             ));
           }));
