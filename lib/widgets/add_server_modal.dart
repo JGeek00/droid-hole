@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/qr_modal.dart';
+
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/server.dart';
@@ -68,6 +70,23 @@ class _AddServerModalState extends State<AddServerModal> {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+
+    final width = MediaQuery.of(context).size.width;
+
+    void _onQrScanned(String value) {
+      tokenFieldController.text = value;
+    }
+
+    void _openQrModal() {
+      showDialog(
+        context: context, 
+        builder: (context) => QrModal(
+          onQrScanned: _onQrScanned,
+        ),
+        barrierDismissible: false,
+        useSafeArea: true,
+      );
+    }
 
     void _connect() async {
       final exists = await serversProvider.checkUrlExists(ipFieldController.text);
@@ -245,7 +264,9 @@ class _AddServerModalState extends State<AddServerModal> {
       switch (status) {
         case 'form':
           return _form(
-            widget.server != null ? _save : _connect
+            widget.server != null ? _save : _connect,
+            width,
+            _openQrModal
           );
          
         case 'connecting':
@@ -347,7 +368,7 @@ class _AddServerModalState extends State<AddServerModal> {
     );
   }
 
-  Widget _form(Function done) {
+  Widget _form(Function done, double width, Function openQrModal) {
     return Column(
       children: [
         const Text(
@@ -394,20 +415,30 @@ class _AddServerModalState extends State<AddServerModal> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: TextField(
-                    controller: tokenFieldController,
-                    onChanged: (value) => _checkDataValid(),
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10)
-                        )
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      width: width - 118,
+                      child: TextField(
+                        controller: tokenFieldController,
+                        onChanged: (value) => _checkDataValid(),
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10)
+                            )
+                          ),
+                          labelText: 'Token',
+                        ),
                       ),
-                      labelText: 'Token',
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    IconButton(
+                      onPressed: () => openQrModal(), 
+                      icon: const Icon(Icons.qr_code)
+                    )
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
