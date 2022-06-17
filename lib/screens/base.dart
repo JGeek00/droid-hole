@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:droid_hole/screens/lists.dart';
+import 'package:droid_hole/screens/statistics.dart';
+import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -164,47 +167,63 @@ class _BaseState extends State<Base> {
       }
     }
 
+    void _enableDisableServer() {
+      if (
+        serversProvider.isServerConnected == true &&
+        serversProvider.connectedServer != null
+      ) {
+        if (serversProvider.connectedServer?.enabled == true) {
+          _openDisableBottomSheet();
+        }
+        else {
+          _enableServer();
+        }
+      }
+    }
+
     List<AppScreen> appScreens = [
       AppScreen(
         screenIcon: const Icon(Icons.home), 
         screenName: "Home", 
         screenWidget: const Home(),
+        hasAppBar: true,
         screenFab: serversProvider.isServerConnected == true 
           && serversProvider.connectedServer != null
-            ? serversProvider.connectedServer!.enabled == true 
-              ? Fab(
-                  icon: const Icon(Icons.verified_user_rounded), 
-                  color: Colors.green, 
-                  onTap: _openDisableBottomSheet
-                ) 
-              : Fab(
-                  icon: const Icon(
-                    Icons.gpp_bad_rounded,
-                    size: 30,
-                  ), 
-                  color: Colors.red, 
-                  onTap: _enableServer
-                )
+            ? Fab(
+                icon: const Icon(Icons.shield_rounded), 
+                color: Theme.of(context).primaryColor,
+                onTap: _enableDisableServer
+              ) 
             : null
       ),
-      AppScreen(
-        screenIcon: const Icon(Icons.storage_rounded), 
-        screenName: "Servers", 
-        screenWidget: const Servers(),
-        screenFab: Fab(
-          icon: const Icon(Icons.add), 
-          color: Theme.of(context).primaryColor, 
-          onTap: _openAddServerBottomSheet
-        )
+      const AppScreen(
+        screenIcon: Icon(Icons.analytics_rounded), 
+        screenName: "Statistics", 
+        screenWidget: Statistics(),
+        hasAppBar: true
+      ),
+      const AppScreen(
+        screenIcon: Icon(Icons.list_alt_rounded), 
+        screenName: "Lists", 
+        screenWidget: Lists(),
+        hasAppBar: true
       ),
       const AppScreen(
         screenIcon: Icon(Icons.settings), 
         screenName: "Settings", 
-        screenWidget: Settings()
+        screenWidget: Settings(),
+        hasAppBar: false
       ),
     ];
 
     return Scaffold(
+      appBar: appScreens[selectedScreen].hasAppBar == true &&
+        serversProvider.connectedServer != null
+        ? const PreferredSize(
+            preferredSize: Size(double.maxFinite, 84),
+            child: TopBar(),
+          )
+        : null,
       bottomNavigationBar: BottomNavBar(
         screens: appScreens,
         selectedScreen: selectedScreen,

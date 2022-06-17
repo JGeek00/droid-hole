@@ -18,9 +18,10 @@ class BottomNavBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: selectedScreen,
       onTap: onChange,
+      type: BottomNavigationBarType.fixed,
       items: screens.map((screen) => BottomNavigationBarItem(
-        icon: screen.screenIcon,
-        label: screen.screenName
+          icon: screen.screenIcon,
+          label: screen.screenName
         )
       ).toList(),
     );
