@@ -99,63 +99,56 @@ class Home extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      appBar: const PreferredSize(
-            preferredSize: Size(double.maxFinite, 84),
-            child: TopBar(),
-          ),
-      body: serversProvider.connectedServer != null 
-        ? SingleChildScrollView(
-            child: Column(
-              children: [
-  
-                serversProvider.isServerConnected == true 
-                  ? const SizedBox()
-                  : SizedBox(
-                      height: height-130,
-                      child: const Center(
-                        child: Text(
-                          "Selected server is disconnected",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24
-                          ),
-                        ),
+  return serversProvider.connectedServer != null 
+    ? SingleChildScrollView(
+        child: Column(
+          children: [
+            serversProvider.isServerConnected == true 
+              ? const SizedBox()
+              : SizedBox(
+                  height: height-130,
+                  child: const Center(
+                    child: Text(
+                      "Selected server is disconnected",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24
                       ),
-                    )
-              ],
-            ),
-          )
-        : Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  Icons.link_off,
-                  size: 70,
-                  color: Colors.grey,
-                ),
-                SizedBox(height: 50),
-                Text(
-                  "No server is selected",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
-                  ),
-                ),
-                SizedBox(height: 30),
-                Text(
-                  "Go to Servers tab and select a connection",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 18
+                    ),
                   ),
                 )
-              ],
+          ],
+        ),
+      )
+    : Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.link_off,
+              size: 70,
+              color: Colors.grey,
             ),
-          )
-    );
+            SizedBox(height: 50),
+            Text(
+              "No server is selected",
+              style: TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+                fontSize: 24
+              ),
+            ),
+            SizedBox(height: 30),
+            Text(
+              "Go to Servers tab and select a connection",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 18
+              ),
+            )
+          ],
+        ),
+      );
   }
 }

@@ -1,18 +1,23 @@
 import 'dart:async';
 
-import 'package:droid_hole/screens/lists.dart';
-import 'package:droid_hole/screens/statistics.dart';
-import 'package:droid_hole/widgets/top_bar.dart';
+import 'package:droid_hole/models/global_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/screens/home.dart';
 import 'package:droid_hole/screens/settings.dart';
+import 'package:droid_hole/screens/statistics.dart';
+import 'package:droid_hole/screens/lists.dart';
 
-import 'package:droid_hole/widgets/add_server_modal.dart';
+import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
+
+import 'package:droid_hole/routers/home_router.dart';
+import 'package:droid_hole/routers/lists_router.dart';
+import 'package:droid_hole/routers/settings_router.dart';
+import 'package:droid_hole/routers/statistics_router.dart';
 
 import 'package:droid_hole/functions/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
@@ -36,6 +41,25 @@ class _BaseState extends State<Base> {
   int selectedScreen = 0;
 
   Timer? timer;
+
+  GlobalKey<NavigatorState> _getRouterKey(int index) {
+    switch (index) {
+      case 0:
+        return GlobalKeys.homeRouterKey;
+
+      case 1:
+        return GlobalKeys.statisticsRouterKey;
+
+      case 2:
+        return GlobalKeys.listsRouterKey;
+
+      case 3:
+        return GlobalKeys.settingsRouterKey;
+
+      default:
+        return GlobalKey();
+    }
+  }
 
   void _changeScreen(screeenIndex) {
     setState(() {
@@ -205,12 +229,11 @@ class _BaseState extends State<Base> {
     ];
 
     return Scaffold(
-      appBar: appScreens[selectedScreen].hasAppBar == true &&
-        serversProvider.connectedServer != null
+      appBar: appScreens[selectedScreen].hasAppBar == true
         ? const PreferredSize(
             preferredSize: Size(double.maxFinite, 84),
             child: TopBar(),
-          )
+          ) 
         : null,
       bottomNavigationBar: BottomNavBar(
         screens: appScreens,
@@ -219,7 +242,15 @@ class _BaseState extends State<Base> {
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,      
-        child: appScreens[selectedScreen].screenWidget,
+        child: IndexedStack(
+          index: selectedScreen,
+          children: const [
+            HomeRouter(),
+            StatisticsRouter(),
+            ListsRouter(),
+            SettingsRouter(),
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: appScreens[selectedScreen].screenFab != null 

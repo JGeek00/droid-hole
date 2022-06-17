@@ -198,11 +198,7 @@ class Settings extends StatelessWidget {
                             : "Not connected"
                           : "Not selected",
                         onTap: () => {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ServersPage()
-                            )
-                          )
+                          Navigator.of(context).pushNamed('/servers')
                         }
                       ),
                       _listItem(
