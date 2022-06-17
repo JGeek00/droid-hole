@@ -1,3 +1,4 @@
+import 'package:droid_hole/widgets/servers_list_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,18 @@ class TopBar extends StatelessWidget {
       }
     }
 
+    void _changeServer() {
+      Future.delayed(const Duration(seconds: 0), () => {
+        showModalBottomSheet(
+          context: context, 
+          builder: (context) => const ServersListModal(),
+          backgroundColor: Colors.transparent,
+          isDismissible: false,
+          enableDrag: false
+        )
+      });
+    }
+
     return Container(
       padding: const EdgeInsets.only(
         top: 10,
@@ -68,75 +81,114 @@ class TopBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            children: [
-              Icon(
-                serversProvider.connectedServer!.enabled == true 
-                  ? Icons.verified_user_rounded
-                  : Icons.gpp_bad_rounded,
-                size: 35,
-                color: serversProvider.connectedServer!.enabled == true
-                  ? Colors.green
-                  : Colors.red,
-              ),
-              const SizedBox(width: 20),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    serversProvider.connectedServer!.alias!,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25
-                    ),
+            children: serversProvider.connectedServer != null 
+              ? [
+                  Icon(
+                    serversProvider.connectedServer!.enabled == true 
+                      ? Icons.verified_user_rounded
+                      : Icons.gpp_bad_rounded,
+                    size: 35,
+                    color: serversProvider.connectedServer!.enabled == true
+                      ? Colors.green
+                      : Colors.red,
                   ),
-                  Text(
-                    serversProvider.connectedServer!.address,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey
-                    ),
-                  )
-                ],
-              ),
-            ],
+                  const SizedBox(width: 20),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        serversProvider.connectedServer!.alias!,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25
+                        ),
+                      ),
+                      Text(
+                        serversProvider.connectedServer!.address,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey
+                        ),
+                      )
+                    ],
+                  ),
+                ]
+              : const [
+                Icon(
+                  Icons.shield,
+                  color: Colors.grey,
+                  size: 35,
+                ),
+                SizedBox(width: 20),
+                Text(
+                  "No server is selected",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25
+                  ),
+                ),
+              ]
           ),
           Padding(
             padding: const EdgeInsets.only(top: 6),
             child: PopupMenuButton(
               splashRadius: 20,
               itemBuilder: (context) => 
-                serversProvider.isServerConnected == true 
-                  ? [
+                serversProvider.connectedServer != null 
+                  ? serversProvider.isServerConnected == true 
+                    ? [
+                        PopupMenuItem(
+                          onTap: _refresh,
+                          child: Row(
+                            children: const [
+                              Icon(Icons.refresh),
+                              SizedBox(width: 15),
+                              Text("Refresh")
+                            ],
+                          )
+                        ),
+                        PopupMenuItem(
+                          onTap: _openWebPanel,
+                          child: Row(
+                            children: const [
+                              Icon(Icons.web),
+                              SizedBox(width: 15),
+                              Text("Open web panel")
+                            ],
+                          )
+                        ),
+                        PopupMenuItem(
+                          onTap: _changeServer,
+                          child: Row(
+                            children: const [
+                              Icon(Icons.storage_rounded),
+                              SizedBox(width: 15),
+                              Text("Change Server")
+                            ],
+                          )
+                        ),
+                      ]
+                    : [
                       PopupMenuItem(
-                        onTap: _refresh,
+                        onTap: () => {},
                         child: Row(
                           children: const [
-                            Icon(Icons.refresh),
+                            Icon(Icons.refresh_rounded),
                             SizedBox(width: 15),
-                            Text("Refresh")
-                          ],
-                        )
-                      ),
-                      PopupMenuItem(
-                        onTap: _openWebPanel,
-                        child: Row(
-                          children: const [
-                            Icon(Icons.web),
-                            SizedBox(width: 15),
-                            Text("Open web panel")
+                            Text("Try reconnect")
                           ],
                         )
                       ),
                     ]
                   : [
                     PopupMenuItem(
-                      onTap: () => {},
+                      onTap: _changeServer,
                       child: Row(
                         children: const [
-                          Icon(Icons.refresh_rounded),
+                          Icon(Icons.storage_rounded),
                           SizedBox(width: 15),
-                          Text("Try reconnect")
+                          Text("Select Server")
                         ],
                       )
                     ),

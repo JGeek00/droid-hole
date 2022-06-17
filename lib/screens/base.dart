@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/screens/home.dart';
-import 'package:droid_hole/screens/servers.dart';
 import 'package:droid_hole/screens/settings.dart';
 
 import 'package:droid_hole/widgets/add_server_modal.dart';
@@ -130,17 +129,6 @@ class _BaseState extends State<Base> {
       );
     }
 
-    void _openAddServerBottomSheet() {
-      showModalBottomSheet(
-        context: context, 
-        isScrollControlled: true,
-        builder: (context) => const AddServerModal(),
-        backgroundColor: Colors.transparent,
-        isDismissible: false,
-        enableDrag: false,
-      );
-    }
-
     void _enableServer() async {
       openProcessModal(context, 'Enabling server...');
       final result = await enableServer(serversProvider.connectedServer!);
@@ -231,7 +219,7 @@ class _BaseState extends State<Base> {
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,      
-        child: SafeArea(child: appScreens[selectedScreen].screenWidget),
+        child: appScreens[selectedScreen].screenWidget,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: appScreens[selectedScreen].screenFab != null 

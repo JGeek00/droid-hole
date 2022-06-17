@@ -1,5 +1,6 @@
 import 'package:droid_hole/functions/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
+import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
@@ -98,60 +99,63 @@ class Home extends StatelessWidget {
       );
     }
 
-    if (serversProvider.connectedServer != null) {
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            
-            serversProvider.isServerConnected == true 
-              ? const SizedBox()
-              : SizedBox(
-                  height: height-130,
-                  child: const Center(
-                    child: Text(
-                      "Selected server is disconnected",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24
+    return Scaffold(
+      appBar: const PreferredSize(
+            preferredSize: Size(double.maxFinite, 84),
+            child: TopBar(),
+          ),
+      body: serversProvider.connectedServer != null 
+        ? SingleChildScrollView(
+            child: Column(
+              children: [
+  
+                serversProvider.isServerConnected == true 
+                  ? const SizedBox()
+                  : SizedBox(
+                      height: height-130,
+                      child: const Center(
+                        child: Text(
+                          "Selected server is disconnected",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24
+                          ),
+                        ),
                       ),
-                    ),
+                    )
+              ],
+            ),
+          )
+        : Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.link_off,
+                  size: 70,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 50),
+                Text(
+                  "No server is selected",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24
+                  ),
+                ),
+                SizedBox(height: 30),
+                Text(
+                  "Go to Servers tab and select a connection",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 18
                   ),
                 )
-          ],
-        ),
-      );
-    }
-    else {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.link_off,
-              size: 70,
-              color: Colors.grey,
+              ],
             ),
-            SizedBox(height: 50),
-            Text(
-              "No server is selected",
-              style: TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.bold,
-                fontSize: 24
-              ),
-            ),
-            SizedBox(height: 30),
-            Text(
-              "Go to Servers tab and select a connection",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 18
-              ),
-            )
-          ],
-        ),
-      );
-    }
+          )
+    );
   }
 }

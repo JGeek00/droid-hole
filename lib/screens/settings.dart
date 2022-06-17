@@ -1,3 +1,4 @@
+import 'package:droid_hole/screens/servers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
@@ -185,6 +186,24 @@ class Settings extends StatelessWidget {
                             ),
                           ),
                         ],
+                      ),
+                      _listItem(
+                        leadingIcon: Icons.storage_rounded,
+                        label: "Servers", 
+                        description: serversProvider.connectedServer != null 
+                          ? serversProvider.isServerConnected == true
+                            ? serversProvider.connectedServer!.alias != null
+                              ? "Connected to ${serversProvider.connectedServer!.alias}"
+                              : "Connected to ${serversProvider.connectedServer!.address}"
+                            : "Not connected"
+                          : "Not selected",
+                        onTap: () => {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ServersPage()
+                            )
+                          )
+                        }
                       ),
                       _listItem(
                         leadingIcon: Icons.update,
