@@ -1,18 +1,25 @@
 import 'dart:async';
 
+import 'package:droid_hole/models/global_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/screens/home.dart';
-import 'package:droid_hole/screens/servers.dart';
 import 'package:droid_hole/screens/settings.dart';
+import 'package:droid_hole/screens/statistics.dart';
+import 'package:droid_hole/screens/lists.dart';
 
-import 'package:droid_hole/widgets/add_server_modal.dart';
+import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
-import 'package:droid_hole/functions/process_modal.dart';
+import 'package:droid_hole/routers/home_router.dart';
+import 'package:droid_hole/routers/lists_router.dart';
+import 'package:droid_hole/routers/settings_router.dart';
+import 'package:droid_hole/routers/statistics_router.dart';
+
+import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -34,6 +41,25 @@ class _BaseState extends State<Base> {
   int selectedScreen = 0;
 
   Timer? timer;
+
+  GlobalKey<NavigatorState> _getRouterKey(int index) {
+    switch (index) {
+      case 0:
+        return GlobalKeys.homeRouterKey;
+
+      case 1:
+        return GlobalKeys.statisticsRouterKey;
+
+      case 2:
+        return GlobalKeys.listsRouterKey;
+
+      case 3:
+        return GlobalKeys.settingsRouterKey;
+
+      default:
+        return GlobalKey();
+    }
+  }
 
   void _changeScreen(screeenIndex) {
     setState(() {
@@ -89,10 +115,10 @@ class _BaseState extends State<Base> {
     }
 
     void _disableServer(int time) async {
-      openProcessModal(context, 'Disabling server...');
+      final ProcessModal process = ProcessModal(context: context);
+      process.open('Disabling server...');
       final result = await disableServer(serversProvider.connectedServer!, time);
-      // ignore: use_build_context_synchronously
-      closeProcessModal(context);
+      process.close();
       if (result['result'] == 'success') {
         serversProvider.updateConnectedServerStatus(false);
         // ignore: use_build_context_synchronously
@@ -127,22 +153,11 @@ class _BaseState extends State<Base> {
       );
     }
 
-    void _openAddServerBottomSheet() {
-      showModalBottomSheet(
-        context: context, 
-        isScrollControlled: true,
-        builder: (context) => const AddServerModal(),
-        backgroundColor: Colors.transparent,
-        isDismissible: false,
-        enableDrag: false,
-      );
-    }
-
     void _enableServer() async {
-      openProcessModal(context, 'Enabling server...');
+      final ProcessModal process = ProcessModal(context: context);
+      process.open('Enabling server...');
       final result = await enableServer(serversProvider.connectedServer!);
-      // ignore: use_build_context_synchronously
-      closeProcessModal(context);
+      process.close();
       if (result['result'] == 'success') {
         serversProvider.updateConnectedServerStatus(true);
         // ignore: use_build_context_synchronously
@@ -164,64 +179,39 @@ class _BaseState extends State<Base> {
       }
     }
 
-    List<AppScreen> appScreens = [
-      AppScreen(
-        screenIcon: const Icon(Icons.home), 
-        screenName: "Home", 
-        screenWidget: const Home(),
-        screenFab: serversProvider.isServerConnected == true 
-          && serversProvider.connectedServer != null
-            ? serversProvider.connectedServer!.enabled == true 
-              ? Fab(
-                  icon: const Icon(Icons.verified_user_rounded), 
-                  color: Colors.green, 
-                  onTap: _openDisableBottomSheet
-                ) 
-              : Fab(
-                  icon: const Icon(
-                    Icons.gpp_bad_rounded,
-                    size: 30,
-                  ), 
-                  color: Colors.red, 
-                  onTap: _enableServer
-                )
-            : null
-      ),
-      AppScreen(
-        screenIcon: const Icon(Icons.storage_rounded), 
-        screenName: "Servers", 
-        screenWidget: const Servers(),
-        screenFab: Fab(
-          icon: const Icon(Icons.add), 
-          color: Theme.of(context).primaryColor, 
-          onTap: _openAddServerBottomSheet
-        )
-      ),
-      const AppScreen(
-        screenIcon: Icon(Icons.settings), 
-        screenName: "Settings", 
-        screenWidget: Settings()
-      ),
-    ];
+    void _enableDisableServer() {
+      if (
+        serversProvider.isServerConnected == true &&
+        serversProvider.connectedServer != null
+      ) {
+        if (serversProvider.connectedServer?.enabled == true) {
+          _openDisableBottomSheet();
+        }
+        else {
+          _enableServer();
+        }
+      }
+    }
 
     return Scaffold(
       bottomNavigationBar: BottomNavBar(
-        screens: appScreens,
         selectedScreen: selectedScreen,
-        onChange: _changeScreen,
+        onChange: (value) => {
+          setState((() => selectedScreen = value))
+        },
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,      
-        child: SafeArea(child: appScreens[selectedScreen].screenWidget),
+        child: IndexedStack(
+          index: selectedScreen,
+          children: const [
+            HomeRouter(),
+            StatisticsRouter(),
+            ListsRouter(),
+            SettingsRouter(),
+          ],
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: appScreens[selectedScreen].screenFab != null 
-        ? FloatingActionButton(
-            onPressed: appScreens[selectedScreen].screenFab?.onTap,
-            backgroundColor: appScreens[selectedScreen].screenFab?.color,
-            child: appScreens[selectedScreen].screenFab?.icon,
-          )
-        : null,
     );
   }
 }

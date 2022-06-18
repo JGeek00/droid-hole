@@ -26,9 +26,10 @@ void main() async {
   configProvider.setAppInfo(appInfo);
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: const Color.fromRGBO(250, 250, 250, 1),
     statusBarColor: Colors.transparent, 
+    statusBarIconBrightness: Brightness.dark,
     statusBarBrightness: Brightness.dark,
+    systemNavigationBarColor: const Color.fromRGBO(250, 250, 250, 1),
     systemNavigationBarDividerColor: Colors.black.withOpacity(0.05),
     systemNavigationBarIconBrightness: Brightness.dark
   ));
