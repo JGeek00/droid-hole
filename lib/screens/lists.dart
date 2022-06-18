@@ -9,7 +9,7 @@ class Lists extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const PreferredSize(
-        preferredSize: Size(double.maxFinite, 84),
+        preferredSize: Size(double.maxFinite, 90),
         child: TopBar()
       ),
       body: Container(

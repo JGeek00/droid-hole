@@ -63,12 +63,7 @@ class TopBar extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.only(
-        top: 10,
-        left: 20,
-        right: 20,
-        bottom: 20
-      ),
+      padding: const EdgeInsets.all(20),
       margin: EdgeInsets.only(top: statusBarHeight),
       decoration: const BoxDecoration(
         border: Border(
@@ -130,70 +125,67 @@ class TopBar extends StatelessWidget {
                 ),
               ]
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: PopupMenuButton(
-              splashRadius: 20,
-              itemBuilder: (context) => 
-                serversProvider.connectedServer != null 
-                  ? serversProvider.isServerConnected == true 
-                    ? [
-                        PopupMenuItem(
-                          onTap: _refresh,
-                          child: Row(
-                            children: const [
-                              Icon(Icons.refresh),
-                              SizedBox(width: 15),
-                              Text("Refresh")
-                            ],
-                          )
-                        ),
-                        PopupMenuItem(
-                          onTap: _openWebPanel,
-                          child: Row(
-                            children: const [
-                              Icon(Icons.web),
-                              SizedBox(width: 15),
-                              Text("Open web panel")
-                            ],
-                          )
-                        ),
-                        PopupMenuItem(
-                          onTap: _changeServer,
-                          child: Row(
-                            children: const [
-                              Icon(Icons.storage_rounded),
-                              SizedBox(width: 15),
-                              Text("Change Server")
-                            ],
-                          )
-                        ),
-                      ]
-                    : [
+          PopupMenuButton(
+            splashRadius: 20,
+            itemBuilder: (context) => 
+              serversProvider.connectedServer != null 
+                ? serversProvider.isServerConnected == true 
+                  ? [
                       PopupMenuItem(
-                        onTap: () => {},
+                        onTap: _refresh,
                         child: Row(
                           children: const [
-                            Icon(Icons.refresh_rounded),
+                            Icon(Icons.refresh),
                             SizedBox(width: 15),
-                            Text("Try reconnect")
+                            Text("Refresh")
+                          ],
+                        )
+                      ),
+                      PopupMenuItem(
+                        onTap: _openWebPanel,
+                        child: Row(
+                          children: const [
+                            Icon(Icons.web),
+                            SizedBox(width: 15),
+                            Text("Open web panel")
+                          ],
+                        )
+                      ),
+                      PopupMenuItem(
+                        onTap: _changeServer,
+                        child: Row(
+                          children: const [
+                            Icon(Icons.storage_rounded),
+                            SizedBox(width: 15),
+                            Text("Change Server")
                           ],
                         )
                       ),
                     ]
                   : [
                     PopupMenuItem(
-                      onTap: _changeServer,
+                      onTap: () => {},
                       child: Row(
                         children: const [
-                          Icon(Icons.storage_rounded),
+                          Icon(Icons.refresh_rounded),
                           SizedBox(width: 15),
-                          Text("Select Server")
+                          Text("Try reconnect")
                         ],
                       )
                     ),
                   ]
-            ),
+                : [
+                  PopupMenuItem(
+                    onTap: _changeServer,
+                    child: Row(
+                      children: const [
+                        Icon(Icons.storage_rounded),
+                        SizedBox(width: 15),
+                        Text("Select Server")
+                      ],
+                    )
+                  ),
+                ]
           )
         ],
       ),

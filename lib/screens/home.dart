@@ -1,13 +1,12 @@
-import 'package:droid_hole/models/process_modal.dart';
-import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/widgets/bottom_nav_bar.dart';
-import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/widgets/servers_list_modal.dart';
 
+import 'package:droid_hole/models/process_modal.dart';
+import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -111,7 +110,7 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       appBar: const PreferredSize(
-        preferredSize: Size(double.maxFinite, 84),
+        preferredSize: Size(double.maxFinite, 90),
         child: TopBar()
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

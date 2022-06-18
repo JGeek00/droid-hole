@@ -195,22 +195,19 @@ class Base extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark, 
-      child: AutoTabsScaffold(
-        routes: const [
-          HomeRouter(),
-          StatisticsRouter(),
-          ListsRouter(),
-          SettingsRouter()
-        ],
-        bottomNavigationBuilder: (context, tabsRouter) {
-          return BottomNavBar(
-            selectedScreen: tabsRouter.activeIndex,
-            onChange: tabsRouter.setActiveIndex,
-          );
-        },
-      ),
+    return AutoTabsScaffold(
+      routes: const [
+        HomeRouter(),
+        StatisticsRouter(),
+        ListsRouter(),
+        SettingsRouter()
+      ],
+      bottomNavigationBuilder: (context, tabsRouter) {
+        return BottomNavBar(
+          selectedScreen: tabsRouter.activeIndex,
+          onChange: tabsRouter.setActiveIndex,
+        );
+      },
     );
   }
 }

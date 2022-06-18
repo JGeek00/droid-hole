@@ -6,7 +6,7 @@ class SettingsTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 15),
+      margin: const EdgeInsets.only(top: 22),
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         border: Border(
