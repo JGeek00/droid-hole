@@ -1,3 +1,6 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:droid_hole/routers/router.gr.dart';
+import 'package:droid_hole/widgets/settings_top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
@@ -127,38 +130,10 @@ class Settings extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size(double.maxFinite, 120),
-        child: Container(
-          margin: const EdgeInsets.only(top: 15),
-          padding: const EdgeInsets.all(20),
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.black12,
-                width: 1
-              )
-            )
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/icon/icon512.png',
-                width: 100,
-              ),
-              const SizedBox(width: 40),
-              const Text(
-                "DroidHole",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24
-                ),
-              )
-            ],
-          ),
-        ),
+    return  Scaffold(
+      appBar: const PreferredSize(
+        preferredSize: Size(double.maxFinite, 120),
+        child: SettingsTopBar()
       ),
       body: Column(
         children: [
@@ -202,7 +177,7 @@ class Settings extends StatelessWidget {
                               : "Not connected"
                             : "Not selected",
                           onTap: () => {
-                            Navigator.of(context).pushNamed('/servers')
+                            AutoRouter.of(context).push(const ServersRoute())
                           }
                         ),
                         _listItem(
