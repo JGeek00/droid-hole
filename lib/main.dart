@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -7,10 +9,15 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'package:droid_hole/widgets/bottom_nav_bar.dart';
+
+import 'package:droid_hole/routers/home_router.dart';
+import 'package:droid_hole/routers/lists_router.dart';
+import 'package:droid_hole/routers/settings_router.dart';
+import 'package:droid_hole/routers/statistics_router.dart';
+import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
-
-import 'package:droid_hole/screens/base.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -110,6 +117,42 @@ class _DroidHoleState extends State<DroidHole> {
     setState(() {});
   }
 
+  int selectedScreen = 0;
+
+  Timer? timer;
+
+  int? previousRefreshTime;
+  void update(ServersProvider serversProvider, AppConfigProvider appConfigProvider) {
+    // Sets previousRefreshTime when is not initialized
+    previousRefreshTime ??= appConfigProvider.getAutoRefreshTime;
+
+    bool isRunning = false; // Prevents async request from being executed when last one is not completed yet
+    timer = Timer.periodic(Duration(seconds: appConfigProvider.getAutoRefreshTime!), (timer) async {
+      // Restarts the timer when time changes
+      if (appConfigProvider.getAutoRefreshTime != previousRefreshTime) {
+        timer.cancel();
+        previousRefreshTime = appConfigProvider.getAutoRefreshTime;
+        update(serversProvider, appConfigProvider);
+      }
+
+      if (isRunning == false) {
+        isRunning = true;
+        if (serversProvider.connectedServer != null) {
+          final statusResult = await status(serversProvider.connectedServer!);
+          if (statusResult['result'] == 'success') {
+            serversProvider.updateConnectedServerStatus(
+              statusResult['data']['status'] == 'enabled' ? true : false
+            );
+          }
+          isRunning = false;
+        }
+        else {
+          timer.cancel();
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -120,7 +163,18 @@ class _DroidHoleState extends State<DroidHole> {
 
   @override
   Widget build(BuildContext context) {
+    final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
+
+    if (serversProvider.isServerConnected == true && timer == null) {
+      update(serversProvider, appConfigProvider);
+    }
+    else if (serversProvider.isServerConnected == true && timer != null && timer!.isActive == false) {
+      update(serversProvider, appConfigProvider);
+    }
+    else if (serversProvider.isServerConnected == false && timer != null) {
+      timer!.cancel();
+    }
 
     return MaterialApp(
       title: 'Droid Hole',
@@ -128,9 +182,26 @@ class _DroidHoleState extends State<DroidHole> {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: Base(
-        refreshTime: appConfigProvider.getAutoRefreshTime!,
-      )
+      home: Scaffold(
+        bottomNavigationBar: BottomNavBar(
+          selectedScreen: selectedScreen,
+          onChange: (value) => {
+            setState((() => selectedScreen = value))
+          },
+        ),
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.dark,      
+          child: IndexedStack(
+            index: selectedScreen,
+            children: const [
+              HomeRouter(),
+              StatisticsRouter(),
+              ListsRouter(),
+              SettingsRouter(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
