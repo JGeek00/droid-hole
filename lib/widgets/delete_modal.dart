@@ -54,7 +54,7 @@ class DeleteModal extends StatelessWidget {
           right: 10,
           bottom: Platform.isIOS ? 7 : 10
         ),
-        height: 200,
+        height: 183,
         child: Column(
           children: [
             const Text(

@@ -4,7 +4,7 @@ import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/functions/process_modal.dart';
+import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 class TopBar extends StatelessWidget {
@@ -36,12 +36,11 @@ class TopBar extends StatelessWidget {
 
     void _refresh() async {
       if (serversProvider.isServerConnected  == true) {
-        await Future.delayed(const Duration(seconds: 0), () => {
-          openProcessModal(context, "Refreshing data...")
-        });
+        final ProcessModal process = ProcessModal(context: context);
+        process.open("Refreshing data...");
         final result = await status(serversProvider.connectedServer!);
         // ignore: use_build_context_synchronously
-        closeProcessModal(context);
+        process.close();
         if (result['result'] == "success") {
           serversProvider.updateConnectedServerStatus(
             result['data']['status'] == 'enabled' ? true : false

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ProcessModal extends StatelessWidget {
+class ProcessDialog extends StatelessWidget {
   final String message;
 
-  const ProcessModal({
+  const ProcessDialog({
     Key? key,
     required this.message,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(_) {
     return Dialog(
       backgroundColor: Colors.white,
       child: Padding(

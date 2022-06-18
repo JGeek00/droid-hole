@@ -19,7 +19,7 @@ import 'package:droid_hole/routers/lists_router.dart';
 import 'package:droid_hole/routers/settings_router.dart';
 import 'package:droid_hole/routers/statistics_router.dart';
 
-import 'package:droid_hole/functions/process_modal.dart';
+import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -115,10 +115,10 @@ class _BaseState extends State<Base> {
     }
 
     void _disableServer(int time) async {
-      openProcessModal(context, 'Disabling server...');
+      final ProcessModal process = ProcessModal(context: context);
+      process.open('Disabling server...');
       final result = await disableServer(serversProvider.connectedServer!, time);
-      // ignore: use_build_context_synchronously
-      closeProcessModal(context);
+      process.close();
       if (result['result'] == 'success') {
         serversProvider.updateConnectedServerStatus(false);
         // ignore: use_build_context_synchronously
@@ -154,10 +154,10 @@ class _BaseState extends State<Base> {
     }
 
     void _enableServer() async {
-      openProcessModal(context, 'Enabling server...');
+      final ProcessModal process = ProcessModal(context: context);
+      process.open('Enabling server...');
       final result = await enableServer(serversProvider.connectedServer!);
-      // ignore: use_build_context_synchronously
-      closeProcessModal(context);
+      process.close();
       if (result['result'] == 'success') {
         serversProvider.updateConnectedServerStatus(true);
         // ignore: use_build_context_synchronously
