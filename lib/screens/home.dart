@@ -1,3 +1,4 @@
+import 'package:droid_hole/functions/conversions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,7 @@ class Home extends StatelessWidget {
     final serversProvider = Provider.of<ServersProvider>(context);
 
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
 
     void _selectServer() {
       Future.delayed(const Duration(seconds: 0), () => {
@@ -108,6 +110,185 @@ class Home extends StatelessWidget {
       }
     }
 
+    Widget _tile({
+      required IconData icon, 
+      required Color iconColor, 
+      required Color color, 
+      required String label, 
+      required String value,
+      required EdgeInsets margin,
+    }) {
+      return Container(
+        margin: margin,
+        padding: const EdgeInsets.all(10),
+        width: (width-60)/2,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: color
+        ),
+        child: Stack(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: 90,
+                  color: iconColor,
+                ),
+              ],
+            ),
+            Container(
+              width: (width-80)/2,
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold
+                    ),
+                  )
+                ],
+              ),
+            )
+          ] 
+        )
+      );
+    }
+
+    Widget _loadingStatus() {
+      switch (serversProvider.getStatusLoading) {
+        case 0:
+          return SizedBox(
+            width: double.maxFinite,
+            height: height-180,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                CircularProgressIndicator(),
+                SizedBox(height: 50),
+                Text(
+                  "Loading stats...",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22
+                  ),
+                )
+              ],
+            ),
+          );
+
+        case 1:
+          return Column(
+            children: [
+              Row(
+                children: [
+                  _tile(
+                    icon: Icons.public, 
+                    iconColor: const Color.fromARGB(255, 64, 146, 66), 
+                    color: Colors.green, 
+                    label: "Total queries", 
+                    value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, "en_US"),
+                    margin: const EdgeInsets.only(
+                      top: 20,
+                      left: 20,
+                      right: 10,
+                      bottom: 10
+                    )
+                  ),
+                  _tile(
+                    icon: Icons.block, 
+                    iconColor: const Color.fromARGB(255, 28, 127, 208), 
+                    color: Colors.blue, 
+                    label: "Queries blocked", 
+                    value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, "en_US"),
+                    margin: const EdgeInsets.only(
+                      top: 20,
+                      left: 10,
+                      right: 20,
+                      bottom: 10
+                    )
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  _tile(
+                    icon: Icons.pie_chart, 
+                    iconColor: const Color.fromARGB(255, 219, 131, 0), 
+                    color: Colors.orange, 
+                    label: "Percentage blocked", 
+                    value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday)}%",
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                      left: 20,
+                      right: 10,
+                      bottom: 20
+                    )
+                  ),
+                  _tile(
+                    icon: Icons.list, 
+                    iconColor: const Color.fromARGB(255, 211, 58, 47), 
+                    color: Colors.red, 
+                    label: "Domains on Adlists", 
+                    value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, "en_US"),
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                      left: 10,
+                      right: 20,
+                      bottom: 20
+                    )
+                  ),
+                ],
+              )
+            ],
+          );
+
+        case 2: 
+          return SizedBox(
+            width: double.maxFinite,
+            height: height-180,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.error,
+                  size: 50,
+                  color: Colors.red,
+                ),
+                SizedBox(height: 50),
+                Text(
+                  "Stats could not be loaded",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22
+                  ),
+                )
+              ],
+            ),
+          );
+
+        default:
+          return const SizedBox();
+      }
+    }
+
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size(double.maxFinite, 90),
@@ -123,13 +304,16 @@ class Home extends StatelessWidget {
             )
           : null,
       body: serversProvider.connectedServer != null 
-          ? SingleChildScrollView(
-              child: Column(
-                children: [
-                  serversProvider.isServerConnected == true 
-                    ? const SizedBox()
-                    : SizedBox(
-                        height: height-130,
+          ? serversProvider.isServerConnected == true 
+            ? SingleChildScrollView(
+                child: _loadingStatus()
+            )
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        height: height-180,
                         child: const Center(
                           child: Text(
                             "Selected server is disconnected",
@@ -140,10 +324,10 @@ class Home extends StatelessWidget {
                             ),
                           ),
                         ),
-                      )
-                ],
-              ),
-            )
+                      ),
+                  ],
+                ),
+              )
           : Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

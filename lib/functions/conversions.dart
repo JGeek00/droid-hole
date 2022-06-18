@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 bool? convertFromIntToBool(int value) {
   if (value == 1) {
     return true;
@@ -20,4 +22,13 @@ int? convertFromBoolToInt(bool value) {
   else {
     return null;
   }
+}
+
+double formatPercentage(double value) {
+  return (value * 100).truncateToDouble() / 100;
+}
+
+String intFormat(int value, String locale) {
+  final f = NumberFormat("#,###", locale);
+  return f.format(value);
 }

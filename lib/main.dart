@@ -138,11 +138,18 @@ class _DroidHoleState extends State<DroidHole> {
       if (isRunning == false) {
         isRunning = true;
         if (serversProvider.connectedServer != null) {
-          final statusResult = await status(serversProvider.connectedServer!);
+          final statusResult = await realtimeStatus(serversProvider.connectedServer!);
           if (statusResult['result'] == 'success') {
             serversProvider.updateConnectedServerStatus(
-              statusResult['data']['status'] == 'enabled' ? true : false
+              statusResult['data'].status == 'enabled' ? true : false
             );
+            serversProvider.setRealtimeStatus(statusResult['data']);
+          }
+          else {
+            serversProvider.setIsServerConnected(false);
+            if (serversProvider.getStatusLoading == 0) {
+              serversProvider.setStatusLoading(2);
+            }
           }
           isRunning = false;
         }

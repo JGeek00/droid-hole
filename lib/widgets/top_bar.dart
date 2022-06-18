@@ -39,13 +39,20 @@ class TopBar extends StatelessWidget {
       if (serversProvider.isServerConnected  == true) {
         final ProcessModal process = ProcessModal(context: context);
         process.open("Refreshing data...");
-        final result = await status(serversProvider.connectedServer!);
+        final result = await realtimeStatus(serversProvider.connectedServer!);
         // ignore: use_build_context_synchronously
         process.close();
         if (result['result'] == "success") {
           serversProvider.updateConnectedServerStatus(
-            result['data']['status'] == 'enabled' ? true : false
+            result['data'].status == 'enabled' ? true : false
           );
+          serversProvider.setRealtimeStatus(result['data']);
+        }
+        else {
+          serversProvider.setIsServerConnected(false);
+          if (serversProvider.getStatusLoading == 0) {
+            serversProvider.setStatusLoading(2);
+          }
         }
       }
     }
@@ -89,10 +96,10 @@ class TopBar extends StatelessWidget {
                   ),
                   const SizedBox(width: 20),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      if (serversProvider.connectedServer!.alias != null) Text(
                         serversProvider.connectedServer!.alias!,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -101,10 +108,15 @@ class TopBar extends StatelessWidget {
                       ),
                       Text(
                         serversProvider.connectedServer!.address,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey
-                        ),
+                        style: serversProvider.connectedServer!.alias != null
+                          ? const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey
+                            )
+                          : const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25
+                            ),
                       )
                     ],
                   ),

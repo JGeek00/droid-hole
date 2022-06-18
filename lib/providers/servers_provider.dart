@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:droid_hole/models/realtime_status.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
 
@@ -13,6 +14,8 @@ class ServersProvider with ChangeNotifier {
 
   Server? _connectedServer;
   bool? _isServerConnected;
+  int _statusLoading = 0;
+  RealtimeStatus? _realtimeStatus;
 
   List<Server> get getServersList {
     return _serversList;
@@ -24,6 +27,14 @@ class ServersProvider with ChangeNotifier {
 
   bool? get isServerConnected {
     return _isServerConnected;
+  }
+
+  RealtimeStatus? get getRealtimeStatus {
+    return _realtimeStatus;
+  }
+
+  int get getStatusLoading {
+    return _statusLoading;
   }
 
   Future<bool> addServer(Server server) async {
@@ -105,6 +116,22 @@ class ServersProvider with ChangeNotifier {
     else {
       return false;
     }
+  }
+
+  void setStatusLoading(int status) {
+    _statusLoading = status;
+    notifyListeners();
+  }
+
+  void setRealtimeStatus(RealtimeStatus realtimeStatus) {
+    _realtimeStatus = realtimeStatus;
+    _statusLoading = 1;
+    notifyListeners();
+  }
+
+  void setIsServerConnected(bool status) {
+    _isServerConnected = status;
+    notifyListeners();
   }
 
   Future saveFromDb(List<Map<String, dynamic>>? servers) async {
