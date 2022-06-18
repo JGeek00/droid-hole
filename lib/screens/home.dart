@@ -112,7 +112,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size(double.maxFinite, 84),
-        child: TopBar(),
+        child: TopBar()
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: serversProvider.connectedServer != null
@@ -124,60 +124,60 @@ class Home extends StatelessWidget {
             )
           : null,
       body: serversProvider.connectedServer != null 
-        ? SingleChildScrollView(
-            child: Column(
-              children: [
-                serversProvider.isServerConnected == true 
-                  ? const SizedBox()
-                  : SizedBox(
-                      height: height-130,
-                      child: const Center(
-                        child: Text(
-                          "Selected server is disconnected",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  serversProvider.isServerConnected == true 
+                    ? const SizedBox()
+                    : SizedBox(
+                        height: height-130,
+                        child: const Center(
+                          child: Text(
+                            "Selected server is disconnected",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24
+                            ),
                           ),
                         ),
-                      ),
-                    )
-              ],
-            ),
-          )
-        : Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.link_off,
-                  size: 70,
-                  color: Colors.grey,
-                ),
-                const SizedBox(height: 50),
-                const Text(
-                  "No server is selected",
-                  style: TextStyle(
+                      )
+                ],
+              ),
+            )
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.link_off,
+                    size: 70,
                     color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
                   ),
-                ),
-                const SizedBox(height: 50),
-                OutlinedButton.icon(
-                  onPressed: _selectServer, 
-                  label: const Text("Select a connection"),
-                  icon: const Icon(Icons.storage_rounded),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      width: 1.0, 
-                      color: Theme.of(context).primaryColor
+                  const SizedBox(height: 50),
+                  const Text(
+                    "No server is selected",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24
                     ),
                   ),
-                )
-              ],
+                  const SizedBox(height: 50),
+                  OutlinedButton.icon(
+                    onPressed: _selectServer, 
+                    label: const Text("Select a connection"),
+                    icon: const Icon(Icons.storage_rounded),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        width: 1.0, 
+                        color: Theme.of(context).primaryColor
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
     );
   }
 }

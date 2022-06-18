@@ -11,10 +11,8 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
-import 'package:droid_hole/routers/home_router.dart';
-import 'package:droid_hole/routers/lists_router.dart';
-import 'package:droid_hole/routers/settings_router.dart';
-import 'package:droid_hole/routers/statistics_router.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:droid_hole/routers/router.gr.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -100,6 +98,8 @@ class DroidHole extends StatefulWidget {
 }
 
 class _DroidHoleState extends State<DroidHole> {
+  final _appRouter = AppRouter();
+
   List<DisplayMode> modes = <DisplayMode>[];
   DisplayMode? active;
   DisplayMode? preferred;
@@ -163,6 +163,7 @@ class _DroidHoleState extends State<DroidHole> {
 
   @override
   Widget build(BuildContext context) {
+
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
@@ -176,31 +177,39 @@ class _DroidHoleState extends State<DroidHole> {
       timer!.cancel();
     }
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Droid Hole',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        bottomNavigationBar: BottomNavBar(
-          selectedScreen: selectedScreen,
-          onChange: (value) => {
-            setState((() => selectedScreen = value))
-          },
-        ),
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.dark,      
-          child: IndexedStack(
-            index: selectedScreen,
-            children: const [
-              HomeRouter(),
-              StatisticsRouter(),
-              ListsRouter(),
-              SettingsRouter(),
-            ],
-          ),
-        ),
+      routerDelegate: _appRouter.delegate(),
+      routeInformationParser: _appRouter.defaultRouteParser(),
+    );
+  }
+}
+
+
+class Base extends StatelessWidget {
+  const Base({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark, 
+      child: AutoTabsScaffold(
+        routes: const [
+          HomeRouter(),
+          StatisticsRouter(),
+          ListsRouter(),
+          SettingsRouter()
+        ],
+        bottomNavigationBuilder: (context, tabsRouter) {
+          return BottomNavBar(
+            selectedScreen: tabsRouter.activeIndex,
+            onChange: tabsRouter.setActiveIndex,
+          );
+        },
       ),
     );
   }
