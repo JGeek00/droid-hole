@@ -193,52 +193,12 @@ class _BaseState extends State<Base> {
       }
     }
 
-    List<AppScreen> appScreens = [
-      AppScreen(
-        screenIcon: const Icon(Icons.home), 
-        screenName: "Home", 
-        screenWidget: const Home(),
-        hasAppBar: true,
-        screenFab: serversProvider.isServerConnected == true 
-          && serversProvider.connectedServer != null
-            ? Fab(
-                icon: const Icon(Icons.shield_rounded), 
-                color: Theme.of(context).primaryColor,
-                onTap: _enableDisableServer
-              ) 
-            : null
-      ),
-      const AppScreen(
-        screenIcon: Icon(Icons.analytics_rounded), 
-        screenName: "Statistics", 
-        screenWidget: Statistics(),
-        hasAppBar: true
-      ),
-      const AppScreen(
-        screenIcon: Icon(Icons.list_alt_rounded), 
-        screenName: "Lists", 
-        screenWidget: Lists(),
-        hasAppBar: true
-      ),
-      const AppScreen(
-        screenIcon: Icon(Icons.settings), 
-        screenName: "Settings", 
-        screenWidget: Settings(),
-        hasAppBar: false
-      ),
-    ];
-
     return Scaffold(
-      appBar: appScreens[selectedScreen].hasAppBar == true
-        ? const PreferredSize(
-            preferredSize: Size(double.maxFinite, 84),
-            child: TopBar(),
-          ) 
-        : null,
       bottomNavigationBar: BottomNavBar(
-        screens: appScreens,
         selectedScreen: selectedScreen,
-        onChange: _changeScreen,
+        onChange: (value) => {
+          setState((() => selectedScreen = value))
+        },
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,      
@@ -252,14 +212,6 @@ class _BaseState extends State<Base> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: appScreens[selectedScreen].screenFab != null 
-        ? FloatingActionButton(
-            onPressed: appScreens[selectedScreen].screenFab?.onTap,
-            backgroundColor: appScreens[selectedScreen].screenFab?.color,
-            child: appScreens[selectedScreen].screenFab?.icon,
-          )
-        : null,
     );
   }
 }

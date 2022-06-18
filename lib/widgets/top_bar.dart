@@ -1,7 +1,8 @@
-import 'package:droid_hole/widgets/servers_list_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
+
+import 'package:droid_hole/widgets/servers_list_modal.dart';
 
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/process_modal.dart';

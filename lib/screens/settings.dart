@@ -1,4 +1,3 @@
-import 'package:droid_hole/screens/servers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
@@ -128,9 +127,11 @@ class Settings extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: [
-        Container(
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size(double.maxFinite, 120),
+        child: Container(
+          margin: const EdgeInsets.only(top: 15),
           padding: const EdgeInsets.all(20),
           decoration: const BoxDecoration(
             border: Border(
@@ -158,107 +159,111 @@ class Settings extends StatelessWidget {
             ],
           ),
         ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.black12
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.black12
+                        )
                       )
-                    )
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(25),
-                            child: Text(
-                              "Settings",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.all(25),
+                              child: Text(
+                                "Settings",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      _listItem(
-                        leadingIcon: Icons.storage_rounded,
-                        label: "Servers", 
-                        description: serversProvider.connectedServer != null 
-                          ? serversProvider.isServerConnected == true
-                            ? serversProvider.connectedServer!.alias != null
-                              ? "Connected to ${serversProvider.connectedServer!.alias}"
-                              : "Connected to ${serversProvider.connectedServer!.address}"
-                            : "Not connected"
-                          : "Not selected",
-                        onTap: () => {
-                          Navigator.of(context).pushNamed('/servers')
-                        }
-                      ),
-                      _listItem(
-                        leadingIcon: Icons.update,
-                        label: "Auto refresh time", 
-                        description: "${appConfigProvider.getAutoRefreshTime.toString()} seconds",
-                        onTap: _openAutoRefreshTimeModal
-                      ),
-                      _listItem(
-                        leadingIcon: Icons.delete,
-                        label: "Reset application", 
-                        description: "Deletes all application data",
-                        color: Colors.red,
-                        onTap: _openResetModal
-                      )
-                    ],
+                          ],
+                        ),
+                        _listItem(
+                          leadingIcon: Icons.storage_rounded,
+                          label: "Servers", 
+                          description: serversProvider.connectedServer != null 
+                            ? serversProvider.isServerConnected == true
+                              ? serversProvider.connectedServer!.alias != null
+                                ? "Connected to ${serversProvider.connectedServer!.alias}"
+                                : "Connected to ${serversProvider.connectedServer!.address}"
+                              : "Not connected"
+                            : "Not selected",
+                          onTap: () => {
+                            Navigator.of(context).pushNamed('/servers')
+                          }
+                        ),
+                        _listItem(
+                          leadingIcon: Icons.update,
+                          label: "Auto refresh time", 
+                          description: "${appConfigProvider.getAutoRefreshTime.toString()} seconds",
+                          onTap: _openAutoRefreshTimeModal
+                        ),
+                        _listItem(
+                          leadingIcon: Icons.delete,
+                          label: "Reset application", 
+                          description: "Deletes all application data",
+                          color: Colors.red,
+                          onTap: _openResetModal
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.black12
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.black12
+                        )
                       )
-                    )
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(25),
-                            child: Text(
-                              "About",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.all(25),
+                              child: Text(
+                                "About",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                                ),
                               ),
                             ),
+                          ],
+                        ),
+                        if (appConfigProvider.getAppInfo != null) 
+                          _listItem(
+                            label: "App version", 
+                            description: appConfigProvider.getAppInfo!.version
                           ),
-                        ],
-                      ),
-                      if (appConfigProvider.getAppInfo != null) 
-                        _listItem(
-                          label: "App version", 
-                          description: appConfigProvider.getAppInfo!.version
-                        ),
-                        _listItem(
-                          label: "Created by", 
-                          description: "JGeek00"
-                        ),
-                    ],
+                          _listItem(
+                            label: "Created by", 
+                            description: "JGeek00"
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }
