@@ -46,6 +46,7 @@ dependencies:
   qr_code_scanner: ^1.0.0
   permission_handler: ^10.0.0
   intl: ^0.17.0
+  charts_flutter: ^0.12.0
 
 dev_dependencies:
   flutter_test:

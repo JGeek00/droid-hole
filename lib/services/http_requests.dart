@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:droid_hole/models/overtime_data.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:droid_hole/models/overtime_data.dart';
 import 'package:droid_hole/models/realtime_status.dart';
 import 'package:droid_hole/models/server.dart';
 
@@ -114,19 +114,17 @@ dynamic enableServer(Server server) async {
 }
 
 
-Future overTimeData(Server server) async {
+Future fetchOverTimeData(Server server) async {
   try {
     final response = await httpClient(
       token: server.token,
       url: '${server.address}/admin/api.php?overTimeData10mins',
     );
     final body = jsonDecode(response.body);
-    if (body['status'] != null) {
-      return {
-        'result': 'success',
-        'data': OverTimeData.fromJson(body)
-      };
-    }
+    return {
+      'result': 'success',
+      'data': OverTimeData.fromJson(body)
+    };
   } on SocketException {
     return {'result': 'socket'};
   } on TimeoutException {

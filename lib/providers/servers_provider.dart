@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:droid_hole/models/realtime_status.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
 
+import 'package:droid_hole/models/overtime_data.dart';
+import 'package:droid_hole/models/realtime_status.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/server.dart';
@@ -14,8 +15,12 @@ class ServersProvider with ChangeNotifier {
 
   Server? _connectedServer;
   bool? _isServerConnected;
+
   int _statusLoading = 0;
   RealtimeStatus? _realtimeStatus;
+
+  int _overtimeDataLoading = 0;
+  OverTimeData? _overtimeData;
 
   List<Server> get getServersList {
     return _serversList;
@@ -35,6 +40,23 @@ class ServersProvider with ChangeNotifier {
 
   int get getStatusLoading {
     return _statusLoading;
+  }
+
+  OverTimeData? get getOvertimeData {
+    return _overtimeData;
+  }
+
+  Map<String, dynamic>? get getOvertimeDataJson {
+    if (_overtimeData != null) {
+      return _overtimeData!.toJson();
+    }
+    else {
+      return null;
+    }
+  }
+
+  int get getOvertimeDataLoadStatus {
+    return _overtimeDataLoading;
   }
 
   Future<bool> addServer(Server server) async {
@@ -131,6 +153,16 @@ class ServersProvider with ChangeNotifier {
 
   void setIsServerConnected(bool status) {
     _isServerConnected = status;
+    notifyListeners();
+  }
+
+  void setOvertimeDataLoadingStatus(int status) {
+    _overtimeDataLoading = status;
+    notifyListeners();
+  }
+
+  void setOvertimeData(OverTimeData value) {
+    _overtimeData = value;
     notifyListeners();
   }
 

@@ -1,11 +1,13 @@
-import 'package:droid_hole/functions/conversions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/bar_chart.dart';
 import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/widgets/servers_list_modal.dart';
 
+import 'package:droid_hole/functions/bar_chart_format.dart';
+import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -303,10 +305,24 @@ class Home extends StatelessWidget {
               child: const Icon(Icons.shield_rounded),
             )
           : null,
-      body: serversProvider.connectedServer != null 
+        body: serversProvider.connectedServer != null 
           ? serversProvider.isServerConnected == true 
             ? SingleChildScrollView(
-                child: _loadingStatus()
+                child: Column(
+                  children: [
+                    _loadingStatus(),
+                    // if (serversProvider.getOvertimeDataLoadStatus == 1) Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                    //   child: Container(
+                    //     width: double.maxFinite,
+                    //     height: 300,
+                    //     child: BarChart(
+                    //       seriesList: formatChartData(serversProvider.getOvertimeDataJson!)
+                    //     ),
+                    //   ),
+                    // )
+                  ],
+                )
             )
             : Center(
                 child: Column(

@@ -11,9 +11,9 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
+import 'package:droid_hole/functions/status_updater.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:droid_hole/routers/router.gr.dart';
-import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
@@ -119,46 +119,8 @@ class _DroidHoleState extends State<DroidHole> {
 
   int selectedScreen = 0;
 
-  Timer? timer;
-
-  int? previousRefreshTime;
-  void update(ServersProvider serversProvider, AppConfigProvider appConfigProvider) {
-    // Sets previousRefreshTime when is not initialized
-    previousRefreshTime ??= appConfigProvider.getAutoRefreshTime;
-
-    bool isRunning = false; // Prevents async request from being executed when last one is not completed yet
-    timer = Timer.periodic(Duration(seconds: appConfigProvider.getAutoRefreshTime!), (timer) async {
-      // Restarts the timer when time changes
-      if (appConfigProvider.getAutoRefreshTime != previousRefreshTime) {
-        timer.cancel();
-        previousRefreshTime = appConfigProvider.getAutoRefreshTime;
-        update(serversProvider, appConfigProvider);
-      }
-
-      if (isRunning == false) {
-        isRunning = true;
-        if (serversProvider.connectedServer != null) {
-          final statusResult = await realtimeStatus(serversProvider.connectedServer!);
-          if (statusResult['result'] == 'success') {
-            serversProvider.updateConnectedServerStatus(
-              statusResult['data'].status == 'enabled' ? true : false
-            );
-            serversProvider.setRealtimeStatus(statusResult['data']);
-          }
-          else {
-            serversProvider.setIsServerConnected(false);
-            if (serversProvider.getStatusLoading == 0) {
-              serversProvider.setStatusLoading(2);
-            }
-          }
-          isRunning = false;
-        }
-        else {
-          timer.cancel();
-        }
-      }
-    });
-  }
+  final StatusUpdater statusUpdater = StatusUpdater();
+  bool firstExec = true;
 
   @override
   void initState() {
@@ -170,18 +132,12 @@ class _DroidHoleState extends State<DroidHole> {
 
   @override
   Widget build(BuildContext context) {
-
-    final serversProvider = Provider.of<ServersProvider>(context);
-    final appConfigProvider = Provider.of<AppConfigProvider>(context);
-
-    if (serversProvider.isServerConnected == true && timer == null) {
-      update(serversProvider, appConfigProvider);
-    }
-    else if (serversProvider.isServerConnected == true && timer != null && timer!.isActive == false) {
-      update(serversProvider, appConfigProvider);
-    }
-    else if (serversProvider.isServerConnected == false && timer != null) {
-      timer!.cancel();
+    if (firstExec == true) {
+      statusUpdater.statusData(context);
+      statusUpdater.overTimeData(context);
+      setState(() {
+        firstExec = false;
+      });
     }
 
     return MaterialApp.router(
