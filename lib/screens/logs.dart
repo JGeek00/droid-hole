@@ -1,4 +1,5 @@
 import 'package:droid_hole/services/http_requests.dart';
+import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -406,11 +407,10 @@ class _LogsListState extends State<LogsList> {
                                 Text("From latest to oldest"),
                               ],
                             ),
-                            Radio(
+                            CustomRadio(
                               value: 0, 
                               groupValue: sortStatus, 
-                              onChanged: _updateSortStatus
-                            ),
+                            )
                           ],
                         )
                       ),
@@ -426,11 +426,10 @@ class _LogsListState extends State<LogsList> {
                                 Text("From oldest to latest"),
                               ],
                             ),
-                            Radio(
+                            CustomRadio(
                               value: 1, 
                               groupValue: sortStatus, 
-                              onChanged: _updateSortStatus
-                            ),
+                            )
                           ],
                         )
                       ),

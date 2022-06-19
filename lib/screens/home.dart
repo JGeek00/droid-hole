@@ -141,15 +141,18 @@ class Home extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  size: 90,
-                  color: iconColor,
-                ),
-              ],
+            SizedBox(
+              height: 110,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    icon,
+                    size: 90,
+                    color: iconColor,
+                  ),
+                ],
+              ),
             ),
             Container(
               width: (width-80)/2,
@@ -159,6 +162,7 @@ class Home extends StatelessWidget {
                 children: [
                   Text(
                     label,
+                    textAlign: TextAlign.end,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18
@@ -214,7 +218,7 @@ class Home extends StatelessWidget {
                     icon: Icons.public, 
                     iconColor: const Color.fromARGB(255, 64, 146, 66), 
                     color: Colors.green, 
-                    label: "Total queries", 
+                    label: "Total\nqueries", 
                     value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, "en_US"),
                     margin: const EdgeInsets.only(
                       top: 20,
@@ -227,7 +231,7 @@ class Home extends StatelessWidget {
                     icon: Icons.block, 
                     iconColor: const Color.fromARGB(255, 28, 127, 208), 
                     color: Colors.blue, 
-                    label: "Queries blocked", 
+                    label: "Queries\nblocked", 
                     value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, "en_US"),
                     margin: const EdgeInsets.only(
                       top: 20,
@@ -244,7 +248,7 @@ class Home extends StatelessWidget {
                     icon: Icons.pie_chart, 
                     iconColor: const Color.fromARGB(255, 219, 131, 0), 
                     color: Colors.orange, 
-                    label: "Percentage blocked", 
+                    label: "Percentage\nblocked", 
                     value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday)}%",
                     margin: const EdgeInsets.only(
                       top: 10,
@@ -257,7 +261,7 @@ class Home extends StatelessWidget {
                     icon: Icons.list, 
                     iconColor: const Color.fromARGB(255, 211, 58, 47), 
                     color: Colors.red, 
-                    label: "Domains on Adlists", 
+                    label: "Domains on\nAdlists", 
                     value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, "en_US"),
                     margin: const EdgeInsets.only(
                       top: 10,
