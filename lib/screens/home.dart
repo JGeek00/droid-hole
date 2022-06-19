@@ -170,12 +170,12 @@ class Home extends StatelessWidget {
       );
     }
 
-    Widget _loadingStatus() {
+    Widget _tiles() {
       switch (serversProvider.getStatusLoading) {
         case 0:
           return SizedBox(
             width: double.maxFinite,
-            height: height-180,
+            height: 300,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -263,7 +263,7 @@ class Home extends StatelessWidget {
         case 2: 
           return SizedBox(
             width: double.maxFinite,
-            height: height-180,
+            height: 300,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -276,6 +276,115 @@ class Home extends StatelessWidget {
                 SizedBox(height: 50),
                 Text(
                   "Stats could not be loaded",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22
+                  ),
+                )
+              ],
+            ),
+          );
+
+        default:
+          return const SizedBox();
+      }
+    }
+
+    Widget _charts() {
+      switch (serversProvider.getOvertimeDataLoadStatus) {
+        case 0:
+          return SizedBox(
+            width: double.maxFinite,
+            height: 280,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                CircularProgressIndicator(),
+                SizedBox(height: 50),
+                Text(
+                  "Loading charts...",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22
+                  ),
+                )
+              ],
+            ),
+          );
+
+        case 1:
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Total queries last 24 hours",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: double.maxFinite,
+                      height: 300,
+                      child: BarChart(
+                        seriesList: formatQueriesChart(serversProvider.getOvertimeDataJson!)
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Client activity last 24 hours",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: double.maxFinite,
+                      height: 300,
+                      child: BarChart(
+                        seriesList: formatClientsChart(serversProvider.getOvertimeDataJson!)
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          );
+
+        case 2: 
+          return SizedBox(
+            width: double.maxFinite,
+            height: 280,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.error,
+                  size: 50,
+                  color: Colors.red,
+                ),
+                SizedBox(height: 50),
+                Text(
+                  "Charts could not be loaded",
                   style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
@@ -310,17 +419,8 @@ class Home extends StatelessWidget {
             ? SingleChildScrollView(
                 child: Column(
                   children: [
-                    _loadingStatus(),
-                    // if (serversProvider.getOvertimeDataLoadStatus == 1) Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 20),
-                    //   child: Container(
-                    //     width: double.maxFinite,
-                    //     height: 300,
-                    //     child: BarChart(
-                    //       seriesList: formatChartData(serversProvider.getOvertimeDataJson!)
-                    //     ),
-                    //   ),
-                    // )
+                    _tiles(),
+                    _charts(),
                   ],
                 )
             )

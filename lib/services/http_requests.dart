@@ -118,12 +118,13 @@ Future fetchOverTimeData(Server server) async {
   try {
     final response = await httpClient(
       token: server.token,
-      url: '${server.address}/admin/api.php?overTimeData10mins',
+      url: '${server.address}/admin/api.php?overTimeData10mins&overTimeDataClients&getClientNames',
     );
     final body = jsonDecode(response.body);
+    var data = OverTimeData.fromJson(body);
     return {
       'result': 'success',
-      'data': OverTimeData.fromJson(body)
+      'data': data
     };
   } on SocketException {
     return {'result': 'socket'};

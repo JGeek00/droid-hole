@@ -1,37 +1,89 @@
+import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-class TimeRecord {
-  final String time;
-  final int value;
+import 'package:droid_hole/constants/colors.dart';
 
-  const TimeRecord({
-    required this.time,
-    required this.value
+class ChartColumn {
+  final String label;
+  final int value;
+  final Map<dynamic, dynamic>? client;
+  final Color? color;
+
+  const ChartColumn({
+    required this.label,
+    required this.value,
+    this.client,
+    this.color,
   });
 }
 
-List<charts.Series<dynamic, String>> formatChartData(Map<dynamic, dynamic> data) {
+List<charts.Series<dynamic, String>> formatQueriesChart(Map<dynamic, dynamic> data) {
+  final List<ChartColumn> totalData = [];
+  final List<ChartColumn> blockedData = [];
 
-  final blockedData = [
-    TimeRecord(time: "1", value: 1),
-  ];
-
-  final totalData = [
-    TimeRecord(time: "1", value: 2),
-  ];
+  data['domains_over_time'].keys.forEach((key) => {
+    totalData.add(
+      ChartColumn(
+        label: key,
+        value: data['domains_over_time'][key]
+      )
+    )
+  });
+  data['ads_over_time'].keys.forEach((key) => {
+    blockedData.add(
+      ChartColumn(
+        label: key,
+        value: data['ads_over_time'][key]
+      )
+    )
+  });
 
   return [
-    charts.Series<TimeRecord, String>(
+    charts.Series<ChartColumn, String>(
       id: 'Blocked',
-      domainFn: (TimeRecord item, _) => item.time,
-      measureFn: (TimeRecord item, _) => item.value,
+      domainFn: (ChartColumn item, _) => item.label,
+      measureFn: (ChartColumn item, _) => item.value,
       data: blockedData,
+      fillColorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
     ),
-    charts.Series<TimeRecord, String>(
+    charts.Series<ChartColumn, String>(
       id: 'Total',
-      domainFn: (TimeRecord item, _) => item.time,
-      measureFn: (TimeRecord item, _) => item.value,
+      domainFn: (ChartColumn item, _) => item.label,
+      measureFn: (ChartColumn item, _) => item.value,
       data: totalData,
+      fillColorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
     ),
+  ];
+}
+
+List<charts.Series<dynamic, String>> formatClientsChart(Map<dynamic, dynamic> data) {
+  final List<List<ChartColumn>> items = [];
+  for (var i = 0; i < data['clients'].length; i++) {
+    final List<ChartColumn> client = [];
+    data['over_time'].keys.forEach((key) {
+      client.add(
+        ChartColumn(
+          label: key, 
+          value: data['over_time'][key][i],
+          client: data['clients'][i],
+          color: colors[i]
+        )
+      );
+    });
+    items.add(client);
+  }
+
+  return [
+    ...items.asMap().entries.map((item) => charts.Series<ChartColumn, String>(
+      id: "${item.key}",
+      domainFn: (ChartColumn item, _) => item.label,
+      measureFn: (ChartColumn item, _) => item.value,
+      data: item.value,
+      fillColorFn: (c, i) => charts.Color(
+        r: c.color!.red, 
+        g: c.color!.green, 
+        b: c.color!.blue
+      )
+    )),
   ];
 }
