@@ -68,6 +68,7 @@ class ServersList extends StatelessWidget {
           defaultServer: server.defaultServer,
           enabled: result['status'] == 'enabled' ? true : false
         ));
+        serversProvider.setRefreshServerStatus(true);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

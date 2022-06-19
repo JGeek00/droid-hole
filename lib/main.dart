@@ -132,7 +132,11 @@ class _DroidHoleState extends State<DroidHole> {
 
   @override
   Widget build(BuildContext context) {
-    if (firstExec == true) {
+    final serversProvider = Provider.of<ServersProvider>(context);
+    if (firstExec == true || serversProvider.getRefreshServerStatus == true) {
+      if (serversProvider.getRefreshServerStatus == true) {
+        serversProvider.setRefreshServerStatus(false);
+      }
       statusUpdater.statusData(context);
       statusUpdater.overTimeData(context);
       setState(() {

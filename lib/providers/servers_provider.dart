@@ -15,6 +15,7 @@ class ServersProvider with ChangeNotifier {
 
   Server? _connectedServer;
   bool? _isServerConnected;
+  bool _refreshServerStatus = false;
 
   int _statusLoading = 0;
   RealtimeStatus? _realtimeStatus;
@@ -57,6 +58,14 @@ class ServersProvider with ChangeNotifier {
 
   int get getOvertimeDataLoadStatus {
     return _overtimeDataLoading;
+  }
+
+  bool get getRefreshServerStatus {
+    return _refreshServerStatus;
+  }
+
+  void setRefreshServerStatus(bool status) {
+    _refreshServerStatus = status;
   }
 
   Future<bool> addServer(Server server) async {
