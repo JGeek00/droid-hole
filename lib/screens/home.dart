@@ -1,3 +1,4 @@
+import 'package:droid_hole/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -111,6 +112,16 @@ class Home extends StatelessWidget {
         }
       }
     }
+
+    double _calculateGridHeight() {
+      if (serversProvider.getOvertimeData!.clients.length % 2 == 1) {
+        return (serversProvider.getOvertimeData!.clients.length/2)*40;
+      }
+      else {
+        int count = serversProvider.getOvertimeData!.clients.length + 1;
+        return (count/2)*38;
+      }
+    } 
 
     Widget _tile({
       required IconData icon, 
@@ -339,9 +350,43 @@ class Home extends StatelessWidget {
                         seriesList: formatQueriesChart(serversProvider.getOvertimeDataJson!)
                       ),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.blue
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            const Text("Blocked")
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.green
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            const Text("Not blocked")
+                          ],
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -363,6 +408,47 @@ class Home extends StatelessWidget {
                         seriesList: formatClientsChart(serversProvider.getOvertimeDataJson!)
                       ),
                     ),
+                    SizedBox(
+                      height: _calculateGridHeight(),
+                      width: double.maxFinite,
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 8,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 10
+                        ),
+                        itemCount: serversProvider.getOvertimeData!.clients.length,
+                        itemBuilder: (context, index) => SizedBox(
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 120,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: colors[index]
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(serversProvider.getOvertimeData!.clients[index].ip)
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ),
+                    )
                   ],
                 ),
               )
@@ -414,69 +500,69 @@ class Home extends StatelessWidget {
               child: const Icon(Icons.shield_rounded),
             )
           : null,
-        body: serversProvider.connectedServer != null 
-          ? serversProvider.isServerConnected == true 
-            ? SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _tiles(),
-                    _charts(),
-                  ],
-                )
-            )
-            : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                        height: height-180,
-                        child: const Center(
-                          child: Text(
-                            "Selected server is disconnected",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+      body: serversProvider.connectedServer != null 
+        ? serversProvider.isServerConnected == true 
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  _tiles(),
+                  _charts(),
+                ],
               )
+          )
           : Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.link_off,
-                    size: 70,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(height: 50),
-                  const Text(
-                    "No server is selected",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-                  OutlinedButton.icon(
-                    onPressed: _selectServer, 
-                    label: const Text("Select a connection"),
-                    icon: const Icon(Icons.storage_rounded),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                        width: 1.0, 
-                        color: Theme.of(context).primaryColor
+                  SizedBox(
+                      height: height-180,
+                      child: const Center(
+                        child: Text(
+                          "Selected server is disconnected",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24
+                          ),
+                        ),
                       ),
                     ),
-                  )
                 ],
               ),
+            )
+        : Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.link_off,
+                  size: 70,
+                  color: Colors.grey,
+                ),
+                const SizedBox(height: 50),
+                const Text(
+                  "No server is selected",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24
+                  ),
+                ),
+                const SizedBox(height: 50),
+                OutlinedButton.icon(
+                  onPressed: _selectServer, 
+                  label: const Text("Select a connection"),
+                  icon: const Icon(Icons.storage_rounded),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      width: 1.0, 
+                      color: Theme.of(context).primaryColor
+                    ),
+                  ),
+                )
+              ],
             ),
+          ),
     );
   }
 }

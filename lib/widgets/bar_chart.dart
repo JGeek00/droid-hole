@@ -19,6 +19,12 @@ class BarChart extends StatelessWidget {
         showAxisLine: true,
         renderSpec: charts.NoneRenderSpec()
       ),
+      primaryMeasureAxis: const charts.NumericAxisSpec(
+        tickProviderSpec: charts.BasicNumericTickProviderSpec(
+          desiredTickCount: 5,
+          dataIsInWholeNumbers: true,
+        ),
+      ),
     );
   }
 }
