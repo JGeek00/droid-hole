@@ -15,7 +15,7 @@ import 'package:flutter/material.dart' as _i8;
 
 import '../main.dart' as _i1;
 import '../screens/home.dart' as _i2;
-import '../screens/lists.dart' as _i4;
+import '../screens/logs.dart' as _i4;
 import '../screens/servers.dart' as _i7;
 import '../screens/settings.dart' as _i6;
 import '../screens/statistics.dart' as _i3;
@@ -40,7 +40,7 @@ class AppRouter extends _i5.RootStackRouter {
     },
     ListsRouter.name: (routeData) {
       return _i5.MaterialPageX<dynamic>(
-          routeData: routeData, child: const _i4.Lists());
+          routeData: routeData, child: const _i4.Logs());
     },
     SettingsRouter.name: (routeData) {
       return _i5.MaterialPageX<dynamic>(
@@ -102,7 +102,7 @@ class StatisticsRouter extends _i5.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i4.Lists]
+/// [_i4.Logs]
 class ListsRouter extends _i5.PageRouteInfo<void> {
   const ListsRouter() : super(ListsRouter.name, path: 'lists');
 

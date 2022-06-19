@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 
 import 'package:droid_hole/main.dart';
 import 'package:droid_hole/screens/home.dart';
-import 'package:droid_hole/screens/lists.dart';
+import 'package:droid_hole/screens/logs.dart';
 import 'package:droid_hole/screens/servers.dart';
 import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
@@ -27,7 +27,7 @@ import 'package:droid_hole/screens/statistics.dart';
         AutoRoute(
           path: 'lists',
           name: 'ListsRouter',
-          page: Lists,
+          page: Logs,
         ),
         AutoRoute(
           path: 'settings',

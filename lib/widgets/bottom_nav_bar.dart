@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:droid_hole/screens/home.dart';
-import 'package:droid_hole/screens/lists.dart';
+import 'package:droid_hole/screens/logs.dart';
 import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
 
@@ -32,8 +32,8 @@ class BottomNavBar extends StatelessWidget {
       ),
       const AppScreen(
         screenIcon: Icon(Icons.list_alt_rounded), 
-        screenName: "Lists", 
-        screenWidget: Lists(),
+        screenName: "Logs", 
+        screenWidget: Logs(),
       ),
       const AppScreen(
         screenIcon: Icon(Icons.settings), 

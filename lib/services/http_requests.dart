@@ -135,3 +135,24 @@ Future fetchOverTimeData(Server server) async {
     return {'result': 'error'};
   }
 }
+
+Future fetchLogs(Server server) async {
+  try {
+    final response = await httpClient(
+      token: server.token,
+      url: '${server.address}/admin/api.php?getAllQueries=100',
+    );
+    final body = jsonDecode(response.body);
+    return {
+      'result': 'success',
+      'data': body['data']
+    };
+  } on SocketException {
+    return {'result': 'socket'};
+  } on TimeoutException {
+    return {'result': 'timeout'};
+  }
+  catch (e) {
+    return {'result': 'error'};
+  }
+}

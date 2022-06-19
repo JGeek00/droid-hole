@@ -1,0 +1,348 @@
+import 'package:droid_hole/services/http_requests.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:droid_hole/widgets/servers_list_modal.dart';
+import 'package:droid_hole/widgets/top_bar.dart';
+
+import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/models/server.dart';
+
+class Logs extends StatelessWidget {
+  const Logs({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final serversProvider = Provider.of<ServersProvider>(context);
+
+    final height = MediaQuery.of(context).size.height;
+
+    void _selectServer() {
+      Future.delayed(const Duration(seconds: 0), () => {
+        showModalBottomSheet(
+          context: context, 
+          builder: (context) => const ServersListModal(),
+          backgroundColor: Colors.transparent,
+          isDismissible: false,
+          enableDrag: false
+        )
+      });
+    }
+
+    if (serversProvider.connectedServer != null && serversProvider.isServerConnected == true) {
+      return LogsList(server: serversProvider.connectedServer!); 
+    }
+    else if (serversProvider.connectedServer != null && serversProvider.isServerConnected == false) {
+      return Scaffold(
+        appBar: const PreferredSize(
+          preferredSize: Size(double.maxFinite, 90),
+          child: TopBar()
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                  height: height-180,
+                  child: const Center(
+                    child: Text(
+                      "Selected server is disconnected",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+    }
+    else if (serversProvider.connectedServer == null) {
+      return Scaffold(
+        appBar: const PreferredSize(
+          preferredSize: Size(double.maxFinite, 90),
+          child: TopBar()
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.link_off,
+                size: 70,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 50),
+              const Text(
+                "No server is selected",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24
+                ),
+              ),
+              const SizedBox(height: 50),
+              OutlinedButton.icon(
+                onPressed: _selectServer, 
+                label: const Text("Select a connection"),
+                icon: const Icon(Icons.storage_rounded),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    width: 1.0, 
+                    color: Theme.of(context).primaryColor
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+    else {
+      return const SizedBox();
+    }
+  }
+}
+
+class LogsList extends StatefulWidget {
+  final Server server;
+
+  const LogsList({
+    Key? key,
+    required this.server
+  }) : super(key: key);
+
+  @override
+  State<LogsList> createState() => _LogsListState();
+}
+
+class _LogsListState extends State<LogsList> {
+  int loadStatus = 0;
+  List<dynamic> logsList = [];
+
+  Future loadLogs() async {
+    final result = await fetchLogs(widget.server);
+    if (result['result'] == 'success') {
+      setState(() {
+        loadStatus = 1;
+        logsList = result['data'];
+      });
+    }
+    else {
+      setState(() => loadStatus = 2);
+    }
+  }
+
+  @override
+  void initState() {
+    loadLogs();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
+    Widget _logStatusWidget({
+      required IconData icon, 
+      required Color color, 
+      required String text
+    }) {
+      return Row(
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 14,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            text,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 12
+            ),  
+          )
+        ],
+      );
+    }
+
+    Widget _logStatus(String status) {
+      switch (status) {
+        case "1":
+          return _logStatusWidget(
+            icon: Icons.gpp_bad_rounded, 
+            color: Colors.red, 
+            text: "Blocked (gravity)"
+          );
+
+        case "2":
+        case "3":
+          return _logStatusWidget(
+            icon: Icons.verified_user_rounded, 
+            color: Colors.green, 
+            text: "OK"
+          );
+
+        case "4":
+          return _logStatusWidget(
+            icon: Icons.gpp_bad_rounded, 
+            color: Colors.red, 
+            text: "Blocked (regex blacklist)"
+          );
+
+        case "5":
+          return _logStatusWidget(
+            icon: Icons.gpp_bad_rounded, 
+            color: Colors.red, 
+            text: "Blocked (exact blacklist)"
+          );
+
+        case "6":
+          return _logStatusWidget(
+            icon: Icons.gpp_bad_rounded, 
+            color: Colors.red, 
+            text: "Blocked (exact blacklist)"
+          );
+
+        default:
+          return _logStatusWidget(
+            icon: Icons.shield_rounded, 
+            color: Colors.grey, 
+            text: "Unknown"
+          );
+      }
+    }
+
+    String _formatTimestamp(int timestamp) {
+      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp*1000);
+      return "${dateTime.hour}:${dateTime.minute}:${dateTime.second}";
+    }
+
+    Widget _status() {
+      switch (loadStatus) {
+        case 0:
+          return SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                CircularProgressIndicator(),
+                SizedBox(height: 50),
+                Text(
+                  "Loading logs...",
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold
+                  ),
+                )
+              ],
+            ),
+          );
+        case 1:
+          return RefreshIndicator(
+            onRefresh: (() async {
+              await loadLogs();
+            }),
+            child: ListView.builder(
+              itemCount: logsList.length,
+              itemBuilder: (context, index) => Material(
+                child: InkWell(
+                  onTap: () => {},
+                  child: Container(
+                    width: double.maxFinite,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: index < logsList.length
+                        ? const Border(
+                            bottom: BorderSide(
+                              color: Colors.black12
+                            )
+                          )
+                        : null
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _logStatus(logsList[index][4]),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: width-100,
+                              child: Text(
+                                logsList[index][2],
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              logsList[index][3],
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13
+                              ),
+                            )
+                          ],
+                        ),
+                        Text(
+                          _formatTimestamp(int.parse(logsList[index][0]))
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ),
+          );
+
+        case 2:
+          return SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.error,
+                  size: 50,
+                  color: Colors.red,
+                ),
+                SizedBox(height: 50),
+                Text(
+                  "Logs couldn't be loaded",
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold
+                  ),
+                )
+              ],
+            ),
+          );
+          
+        default:
+          return const SizedBox();
+      }
+    }
+
+    return Scaffold(
+      appBar: const PreferredSize(
+        preferredSize: Size(double.maxFinite, 90),
+        child: TopBar()
+      ),
+      body: _status()
+    );
+  }
+}
