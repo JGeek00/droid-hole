@@ -1,5 +1,6 @@
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/widgets/servers_list_modal.dart';
@@ -122,13 +123,16 @@ class LogsList extends StatefulWidget {
 class _LogsListState extends State<LogsList> {
   int loadStatus = 0;
   List<dynamic> logsList = [];
+  List<dynamic> logsListDisplay = [];
+  int sortStatus = 0;
 
   Future loadLogs() async {
     final result = await fetchLogs(widget.server);
     if (result['result'] == 'success') {
       setState(() {
         loadStatus = 1;
-        logsList = result['data'];
+        logsList = result['data'].reversed.toList();
+        logsListDisplay = result['data'].reversed.toList();
       });
     }
     else {
@@ -220,7 +224,15 @@ class _LogsListState extends State<LogsList> {
 
     String _formatTimestamp(int timestamp) {
       DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp*1000);
-      return "${dateTime.hour}:${dateTime.minute}:${dateTime.second}";
+      DateFormat f = DateFormat('HH:mm:ss');
+      return f.format(dateTime);
+    }
+
+    void _updateSortStatus(value) {
+      setState(() {
+        sortStatus = value;
+        logsListDisplay = logsListDisplay.reversed.toList();
+      });
     }
 
     Widget _status() {
@@ -251,7 +263,7 @@ class _LogsListState extends State<LogsList> {
               await loadLogs();
             }),
             child: ListView.builder(
-              itemCount: logsList.length,
+              itemCount: logsListDisplay.length,
               itemBuilder: (context, index) => Material(
                 child: InkWell(
                   onTap: () => {},
@@ -259,7 +271,7 @@ class _LogsListState extends State<LogsList> {
                     width: double.maxFinite,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      border: index < logsList.length
+                      border: index < logsListDisplay.length
                         ? const Border(
                             bottom: BorderSide(
                               color: Colors.black12
@@ -273,12 +285,12 @@ class _LogsListState extends State<LogsList> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _logStatus(logsList[index][4]),
+                            _logStatus(logsListDisplay[index][4]),
                             const SizedBox(height: 10),
                             SizedBox(
                               width: width-100,
                               child: Text(
-                                logsList[index][2],
+                                logsListDisplay[index][2],
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -288,7 +300,7 @@ class _LogsListState extends State<LogsList> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              logsList[index][3],
+                              logsListDisplay[index][3],
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 13
@@ -297,7 +309,7 @@ class _LogsListState extends State<LogsList> {
                           ],
                         ),
                         Text(
-                          _formatTimestamp(int.parse(logsList[index][0]))
+                          _formatTimestamp(int.parse(logsListDisplay[index][0]))
                         ),
                       ],
                     ),
@@ -338,9 +350,97 @@ class _LogsListState extends State<LogsList> {
     }
 
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size(double.maxFinite, 90),
-        child: TopBar()
+      appBar: PreferredSize(
+        preferredSize: const Size(double.maxFinite, 90),
+        child: Container(
+          margin: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black12,
+              )
+            )
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  "Query logs",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () => {}, 
+                    icon: const Icon(Icons.search_rounded),
+                    splashRadius: 20,
+                  ),
+                  const SizedBox(width: 5),
+                  IconButton(
+                    onPressed: () => {}, 
+                    icon: const Icon(Icons.filter_list_rounded),
+                    splashRadius: 20,
+                  ),
+                  const SizedBox(width: 5),
+                  PopupMenuButton(
+                    splashRadius: 20,
+                    icon: const Icon(Icons.sort_rounded),
+                    onSelected: (value) => _updateSortStatus(value),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: const [
+                                Icon(Icons.arrow_downward_rounded),
+                                SizedBox(width: 10),
+                                Text("From latest to oldest"),
+                              ],
+                            ),
+                            Radio(
+                              value: 0, 
+                              groupValue: sortStatus, 
+                              onChanged: _updateSortStatus
+                            ),
+                          ],
+                        )
+                      ),
+                      PopupMenuItem(
+                        value: 1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: const [
+                                Icon(Icons.arrow_upward_rounded),
+                                SizedBox(width: 10),
+                                Text("From oldest to latest"),
+                              ],
+                            ),
+                            Radio(
+                              value: 1, 
+                              groupValue: sortStatus, 
+                              onChanged: _updateSortStatus
+                            ),
+                          ],
+                        )
+                      ),
+                    ]
+                  )
+                ],
+              )
+            ],
+          ),
+        )
       ),
       body: _status()
     );
