@@ -230,10 +230,12 @@ class _LogsListState extends State<LogsList> {
     }
 
     void _updateSortStatus(value) {
-      setState(() {
-        sortStatus = value;
-        logsListDisplay = logsListDisplay.reversed.toList();
-      });
+      if (sortStatus != value) {
+        setState(() {
+          sortStatus = value;
+          logsListDisplay = logsListDisplay.reversed.toList();
+        });
+      }
     }
 
     Widget _status() {
