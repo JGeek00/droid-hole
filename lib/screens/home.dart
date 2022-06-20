@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/no_server_selected.dart';
+import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 import 'package:droid_hole/widgets/bar_chart.dart';
 import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/widgets/servers_list_modal.dart';
 
 import 'package:droid_hole/functions/bar_chart_format.dart';
+import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/constants/colors.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/process_modal.dart';
@@ -110,24 +113,6 @@ class Home extends StatelessWidget {
         }
         else {
           _enableServer();
-        }
-      }
-    }
-
-    Future _refresh() async {
-      if (serversProvider.isServerConnected  == true) {
-        final result = await realtimeStatus(serversProvider.connectedServer!);
-        if (result['result'] == "success") {
-          serversProvider.updateConnectedServerStatus(
-            result['data'].status == 'enabled' ? true : false
-          );
-          serversProvider.setRealtimeStatus(result['data']);
-        }
-        else {
-          serversProvider.setIsServerConnected(false);
-          if (serversProvider.getStatusLoading == 0) {
-            serversProvider.setStatusLoading(2);
-          }
         }
       }
     }
@@ -637,9 +622,9 @@ class Home extends StatelessWidget {
       body: serversProvider.connectedServer != null 
         ? serversProvider.isServerConnected == true 
           ? RefreshIndicator(
-              onRefresh: (() async {
-                _refresh();
-              }),
+              onRefresh: () async {
+                await refreshServerStatus(context, serversProvider);
+              },
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -649,66 +634,10 @@ class Home extends StatelessWidget {
                 )
               ),
             )
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      height: height-180,
-                      child: const Center(
-                        child: Text(
-                          "Selected server is disconnected",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+          : const Center(
+              child: SelectedServerDisconnected()
             )
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: height-150 > 300 ? 300 : height-150,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Icon(
-                        Icons.link_off,
-                        size: 70,
-                        color: Colors.grey,
-                      ),
-                      const Text(
-                        "No server is selected",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: _selectServer, 
-                        label: const Text("Select a connection"),
-                        icon: const Icon(Icons.storage_rounded),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            width: 1.0, 
-                            color: Theme.of(context).primaryColor
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+        : const NoServerSelected()
     );
   }
 }

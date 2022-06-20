@@ -1,12 +1,13 @@
-import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:droid_hole/widgets/servers_list_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
+import 'package:droid_hole/widgets/custom_radio.dart';
+import 'package:droid_hole/widgets/no_server_selected.dart';
+import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
+import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/models/server.dart';
 
@@ -17,98 +18,28 @@ class Logs extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
-    final height = MediaQuery.of(context).size.height;
-
-    void _selectServer() {
-      Future.delayed(const Duration(seconds: 0), () => {
-        showModalBottomSheet(
-          context: context, 
-          builder: (context) => const ServersListModal(),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false
-        )
-      });
-    }
-
     if (serversProvider.connectedServer != null && serversProvider.isServerConnected == true) {
       return LogsList(server: serversProvider.connectedServer!); 
     }
     else if (serversProvider.connectedServer != null && serversProvider.isServerConnected == false) {
-      return Scaffold(
-        appBar: const PreferredSize(
+      return const Scaffold(
+        appBar: PreferredSize(
           preferredSize: Size(double.maxFinite, 90),
           child: TopBar()
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                  height: height-180,
-                  child: const Center(
-                    child: Text(
-                      "Selected server is disconnected",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
+          child: SelectedServerDisconnected()
         ),
       );
     }
     else if (serversProvider.connectedServer == null) {
-      return Scaffold(
-        appBar: const PreferredSize(
+      return const Scaffold(
+        appBar: PreferredSize(
           preferredSize: Size(double.maxFinite, 90),
           child: TopBar()
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: height-150 > 300 ? 300 : height-150,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Icon(
-                        Icons.link_off,
-                        size: 70,
-                        color: Colors.grey,
-                      ),
-                      const Text(
-                        "No server is selected",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: _selectServer, 
-                        label: const Text("Select a connection"),
-                        icon: const Icon(Icons.storage_rounded),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            width: 1.0, 
-                            color: Theme.of(context).primaryColor
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+          child: NoServerSelected()
         ),
       );
     }

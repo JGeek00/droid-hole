@@ -36,24 +36,30 @@ class TopBar extends StatelessWidget {
     }
 
     void _refresh() async {
-      if (serversProvider.isServerConnected  == true) {
-        final ProcessModal process = ProcessModal(context: context);
-        process.open("Refreshing data...");
-        final result = await realtimeStatus(serversProvider.connectedServer!);
+      final ProcessModal process = ProcessModal(context: context);
+      process.open("Refreshing data...");
+      final result = await realtimeStatus(serversProvider.connectedServer!);
+      // ignore: use_build_context_synchronously
+      process.close();
+      if (result['result'] == "success") {
+        serversProvider.updateConnectedServerStatus(
+          result['data'].status == 'enabled' ? true : false
+        );
+        serversProvider.setIsServerConnected(true);
+        serversProvider.setRealtimeStatus(result['data']);
+      }
+      else {
+        serversProvider.setIsServerConnected(false);
+        if (serversProvider.getStatusLoading == 0) {
+          serversProvider.setStatusLoading(2);
+        }
         // ignore: use_build_context_synchronously
-        process.close();
-        if (result['result'] == "success") {
-          serversProvider.updateConnectedServerStatus(
-            result['data'].status == 'enabled' ? true : false
-          );
-          serversProvider.setRealtimeStatus(result['data']);
-        }
-        else {
-          serversProvider.setIsServerConnected(false);
-          if (serversProvider.getStatusLoading == 0) {
-            serversProvider.setStatusLoading(2);
-          }
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Could not connect to the server."),
+            backgroundColor: Colors.red,
+          )
+        );
       }
     }
 
@@ -179,7 +185,7 @@ class TopBar extends StatelessWidget {
                     ]
                   : [
                     PopupMenuItem(
-                      onTap: () => {},
+                      onTap: _refresh,
                       child: Row(
                         children: const [
                           Icon(Icons.refresh_rounded),
