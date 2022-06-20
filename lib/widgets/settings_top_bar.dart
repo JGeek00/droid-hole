@@ -5,9 +5,11 @@ class SettingsTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+
     return Container(
-      margin: const EdgeInsets.only(top: 22),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.only(top: statusBarHeight),
+      padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(

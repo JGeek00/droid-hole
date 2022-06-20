@@ -10,6 +10,8 @@ class ServersTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+
     void _openAddServerBottomSheet({Server? server}) async {
       await Future.delayed(const Duration(seconds: 0), (() => {
         showModalBottomSheet(
@@ -24,7 +26,7 @@ class ServersTopBar extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(top: 25),
+      margin: EdgeInsets.only(top: statusBarHeight),
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         border: Border(

@@ -70,7 +70,7 @@ class TopBar extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       margin: EdgeInsets.only(top: statusBarHeight),
       decoration: const BoxDecoration(
         border: Border(
@@ -82,60 +82,63 @@ class TopBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: serversProvider.connectedServer != null 
-              ? [
-                  Icon(
-                    serversProvider.connectedServer!.enabled == true 
-                      ? Icons.verified_user_rounded
-                      : Icons.gpp_bad_rounded,
-                    size: 35,
-                    color: serversProvider.connectedServer!.enabled == true
-                      ? Colors.green
-                      : Colors.red,
-                  ),
-                  const SizedBox(width: 20),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (serversProvider.connectedServer!.alias != null) Text(
-                        serversProvider.connectedServer!.alias!,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              children: serversProvider.connectedServer != null 
+                ? [
+                    Icon(
+                      serversProvider.connectedServer!.enabled == true 
+                        ? Icons.verified_user_rounded
+                        : Icons.gpp_bad_rounded,
+                      size: 30,
+                      color: serversProvider.connectedServer!.enabled == true
+                        ? Colors.green
+                        : Colors.red,
+                    ),
+                    const SizedBox(width: 20),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (serversProvider.connectedServer!.alias != null) Text(
+                          serversProvider.connectedServer!.alias!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22
+                          ),
                         ),
-                      ),
-                      Text(
-                        serversProvider.connectedServer!.address,
-                        style: serversProvider.connectedServer!.alias != null
-                          ? const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey
-                            )
-                          : const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25
-                            ),
-                      )
-                    ],
+                        Text(
+                          serversProvider.connectedServer!.address,
+                          style: serversProvider.connectedServer!.alias != null
+                            ? const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey
+                              )
+                            : const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22
+                              ),
+                        )
+                      ],
+                    ),
+                  ]
+                : const [
+                  Icon(
+                    Icons.shield,
+                    color: Colors.grey,
+                    size: 30,
+                  ),
+                  SizedBox(width: 20),
+                  Text(
+                    "No server is selected",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22
+                    ),
                   ),
                 ]
-              : const [
-                Icon(
-                  Icons.shield,
-                  color: Colors.grey,
-                  size: 35,
-                ),
-                SizedBox(width: 20),
-                Text(
-                  "No server is selected",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25
-                  ),
-                ),
-              ]
+            ),
           ),
           PopupMenuButton(
             splashRadius: 20,

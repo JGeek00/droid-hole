@@ -150,6 +150,7 @@ class _LogsListState extends State<LogsList> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
     Widget _logStatusWidget({
       required IconData icon, 
@@ -354,10 +355,10 @@ class _LogsListState extends State<LogsList> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size(double.maxFinite, 90),
+        preferredSize: const Size(double.maxFinite, 70),
         child: Container(
-          margin: const EdgeInsets.only(top: 20),
-          padding: const EdgeInsets.all(10),
+          margin: EdgeInsets.only(top: statusBarHeight),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(
@@ -369,12 +370,12 @@ class _LogsListState extends State<LogsList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text(
                   "Query logs",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 24
+                    fontSize: 20
                   ),
                 ),
               ),

@@ -9,7 +9,7 @@ class Statistics extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const PreferredSize(
-        preferredSize: Size(double.maxFinite, 90),
+        preferredSize: Size(double.maxFinite, 70),
         child: TopBar()
       ),
       body: Container(

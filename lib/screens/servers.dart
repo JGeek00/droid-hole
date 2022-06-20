@@ -34,7 +34,7 @@ class _ServersPageState extends State<ServersPage> {
 
     return Scaffold(
       appBar: const PreferredSize(
-        preferredSize: Size(double.maxFinite, 80),
+        preferredSize: Size(double.maxFinite, 60),
         child: ServersTopBar()
       ),
       body: ServersList(

@@ -55,12 +55,7 @@ class _ServersListModalState extends State<ServersListModal> {
         children: [
           Container(
             width: double.maxFinite,
-            padding: const EdgeInsets.only(
-              top: 20,
-              left: 20,
-              right: 20,
-              bottom: 15
-            ),
+            padding: const EdgeInsets.all(10),
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(
@@ -87,7 +82,7 @@ class _ServersListModalState extends State<ServersListModal> {
                       child: Text(
                         "PiHole servers",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold
                         ),
                       ),

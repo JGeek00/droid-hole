@@ -1,4 +1,3 @@
-import 'package:droid_hole/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +7,7 @@ import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/widgets/servers_list_modal.dart';
 
 import 'package:droid_hole/functions/bar_chart_format.dart';
+import 'package:droid_hole/constants/colors.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
@@ -113,13 +113,31 @@ class Home extends StatelessWidget {
       }
     }
 
+    Future _refresh() async {
+      if (serversProvider.isServerConnected  == true) {
+        final result = await realtimeStatus(serversProvider.connectedServer!);
+        if (result['result'] == "success") {
+          serversProvider.updateConnectedServerStatus(
+            result['data'].status == 'enabled' ? true : false
+          );
+          serversProvider.setRealtimeStatus(result['data']);
+        }
+        else {
+          serversProvider.setIsServerConnected(false);
+          if (serversProvider.getStatusLoading == 0) {
+            serversProvider.setStatusLoading(2);
+          }
+        }
+      }
+    }
+
     double _calculateGridHeight() {
       if (serversProvider.getOvertimeData!.clients.length % 2 == 1) {
-        return (serversProvider.getOvertimeData!.clients.length/2)*40;
+        return (serversProvider.getOvertimeData!.clients.length/2)*30;
       }
       else {
         int count = serversProvider.getOvertimeData!.clients.length + 1;
-        return (count/2)*38;
+        return (count/2)*30;
       }
     } 
 
@@ -133,22 +151,22 @@ class Home extends StatelessWidget {
     }) {
       return Container(
         margin: margin,
-        padding: const EdgeInsets.all(10),
-        width: (width-60)/2,
+        width: (width-56)/2,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: color
         ),
         child: Stack(
           children: [
-            SizedBox(
-              height: 110,
+            Container(
+              height: 78,
+              padding: const EdgeInsets.only(left: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     icon,
-                    size: 90,
+                    size: 50,
                     color: iconColor,
                   ),
                 ],
@@ -165,7 +183,7 @@ class Home extends StatelessWidget {
                     textAlign: TextAlign.end,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 18
+                      fontSize: 14
                     ),
                   ),
                   const SizedBox(height: 15),
@@ -173,7 +191,7 @@ class Home extends StatelessWidget {
                     value,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 28,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold
                     ),
                   )
@@ -218,26 +236,26 @@ class Home extends StatelessWidget {
                     icon: Icons.public, 
                     iconColor: const Color.fromARGB(255, 64, 146, 66), 
                     color: Colors.green, 
-                    label: "Total\nqueries", 
+                    label: "Total queries", 
                     value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, "en_US"),
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 20,
-                      right: 10,
-                      bottom: 10
+                      right: 8,
+                      bottom: 8
                     )
                   ),
                   _tile(
                     icon: Icons.block, 
                     iconColor: const Color.fromARGB(255, 28, 127, 208), 
                     color: Colors.blue, 
-                    label: "Queries\nblocked", 
+                    label: "Queries blocked", 
                     value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, "en_US"),
                     margin: const EdgeInsets.only(
                       top: 20,
-                      left: 10,
+                      left: 8,
                       right: 20,
-                      bottom: 10
+                      bottom: 8
                     )
                   ),
                 ],
@@ -248,12 +266,12 @@ class Home extends StatelessWidget {
                     icon: Icons.pie_chart, 
                     iconColor: const Color.fromARGB(255, 219, 131, 0), 
                     color: Colors.orange, 
-                    label: "Percentage\nblocked", 
+                    label: "Percentage blocked", 
                     value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday)}%",
                     margin: const EdgeInsets.only(
-                      top: 10,
+                      top: 8,
                       left: 20,
-                      right: 10,
+                      right: 8,
                       bottom: 20
                     )
                   ),
@@ -261,11 +279,11 @@ class Home extends StatelessWidget {
                     icon: Icons.list, 
                     iconColor: const Color.fromARGB(255, 211, 58, 47), 
                     color: Colors.red, 
-                    label: "Domains on\nAdlists", 
+                    label: "Domains on Adlists", 
                     value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, "en_US"),
                     margin: const EdgeInsets.only(
-                      top: 10,
-                      left: 10,
+                      top: 8,
+                      left: 8,
                       right: 20,
                       bottom: 20
                     )
@@ -452,7 +470,8 @@ class Home extends StatelessWidget {
                           ),
                         )
                       ),
-                    )
+                    ),
+                    const SizedBox(height: 50),
                   ],
                 ),
               )
@@ -492,7 +511,7 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       appBar: const PreferredSize(
-        preferredSize: Size(double.maxFinite, 90),
+        preferredSize: Size(double.maxFinite, 70),
         child: TopBar()
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -506,14 +525,19 @@ class Home extends StatelessWidget {
           : null,
       body: serversProvider.connectedServer != null 
         ? serversProvider.isServerConnected == true 
-          ? SingleChildScrollView(
-              child: Column(
-                children: [
-                  _tiles(),
-                  _charts(),
-                ],
-              )
-          )
+          ? RefreshIndicator(
+              onRefresh: (() async {
+                _refresh();
+              }),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _tiles(),
+                    _charts(),
+                  ],
+                )
+              ),
+            )
           : Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
