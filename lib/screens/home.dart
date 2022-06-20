@@ -324,6 +324,61 @@ class Home extends StatelessWidget {
       }
     }
 
+    List<Widget> _generateLegend(List values) {
+      List<Widget> _generateRow(int length) {
+        Widget _generateItem(int i) {
+          return Container(
+            width: 120,
+            margin: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 10
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: colors[i]
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(serversProvider.getOvertimeData!.clients[i].ip)
+              ],
+            ),
+          );
+        }
+
+        List<Widget> widgets = [];
+        for (var i = 0; i < length; i+=2) {
+          widgets.add(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _generateItem(i),
+                    _generateItem(i+1),
+                  ],
+                ),
+              ],
+            )
+          );
+        }
+        return widgets;
+      }
+
+      if (values.length % 2 == 0) {
+        return _generateRow(values.length);
+      }
+      else {
+        return _generateRow(values.length);
+      }
+    }
+
     Widget _charts() {
       switch (serversProvider.getOvertimeDataLoadStatus) {
         case 0:
@@ -431,47 +486,54 @@ class Home extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: _calculateGridHeight(),
                       width: double.maxFinite,
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          childAspectRatio: 8,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 10
-                        ),
-                        itemCount: serversProvider.getOvertimeData!.clients.length,
-                        itemBuilder: (context, index) => SizedBox(
-                          height: 50,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 120,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 10,
-                                      height: 10,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: colors[index]
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(serversProvider.getOvertimeData!.clients[index].ip)
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: _generateLegend(serversProvider.getOvertimeData!.clients),
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    // SizedBox(
+                    //   height: _calculateGridHeight(),
+                    //   width: double.maxFinite,
+                      // child: GridView.builder(
+                      //   shrinkWrap: true,
+                      //   physics: const NeverScrollableScrollPhysics(),
+                      //   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      //     maxCrossAxisExtent: 200,
+                      //     childAspectRatio: 8,
+                      //     crossAxisSpacing: 20,
+                      //     mainAxisSpacing: 10
+                      //   ),
+                      //   itemCount: serversProvider.getOvertimeData!.clients.length,
+                      //   itemBuilder: (context, index) => SizedBox(
+                      //     height: 50,
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         SizedBox(
+                      //           width: 120,
+                      //           child: Row(
+                      //             mainAxisAlignment: MainAxisAlignment.start,
+                      //             children: [
+                      //               Container(
+                      //                 width: 10,
+                      //                 height: 10,
+                      //                 decoration: BoxDecoration(
+                      //                   borderRadius: BorderRadius.circular(10),
+                      //                   color: colors[index]
+                      //                 ),
+                      //               ),
+                      //               const SizedBox(width: 10),
+                      //               Text(serversProvider.getOvertimeData!.clients[index].ip)
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   )
+                      // ),
+                    // ),
+                    SizedBox(height: 50),
                   ],
                 ),
               )
