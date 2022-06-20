@@ -94,13 +94,17 @@ class TopBar extends StatelessWidget {
               children: serversProvider.connectedServer != null 
                 ? [
                     Icon(
-                      serversProvider.connectedServer!.enabled == true 
-                        ? Icons.verified_user_rounded
-                        : Icons.gpp_bad_rounded,
+                      serversProvider.isServerConnected == true 
+                        ? serversProvider.connectedServer!.enabled == true 
+                          ? Icons.verified_user_rounded
+                          : Icons.gpp_bad_rounded
+                        : Icons.shield_rounded,
                       size: 30,
-                      color: serversProvider.connectedServer!.enabled == true
-                        ? Colors.green
-                        : Colors.red,
+                      color: serversProvider.isServerConnected == true 
+                        ? serversProvider.connectedServer!.enabled == true
+                          ? Colors.green
+                          : Colors.red
+                        : Colors.grey
                     ),
                     const SizedBox(width: 20),
                     Column(

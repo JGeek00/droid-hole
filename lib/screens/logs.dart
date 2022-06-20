@@ -18,16 +18,35 @@ class Logs extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+
     if (serversProvider.connectedServer != null && serversProvider.isServerConnected == true) {
       return LogsList(server: serversProvider.connectedServer!); 
     }
     else if (serversProvider.connectedServer != null && serversProvider.isServerConnected == false) {
-      return const Scaffold(
+      return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size(double.maxFinite, 90),
-          child: TopBar()
+          preferredSize: const Size(double.maxFinite, 70),
+          child: Container(
+            margin: EdgeInsets.only(top: statusBarHeight),
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.black12
+                )
+              )
+            ),
+            child: const Text(
+              "Query logs",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20
+              ),
+            ),
+          )
         ),
-        body: Center(
+        body: const Center(
           child: SelectedServerDisconnected()
         ),
       );
