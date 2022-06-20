@@ -295,17 +295,22 @@ class _AddServerModalState extends State<AddServerModal> {
         padding: EdgeInsets.only(
           bottom: Platform.isIOS ? 20 : 0
         ),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          height: height,
-          curve: Curves.easeInOut,
-          padding: const EdgeInsets.all(20),
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
+        child: SizedBox(
+          child: SingleChildScrollView(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              height: height,
+              width: mediaQueryData.size.width > 400 ? 400 : null,
+              curve: Curves.easeInOut,
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: _statusWidget()
+            ),
           ),
-          child: _statusWidget()
         ),
       ),
     );

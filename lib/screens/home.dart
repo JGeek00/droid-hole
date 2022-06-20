@@ -21,6 +21,7 @@ class Home extends StatelessWidget {
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final orientation = MediaQuery.of(context).orientation;
 
     void _selectServer() {
       Future.delayed(const Duration(seconds: 0), () => {
@@ -131,17 +132,9 @@ class Home extends StatelessWidget {
       }
     }
 
-    double _calculateGridHeight() {
-      if (serversProvider.getOvertimeData!.clients.length % 2 == 1) {
-        return (serversProvider.getOvertimeData!.clients.length/2)*30;
-      }
-      else {
-        int count = serversProvider.getOvertimeData!.clients.length + 1;
-        return (count/2)*30;
-      }
-    } 
-
     Widget _tile({
+      required double mainWidth,
+      required double innerWidth,
       required IconData icon, 
       required Color iconColor, 
       required Color color, 
@@ -151,7 +144,7 @@ class Home extends StatelessWidget {
     }) {
       return Container(
         margin: margin,
-        width: (width-56)/2,
+        width: mainWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: color
@@ -173,7 +166,7 @@ class Home extends StatelessWidget {
               ),
             ),
             Container(
-              width: (width-80)/2,
+              width: innerWidth,
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -229,10 +222,83 @@ class Home extends StatelessWidget {
 
         case 1:
           return Column(
-            children: [
+            children: !(orientation == Orientation.landscape && height < 1000) 
+              ? [
+                Row(
+                  children: [
+                    _tile(
+                      mainWidth: (width-56)/2,
+                      innerWidth: (width-80)/2,
+                      icon: Icons.public, 
+                      iconColor: const Color.fromARGB(255, 64, 146, 66), 
+                      color: Colors.green, 
+                      label: "Total queries", 
+                      value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, "en_US"),
+                      margin: const EdgeInsets.only(
+                        top: 20,
+                        left: 20,
+                        right: 8,
+                        bottom: 8
+                      )
+                    ),
+                    _tile(
+                      mainWidth: (width-56)/2,
+                      innerWidth: (width-80)/2,
+                      icon: Icons.block, 
+                      iconColor: const Color.fromARGB(255, 28, 127, 208), 
+                      color: Colors.blue, 
+                      label: "Queries blocked", 
+                      value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, "en_US"),
+                      margin: const EdgeInsets.only(
+                        top: 20,
+                        left: 8,
+                        right: 20,
+                        bottom: 8
+                      )
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    _tile(
+                      mainWidth: (width-56)/2,
+                      innerWidth: (width-80)/2,
+                      icon: Icons.pie_chart, 
+                      iconColor: const Color.fromARGB(255, 219, 131, 0), 
+                      color: Colors.orange, 
+                      label: "Percentage blocked", 
+                      value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday)}%",
+                      margin: const EdgeInsets.only(
+                        top: 8,
+                        left: 20,
+                        right: 8,
+                        bottom: 20
+                      )
+                    ),
+                    _tile(
+                      mainWidth: (width-56)/2,
+                      innerWidth: (width-80)/2,
+                      icon: Icons.list, 
+                      iconColor: const Color.fromARGB(255, 211, 58, 47), 
+                      color: Colors.red, 
+                      label: "Domains on Adlists", 
+                      value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, "en_US"),
+                      margin: const EdgeInsets.only(
+                        top: 8,
+                        left: 8,
+                        right: 20,
+                        bottom: 20
+                      )
+                    ),
+                  ],
+                )
+              ]
+            : [
               Row(
                 children: [
                   _tile(
+                    mainWidth: (width-88)/4,
+                      innerWidth: (width-80)/4,
                     icon: Icons.public, 
                     iconColor: const Color.fromARGB(255, 64, 146, 66), 
                     color: Colors.green, 
@@ -242,10 +308,12 @@ class Home extends StatelessWidget {
                       top: 20,
                       left: 20,
                       right: 8,
-                      bottom: 8
+                      bottom: 20
                     )
                   ),
                   _tile(
+                    mainWidth: (width-88)/4,
+                    innerWidth: (width-80)/4,
                     icon: Icons.block, 
                     iconColor: const Color.fromARGB(255, 28, 127, 208), 
                     color: Colors.blue, 
@@ -254,35 +322,35 @@ class Home extends StatelessWidget {
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 8,
-                      right: 20,
-                      bottom: 8
+                      right: 8,
+                      bottom: 20
                     )
                   ),
-                ],
-              ),
-              Row(
-                children: [
                   _tile(
+                    mainWidth: (width-88)/4,
+                    innerWidth: (width-80)/4,
                     icon: Icons.pie_chart, 
                     iconColor: const Color.fromARGB(255, 219, 131, 0), 
                     color: Colors.orange, 
                     label: "Percentage blocked", 
                     value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday)}%",
                     margin: const EdgeInsets.only(
-                      top: 8,
-                      left: 20,
+                      top: 20,
+                      left: 8,
                       right: 8,
                       bottom: 20
                     )
                   ),
                   _tile(
+                    mainWidth: (width-88)/4,
+                    innerWidth: (width-80)/4,
                     icon: Icons.list, 
                     iconColor: const Color.fromARGB(255, 211, 58, 47), 
                     color: Colors.red, 
                     label: "Domains on Adlists", 
                     value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, "en_US"),
                     margin: const EdgeInsets.only(
-                      top: 8,
+                      top: 20,
                       left: 8,
                       right: 20,
                       bottom: 20
@@ -352,21 +420,43 @@ class Home extends StatelessWidget {
         }
 
         List<Widget> widgets = [];
-        for (var i = 0; i < length; i+=2) {
-          widgets.add(
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _generateItem(i),
-                    _generateItem(i+1),
-                  ],
-                ),
-              ],
-            )
-          );
+        if (!(orientation == Orientation.landscape && height < 1000)) {
+          for (var i = 0; i < length; i+=2) {
+            widgets.add(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _generateItem(i),
+                      i+1 < length ? _generateItem(i+1) : const SizedBox(),
+                    ],
+                  ),
+                ],
+              )
+            );
+          }
+        }
+        else {
+          for (var i = 0; i < length; i+=4) {
+            widgets.add(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _generateItem(i),
+                      i+1 < length ? _generateItem(i+1) : const SizedBox(),
+                      i+2 < length ? _generateItem(i+2) : const SizedBox(),
+                      i+3 < length ? _generateItem(i+3) : const SizedBox(),
+                    ],
+                  ),
+                ],
+              )
+            );
+          }
         }
         return widgets;
       }
@@ -492,48 +582,7 @@ class Home extends StatelessWidget {
                         children: _generateLegend(serversProvider.getOvertimeData!.clients),
                       ),
                     ),
-                    // SizedBox(
-                    //   height: _calculateGridHeight(),
-                    //   width: double.maxFinite,
-                      // child: GridView.builder(
-                      //   shrinkWrap: true,
-                      //   physics: const NeverScrollableScrollPhysics(),
-                      //   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      //     maxCrossAxisExtent: 200,
-                      //     childAspectRatio: 8,
-                      //     crossAxisSpacing: 20,
-                      //     mainAxisSpacing: 10
-                      //   ),
-                      //   itemCount: serversProvider.getOvertimeData!.clients.length,
-                      //   itemBuilder: (context, index) => SizedBox(
-                      //     height: 50,
-                      //     child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //       children: [
-                      //         SizedBox(
-                      //           width: 120,
-                      //           child: Row(
-                      //             mainAxisAlignment: MainAxisAlignment.start,
-                      //             children: [
-                      //               Container(
-                      //                 width: 10,
-                      //                 height: 10,
-                      //                 decoration: BoxDecoration(
-                      //                   borderRadius: BorderRadius.circular(10),
-                      //                   color: colors[index]
-                      //                 ),
-                      //               ),
-                      //               const SizedBox(width: 10),
-                      //               Text(serversProvider.getOvertimeData!.clients[index].ip)
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   )
-                      // ),
-                    // ),
-                    SizedBox(height: 50),
+                    const SizedBox(height: 60),
                   ],
                 ),
               )
@@ -620,38 +669,45 @@ class Home extends StatelessWidget {
                 ],
               ),
             )
-        : Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.link_off,
-                  size: 70,
-                  color: Colors.grey,
-                ),
-                const SizedBox(height: 50),
-                const Text(
-                  "No server is selected",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: height-150 > 300 ? 300 : height-150,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Icon(
+                        Icons.link_off,
+                        size: 70,
+                        color: Colors.grey,
+                      ),
+                      const Text(
+                        "No server is selected",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: _selectServer, 
+                        label: const Text("Select a connection"),
+                        icon: const Icon(Icons.storage_rounded),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            width: 1.0, 
+                            color: Theme.of(context).primaryColor
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-                const SizedBox(height: 50),
-                OutlinedButton.icon(
-                  onPressed: _selectServer, 
-                  label: const Text("Select a connection"),
-                  icon: const Icon(Icons.storage_rounded),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      width: 1.0, 
-                      color: Theme.of(context).primaryColor
-                    ),
-                  ),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
     );
   }

@@ -71,33 +71,42 @@ class Logs extends StatelessWidget {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.link_off,
-                size: 70,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 50),
-              const Text(
-                "No server is selected",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24
-                ),
-              ),
-              const SizedBox(height: 50),
-              OutlinedButton.icon(
-                onPressed: _selectServer, 
-                label: const Text("Select a connection"),
-                icon: const Icon(Icons.storage_rounded),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    width: 1.0, 
-                    color: Theme.of(context).primaryColor
+              SizedBox(
+                height: height-150 > 300 ? 300 : height-150,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Icon(
+                        Icons.link_off,
+                        size: 70,
+                        color: Colors.grey,
+                      ),
+                      const Text(
+                        "No server is selected",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: _selectServer, 
+                        label: const Text("Select a connection"),
+                        icon: const Icon(Icons.storage_rounded),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            width: 1.0, 
+                            color: Theme.of(context).primaryColor
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

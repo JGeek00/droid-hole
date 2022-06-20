@@ -177,7 +177,8 @@ class _QrModalState extends State<QrModal> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Container(
-        height: 441,
+        height: 320,
+        width: 400,
         padding: const EdgeInsets.only(
           top: 20,
           left: 20,
@@ -197,31 +198,37 @@ class _QrModalState extends State<QrModal> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: SizedBox(
-                height: 300,
+                height: 178,
                 child: _getPermissionStatus()
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: qrViewController != null ? _toggleFlash : null, 
-                  splashRadius: 20,
-                  icon: Icon(
-                    qrViewController != null ? (
-                      flashEnabled == true
-                        ? Icons.flash_on
-                        : Icons.flash_off
-                    ) : Icons.flash_off
-                  )
-                ),
-                TextButton.icon(
-                  onPressed: _closeModal, 
-                  icon: const Icon(Icons.close),
-                  label: const Text("Cancel"),
-                )
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: qrViewController != null ? _toggleFlash : null, 
+                        splashRadius: 20,
+                        icon: Icon(
+                          qrViewController != null ? (
+                            flashEnabled == true
+                              ? Icons.flash_on
+                              : Icons.flash_off
+                          ) : Icons.flash_off
+                        )
+                      ),
+                      TextButton.icon(
+                        onPressed: _closeModal, 
+                        icon: const Icon(Icons.close),
+                        label: const Text("Cancel"),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             )
           ],
         ),

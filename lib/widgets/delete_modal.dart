@@ -54,7 +54,8 @@ class DeleteModal extends StatelessWidget {
           right: 10,
           bottom: Platform.isIOS ? 7 : 10
         ),
-        height: 183,
+        height: 200,
+        width: 400,
         child: Column(
           children: [
             const Text(
@@ -87,26 +88,33 @@ class DeleteModal extends StatelessWidget {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton.icon(
-                  onPressed: () => {
-                    Navigator.pop(context)
-                  }, 
-                  icon: const Icon(Icons.cancel), 
-                  label: const Text("Cancel")
-                ),
-                TextButton.icon(
-                  onPressed: _removeServer, 
-                  icon: const Icon(Icons.delete), 
-                  label: const Text("Remove"),
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(Colors.red),
-                    overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1))
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () => {
+                          Navigator.pop(context)
+                        }, 
+                        icon: const Icon(Icons.cancel), 
+                        label: const Text("Cancel")
+                      ),
+                      TextButton.icon(
+                        onPressed: _removeServer, 
+                        icon: const Icon(Icons.delete), 
+                        label: const Text("Remove"),
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all(Colors.red),
+                          overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1))
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           ],
         ),

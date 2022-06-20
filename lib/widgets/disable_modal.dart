@@ -100,275 +100,277 @@ class _DisableModalState extends State<DisableModal> {
         padding: EdgeInsets.only(
           bottom: Platform.isIOS ? 20 : 0
         ),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeInOut,
-          height: selectedOption == 5 ? 418 : 315,
-          padding: const EdgeInsets.all(20),
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
-              const Text(
-                "Disable",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+        child: SingleChildScrollView(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            height: selectedOption == 5 ? 418 : 315,
+            padding: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              children: [
+                const Text(
+                  "Disable",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.maxFinite,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 10,
-                              right: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 0,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 0
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.black87
-                                  ),
-                                  child: const Text("30 seconds"),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 10,
-                              left: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 1,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 1
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.black87
-                                  ),
-                                  child: const Text("1 minute"),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 5,
-                              right: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 2,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 2
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.black87
-                                  ),
-                                  child: const Text("2 minutes"),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 5,
-                              left: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 3,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 3
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.black87
-                                  ),
-                                  child: const Text("5 minutes"),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 5,
-                              right: 5,
-                              bottom: 10
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 4,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 4
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.black87
-                                  ),
-                                  child: const Text("Indefinitely"),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 5,
-                              left: 5,
-                              bottom: 10
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 5,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 5
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.black87
-                                  ),
-                                  child: const Text("Custom"),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (showCustomDurationInput == true) 
-                        Column(
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.maxFinite,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Row(
                           children: [
-                            const SizedBox(height: 25),
-                            TextField(
-                              onChanged: _validateCustomMinutes,
-                              controller: customTimeController,
-                              keyboardType: const TextInputType.numberWithOptions(
-                                decimal: false
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 10,
+                                right: 5,
+                                bottom: 5
                               ),
-                              decoration: InputDecoration(
-                                errorText: !customTimeIsValid && customTimeController.text != ''
-                                  ? "Value not valid" 
-                                  : null,
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10)
-                                  )
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 0,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 0
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.black87
+                                    ),
+                                    child: const Text("30 seconds"),
+                                  ),
                                 ),
-                                labelText: 'Custom minutes',
+                              ),
+                            ),
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 10,
+                                left: 5,
+                                bottom: 5
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 1,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 1
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.black87
+                                    ),
+                                    child: const Text("1 minute"),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context), 
-                          child: Row(
-                            children: const [
-                              Icon(Icons.cancel),
-                              SizedBox(width: 10),
-                              Text("Cancel")
+                        Row(
+                          children: [
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 5,
+                                right: 5,
+                                bottom: 5
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 2,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 2
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.black87
+                                    ),
+                                    child: const Text("2 minutes"),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 5,
+                                left: 5,
+                                bottom: 5
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 3,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 3
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.black87
+                                    ),
+                                    child: const Text("5 minutes"),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 5,
+                                right: 5,
+                                bottom: 10
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 4,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 4
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.black87
+                                    ),
+                                    child: const Text("Indefinitely"),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 5,
+                                left: 5,
+                                bottom: 10
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 5,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 5
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.black87
+                                    ),
+                                    child: const Text("Custom"),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (showCustomDurationInput == true) 
+                          Column(
+                            children: [
+                              const SizedBox(height: 25),
+                              TextField(
+                                onChanged: _validateCustomMinutes,
+                                controller: customTimeController,
+                                keyboardType: const TextInputType.numberWithOptions(
+                                  decimal: false
+                                ),
+                                decoration: InputDecoration(
+                                  errorText: !customTimeIsValid && customTimeController.text != ''
+                                    ? "Value not valid" 
+                                    : null,
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10)
+                                    )
+                                  ),
+                                  labelText: 'Custom minutes',
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                        TextButton(
-                          onPressed: _selectionIsValid() == true 
-                            ? () {
-                              Navigator.pop(context);
-                              widget.onDisable(_getTime());
-                            }
-                            : null,
-                          style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.all(
-                              Colors.red.withOpacity(0.1)
-                            ),
-                            foregroundColor: MaterialStateProperty.all(
-                              _selectionIsValid() == true 
-                                ? Colors.red
-                                : Colors.grey,
-                            ),
-                          ), 
-                          child: Row(
-                            children: const [
-                              Icon(Icons.gpp_bad_rounded),
-                              SizedBox(width: 10),
-                              Text("Disable")
-                            ],
-                          ),
-                        ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              )
-            ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context), 
+                            child: Row(
+                              children: const [
+                                Icon(Icons.cancel),
+                                SizedBox(width: 10),
+                                Text("Cancel")
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: _selectionIsValid() == true 
+                              ? () {
+                                Navigator.pop(context);
+                                widget.onDisable(_getTime());
+                              }
+                              : null,
+                            style: ButtonStyle(
+                              overlayColor: MaterialStateProperty.all(
+                                Colors.red.withOpacity(0.1)
+                              ),
+                              foregroundColor: MaterialStateProperty.all(
+                                _selectionIsValid() == true 
+                                  ? Colors.red
+                                  : Colors.grey,
+                              ),
+                            ), 
+                            child: Row(
+                              children: const [
+                                Icon(Icons.gpp_bad_rounded),
+                                SizedBox(width: 10),
+                                Text("Disable")
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

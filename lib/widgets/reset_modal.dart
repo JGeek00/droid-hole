@@ -15,6 +15,7 @@ class ResetModal extends StatelessWidget {
     return Dialog(
       child: Container(
         height: 205,
+        width: 500,
         padding: EdgeInsets.only(
           top: 20,
           left: 10,
@@ -42,23 +43,30 @@ class ResetModal extends StatelessWidget {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () => {Navigator.pop(context)}, 
-                  child: const Text("Cancel"),
-                ), 
-                TextButton.icon(
-                  onPressed: onConfirm, 
-                  icon: const Icon(Icons.delete), 
-                  label: const Text("Delete"),
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(Colors.red),
-                    overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1)),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => {Navigator.pop(context)}, 
+                        child: const Text("Cancel"),
+                      ), 
+                      TextButton.icon(
+                        onPressed: onConfirm, 
+                        icon: const Icon(Icons.delete), 
+                        label: const Text("Delete"),
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all(Colors.red),
+                          overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1)),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           ],
         ),
