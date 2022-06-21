@@ -41,7 +41,12 @@ class Home extends StatelessWidget {
     void _disableServer(int time) async {
       final ProcessModal process = ProcessModal(context: context);
       process.open('Disabling server...');
-      final result = await disableServer(serversProvider.connectedServer!, time);
+      final result = await disableServer(
+        serversProvider.connectedServer!, 
+        serversProvider.connectedServerToken!['token'],
+        serversProvider.connectedServerToken!['phpSessId'],
+        time
+      );
       process.close();
       if (result['result'] == 'success') {
         serversProvider.updateConnectedServerStatus(false);
@@ -67,7 +72,11 @@ class Home extends StatelessWidget {
     void _enableServer() async {
       final ProcessModal process = ProcessModal(context: context);
       process.open('Enabling server...');
-      final result = await enableServer(serversProvider.connectedServer!);
+      final result = await enableServer(
+        serversProvider.connectedServer!,
+        serversProvider.connectedServerToken!['token'],
+        serversProvider.connectedServerToken!['phpSessId']
+      );
       process.close();
       if (result['result'] == 'success') {
         serversProvider.updateConnectedServerStatus(true);

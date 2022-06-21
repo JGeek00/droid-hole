@@ -38,7 +38,10 @@ class TopBar extends StatelessWidget {
     void _refresh() async {
       final ProcessModal process = ProcessModal(context: context);
       process.open("Refreshing data...");
-      final result = await realtimeStatus(serversProvider.connectedServer!);
+      final result = await realtimeStatus(
+        serversProvider.connectedServer!,
+        serversProvider.connectedServerToken!['phpSessId']
+      );
       // ignore: use_build_context_synchronously
       process.close();
       if (result['result'] == "success") {

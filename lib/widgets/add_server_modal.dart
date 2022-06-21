@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:droid_hole/widgets/qr_modal.dart';
-
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/server.dart';
@@ -25,7 +23,7 @@ class _AddServerModalState extends State<AddServerModal> {
 
   TextEditingController ipFieldController = TextEditingController();
   TextEditingController aliasFieldController = TextEditingController();
-  TextEditingController tokenFieldController = TextEditingController();
+  TextEditingController passwordFieldController = TextEditingController();
   bool defaultCheckbox = false;
 
   String? errorUrl;
@@ -36,17 +34,21 @@ class _AddServerModalState extends State<AddServerModal> {
   double height = 406;
   String errorMessage = 'Failed';
   
-  void _checkDataValid() {
+  void _checkDataValid(String field, String value) {
     if (
       ipFieldController.text != '' &&
-      tokenFieldController.text != ''
+      aliasFieldController.text != '' &&
+      passwordFieldController.text != '' &&
+      value != ''
     ) {
       setState(() {
         allDataValid = true;
       });
     }
     else {
-      allDataValid = false;
+      setState(() {
+        allDataValid = false;
+      });
     }
   }
 
@@ -56,7 +58,7 @@ class _AddServerModalState extends State<AddServerModal> {
     if (widget.server != null) {
       ipFieldController.text = widget.server!.address;
       aliasFieldController.text = widget.server!.alias!;
-      tokenFieldController.text = widget.server!.token;
+      passwordFieldController.text = widget.server!.password;
       setState(() {
         defaultCheckbox = widget.server!.defaultServer;
       });
@@ -72,22 +74,6 @@ class _AddServerModalState extends State<AddServerModal> {
     final serversProvider = Provider.of<ServersProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
-
-    void _onQrScanned(String value) {
-      tokenFieldController.text = value;
-      _checkDataValid();
-    }
-
-    void _openQrModal() {
-      showDialog(
-        context: context, 
-        builder: (context) => QrModal(
-          onQrScanned: _onQrScanned,
-        ),
-        barrierDismissible: false,
-        useSafeArea: true,
-      );
-    }
 
     void _connect() async {
       final exists = await serversProvider.checkUrlExists(ipFieldController.text);
@@ -133,7 +119,7 @@ class _AddServerModalState extends State<AddServerModal> {
         final serverObj = Server(
           address: ipFieldController.text, 
           alias: aliasFieldController.text,
-          token: tokenFieldController.text, 
+          password: passwordFieldController.text, 
           defaultServer: false,
         );
         final result = await login(serverObj);
@@ -147,7 +133,7 @@ class _AddServerModalState extends State<AddServerModal> {
             serversProvider.addServer(Server(
               address: serverObj.address,
               alias: serverObj.alias,
-              token: serverObj.token,
+              password: serverObj.password,
               defaultServer: defaultCheckbox,
               enabled: result['status'] == 'enabled' ? true : false
             ));
@@ -166,7 +152,7 @@ class _AddServerModalState extends State<AddServerModal> {
           }
           else if (result['result'] == 'token_invalid') {
             setState(() {
-              errorMessage = "Failed. Check token.";
+              errorMessage = "Failed. Password not valid.";
             });
           }
           else {
@@ -200,7 +186,7 @@ class _AddServerModalState extends State<AddServerModal> {
       final serverObj = Server(
         address: ipFieldController.text, 
         alias: aliasFieldController.text,
-        token: tokenFieldController.text, 
+        password: passwordFieldController.text, 
         defaultServer: false,
       );
       final result = await login(serverObj);
@@ -214,7 +200,7 @@ class _AddServerModalState extends State<AddServerModal> {
           Server server = Server(
             address: widget.server!.address, 
             alias: aliasFieldController.text,
-            token: tokenFieldController.text, 
+            password: passwordFieldController.text, 
             defaultServer: defaultCheckbox,
           );
           final result = await serversProvider.editServer(server);
@@ -271,8 +257,7 @@ class _AddServerModalState extends State<AddServerModal> {
         case 'form':
           return _form(
             widget.server != null ? _save : _connect,
-            width,
-            _openQrModal
+            width
           );
          
         case 'connecting':
@@ -379,12 +364,14 @@ class _AddServerModalState extends State<AddServerModal> {
     );
   }
 
-  Widget _form(Function done, double width, Function openQrModal) {
+  Widget _form(Function done, double width) {
     return Column(
       children: [
-        const Text(
-          "Add server connection",
-          style: TextStyle(
+        Text(
+          widget.server != null 
+            ? "Edit server connection" 
+            : "Add server connection",
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -398,10 +385,11 @@ class _AddServerModalState extends State<AddServerModal> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
-                    onChanged: (value) => _checkDataValid(),
+                    onChanged: (value) => _checkDataValid('address', value),
                     controller: ipFieldController,
                     enabled: widget.server != null ? false : true,
                     decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.http_outlined),
                       errorText: errorUrl,
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(
@@ -416,7 +404,9 @@ class _AddServerModalState extends State<AddServerModal> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
                     controller: aliasFieldController,
+                    onChanged: (value) => _checkDataValid('alias', value),
                     decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.badge_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(10)
@@ -426,30 +416,23 @@ class _AddServerModalState extends State<AddServerModal> {
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      width: width - 118,
-                      child: TextField(
-                        controller: tokenFieldController,
-                        onChanged: (value) => _checkDataValid(),
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10)
-                            )
-                          ),
-                          labelText: 'Token',
-                        ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: TextField(
+                    obscureText: true,
+                    keyboardType: TextInputType.visiblePassword,
+                    controller: passwordFieldController,
+                    onChanged: (value) => _checkDataValid('password', value),
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.lock_outline),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10)
+                        )
                       ),
+                      labelText: 'Password',
                     ),
-                    const SizedBox(width: 10),
-                    IconButton(
-                      onPressed: () => openQrModal(), 
-                      icon: const Icon(Icons.qr_code)
-                    )
-                  ],
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

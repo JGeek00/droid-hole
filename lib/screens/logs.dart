@@ -24,7 +24,10 @@ class Logs extends StatelessWidget {
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
     if (serversProvider.connectedServer != null && serversProvider.isServerConnected == true) {
-      return LogsList(server: serversProvider.connectedServer!); 
+      return LogsList(
+        server: serversProvider.connectedServer!, 
+        token: serversProvider.connectedServerToken!['phpSessId']
+      ); 
     }
     else if (serversProvider.connectedServer != null && serversProvider.isServerConnected == false) {
       return Scaffold(
@@ -73,10 +76,12 @@ class Logs extends StatelessWidget {
 
 class LogsList extends StatefulWidget {
   final Server server;
+  final String token;
 
   const LogsList({
     Key? key,
-    required this.server
+    required this.server,
+    required this.token,
   }) : super(key: key);
 
   @override
@@ -90,7 +95,10 @@ class _LogsListState extends State<LogsList> {
   int sortStatus = 0;
 
   Future loadLogs() async {
-    final result = await fetchLogs(widget.server);
+    final result = await fetchLogs(
+      widget.server,
+      widget.token
+    );
     if (result['result'] == 'success') {
       List<Log> items = [];
       result['data'].forEach((item) => items.add(Log.fromJson(item)));

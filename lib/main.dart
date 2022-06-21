@@ -53,17 +53,26 @@ void main() async {
   );
 }
 
+Future upgradeDbToV3(Database db) async {
+  await db.execute("ALTER TABLE servers RENAME COLUMN token TO password");
+}
+
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
   List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 2,
+    version: 3,
     onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, token TEXT, isDefaultServer NUMERIC)");
+      await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, isDefaultServer NUMERIC)");
       await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC)");
       await db.execute("INSERT INTO appConfig (autoRefreshTime) VALUES (5)");
+    },
+    onUpgrade: (Database db, int oldVersion, int newVersion) async {
+      if (oldVersion == 2) {
+        await upgradeDbToV3(db);
+      }
     },
     onOpen: (Database db) async {
       await db.transaction((txn) async{

@@ -15,6 +15,10 @@ class ServersProvider with ChangeNotifier {
 
   Server? _connectedServer;
   bool? _isServerConnected;
+  Map<String, dynamic> _connectedServerToken = {
+    'formToken': '',
+    'phpSessId': ''
+  };
   bool _refreshServerStatus = false;
 
   int _statusLoading = 0;
@@ -29,6 +33,10 @@ class ServersProvider with ChangeNotifier {
 
   Server? get connectedServer {
     return _connectedServer;
+  }
+
+  Map<String, dynamic>? get connectedServerToken {
+    return _connectedServerToken;
   }
 
   bool? get isServerConnected {
@@ -160,6 +168,11 @@ class ServersProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setConnectedServerToken(String token, String value) {
+    _connectedServerToken[token] = value;
+    notifyListeners();
+  }
+
   void setIsServerConnected(bool status) {
     _isServerConnected = status;
     notifyListeners();
@@ -181,7 +194,7 @@ class ServersProvider with ChangeNotifier {
         final Server serverObj = Server(
           address: server['address'], 
           alias: server['alias'],
-          token: server['token'], 
+          password: server['password'], 
           defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
         );
         _serversList.add(serverObj);
@@ -189,6 +202,8 @@ class ServersProvider with ChangeNotifier {
           final result = await login(serverObj);
           if (result['result'] == 'success') {
             serverObj.enabled = result['status'] == 'enabled' ? true : false;
+            _connectedServerToken['phpSessId'] = result['phpSessId'];
+            _connectedServerToken['token'] = result['token'];
             _isServerConnected = true;
             _connectedServer = serverObj;
           }
@@ -205,7 +220,7 @@ class ServersProvider with ChangeNotifier {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawInsert(
-          'INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.token}", 0)',
+          'INSERT INTO servers (address, alias, password, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.password}", 0)',
         );
         return true;
       });
@@ -218,7 +233,7 @@ class ServersProvider with ChangeNotifier {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
-          'UPDATE servers SET alias = "${server.alias}", token = "${server.token}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)} WHERE address = "${server.address}"',
+          'UPDATE servers SET alias = "${server.alias}", password = "${server.password}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)} WHERE address = "${server.address}"',
         );
         return true;
       });
@@ -301,7 +316,12 @@ class ServersProvider with ChangeNotifier {
 
   Future<bool> deleteDbData() async {
     _serversList = [];
+    _isServerConnected = false;
     _connectedServer = null;
+    _connectedServerToken = {
+      'formToken': '',
+      'phpSessId': ''
+    };
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawDelete(

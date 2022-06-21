@@ -64,10 +64,13 @@ class ServersList extends StatelessWidget {
         serversProvider.setConnectedServer(Server(
           address: server.address,
           alias: server.alias,
-          token: server.token,
+          password: server.password,
           defaultServer: server.defaultServer,
           enabled: result['status'] == 'enabled' ? true : false
         ));
+        serversProvider.setConnectedServerToken('phpSessId', result['phpSessId']);
+        serversProvider.setConnectedServerToken('token', result['token']);
+        serversProvider.setIsServerConnected(true);
         serversProvider.setRefreshServerStatus(true);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
@@ -78,6 +81,7 @@ class ServersList extends StatelessWidget {
         );
       }
       else {
+        serversProvider.setIsServerConnected(false);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
