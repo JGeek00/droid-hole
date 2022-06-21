@@ -1,17 +1,20 @@
-import 'package:droid_hole/functions/format.dart';
-import 'package:droid_hole/widgets/log_status.dart';
 import 'package:flutter/material.dart';
 
+import 'package:droid_hole/widgets/log_status.dart';
+
 import 'package:droid_hole/models/log.dart';
+import 'package:droid_hole/functions/format.dart';
 
 class LogDetailsModal extends StatelessWidget {
   final Log log;
   final double statusBarHeight;
+  final void Function(String, Log) whiteBlackList;
 
   const LogDetailsModal({
     Key? key,
     required this.log,
     required this.statusBarHeight,
+    required this.whiteBlackList,
   }) : super(key: key);
 
   @override
@@ -45,6 +48,43 @@ class LogDetailsModal extends StatelessWidget {
           ],
         ),
       );  
+    }
+
+    Widget _blackWhiteListButton() {
+      if (
+        log.status == '2' ||
+        log.status == '3' ||
+        log.status == '12' ||
+        log.status == '13' ||
+        log.status == '14'
+      ) {
+        return TextButton.icon(
+          onPressed: () {
+            Navigator.pop(context);
+            whiteBlackList('black', log);
+          }, 
+          icon: const Icon(Icons.block_rounded), 
+          label: const Text("Blacklist"),
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all(Colors.red),
+            overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1))
+          ),
+        );
+      }
+      else {
+        return TextButton.icon(
+          onPressed: () {
+            Navigator.pop(context);
+            whiteBlackList('white', log);
+          },
+          icon: const Icon(Icons.check), 
+          label: const Text("Whitelist"),
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all(Colors.green),
+            overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
+          ),
+        );
+      }
     }
     
     return Container(
@@ -91,13 +131,14 @@ class LogDetailsModal extends StatelessWidget {
               _item(Icons.system_update_alt_outlined, "Reply", Text("${log.replyType} (${(log.replyTime/10)} ms)")),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  _blackWhiteListButton(),
                   TextButton.icon(
                     onPressed: () => Navigator.pop(context), 
                     icon: const Icon(Icons.close),
                     label: const Text("Close"),
-                  )
+                  ),
                 ],
               )
             ],

@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -229,3 +231,51 @@ Future fetchLogs(Server server, String phpSessId) async {
     return {'result': 'error'};
   }
 }
+
+Future setWhiteBlacklist({
+  required Server server, 
+  required String domain,
+  required String list,
+  required String token, 
+  required String phpSessId
+}) async {
+  try {
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('${server.address}/admin/scripts/pi-hole/php/groups.php'),
+    )..fields.addAll({
+      'domain': domain,
+      'list': list,
+      'token': token,
+      'action': 'replace_domain'
+    });
+    request.headers.addAll({
+      'Cookie': 'PHPSESSID=$phpSessId'
+    });
+    final res = await request.send().timeout(
+      const Duration(seconds: 10)
+    );
+    final response = await res.stream.bytesToString();
+    final responseJson = jsonDecode(response);
+    if (responseJson['success'] == true) {
+      return {
+        'result': 'success',
+        'data': responseJson
+      };
+    }
+    else {
+      return {
+        'result': 'token'
+      };
+    }
+  } on FormatException {
+    return {'result': 'token'};
+  } on SocketException {
+    return {'result': 'socket'};
+  } on TimeoutException {
+    return {'result': 'timeout'};
+  }
+  catch (e) {
+    return {'result': 'error'};
+  }
+} 

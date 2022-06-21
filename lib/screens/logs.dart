@@ -1,13 +1,14 @@
-import 'package:droid_hole/widgets/log_status.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/log_status.dart';
 import 'package:droid_hole/widgets/log_details_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
+import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/functions/format.dart';
 import 'package:droid_hole/models/log.dart';
 import 'package:droid_hole/services/http_requests.dart';
@@ -121,6 +122,8 @@ class _LogsListState extends State<LogsList> {
 
   @override
   Widget build(BuildContext context) {
+    final serversProvider = Provider.of<ServersProvider>(context);
+
     final width = MediaQuery.of(context).size.width;
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;    
 
@@ -133,12 +136,71 @@ class _LogsListState extends State<LogsList> {
       }
     }
 
+    void _whiteBlackList(String list, Log log) async {
+      final loading = ProcessModal(context: context);
+      loading.open(
+        list == 'white' 
+          ? "Adding to whitelist..." 
+          : "adding to blacklist..."
+      );
+      final result = await setWhiteBlacklist(
+        server: serversProvider.connectedServer!, 
+        domain: log.url, 
+        list: list, 
+        token: serversProvider.connectedServerToken!['token'], 
+        phpSessId: serversProvider.connectedServerToken!['phpSessId']
+      );
+      loading.close();
+      if (result['result'] == 'success') {
+        if (result['data']['message'].toString().contains('Added')) {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                list == 'white'
+                  ? "Domain added to whitelist."
+                  : "Domain added to blacklist."
+              ),
+              backgroundColor: Colors.green,
+            )
+          );
+        }
+        else {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                list == 'white'
+                  ? "Domain is already on whitelist."
+                  : "Domain is already on blacklist."
+              ),
+              backgroundColor: Colors.grey,
+            )
+          );
+        }
+      }
+      else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              list == 'white'
+                ? "Could not add domain to whitelist."
+                : "Could not add domain to blacklist."
+            ),
+            backgroundColor: Colors.red,
+          )
+        );
+      }
+    }
+
     void _showLogDetails(Log log) {
       showModalBottomSheet(
         context: context, 
         builder: (context) => LogDetailsModal(
           log: log,
-          statusBarHeight: statusBarHeight
+          statusBarHeight: statusBarHeight,
+          whiteBlackList: _whiteBlackList,
         ),
         backgroundColor: Colors.transparent,
         isDismissible: true, 
