@@ -1,12 +1,15 @@
+import 'package:droid_hole/widgets/log_status.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/log_details_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
+import 'package:droid_hole/functions/format.dart';
+import 'package:droid_hole/models/log.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/models/server.dart';
@@ -82,17 +85,19 @@ class LogsList extends StatefulWidget {
 
 class _LogsListState extends State<LogsList> {
   int loadStatus = 0;
-  List<dynamic> logsList = [];
-  List<dynamic> logsListDisplay = [];
+  List<Log> logsList = [];
+  List<Log> logsListDisplay = [];
   int sortStatus = 0;
 
   Future loadLogs() async {
     final result = await fetchLogs(widget.server);
     if (result['result'] == 'success') {
+      List<Log> items = [];
+      result['data'].forEach((item) => items.add(Log.fromJson(item)));
       setState(() {
         loadStatus = 1;
-        logsList = result['data'].reversed.toList();
-        logsListDisplay = result['data'].reversed.toList();
+        logsList = items.reversed.toList();
+        logsListDisplay = items.reversed.toList();
       });
     }
     else {
@@ -109,85 +114,7 @@ class _LogsListState extends State<LogsList> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-
-    Widget _logStatusWidget({
-      required IconData icon, 
-      required Color color, 
-      required String text
-    }) {
-      return Row(
-        children: [
-          Icon(
-            icon,
-            color: color,
-            size: 14,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            text,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.bold,
-              fontSize: 12
-            ),  
-          )
-        ],
-      );
-    }
-
-    Widget _logStatus(String status) {
-      switch (status) {
-        case "1":
-          return _logStatusWidget(
-            icon: Icons.gpp_bad_rounded, 
-            color: Colors.red, 
-            text: "Blocked (gravity)"
-          );
-
-        case "2":
-        case "3":
-          return _logStatusWidget(
-            icon: Icons.verified_user_rounded, 
-            color: Colors.green, 
-            text: "OK"
-          );
-
-        case "4":
-          return _logStatusWidget(
-            icon: Icons.gpp_bad_rounded, 
-            color: Colors.red, 
-            text: "Blocked (regex blacklist)"
-          );
-
-        case "5":
-          return _logStatusWidget(
-            icon: Icons.gpp_bad_rounded, 
-            color: Colors.red, 
-            text: "Blocked (exact blacklist)"
-          );
-
-        case "6":
-          return _logStatusWidget(
-            icon: Icons.gpp_bad_rounded, 
-            color: Colors.red, 
-            text: "Blocked (exact blacklist)"
-          );
-
-        default:
-          return _logStatusWidget(
-            icon: Icons.shield_rounded, 
-            color: Colors.grey, 
-            text: "Unknown"
-          );
-      }
-    }
-
-    String _formatTimestamp(int timestamp) {
-      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp*1000);
-      DateFormat f = DateFormat('HH:mm:ss');
-      return f.format(dateTime);
-    }
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;    
 
     void _updateSortStatus(value) {
       if (sortStatus != value) {
@@ -196,6 +123,20 @@ class _LogsListState extends State<LogsList> {
           logsListDisplay = logsListDisplay.reversed.toList();
         });
       }
+    }
+
+    void _showLogDetails(Log log) {
+      showModalBottomSheet(
+        context: context, 
+        builder: (context) => LogDetailsModal(
+          log: log,
+          statusBarHeight: statusBarHeight
+        ),
+        backgroundColor: Colors.transparent,
+        isDismissible: true, 
+        enableDrag: true,
+        isScrollControlled: true,
+      );
     }
 
     Widget _status() {
@@ -229,7 +170,7 @@ class _LogsListState extends State<LogsList> {
               itemCount: logsListDisplay.length,
               itemBuilder: (context, index) => Material(
                 child: InkWell(
-                  onTap: () => {},
+                  onTap: () => _showLogDetails(logsListDisplay[index]),
                   child: Container(
                     width: double.maxFinite,
                     padding: const EdgeInsets.all(10),
@@ -248,12 +189,12 @@ class _LogsListState extends State<LogsList> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _logStatus(logsListDisplay[index][4]),
+                            LogStatus(status: logsListDisplay[index].status, showIcon: true),
                             const SizedBox(height: 10),
                             SizedBox(
                               width: width-100,
                               child: Text(
-                                logsListDisplay[index][2],
+                                logsListDisplay[index].url,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -263,7 +204,7 @@ class _LogsListState extends State<LogsList> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              logsListDisplay[index][3],
+                              logsListDisplay[index].device,
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 13
@@ -272,7 +213,7 @@ class _LogsListState extends State<LogsList> {
                           ],
                         ),
                         Text(
-                          _formatTimestamp(int.parse(logsListDisplay[index][0]))
+                          formatTimestamp(logsListDisplay[index].dateTime, 'HH:mm:ss')
                         ),
                       ],
                     ),
