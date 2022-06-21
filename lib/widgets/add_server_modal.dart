@@ -57,7 +57,7 @@ class _AddServerModalState extends State<AddServerModal> {
     super.initState();
     if (widget.server != null) {
       ipFieldController.text = widget.server!.address;
-      aliasFieldController.text = widget.server!.alias!;
+      aliasFieldController.text = widget.server!.alias;
       passwordFieldController.text = widget.server!.password;
       setState(() {
         defaultCheckbox = widget.server!.defaultServer;

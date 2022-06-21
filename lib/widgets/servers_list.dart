@@ -184,11 +184,11 @@ class ServersList extends StatelessWidget {
                     fontWeight: FontWeight.bold
                   ),
                 ),
-                if (servers[index].alias != null) Column(
+                Column(
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      servers[index].alias!,
+                      servers[index].alias,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 14,

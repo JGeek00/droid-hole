@@ -114,8 +114,8 @@ class TopBar extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (serversProvider.connectedServer!.alias != null) Text(
-                          serversProvider.connectedServer!.alias!,
+                        Text(
+                          serversProvider.connectedServer!.alias,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 22
@@ -123,15 +123,10 @@ class TopBar extends StatelessWidget {
                         ),
                         Text(
                           serversProvider.connectedServer!.address,
-                          style: serversProvider.connectedServer!.alias != null
-                            ? const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey
-                              )
-                            : const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22
-                              ),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey
+                          )
                         )
                       ],
                     ),
