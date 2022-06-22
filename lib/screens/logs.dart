@@ -1,3 +1,4 @@
+import 'package:droid_hole/widgets/logs_filters_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -209,6 +210,19 @@ class _LogsListState extends State<LogsList> {
       );
     }
 
+    void _showFiltersModal() {
+      showModalBottomSheet(
+        context: context, 
+        builder: (context) => LogsFiltersModal(
+          statusBarHeight: statusBarHeight,
+        ),
+        backgroundColor: Colors.transparent,
+        isDismissible: true, 
+        enableDrag: true,
+        isScrollControlled: true,
+      );
+    }
+
     Widget _status() {
       switch (loadStatus) {
         case 0:
@@ -358,7 +372,7 @@ class _LogsListState extends State<LogsList> {
                   ),
                   const SizedBox(width: 5),
                   IconButton(
-                    onPressed: () => {}, 
+                    onPressed: _showFiltersModal, 
                     icon: const Icon(Icons.filter_list_rounded),
                     splashRadius: 20,
                   ),
