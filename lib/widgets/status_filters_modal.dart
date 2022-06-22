@@ -79,9 +79,6 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      height: mediaQuery.orientation == Orientation.landscape
-        ? mediaQuery.size.height - (widget.statusBarHeight+10)
-        : 916,
       child: Column(
         children: [
           Row(
@@ -100,7 +97,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
             ],
           ),
           SizedBox(
-            height: 785,
+            height: mediaQuery.size.height - 165,
             child: SingleChildScrollView(
               child: Column(
                 children: [

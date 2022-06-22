@@ -53,10 +53,12 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
     }
 
     return Container(
-      margin: const EdgeInsets.all(10),
-      height: mediaQuery.orientation == Orientation.landscape
-          ? mediaQuery.size.height - (widget.statusBarHeight+10)
-          : null,
+      margin: EdgeInsets.only(
+        top: widget.statusBarHeight,
+        left: 10,
+        right: 10,
+        bottom: 10
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10)
