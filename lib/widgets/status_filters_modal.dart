@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:droid_hole/providers/filters_provider.dart';
 
 class StatusFiltersModal extends StatefulWidget {
   final double statusBarHeight;
-  final List<int> statusSelected;
-  final void Function(List<int>) updateList;
 
   const StatusFiltersModal({
     Key? key,
     required this.statusBarHeight,
-    required this.statusSelected,
-    required this.updateList,
   }) : super(key: key);
 
   @override
@@ -18,7 +17,7 @@ class StatusFiltersModal extends StatefulWidget {
 
 class _StatusFiltersModalState extends State<StatusFiltersModal> {
   List<int> _statusSelected = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
   ];
 
   void _updateStatusSelected(int option) {
@@ -35,14 +34,14 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
   }
 
   @override
-  void initState() {
-    _statusSelected = widget.statusSelected;
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final filtersProvider = Provider.of<FiltersProvider>(context);
+
     final mediaQuery = MediaQuery.of(context);
+
+    void updateList() {
+      filtersProvider.setStatusSelected(_statusSelected);
+    }
 
     Widget _listItem({
       required IconData icon,
@@ -79,6 +78,9 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
+      height: mediaQuery.orientation == Orientation.portrait
+        ? 920
+        : null,
       child: Column(
         children: [
           Row(
@@ -97,79 +99,81 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
             ],
           ),
           SizedBox(
-            height: mediaQuery.size.height - 165,
+            height: mediaQuery.orientation == Orientation.portrait
+              ? mediaQuery.size.height - 235
+              : mediaQuery.size.height - 165,
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   _listItem(
                     icon: Icons.gpp_bad_rounded, 
                     label: "Blocked (gravity)", 
-                    value: 0
-                  ),
-                  _listItem(
-                    icon: Icons.verified_user_rounded, 
-                    label: "OK (forwarded)", 
                     value: 1
                   ),
                   _listItem(
                     icon: Icons.verified_user_rounded, 
-                    label: "OK (cache)", 
+                    label: "OK (forwarded)", 
                     value: 2
                   ),
                   _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (regex blacklist", 
+                    icon: Icons.verified_user_rounded, 
+                    label: "OK (cache)", 
                     value: 3
                   ),
                   _listItem(
                     icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (exact blacklist)", 
+                    label: "Blocked (regex blacklist", 
                     value: 4
                   ),
                   _listItem(
                     icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (external, IP)", 
+                    label: "Blocked (exact blacklist)", 
                     value: 5
                   ),
                   _listItem(
                     icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (external, NULL)", 
+                    label: "Blocked (external, IP)", 
                     value: 6
                   ),
                   _listItem(
                     icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (external, NXRA)", 
+                    label: "Blocked (external, NULL)", 
                     value: 7
                   ),
                   _listItem(
                     icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (gravity, CNAME)", 
+                    label: "Blocked (external, NXRA)", 
                     value: 8
                   ),
                   _listItem(
                     icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (regex blacklist, CNAME)", 
+                    label: "Blocked (gravity, CNAME)", 
                     value: 9
                   ),
                   _listItem(
                     icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (exact blacklist, CNAME)", 
+                    label: "Blocked (regex blacklist, CNAME)", 
                     value: 10
                   ),
                   _listItem(
-                    icon: Icons.refresh_rounded, 
-                    label: "Retried", 
+                    icon: Icons.gpp_bad_rounded, 
+                    label: "Blocked (exact blacklist, CNAME)", 
                     value: 11
                   ),
                   _listItem(
                     icon: Icons.refresh_rounded, 
-                    label: "Retried (ignored)", 
+                    label: "Retried", 
                     value: 12
+                  ),
+                  _listItem(
+                    icon: Icons.refresh_rounded, 
+                    label: "Retried (ignored)", 
+                    value: 13
                   ),
                   _listItem(
                     icon: Icons.gpp_bad_rounded, 
                     label: "OK (already forwarded)", 
-                    value: 13
+                    value: 14
                   ),
                 ],
               ),
@@ -187,7 +191,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                 ),
                 TextButton.icon(
                   onPressed: () {
-                    widget.updateList(_statusSelected);
+                    updateList();
                     Navigator.pop(context);
                   }, 
                   icon: const Icon(Icons.check), 

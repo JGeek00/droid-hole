@@ -1,12 +1,19 @@
-import 'package:droid_hole/widgets/status_filters_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:droid_hole/widgets/status_filters_modal.dart';
+
+import 'package:droid_hole/providers/filters_provider.dart';
+import 'package:droid_hole/functions/format.dart';
 
 class LogsFiltersModal extends StatefulWidget {
   final double statusBarHeight;
+  final void Function() filterLogs;
 
   const LogsFiltersModal({
     Key? key,
     required this.statusBarHeight,
+    required this.filterLogs,
   }) : super(key: key);
 
   @override
@@ -14,23 +21,15 @@ class LogsFiltersModal extends StatefulWidget {
 }
 
 class _LogsFiltersModalState extends State<LogsFiltersModal> {
-  List<int> _statusSelected = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
+    final filtersProvider = Provider.of<FiltersProvider>(context);
 
     void _openStatusModal() {
       showModalBottomSheet(
         context: context, 
         builder: (context) => StatusFiltersModal(
           statusBarHeight: widget.statusBarHeight,
-          statusSelected: _statusSelected,
-          updateList: (List<int> list) {
-            setState(() => _statusSelected = list);
-          },
         ),
         backgroundColor: Colors.transparent,
         isDismissible: true, 
@@ -40,7 +39,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
     }
 
     String _statusText() {
-      switch (_statusSelected.length) {
+      switch (filtersProvider.statusSelected.length) {
         case 0:
           return "No items selected";
 
@@ -48,7 +47,42 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
           return "All items selected";
 
         default:
-          return "${_statusSelected.length} items selected";
+          return "${filtersProvider.statusSelected.length} items selected";
+      }
+    }
+
+    void _selectTime(String time) async {
+      DateTime now = DateTime.now();
+      DateTime? dateValue = await showDatePicker(
+        context: context, 
+        initialDate: now, 
+        firstDate: DateTime(now.year, now.month-1, now.day), 
+        lastDate: now
+      );
+      if (dateValue != null) {
+        TimeOfDay? timeValue = await showTimePicker(
+          context: context, 
+          initialTime: TimeOfDay.now(),
+          helpText: time == 'from'
+            ? "Select start time"
+            : "Select end time"
+        );
+        if (timeValue != null) {
+          DateTime value = DateTime(
+            dateValue.year,
+            dateValue.month,
+            dateValue.day,
+            timeValue.hour,
+            timeValue.minute,
+            dateValue.second
+          );
+          if (time == 'from') {
+            filtersProvider.setStartTime(value);
+          }
+          else {
+            filtersProvider.setEndTime(value);
+          }
+        }
       }
     }
 
@@ -99,15 +133,72 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          TextButton.icon(
-                            onPressed: () => {}, 
-                            icon: const Icon(Icons.access_time), 
-                            label: const Text("Minimum time")
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => _selectTime('from'),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  children: [
+                                    const Text(
+                                      "From:",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      filtersProvider.startTime != null 
+                                        ? formatTimestamp(filtersProvider.startTime!, "dd/MM/yyyy - HH:mm")
+                                        : "Not selected",
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                          TextButton.icon(
-                            onPressed: () => {}, 
-                            icon: const Icon(Icons.access_time), 
-                            label: const Text("Maximum time")
+                          const Text(
+                            "-",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20
+                            ),
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => _selectTime('to'),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  children: [
+                                    const Text(
+                                      "To:",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      filtersProvider.endTime != null 
+                                        ? formatTimestamp(filtersProvider.endTime!, "dd/MM/yyyy - HH:mm")
+                                        : "Not selected",
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -133,7 +224,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                             children: [
                               const Text(
                                 "Status",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16
                                 ),
@@ -167,6 +258,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                   ),
                   TextButton.icon(
                     onPressed: () {
+                      widget.filterLogs();
                       Navigator.pop(context);
                     }, 
                     icon: const Icon(Icons.check), 

@@ -11,6 +11,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
+import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/status_updater.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:droid_hole/routers/router.gr.dart';
@@ -20,6 +21,7 @@ import 'package:droid_hole/providers/servers_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ServersProvider serversProvider = ServersProvider();
+  FiltersProvider filtersProvider = FiltersProvider();
   AppConfigProvider configProvider = AppConfigProvider();
 
   Map<String, dynamic> dbData = await loadDb();
@@ -43,6 +45,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: ((context) => serversProvider)
+        ),
+        ChangeNotifierProvider(
+          create: ((context) => filtersProvider)
         ),
         ChangeNotifierProvider(
           create: ((context) => configProvider)

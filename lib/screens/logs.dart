@@ -1,7 +1,7 @@
-import 'package:droid_hole/widgets/logs_filters_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/logs_filters_modal.dart';
 import 'package:droid_hole/widgets/log_status.dart';
 import 'package:droid_hole/widgets/log_details_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
@@ -9,6 +9,7 @@ import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
+import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/functions/format.dart';
 import 'package:droid_hole/models/log.dart';
@@ -124,9 +125,23 @@ class _LogsListState extends State<LogsList> {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final filtersProvider = Provider.of<FiltersProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
-    final statusBarHeight = MediaQuery.of(context).viewPadding.top;    
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;   
+
+    void filterLogs() {
+      List<Log> tempLogs = [...logsList];
+      if (filtersProvider.startTime != null) {
+        tempLogs = tempLogs.where((log) => log.dateTime.isAfter(filtersProvider.startTime!)).toList();
+      }
+      if (filtersProvider.endTime != null) {
+        tempLogs = tempLogs.where((log) => log.dateTime.isBefore(filtersProvider.endTime!)).toList();
+      }
+      setState(() {
+        logsListDisplay = tempLogs;
+      });
+    } 
 
     void _updateSortStatus(value) {
       if (sortStatus != value) {
@@ -215,6 +230,7 @@ class _LogsListState extends State<LogsList> {
         context: context, 
         builder: (context) => LogsFiltersModal(
           statusBarHeight: statusBarHeight,
+          filterLogs: filterLogs,
         ),
         backgroundColor: Colors.transparent,
         isDismissible: true, 
@@ -250,61 +266,78 @@ class _LogsListState extends State<LogsList> {
             onRefresh: (() async {
               await loadLogs();
             }),
-            child: ListView.builder(
-              itemCount: logsListDisplay.length,
-              itemBuilder: (context, index) => Material(
-                child: InkWell(
-                  onTap: () => _showLogDetails(logsListDisplay[index]),
-                  child: Container(
-                    width: double.maxFinite,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: index < logsListDisplay.length
-                        ? const Border(
-                            bottom: BorderSide(
-                              color: Colors.black12
-                            )
-                          )
-                        : null
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            child: logsListDisplay.isNotEmpty
+              ? ListView.builder(
+                  itemCount: logsListDisplay.length,
+                  itemBuilder: (context, index) => Material(
+                    child: InkWell(
+                      onTap: () => _showLogDetails(logsListDisplay[index]),
+                      child: Container(
+                        width: double.maxFinite,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: index < logsListDisplay.length
+                            ? const Border(
+                                bottom: BorderSide(
+                                  color: Colors.black12
+                                )
+                              )
+                            : null
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            LogStatus(status: logsListDisplay[index].status, showIcon: true),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              width: width-100,
-                              child: Text(
-                                logsListDisplay[index].url,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                LogStatus(status: logsListDisplay[index].status, showIcon: true),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  width: width-100,
+                                  child: Text(
+                                    logsListDisplay[index].url,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  logsListDisplay[index].device,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13
+                                  ),
+                                )
+                              ],
                             ),
-                            const SizedBox(height: 10),
                             Text(
-                              logsListDisplay[index].device,
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 13
-                              ),
-                            )
+                              formatTimestamp(logsListDisplay[index].dateTime, 'HH:mm:ss')
+                            ),
                           ],
                         ),
-                        Text(
-                          formatTimestamp(logsListDisplay[index].dateTime, 'HH:mm:ss')
-                        ),
-                      ],
+                      ),
                     ),
+                  )
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [ 
+                      Text(
+                        "No logs to display here.",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold
+                        ),
+                      )
+                    ],
                   ),
-                ),
               )
-            ),
           );
 
         case 2:
