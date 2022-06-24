@@ -115,6 +115,10 @@ class _LogsListState extends State<LogsList> {
     DateTime? startTime,
     DateTime? endTime, 
   }) async {
+    setState(() {
+      _showSearchBar = false;
+      _searchController.text = "";
+    });
     final result = await fetchLogs(
       widget.server,
       widget.token
