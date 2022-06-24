@@ -5,11 +5,13 @@ import 'package:droid_hole/providers/filters_provider.dart';
 
 class StatusFiltersModal extends StatefulWidget {
   final double statusBarHeight;
+  final double bottomNavBarHeight;
   final List<int> statusSelected;
 
   const StatusFiltersModal({
     Key? key,
     required this.statusBarHeight,
+    required this.bottomNavBarHeight,
     required this.statusSelected,
   }) : super(key: key);
 
@@ -103,9 +105,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      height: mediaQuery.orientation == Orientation.portrait
-        ? 920
-        : null,
+      height: mediaQuery.size.height >= 916 ? 916 : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight),
       child: Column(
         children: [
           Row(
@@ -124,9 +124,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
             ],
           ),
           SizedBox(
-            height: mediaQuery.orientation == Orientation.portrait
-              ? mediaQuery.size.height - 235
-              : mediaQuery.size.height - 165,
+            height: mediaQuery.size.height >= 916 ? 785 : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+141),
             child: SingleChildScrollView(
               child: Column(
                 children: [

@@ -183,6 +183,7 @@ class _LogsListState extends State<LogsList> {
 
     final width = MediaQuery.of(context).size.width;
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;   
+    final bottomNavBarHeight = MediaQuery.of(context).viewPadding.bottom;   
 
     void _updateSortStatus(value) {
       if (sortStatus != value) {
@@ -271,6 +272,7 @@ class _LogsListState extends State<LogsList> {
         context: context, 
         builder: (context) => LogsFiltersModal(
           statusBarHeight: statusBarHeight,
+          bottomNavBarHeight: bottomNavBarHeight,
           filterLogs: () {
             setState(() {
               logsListDisplay = filterLogs(

@@ -8,11 +8,13 @@ import 'package:droid_hole/functions/format.dart';
 
 class LogsFiltersModal extends StatefulWidget {
   final double statusBarHeight;
+  final double bottomNavBarHeight;
   final void Function() filterLogs;
 
   const LogsFiltersModal({
     Key? key,
     required this.statusBarHeight,
+    required this.bottomNavBarHeight,
     required this.filterLogs,
   }) : super(key: key);
 
@@ -32,6 +34,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
         context: context, 
         builder: (context) => StatusFiltersModal(
           statusBarHeight: widget.statusBarHeight,
+          bottomNavBarHeight: widget.bottomNavBarHeight,
           statusSelected: filtersProvider.statusSelected,
         ),
         backgroundColor: Colors.transparent,
