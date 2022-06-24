@@ -21,6 +21,8 @@ class LogsFiltersModal extends StatefulWidget {
 }
 
 class _LogsFiltersModalState extends State<LogsFiltersModal> {
+  String? timeError;
+
   @override
   Widget build(BuildContext context) {
     final filtersProvider = Provider.of<FiltersProvider>(context);
@@ -30,6 +32,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
         context: context, 
         builder: (context) => StatusFiltersModal(
           statusBarHeight: widget.statusBarHeight,
+          statusSelected: filtersProvider.statusSelected,
         ),
         backgroundColor: Colors.transparent,
         isDismissible: true, 
@@ -77,13 +80,46 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
             dateValue.second
           );
           if (time == 'from') {
-            filtersProvider.setStartTime(value);
+            if (filtersProvider.endTime != null && value.isAfter(filtersProvider.endTime!)) {
+              setState(() {
+                timeError = "Start time is not before end time";
+              });
+            }
+            else {
+              filtersProvider.setStartTime(value);
+              setState(() {
+                timeError = null;
+              });
+            }
           }
           else {
-            filtersProvider.setEndTime(value);
+            if (filtersProvider.startTime != null && value.isBefore(filtersProvider.startTime!)) {
+              setState(() {
+                timeError = "End time is not after start time";
+              });
+            }
+            else {
+              filtersProvider.setEndTime(value);
+              setState(() {
+                timeError = null;
+              });
+            }
           }
         }
       }
+    }
+
+    bool isFilteringValid() {
+      if (timeError == null && filtersProvider.statusSelected.isNotEmpty) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
+    void _resetFilters() {
+      filtersProvider.resetFilters();
     }
 
     return Container(
@@ -130,76 +166,119 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      Column(
                         children: [
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => _selectTime('from'),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    const Text(
-                                      "From:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15
-                                      ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Material(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                child: InkWell(
+                                  onTap: () => _selectTime('from'),
+                                  borderRadius: BorderRadius.circular(10),
+                                  splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 10
                                     ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      filtersProvider.startTime != null 
-                                        ? formatTimestamp(filtersProvider.startTime!, "dd/MM/yyyy - HH:mm")
-                                        : "Not selected",
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14
-                                      ),
-                                    )
-                                  ],
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Theme.of(context).primaryColor
+                                      )
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "From time",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          filtersProvider.startTime != null 
+                                            ? formatTimestamp(filtersProvider.startTime!, "dd/MM/yyyy - HH:mm")
+                                            : "Not selected",
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 12
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          const Text(
-                            "-",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20
-                            ),
-                          ),
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => _selectTime('to'),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    const Text(
-                                      "To:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      filtersProvider.endTime != null 
-                                        ? formatTimestamp(filtersProvider.endTime!, "dd/MM/yyyy - HH:mm")
-                                        : "Not selected",
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14
-                                      ),
-                                    )
-                                  ],
+                              const Text(
+                                "-",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20
                                 ),
                               ),
-                            ),
+                              Material(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                child: InkWell(
+                                  onTap: () => _selectTime('to'),
+                                  borderRadius: BorderRadius.circular(10),
+                                  splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 10
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Theme.of(context).primaryColor
+                                      )
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "To time",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: Theme.of(context).primaryColor
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          filtersProvider.endTime != null 
+                                            ? formatTimestamp(filtersProvider.endTime!, "dd/MM/yyyy - HH:mm")
+                                            : "Not selected",
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 12
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
+                          if (timeError != null) ...[
+                            const SizedBox(height: 5),
+                            Text(
+                              timeError!,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: Colors.red
+                              ),
+                            )
+                          ]
                         ],
                       ),
                     ],
@@ -252,22 +331,38 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton.icon(
-                    onPressed: () => Navigator.pop(context), 
-                    icon: const Icon(Icons.close),
-                    label: const Text("Close"),
+                    onPressed: _resetFilters, 
+                    icon: const Icon(Icons.restore_rounded),
+                    label: const Text("Reset filters"),
                   ),
-                  TextButton.icon(
-                    onPressed: () {
-                      widget.filterLogs();
-                      Navigator.pop(context);
-                    }, 
-                    icon: const Icon(Icons.check), 
-                    label: const Text("Apply"),
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(Colors.green),
-                      overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
-                    ),
-                  ),
+                  Row(
+                    children: [
+                      TextButton.icon(
+                        onPressed: () => Navigator.pop(context), 
+                        icon: const Icon(Icons.close),
+                        label: const Text("Close"),
+                      ),
+                      const SizedBox(width: 10),
+                      TextButton.icon(
+                        onPressed: isFilteringValid() == true
+                          ? () {
+                              widget.filterLogs();
+                              Navigator.pop(context);
+                            }
+                          : null, 
+                        icon: const Icon(Icons.check), 
+                        label: const Text("Apply"),
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all(
+                            isFilteringValid() == true
+                              ? Colors.green
+                              : Colors.grey
+                          ),
+                          overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             )

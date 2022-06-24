@@ -23,13 +23,17 @@ class Logs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final filtersProvider = Provider.of<FiltersProvider>(context);
 
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
     if (serversProvider.selectedServer != null && serversProvider.isServerConnected == true) {
       return LogsList(
         server: serversProvider.selectedServer!, 
-        token: serversProvider.selectedServerToken!['phpSessId']
+        token: serversProvider.selectedServerToken!['phpSessId'],
+        selectedStatus: filtersProvider.statusSelected,
+        startTime: filtersProvider.startTime,
+        endTime: filtersProvider.endTime,
       ); 
     }
     else if (serversProvider.selectedServer != null && serversProvider.isServerConnected == false) {
@@ -80,11 +84,17 @@ class Logs extends StatelessWidget {
 class LogsList extends StatefulWidget {
   final Server server;
   final String token;
+  final List<int> selectedStatus;
+  final DateTime? startTime;
+  final DateTime? endTime;
 
   const LogsList({
     Key? key,
     required this.server,
     required this.token,
+    required this.selectedStatus,
+    required this.startTime,
+    required this.endTime,
   }) : super(key: key);
 
   @override
@@ -97,7 +107,11 @@ class _LogsListState extends State<LogsList> {
   List<Log> logsListDisplay = [];
   int sortStatus = 0;
 
-  Future loadLogs() async {
+  Future loadLogs({
+    List<int>? statusSelected,
+    DateTime? startTime,
+    DateTime? endTime, 
+  }) async {
     final result = await fetchLogs(
       widget.server,
       widget.token
@@ -105,16 +119,49 @@ class _LogsListState extends State<LogsList> {
     if (result['result'] == 'success') {
       List<Log> items = [];
       result['data'].forEach((item) => items.add(Log.fromJson(item)));
+      List<Log> filtered = filterLogs(
+        logs: items.reversed.toList(),
+        statusSelected: statusSelected ?? widget.selectedStatus,
+        startTime: startTime ?? widget.startTime,
+        endTime: endTime ?? widget.endTime,
+      );
       setState(() {
         loadStatus = 1;
         logsList = items.reversed.toList();
-        logsListDisplay = items.reversed.toList();
+        logsListDisplay = filtered;
       });
     }
     else {
       setState(() => loadStatus = 2);
     }
   }
+
+  List<Log> filterLogs({
+    List<Log>? logs,
+    required List<int> statusSelected,
+    required DateTime? startTime,
+    required DateTime? endTime, 
+  }) {
+    List<Log> tempLogs = logs != null ? [...logs] : [...logsList];
+
+    if (startTime != null) {
+      tempLogs = tempLogs.where((log) => log.dateTime.isAfter(startTime)).toList();
+    }
+    if (endTime != null) {
+      tempLogs = tempLogs.where((log) => log.dateTime.isBefore(endTime)).toList();
+    }
+
+    tempLogs = tempLogs.where((log) {
+      if (statusSelected.contains(int.parse(log.status))) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }).toList();
+
+    return tempLogs;
+  } 
 
   @override
   void initState() {
@@ -129,19 +176,6 @@ class _LogsListState extends State<LogsList> {
 
     final width = MediaQuery.of(context).size.width;
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;   
-
-    void filterLogs() {
-      List<Log> tempLogs = [...logsList];
-      if (filtersProvider.startTime != null) {
-        tempLogs = tempLogs.where((log) => log.dateTime.isAfter(filtersProvider.startTime!)).toList();
-      }
-      if (filtersProvider.endTime != null) {
-        tempLogs = tempLogs.where((log) => log.dateTime.isBefore(filtersProvider.endTime!)).toList();
-      }
-      setState(() {
-        logsListDisplay = tempLogs;
-      });
-    } 
 
     void _updateSortStatus(value) {
       if (sortStatus != value) {
@@ -230,7 +264,15 @@ class _LogsListState extends State<LogsList> {
         context: context, 
         builder: (context) => LogsFiltersModal(
           statusBarHeight: statusBarHeight,
-          filterLogs: filterLogs,
+          filterLogs: () {
+            setState(() {
+              logsListDisplay = filterLogs(
+                statusSelected: filtersProvider.statusSelected,
+                startTime: filtersProvider.startTime,
+                endTime: filtersProvider.endTime
+              );
+            });
+          },
         ),
         backgroundColor: Colors.transparent,
         isDismissible: true, 

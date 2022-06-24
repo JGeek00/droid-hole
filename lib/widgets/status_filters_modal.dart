@@ -5,10 +5,12 @@ import 'package:droid_hole/providers/filters_provider.dart';
 
 class StatusFiltersModal extends StatefulWidget {
   final double statusBarHeight;
+  final List<int> statusSelected;
 
   const StatusFiltersModal({
     Key? key,
     required this.statusBarHeight,
+    required this.statusSelected,
   }) : super(key: key);
 
   @override
@@ -31,6 +33,14 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
         _statusSelected.add(option);
       });
     }
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      _statusSelected = widget.statusSelected;
+    });
+    super.initState();
   }
 
   @override
@@ -65,6 +75,21 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
           ),
         ),
       );
+    }
+
+    void _checkUncheckAll() {
+      if (_statusSelected.isEmpty == true) {
+        setState(() {
+          _statusSelected = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+          ];
+        });
+      }
+      else {
+        setState(() {
+          _statusSelected = [];
+        });
+      }
     }
 
     return Container(
@@ -185,21 +210,39 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton.icon(
-                  onPressed: () => Navigator.pop(context), 
-                  icon: const Icon(Icons.close),
-                  label: const Text("Close"),
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    updateList();
-                    Navigator.pop(context);
-                  }, 
-                  icon: const Icon(Icons.check), 
-                  label: const Text("Apply"),
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(Colors.green),
-                    overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
+                  onPressed: _checkUncheckAll, 
+                  icon: Icon(
+                    _statusSelected.isEmpty == true
+                      ? Icons.check_box_rounded
+                      : Icons.check_box_outline_blank_rounded
                   ),
+                  label: Text(
+                    _statusSelected.isNotEmpty == true
+                      ? "Unselect all"
+                      : "Select all"
+                  ),
+                ),
+                Row(
+                  children: [
+                    TextButton.icon(
+                      onPressed: () => Navigator.pop(context), 
+                      icon: const Icon(Icons.close),
+                      label: const Text("Close"),
+                    ),
+                    const SizedBox(width: 10),
+                    TextButton.icon(
+                      onPressed: () {
+                        updateList();
+                        Navigator.pop(context);
+                      }, 
+                      icon: const Icon(Icons.check), 
+                      label: const Text("Apply"),
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateProperty.all(Colors.green),
+                        overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
