@@ -65,8 +65,8 @@ dev_dependencies:
 
 
 flutter_icons:
-  image_path_android: "assets/icon/icon512.png"
-  image_path_ios: "assets/icon/icon-background-512.png"
+  image_path_android: "assets/icon/icon.png"
+  image_path_ios: "assets/icon/icon-background.png"
   android: true # can specify file name here e.g. "ic_launcher"
   ios: true # can specify file name here e.g. "My-Launcher-Icon"
 
@@ -91,7 +91,7 @@ flutter_native_splash:
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a 
   # png file and should be sized for 4x pixel density.
-  image: assets/icon/icon512.png
+  image: assets/icon/icon.png
 
   # The color_dark, background_image_dark, and image_dark are parameters that set the background
   # and image when the device is in dark mode. If they are not specified, the app will use the
@@ -100,7 +100,7 @@ flutter_native_splash:
   # set.
   color_dark: "#212121"
   #background_image_dark: "assets/dark-background.png"
-  image_dark: assets/icon/icon-background-512.png
+  image_dark: assets/icon/icon-background.png
 
   # The android, ios and web parameters can be used to disable generating a splash screen on a given 
   # platform.
@@ -158,7 +158,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/icon/icon512.png
+    - assets/icon/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
