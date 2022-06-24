@@ -99,7 +99,9 @@ class RealtimeStatus {
     dnsQueriesAllReplies: json["dns_queries_all_replies"],
     privacyLevel: json["privacy_level"],
     status: json["status"],
-    topQueries: Map.from(json["top_queries"]).map((k, v) => MapEntry<String, int>(k, v)),
+    topQueries: (json["top_queries"] == MapEntry<String, int>)
+      ? Map.from(json["top_queries"]).map((k, v) => MapEntry<String, int>(k, v))
+      : {},
     topAds: (json["top_ads"] == MapEntry<String, int>)
       ? Map.from(json["top_ads"]).map((k, v) => MapEntry<String, int>(k, v))
       : {},
