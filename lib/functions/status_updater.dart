@@ -29,13 +29,13 @@ class StatusUpdater {
 
       if (isRunning == false) {
         isRunning = true;
-        if (serversProvider.connectedServer != null) {
+        if (serversProvider.selectedServer != null) {
           final statusResult = await realtimeStatus(
-            serversProvider.connectedServer!,
-            serversProvider.connectedServerToken!['phpSessId']
+            serversProvider.selectedServer!,
+            serversProvider.selectedServerToken!['phpSessId']
           );
           if (statusResult['result'] == 'success') {
-            serversProvider.updateConnectedServerStatus(
+            serversProvider.updateselectedServerStatus(
               statusResult['data'].status == 'enabled' ? true : false
             );
             serversProvider.setRealtimeStatus(statusResult['data']);
@@ -61,10 +61,10 @@ class StatusUpdater {
 
   void _updateOverTimeData(ServersProvider serversProvider) {
     void timerFn({Timer? timer}) async {
-      if (serversProvider.connectedServer != null) {
+      if (serversProvider.selectedServer != null) {
         final statusResult = await fetchOverTimeData(
-          serversProvider.connectedServer!,
-          serversProvider.connectedServerToken!['phpSessId']
+          serversProvider.selectedServer!,
+          serversProvider.selectedServerToken!['phpSessId']
         );
         if (statusResult['result'] == 'success') {
           serversProvider.setOvertimeData(statusResult['data']);

@@ -20,7 +20,7 @@ class TopBar extends StatelessWidget {
     void _openWebPanel() {
       if (serversProvider.isServerConnected == true) {
         FlutterWebBrowser.openWebPage(
-          url: '${serversProvider.connectedServer!.address}/admin/',
+          url: '${serversProvider.selectedServer!.address}/admin/',
           customTabsOptions: const CustomTabsOptions(
             instantAppsEnabled: true,
             showTitle: true,
@@ -39,13 +39,13 @@ class TopBar extends StatelessWidget {
       final ProcessModal process = ProcessModal(context: context);
       process.open("Refreshing data...");
       final result = await realtimeStatus(
-        serversProvider.connectedServer!,
-        serversProvider.connectedServerToken!['phpSessId']
+        serversProvider.selectedServer!,
+        serversProvider.selectedServerToken!['phpSessId']
       );
       // ignore: use_build_context_synchronously
       process.close();
       if (result['result'] == "success") {
-        serversProvider.updateConnectedServerStatus(
+        serversProvider.updateselectedServerStatus(
           result['data'].status == 'enabled' ? true : false
         );
         serversProvider.setIsServerConnected(true);
@@ -94,17 +94,17 @@ class TopBar extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Row(
-              children: serversProvider.connectedServer != null 
+              children: serversProvider.selectedServer != null 
                 ? [
                     Icon(
                       serversProvider.isServerConnected == true 
-                        ? serversProvider.connectedServer!.enabled == true 
+                        ? serversProvider.selectedServer!.enabled == true 
                           ? Icons.verified_user_rounded
                           : Icons.gpp_bad_rounded
                         : Icons.shield_rounded,
                       size: 30,
                       color: serversProvider.isServerConnected == true 
-                        ? serversProvider.connectedServer!.enabled == true
+                        ? serversProvider.selectedServer!.enabled == true
                           ? Colors.green
                           : Colors.red
                         : Colors.grey
@@ -115,14 +115,14 @@ class TopBar extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          serversProvider.connectedServer!.alias,
+                          serversProvider.selectedServer!.alias,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 22
                           ),
                         ),
                         Text(
-                          serversProvider.connectedServer!.address,
+                          serversProvider.selectedServer!.address,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey
@@ -151,7 +151,7 @@ class TopBar extends StatelessWidget {
           PopupMenuButton(
             splashRadius: 20,
             itemBuilder: (context) => 
-              serversProvider.connectedServer != null 
+              serversProvider.selectedServer != null 
                 ? serversProvider.isServerConnected == true 
                   ? [
                       PopupMenuItem(

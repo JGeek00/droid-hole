@@ -25,13 +25,13 @@ class Logs extends StatelessWidget {
 
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
-    if (serversProvider.connectedServer != null && serversProvider.isServerConnected == true) {
+    if (serversProvider.selectedServer != null && serversProvider.isServerConnected == true) {
       return LogsList(
-        server: serversProvider.connectedServer!, 
-        token: serversProvider.connectedServerToken!['phpSessId']
+        server: serversProvider.selectedServer!, 
+        token: serversProvider.selectedServerToken!['phpSessId']
       ); 
     }
-    else if (serversProvider.connectedServer != null && serversProvider.isServerConnected == false) {
+    else if (serversProvider.selectedServer != null && serversProvider.isServerConnected == false) {
       return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size(double.maxFinite, 70),
@@ -59,7 +59,7 @@ class Logs extends StatelessWidget {
         ),
       );
     }
-    else if (serversProvider.connectedServer == null) {
+    else if (serversProvider.selectedServer == null) {
       return const Scaffold(
         appBar: PreferredSize(
           preferredSize: Size(double.maxFinite, 90),
@@ -145,11 +145,11 @@ class _LogsListState extends State<LogsList> {
           : "adding to blacklist..."
       );
       final result = await setWhiteBlacklist(
-        server: serversProvider.connectedServer!, 
+        server: serversProvider.selectedServer!, 
         domain: log.url, 
         list: list, 
-        token: serversProvider.connectedServerToken!['token'], 
-        phpSessId: serversProvider.connectedServerToken!['phpSessId']
+        token: serversProvider.selectedServerToken!['token'], 
+        phpSessId: serversProvider.selectedServerToken!['phpSessId']
       );
       loading.close();
       if (result['result'] == 'success') {

@@ -61,15 +61,15 @@ class ServersList extends StatelessWidget {
       final result = await login(server);
       process.close();
       if (result['result'] == 'success') {
-        serversProvider.setConnectedServer(Server(
+        serversProvider.setselectedServer(Server(
           address: server.address,
           alias: server.alias,
           password: server.password,
           defaultServer: server.defaultServer,
           enabled: result['status'] == 'enabled' ? true : false
         ));
-        serversProvider.setConnectedServerToken('phpSessId', result['phpSessId']);
-        serversProvider.setConnectedServerToken('token', result['token']);
+        serversProvider.setselectedServerToken('phpSessId', result['phpSessId']);
+        serversProvider.setselectedServerToken('token', result['token']);
         serversProvider.setIsServerConnected(true);
         serversProvider.setRefreshServerStatus(true);
         // ignore: use_build_context_synchronously
@@ -121,7 +121,7 @@ class ServersList extends StatelessWidget {
           children: [
             Icon(
               Icons.storage_rounded,
-              color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == server.address
+              color: serversProvider.selectedServer != null && serversProvider.selectedServer?.address == server.address
                 ? serversProvider.isServerConnected == true 
                   ? Colors.green
                   : Colors.orange
@@ -154,7 +154,7 @@ class ServersList extends StatelessWidget {
       else {
         return Icon(
           Icons.storage_rounded,
-          color: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == server.address
+          color: serversProvider.selectedServer != null && serversProvider.selectedServer?.address == server.address
             ? serversProvider.isServerConnected == true 
               ? Colors.green
               : Colors.orange
@@ -260,7 +260,7 @@ class ServersList extends StatelessWidget {
                 ]
               ),
               SizedBox(
-                child: serversProvider.connectedServer != null && serversProvider.connectedServer?.address == servers[index].address
+                child: serversProvider.selectedServer != null && serversProvider.selectedServer?.address == servers[index].address
                   ? Container(
                     margin: const EdgeInsets.only(right: 12),
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),

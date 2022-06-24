@@ -13,9 +13,9 @@ class ServersProvider with ChangeNotifier {
   List<Server> _serversList = [];
   Database? _dbInstance;
 
-  Server? _connectedServer;
+  Server? _selectedServer;
   bool? _isServerConnected;
-  Map<String, dynamic> _connectedServerToken = {
+  Map<String, dynamic> _selectedServerToken = {
     'formToken': '',
     'phpSessId': ''
   };
@@ -31,12 +31,12 @@ class ServersProvider with ChangeNotifier {
     return _serversList;
   }
 
-  Server? get connectedServer {
-    return _connectedServer;
+  Server? get selectedServer {
+    return _selectedServer;
   }
 
-  Map<String, dynamic>? get connectedServerToken {
-    return _connectedServerToken;
+  Map<String, dynamic>? get selectedServerToken {
+    return _selectedServerToken;
   }
 
   bool? get isServerConnected {
@@ -124,7 +124,7 @@ class ServersProvider with ChangeNotifier {
   Future<bool> removeServer(String serverAddress) async {
     final result = await removeFromDb(serverAddress);
     if (result == true) {
-      _connectedServer = null;
+      _selectedServer = null;
       List<Server> newServers = _serversList.where((server) => server.address != serverAddress).toList();
       _serversList = newServers;
       notifyListeners();
@@ -168,8 +168,8 @@ class ServersProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setConnectedServerToken(String token, String value) {
-    _connectedServerToken[token] = value;
+  void setselectedServerToken(String token, String value) {
+    _selectedServerToken[token] = value;
     notifyListeners();
   }
 
@@ -202,13 +202,14 @@ class ServersProvider with ChangeNotifier {
           final result = await login(serverObj);
           if (result['result'] == 'success') {
             serverObj.enabled = result['status'] == 'enabled' ? true : false;
-            _connectedServerToken['phpSessId'] = result['phpSessId'];
-            _connectedServerToken['token'] = result['token'];
+            _selectedServerToken['phpSessId'] = result['phpSessId'];
+            _selectedServerToken['token'] = result['token'];
             _isServerConnected = true;
-            _connectedServer = serverObj;
+            _selectedServer = serverObj;
           }
           else {
             _isServerConnected = false;
+            _selectedServer = serverObj;
           }
         }
       }
@@ -297,15 +298,15 @@ class ServersProvider with ChangeNotifier {
     }
   }
 
-  void setConnectedServer(Server server) {
-    _connectedServer = server;
+  void setselectedServer(Server server) {
+    _selectedServer = server;
     _isServerConnected = true;
     notifyListeners();
   }
 
-  void updateConnectedServerStatus(bool enabled) {
-    if (_connectedServer != null) {
-      _connectedServer!.enabled = enabled;
+  void updateselectedServerStatus(bool enabled) {
+    if (_selectedServer != null) {
+      _selectedServer!.enabled = enabled;
       notifyListeners();
     }
   }
@@ -317,8 +318,8 @@ class ServersProvider with ChangeNotifier {
   Future<bool> deleteDbData() async {
     _serversList = [];
     _isServerConnected = false;
-    _connectedServer = null;
-    _connectedServerToken = {
+    _selectedServer = null;
+    _selectedServerToken = {
       'formToken': '',
       'phpSessId': ''
     };

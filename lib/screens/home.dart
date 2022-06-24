@@ -42,14 +42,14 @@ class Home extends StatelessWidget {
       final ProcessModal process = ProcessModal(context: context);
       process.open('Disabling server...');
       final result = await disableServer(
-        serversProvider.connectedServer!, 
-        serversProvider.connectedServerToken!['token'],
-        serversProvider.connectedServerToken!['phpSessId'],
+        serversProvider.selectedServer!, 
+        serversProvider.selectedServerToken!['token'],
+        serversProvider.selectedServerToken!['phpSessId'],
         time
       );
       process.close();
       if (result['result'] == 'success') {
-        serversProvider.updateConnectedServerStatus(false);
+        serversProvider.updateselectedServerStatus(false);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -73,13 +73,13 @@ class Home extends StatelessWidget {
       final ProcessModal process = ProcessModal(context: context);
       process.open('Enabling server...');
       final result = await enableServer(
-        serversProvider.connectedServer!,
-        serversProvider.connectedServerToken!['token'],
-        serversProvider.connectedServerToken!['phpSessId']
+        serversProvider.selectedServer!,
+        serversProvider.selectedServerToken!['token'],
+        serversProvider.selectedServerToken!['phpSessId']
       );
       process.close();
       if (result['result'] == 'success') {
-        serversProvider.updateConnectedServerStatus(true);
+        serversProvider.updateselectedServerStatus(true);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -115,9 +115,9 @@ class Home extends StatelessWidget {
     void _enableDisableServer() {
       if (
         serversProvider.isServerConnected == true &&
-        serversProvider.connectedServer != null
+        serversProvider.selectedServer != null
       ) {
-        if (serversProvider.connectedServer?.enabled == true) {
+        if (serversProvider.selectedServer?.enabled == true) {
           _openDisableBottomSheet();
         }
         else {
@@ -620,7 +620,7 @@ class Home extends StatelessWidget {
         child: TopBar()
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: serversProvider.connectedServer != null
+      floatingActionButton: serversProvider.selectedServer != null
         && serversProvider.isServerConnected == true
           ? FloatingActionButton(
               onPressed: _enableDisableServer,
@@ -628,7 +628,7 @@ class Home extends StatelessWidget {
               child: const Icon(Icons.shield_rounded),
             )
           : null,
-      body: serversProvider.connectedServer != null 
+      body: serversProvider.selectedServer != null 
         ? serversProvider.isServerConnected == true 
           ? RefreshIndicator(
               onRefresh: () async {

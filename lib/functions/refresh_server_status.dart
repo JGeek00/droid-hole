@@ -5,11 +5,11 @@ import 'package:droid_hole/services/http_requests.dart';
 
 Future refreshServerStatus(BuildContext context, ServersProvider serversProvider) async {
   final result = await realtimeStatus(
-    serversProvider.connectedServer!,
-    serversProvider.connectedServerToken!['phpSessId']
+    serversProvider.selectedServer!,
+    serversProvider.selectedServerToken!['phpSessId']
   );
   if (result['result'] == "success") {
-    serversProvider.updateConnectedServerStatus(
+    serversProvider.updateselectedServerStatus(
       result['data'].status == 'enabled' ? true : false
     );
     serversProvider.setIsServerConnected(true);

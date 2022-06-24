@@ -169,11 +169,11 @@ class Settings extends StatelessWidget {
                         _listItem(
                           leadingIcon: Icons.storage_rounded,
                           label: "Servers", 
-                          description: serversProvider.connectedServer != null 
+                          description: serversProvider.selectedServer != null 
                             ? serversProvider.isServerConnected == true
-                              ? serversProvider.connectedServer!.alias != null
-                                ? "Connected to ${serversProvider.connectedServer!.alias}"
-                                : "Connected to ${serversProvider.connectedServer!.address}"
+                              ? serversProvider.selectedServer!.alias != null
+                                ? "Connected to ${serversProvider.selectedServer!.alias}"
+                                : "Connected to ${serversProvider.selectedServer!.address}"
                               : "Not connected"
                             : "Not selected",
                           onTap: () => {
