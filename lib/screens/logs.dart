@@ -102,6 +102,9 @@ class LogsList extends StatefulWidget {
 }
 
 class _LogsListState extends State<LogsList> {
+  bool _showSearchBar = false;
+  final TextEditingController _searchController = TextEditingController();
+
   int loadStatus = 0;
   List<Log> logsList = [];
   List<Log> logsListDisplay = [];
@@ -281,6 +284,16 @@ class _LogsListState extends State<LogsList> {
       );
     }
 
+    void _searchLogs(String value) {
+      List<Log> searched = logsList.where((log) => 
+        log.url.toLowerCase().contains(value.toLowerCase())
+      ).toList();
+      setState(() {
+        logsListDisplay = searched;
+      });
+      filtersProvider.resetFilters();
+    }
+
     Widget _status() {
       switch (loadStatus) {
         case 0:
@@ -417,7 +430,6 @@ class _LogsListState extends State<LogsList> {
         preferredSize: const Size(double.maxFinite, 70),
         child: Container(
           margin: EdgeInsets.only(top: statusBarHeight),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(
@@ -425,82 +437,136 @@ class _LogsListState extends State<LogsList> {
               )
             )
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Text(
-                  "Query logs",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
+          child: _showSearchBar == false
+            ? Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      "Query logs",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _showSearchBar = true;
+                          });
+                        }, 
+                        icon: const Icon(Icons.search_rounded),
+                        splashRadius: 20,
+                      ),
+                      const SizedBox(width: 5),
+                      IconButton(
+                        onPressed: _showFiltersModal, 
+                        icon: const Icon(Icons.filter_list_rounded),
+                        splashRadius: 20,
+                      ),
+                      const SizedBox(width: 5),
+                      PopupMenuButton(
+                        splashRadius: 20,
+                        icon: const Icon(Icons.sort_rounded),
+                        onSelected: (value) => _updateSortStatus(value),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: 0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: const [
+                                    Icon(Icons.arrow_downward_rounded),
+                                    SizedBox(width: 10),
+                                    Text("From latest to oldest"),
+                                  ],
+                                ),
+                                CustomRadio(
+                                  value: 0, 
+                                  groupValue: sortStatus, 
+                                )
+                              ],
+                            )
+                          ),
+                          PopupMenuItem(
+                            value: 1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: const [
+                                    Icon(Icons.arrow_upward_rounded),
+                                    SizedBox(width: 10),
+                                    Text("From oldest to latest"),
+                                  ],
+                                ),
+                                CustomRadio(
+                                  value: 1, 
+                                  groupValue: sortStatus, 
+                                )
+                              ],
+                            )
+                          ),
+                        ]
+                      )
+                    ],
+                  )
+                ]
+              ),
+            )
+          : SizedBox(
+            height: 63,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  onPressed: () => setState(() {
+                    _showSearchBar = false;
+                    _searchController.text = "";
+                    logsListDisplay = logsList;
+                    sortStatus = 0;
+                  }),
+                  icon: const Icon(Icons.arrow_back),
+                  splashRadius: 20,
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: width-116,
+                  height: 50,
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: _searchLogs,
+                    style: const TextStyle(
+                      fontSize: 18
+                    ),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search by URL...",
+                      hintStyle: TextStyle(
+                        fontSize: 18
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => {}, 
-                    icon: const Icon(Icons.search_rounded),
-                    splashRadius: 20,
-                  ),
-                  const SizedBox(width: 5),
-                  IconButton(
-                    onPressed: _showFiltersModal, 
-                    icon: const Icon(Icons.filter_list_rounded),
-                    splashRadius: 20,
-                  ),
-                  const SizedBox(width: 5),
-                  PopupMenuButton(
-                    splashRadius: 20,
-                    icon: const Icon(Icons.sort_rounded),
-                    onSelected: (value) => _updateSortStatus(value),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: 0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: const [
-                                Icon(Icons.arrow_downward_rounded),
-                                SizedBox(width: 10),
-                                Text("From latest to oldest"),
-                              ],
-                            ),
-                            CustomRadio(
-                              value: 0, 
-                              groupValue: sortStatus, 
-                            )
-                          ],
-                        )
-                      ),
-                      PopupMenuItem(
-                        value: 1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: const [
-                                Icon(Icons.arrow_upward_rounded),
-                                SizedBox(width: 10),
-                                Text("From oldest to latest"),
-                              ],
-                            ),
-                            CustomRadio(
-                              value: 1, 
-                              groupValue: sortStatus, 
-                            )
-                          ],
-                        )
-                      ),
-                    ]
-                  )
-                ],
-              )
-            ],
-          ),
+                const SizedBox(width: 10),
+                IconButton(
+                  onPressed: () => setState(() => _searchController.text = ""), 
+                  icon: const Icon(Icons.clear_rounded),
+                  splashRadius: 20,
+                  color: Colors.black,
+                )
+              ],
+            ),
+          )
         )
       ),
       body: _status()
