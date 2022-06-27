@@ -22,7 +22,7 @@ class SettingsTopBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            'assets/icon/icon512.png',
+            'assets/icon/icon-no-background.png',
             width: 100,
           ),
           const SizedBox(width: 40),

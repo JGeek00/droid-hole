@@ -66,7 +66,7 @@ List<charts.Series<dynamic, String>> formatClientsChart(Map<dynamic, dynamic> da
           label: key, 
           value: data['over_time'][key][i],
           client: data['clients'][i],
-          color: colors[i]
+          color: data['clients'][i]['color']
         )
       );
     });

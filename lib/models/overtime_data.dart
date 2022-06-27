@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
+import 'package:droid_hole/functions/colors.dart';
+
 OverTimeData overTimeDataFromJson(String str) => OverTimeData.fromJson(json.decode(str));
 
 String overTimeDataToJson(OverTimeData data) => json.encode(data.toJson());
@@ -36,18 +40,22 @@ class Client {
   Client({
     required this.name,
     required this.ip,
+    required this.color,
   });
 
   final String name;
   final String ip;
+  final Color color;
 
   factory Client.fromJson(Map<String, dynamic> json) => Client(
     name: json["name"],
     ip: json["ip"],
+    color: generateRandomColor()
   );
 
   Map<String, dynamic> toJson() => {
     "name": name,
     "ip": ip,
+    "color": color,
   };
 }

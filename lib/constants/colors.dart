@@ -15,5 +15,12 @@ List<Color> colors = [
   Colors.deepOrange,
   Colors.blueAccent,
   Colors.grey,
-  Colors.indigo
+  Colors.indigo,
+  Colors.redAccent,
+  Colors.yellowAccent,
+  Colors.purple,
+  Colors.limeAccent,
+  Colors.teal,
+  Colors.pink,
+  Colors.greenAccent
 ];

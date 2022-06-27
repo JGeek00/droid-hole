@@ -403,7 +403,7 @@ class Home extends StatelessWidget {
                   height: 10,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: colors[i]
+                    color: serversProvider.getOvertimeData!.clients[i].color
                   ),
                 ),
                 const SizedBox(width: 10),
