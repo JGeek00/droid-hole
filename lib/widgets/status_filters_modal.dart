@@ -80,7 +80,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
     }
 
     void _checkUncheckAll() {
-      if (_statusSelected.isEmpty == true) {
+      if (_statusSelected.length < 14) {
         setState(() {
           _statusSelected = [
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
@@ -105,7 +105,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      height: mediaQuery.size.height >= 916 ? 916 : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight),
+      height: mediaQuery.size.height >= 972 ? 972 : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight),
       child: Column(
         children: [
           Row(
@@ -123,84 +123,110 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
               ),
             ],
           ),
-          SizedBox(
-            height: mediaQuery.size.height >= 916 ? 785 : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+141),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (gravity)", 
-                    value: 1
+          Column(
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: _checkUncheckAll,
+                  child: ListTile(
+                    title: const Text(
+                      "All status selected",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                      ),
+                    ),
+                    trailing: Checkbox(
+                      value: _statusSelected.length == 14 ? true : false, 
+                      onChanged: (_) => _checkUncheckAll(),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)
+                      ),
+                    ),
                   ),
-                  _listItem(
-                    icon: Icons.verified_user_rounded, 
-                    label: "OK (forwarded)", 
-                    value: 2
-                  ),
-                  _listItem(
-                    icon: Icons.verified_user_rounded, 
-                    label: "OK (cache)", 
-                    value: 3
-                  ),
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (regex blacklist", 
-                    value: 4
-                  ),
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (exact blacklist)", 
-                    value: 5
-                  ),
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (external, IP)", 
-                    value: 6
-                  ),
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (external, NULL)", 
-                    value: 7
-                  ),
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (external, NXRA)", 
-                    value: 8
-                  ),
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (gravity, CNAME)", 
-                    value: 9
-                  ),
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (regex blacklist, CNAME)", 
-                    value: 10
-                  ),
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "Blocked (exact blacklist, CNAME)", 
-                    value: 11
-                  ),
-                  _listItem(
-                    icon: Icons.refresh_rounded, 
-                    label: "Retried", 
-                    value: 12
-                  ),
-                  _listItem(
-                    icon: Icons.refresh_rounded, 
-                    label: "Retried (ignored)", 
-                    value: 13
-                  ),
-                  _listItem(
-                    icon: Icons.gpp_bad_rounded, 
-                    label: "OK (already forwarded)", 
-                    value: 14
-                  ),
-                ],
+                ),
               ),
-            ),
+              SizedBox(
+                height: mediaQuery.size.height >= 972 ? 785 : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+197),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "Blocked (gravity)", 
+                        value: 1
+                      ),
+                      _listItem(
+                        icon: Icons.verified_user_rounded, 
+                        label: "OK (forwarded)", 
+                        value: 2
+                      ),
+                      _listItem(
+                        icon: Icons.verified_user_rounded, 
+                        label: "OK (cache)", 
+                        value: 3
+                      ),
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "Blocked (regex blacklist", 
+                        value: 4
+                      ),
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "Blocked (exact blacklist)", 
+                        value: 5
+                      ),
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "Blocked (external, IP)", 
+                        value: 6
+                      ),
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "Blocked (external, NULL)", 
+                        value: 7
+                      ),
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "Blocked (external, NXRA)", 
+                        value: 8
+                      ),
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "Blocked (gravity, CNAME)", 
+                        value: 9
+                      ),
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "Blocked (regex blacklist, CNAME)", 
+                        value: 10
+                      ),
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "Blocked (exact blacklist, CNAME)", 
+                        value: 11
+                      ),
+                      _listItem(
+                        icon: Icons.refresh_rounded, 
+                        label: "Retried", 
+                        value: 12
+                      ),
+                      _listItem(
+                        icon: Icons.refresh_rounded, 
+                        label: "Retried (ignored)", 
+                        value: 13
+                      ),
+                      _listItem(
+                        icon: Icons.gpp_bad_rounded, 
+                        label: "OK (already forwarded)", 
+                        value: 14
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.all(10),
@@ -208,39 +234,22 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton.icon(
-                  onPressed: _checkUncheckAll, 
-                  icon: Icon(
-                    _statusSelected.isEmpty == true
-                      ? Icons.check_box_rounded
-                      : Icons.check_box_outline_blank_rounded
-                  ),
-                  label: Text(
-                    _statusSelected.isNotEmpty == true
-                      ? "Unselect all"
-                      : "Select all"
-                  ),
+                  onPressed: () => Navigator.pop(context), 
+                  icon: const Icon(Icons.close),
+                  label: const Text("Close"),
                 ),
-                Row(
-                  children: [
-                    TextButton.icon(
-                      onPressed: () => Navigator.pop(context), 
-                      icon: const Icon(Icons.close),
-                      label: const Text("Close"),
-                    ),
-                    const SizedBox(width: 10),
-                    TextButton.icon(
-                      onPressed: () {
-                        updateList();
-                        Navigator.pop(context);
-                      }, 
-                      icon: const Icon(Icons.check), 
-                      label: const Text("Apply"),
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all(Colors.green),
-                        overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
-                      ),
-                    ),
-                  ],
+                const SizedBox(width: 10),
+                TextButton.icon(
+                  onPressed: () {
+                    updateList();
+                    Navigator.pop(context);
+                  }, 
+                  icon: const Icon(Icons.check), 
+                  label: const Text("Apply"),
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(Colors.green),
+                    overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
+                  ),
                 ),
               ],
             ),

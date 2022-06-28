@@ -287,7 +287,6 @@ class _AddServerModalState extends State<AddServerModal> {
               height: height,
               width: mediaQueryData.size.width > 400 ? 400 : null,
               curve: Curves.easeInOut,
-              padding: const EdgeInsets.all(20),
               margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -367,105 +366,110 @@ class _AddServerModalState extends State<AddServerModal> {
   Widget _form(Function done, double width) {
     return Column(
       children: [
-        Text(
-          widget.server != null 
-            ? "Edit server connection" 
-            : "Add server connection",
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Text(
+            widget.server != null 
+              ? "Edit server connection" 
+              : "Add server connection",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
           ),
         ),
-        const SizedBox(height: 10),
         SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: TextField(
-                    onChanged: (value) => _checkDataValid('address', value),
-                    controller: ipFieldController,
-                    enabled: widget.server != null ? false : true,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.http_outlined),
-                      errorText: errorUrl,
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10)
-                        )
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      onChanged: (value) => _checkDataValid('address', value),
+                      controller: ipFieldController,
+                      enabled: widget.server != null ? false : true,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.http_outlined),
+                        errorText: errorUrl,
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10)
+                          )
+                        ),
+                        labelText: 'Server address',
                       ),
-                      labelText: 'Server address',
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: TextField(
-                    controller: aliasFieldController,
-                    onChanged: (value) => _checkDataValid('alias', value),
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.badge_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10)
-                        )
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      controller: aliasFieldController,
+                      onChanged: (value) => _checkDataValid('alias', value),
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.badge_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10)
+                          )
+                        ),
+                        labelText: 'Alias',
                       ),
-                      labelText: 'Alias',
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: TextField(
-                    obscureText: true,
-                    keyboardType: TextInputType.visiblePassword,
-                    controller: passwordFieldController,
-                    onChanged: (value) => _checkDataValid('password', value),
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.lock_outline),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10)
-                        )
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      obscureText: true,
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: passwordFieldController,
+                      onChanged: (value) => _checkDataValid('password', value),
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.lock_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10)
+                          )
+                        ),
+                        labelText: 'Password',
                       ),
-                      labelText: 'Password',
                     ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                      value: defaultCheckbox,
-                      onChanged: widget.server == null ? (value) => {
-                        setState(() => {
-                          defaultCheckbox = !defaultCheckbox
-                        })
-                      } : null,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: widget.server == null ? (() => {
-                        setState(() => {
-                          defaultCheckbox = !defaultCheckbox
-                        })
-                      }) : null,
-                      child: Text(
-                        "Default connection",
-                        style: TextStyle(
-                          color: widget.server != null 
-                            ? Colors.grey
-                            : null
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        value: defaultCheckbox,
+                        onChanged: widget.server == null ? (value) => {
+                          setState(() => {
+                            defaultCheckbox = !defaultCheckbox
+                          })
+                        } : null,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ],
+                      GestureDetector(
+                        onTap: widget.server == null ? (() => {
+                          setState(() => {
+                            defaultCheckbox = !defaultCheckbox
+                          })
+                        }) : null,
+                        child: Text(
+                          "Default connection",
+                          style: TextStyle(
+                            color: widget.server != null 
+                              ? Colors.grey
+                              : null
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -473,38 +477,45 @@ class _AddServerModalState extends State<AddServerModal> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton.icon(
-                    onPressed: (() => {
-                      Navigator.pop(context)
-                    }),
-                    label: const Text("Cancel"),
-                    icon: const Icon(Icons.cancel)
-                  ),
-                  TextButton.icon(
-                    onPressed: allDataValid == true 
-                      ? () => done()
-                      : null,
-                    style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all(
-                        Colors.green.withOpacity(0.1)
-                      ),
-                      foregroundColor: MaterialStateProperty.all(
-                        allDataValid == true 
-                          ? Colors.green
-                          : Colors.grey,
-                      ),
-                    ), 
-                    label: Text(
-                      widget.server != null ? "Save" : "Connect"
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 10,
+                  left: 10,
+                  right: 10
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton.icon(
+                      onPressed: (() => {
+                        Navigator.pop(context)
+                      }),
+                      label: const Text("Cancel"),
+                      icon: const Icon(Icons.cancel)
                     ),
-                    icon: Icon(
-                      widget.server != null ? Icons.save : Icons.login
+                    TextButton.icon(
+                      onPressed: allDataValid == true 
+                        ? () => done()
+                        : null,
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.all(
+                          Colors.green.withOpacity(0.1)
+                        ),
+                        foregroundColor: MaterialStateProperty.all(
+                          allDataValid == true 
+                            ? Colors.green
+                            : Colors.grey,
+                        ),
+                      ), 
+                      label: Text(
+                        widget.server != null ? "Save" : "Connect"
+                      ),
+                      icon: Icon(
+                        widget.server != null ? Icons.save : Icons.login
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

@@ -55,47 +55,21 @@ class _ServersListModalState extends State<ServersListModal> {
         children: [
           Container(
             width: double.maxFinite,
-            padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.black12,
-                  width: 1,
-                )
+            padding: const EdgeInsets.all(20),
+            child: const Center(
+              child: Text(
+                "PiHole Servers",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20
+                ),
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () => {
-                        Navigator.pop(context)
-                      }, 
-                      icon: const Icon(Icons.close),
-                      splashRadius: 20,
-                    ),
-                    const SizedBox(width: 5),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        "PiHole servers",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () => _openAddServerBottomSheet(), 
-                  icon: const Icon(Icons.add),
-                  splashRadius: 20,
-                )
-              ],
-            ),
+          ),
+          Container(
+            height: 1,
+            width: double.maxFinite,
+            color: Colors.black12,
           ),
           Expanded(
             child: ClipRRect(
@@ -107,6 +81,31 @@ class _ServersListModalState extends State<ServersListModal> {
                 context: context,
                 controllers: expandableControllerList,
                 onChange: _expandOrContract
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () => _openAddServerBottomSheet(), 
+                        icon: const Icon(Icons.add), 
+                        label: const Text("Add"),
+                      ),
+                      TextButton.icon(
+                        onPressed: () => Navigator.pop(context), 
+                        icon: const Icon(Icons.close), 
+                        label: const Text("Close"),
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
           )

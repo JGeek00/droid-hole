@@ -105,7 +105,6 @@ class _DisableModalState extends State<DisableModal> {
             duration: const Duration(milliseconds: 250),
             curve: Curves.easeInOut,
             height: selectedOption == 5 ? 418 : 315,
-            padding: const EdgeInsets.all(20),
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -113,16 +112,19 @@ class _DisableModalState extends State<DisableModal> {
             ),
             child: Column(
               children: [
-                const Text(
-                  "Disable",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    "Disable",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                SizedBox(
+                Container(
                   width: double.maxFinite,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -326,45 +328,48 @@ class _DisableModalState extends State<DisableModal> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context), 
-                            child: Row(
-                              children: const [
-                                Icon(Icons.cancel),
-                                SizedBox(width: 10),
-                                Text("Cancel")
-                              ],
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: _selectionIsValid() == true 
-                              ? () {
-                                Navigator.pop(context);
-                                widget.onDisable(_getTime());
-                              }
-                              : null,
-                            style: ButtonStyle(
-                              overlayColor: MaterialStateProperty.all(
-                                Colors.red.withOpacity(0.1)
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context), 
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.cancel),
+                                  SizedBox(width: 10),
+                                  Text("Cancel")
+                                ],
                               ),
-                              foregroundColor: MaterialStateProperty.all(
-                                _selectionIsValid() == true 
-                                  ? Colors.red
-                                  : Colors.grey,
-                              ),
-                            ), 
-                            child: Row(
-                              children: const [
-                                Icon(Icons.gpp_bad_rounded),
-                                SizedBox(width: 10),
-                                Text("Disable")
-                              ],
                             ),
-                          ),
-                        ],
+                            TextButton(
+                              onPressed: _selectionIsValid() == true 
+                                ? () {
+                                  Navigator.pop(context);
+                                  widget.onDisable(_getTime());
+                                }
+                                : null,
+                              style: ButtonStyle(
+                                overlayColor: MaterialStateProperty.all(
+                                  Colors.red.withOpacity(0.1)
+                                ),
+                                foregroundColor: MaterialStateProperty.all(
+                                  _selectionIsValid() == true 
+                                    ? Colors.red
+                                    : Colors.grey,
+                                ),
+                              ), 
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.gpp_bad_rounded),
+                                  SizedBox(width: 10),
+                                  Text("Disable")
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

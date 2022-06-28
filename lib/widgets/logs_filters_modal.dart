@@ -29,6 +29,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
   Widget build(BuildContext context) {
     final filtersProvider = Provider.of<FiltersProvider>(context);
 
+    final width = MediaQuery.of(context).size.width;
+
     void _openStatusModal() {
       showModalBottomSheet(
         context: context, 
@@ -139,17 +141,46 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  "Filters",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(width: (width-20)/3),
+                Container(
+                  width: (width-20)/3,
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: const Center(
+                    child: Text(
+                      "Filters",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Container(
+                  width: (width-20)/3,
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(50),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(50),
+                          onTap: _resetFilters,
+                          child: const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Icon(Icons.restore),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
             const SizedBox(height: 10),
             Column(
@@ -334,37 +365,28 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton.icon(
-                    onPressed: _resetFilters, 
-                    icon: const Icon(Icons.restore_rounded),
-                    label: const Text("Reset filters"),
+                    onPressed: () => Navigator.pop(context), 
+                    icon: const Icon(Icons.close),
+                    label: const Text("Close"),
                   ),
-                  Row(
-                    children: [
-                      TextButton.icon(
-                        onPressed: () => Navigator.pop(context), 
-                        icon: const Icon(Icons.close),
-                        label: const Text("Close"),
+                  const SizedBox(width: 10),
+                  TextButton.icon(
+                    onPressed: isFilteringValid() == true
+                      ? () {
+                          widget.filterLogs();
+                          Navigator.pop(context);
+                        }
+                      : null, 
+                    icon: const Icon(Icons.check), 
+                    label: const Text("Apply"),
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(
+                        isFilteringValid() == true
+                          ? Colors.green
+                          : Colors.grey
                       ),
-                      const SizedBox(width: 10),
-                      TextButton.icon(
-                        onPressed: isFilteringValid() == true
-                          ? () {
-                              widget.filterLogs();
-                              Navigator.pop(context);
-                            }
-                          : null, 
-                        icon: const Icon(Icons.check), 
-                        label: const Text("Apply"),
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all(
-                            isFilteringValid() == true
-                              ? Colors.green
-                              : Colors.grey
-                          ),
-                          overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
-                        ),
-                      ),
-                    ],
+                      overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
+                    ),
                   )
                 ],
               ),
