@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:droid_hole/providers/servers_provider.dart';
 
 class StatisticsTopBar extends StatelessWidget {
   const StatisticsTopBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final serversProvider = Provider.of<ServersProvider>(context);
+
     final topBarHeight = MediaQuery.of(context).viewPadding.top;
     
     return Container(
@@ -33,7 +38,10 @@ class StatisticsTopBar extends StatelessWidget {
               ],
             ),
           ),
-          TabBar(
+          if (
+            serversProvider.selectedServer != null &&
+            serversProvider.isServerConnected == true  
+          ) TabBar(
             labelColor: Theme.of(context).primaryColor,
             unselectedLabelColor: Colors.black,
             tabs: const [

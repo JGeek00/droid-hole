@@ -40,6 +40,7 @@ Future<Response> httpClient({
 }
 
 Future realtimeStatus(Server server, String token) async {
+  try {
     final response = await httpClient(
       method: 'get',
       url: '${server.address}/admin/api.php?summaryRaw&topItems&getForwardDestinations&getQuerySources&topClientsBlocked&getQueryTypes',
@@ -54,14 +55,12 @@ Future realtimeStatus(Server server, String token) async {
         'data': RealtimeStatus.fromJson(body)
       };
     }
-  try {
   } on SocketException {
     return {'result': 'socket'};
   } on TimeoutException {
     return {'result': 'timeout'};
   }
   catch (e) {
-    print(e);
     return {'result': 'error'};
   }
 }

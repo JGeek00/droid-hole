@@ -32,3 +32,14 @@ String intFormat(int value, String locale) {
   final f = NumberFormat("#,###", locale);
   return f.format(value);
 }
+
+List<Map<String, dynamic>> convertFromMapToList(Map<String, int> values) {
+  List<Map<String, dynamic>> items = [];
+  values.forEach((key, value) {
+    items.add({
+      "label": key,
+      "value": value
+    });
+  });
+  return items;
+}

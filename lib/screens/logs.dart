@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/logs_filters_modal.dart';
 import 'package:droid_hole/widgets/log_status.dart';
 import 'package:droid_hole/widgets/log_details_modal.dart';
-import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/widgets/custom_radio.dart';
-import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
@@ -36,7 +35,7 @@ class Logs extends StatelessWidget {
         endTime: filtersProvider.endTime,
       ); 
     }
-    else if (serversProvider.selectedServer != null && serversProvider.isServerConnected == false) {
+    else {
       return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size(double.maxFinite, 70),
@@ -59,24 +58,14 @@ class Logs extends StatelessWidget {
             ),
           )
         ),
-        body: const Center(
-          child: SelectedServerDisconnected()
-        ),
+        body: serversProvider.selectedServer != null 
+        ? serversProvider.isServerConnected == true 
+          ? null
+          : const Center(
+              child: SelectedServerDisconnected()
+            )
+        : const NoServerSelected()
       );
-    }
-    else if (serversProvider.selectedServer == null) {
-      return const Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size(double.maxFinite, 90),
-          child: TopBar()
-        ),
-        body: Center(
-          child: NoServerSelected()
-        ),
-      );
-    }
-    else {
-      return const SizedBox();
     }
   }
 }

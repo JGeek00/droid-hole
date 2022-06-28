@@ -32,7 +32,7 @@ class RealtimeStatus {
   final int dnsQueriesAllReplies;
   final int privacyLevel;
   final String status;
-  final Map<String, double> topQueries;
+  final Map<String, int> topQueries;
   final Map<String, int> topAds;
   final Map<String, int> topSources;
   final Map<String, int> topSourcesBlocked;
@@ -103,16 +103,10 @@ class RealtimeStatus {
     dnsQueriesAllReplies: json["dns_queries_all_replies"],
     privacyLevel: json["privacy_level"],
     status: json["status"],
-    topQueries: Map.from(json["top_queries"]).map((k, v) => MapEntry<String, double>(k, v.toDouble())),
-    topAds: (json["top_ads"] == MapEntry<String, int>)
-      ? Map.from(json["top_ads"]).map((k, v) => MapEntry<String, int>(k, v))
-      : {},
-    topSources: (json["top_sources"] == MapEntry<String, int>) 
-      ? Map.from(json["top_sources"]).map((k, v) => MapEntry<String, int>(k, v))
-      : {},
-    topSourcesBlocked: (json["top_sources_blocked"].runtimeType == MapEntry<String, int>) 
-      ? Map.from(json["top_sources_blocked"]).map((k, v) => MapEntry<String, int>(k, v))
-      : {},
+    topQueries: Map.from(json["top_queries"]).map((k, v) => MapEntry<String, int>(k, v)),
+    topAds: Map.from(json["top_ads"]).map((k, v) => MapEntry<String, int>(k, v)),
+    topSources: Map.from(json["top_sources"]).map((k, v) => MapEntry<String, int>(k, v)),
+    topSourcesBlocked: Map.from(json["top_sources_blocked"]).map((k, v) => MapEntry<String, int>(k, v)),
     forwardDestinations: sortValues(
       removeZeroValues(
         Map.from(json["forward_destinations"]).map((k, v) => MapEntry<String, double>(k, v.toDouble()))
