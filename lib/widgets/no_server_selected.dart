@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/servers_list_modal.dart';
 
@@ -36,9 +37,9 @@ class NoServerSelected extends StatelessWidget {
                   size: 70,
                   color: Colors.grey,
                 ),
-                const Text(
-                  "No server is selected",
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.noServerSelected,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 24
@@ -46,7 +47,7 @@ class NoServerSelected extends StatelessWidget {
                 ),
                 OutlinedButton.icon(
                   onPressed: _selectServer, 
-                  label: const Text("Select a connection"),
+                  label: Text(AppLocalizations.of(context)!.selectConnection),
                   icon: const Icon(Icons.storage_rounded),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(

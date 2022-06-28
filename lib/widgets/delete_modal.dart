@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/models/server.dart';
@@ -20,22 +23,19 @@ class DeleteModal extends StatelessWidget {
 
     void _removeServer() async {
       final deleted = await serversProvider.removeServer(serverToDelete.address);
-      // ignore: use_build_context_synchronously
       Navigator.pop(context);
       if (deleted == true) {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Connection removed successfully."),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.connectionRemoved),
             backgroundColor: Colors.green,
           )
         );
       }
       else {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Connection cannot be removed."),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.connectionCannotBeRemoved),
             backgroundColor: Colors.red,
           )
         );
@@ -58,9 +58,9 @@ class DeleteModal extends StatelessWidget {
         width: 400,
         child: Column(
           children: [
-            const Text(
-              "Remove",
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.remove,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20
               ),
@@ -72,8 +72,8 @@ class DeleteModal extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  const Text(
-                    "Are you sure you want to remove this PiHole server?"
+                  Text(
+                    AppLocalizations.of(context)!.removeWarning
                   ),
                   const SizedBox(height: 10),
                   Center(
@@ -100,12 +100,12 @@ class DeleteModal extends StatelessWidget {
                           Navigator.pop(context)
                         }, 
                         icon: const Icon(Icons.cancel), 
-                        label: const Text("Cancel")
+                        label: Text(AppLocalizations.of(context)!.cancel)
                       ),
                       TextButton.icon(
                         onPressed: _removeServer, 
                         icon: const Icon(Icons.delete), 
-                        label: const Text("Remove"),
+                        label: Text(AppLocalizations.of(context)!.remove),
                         style: ButtonStyle(
                           foregroundColor: MaterialStateProperty.all(Colors.red),
                           overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1))

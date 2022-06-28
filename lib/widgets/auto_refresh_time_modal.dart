@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/option_box.dart';
 
@@ -148,11 +149,11 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
           ),
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Text(
-                  "Auto refresh time",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.autoRefreshTime,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                   ),
@@ -188,7 +189,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("1 second"),
+                                    child: Text(AppLocalizations.of(context)!.second1),
                                   ),
                                 ),
                               ),
@@ -214,7 +215,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("2 seconds"),
+                                    child: Text(AppLocalizations.of(context)!.seconds2),
                                   ),
                                 ),
                               ),
@@ -244,7 +245,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("5 seconds"),
+                                    child: Text(AppLocalizations.of(context)!.seconds5),
                                   ),
                                 ),
                               ),
@@ -270,7 +271,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("10 seconds"),
+                                    child: Text(AppLocalizations.of(context)!.seconds10),
                                   ),
                                 ),
                               ),
@@ -300,7 +301,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("30 seconds"),
+                                    child: Text(AppLocalizations.of(context)!.seconds30),
                                   ),
                                 ),
                               ),
@@ -326,7 +327,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("Custom"),
+                                    child: Text(AppLocalizations.of(context)!.custom),
                                   ),
                                 ),
                               ),
@@ -345,14 +346,14 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                 ),
                                 decoration: InputDecoration(
                                   errorText: !customTimeIsValid && customTimeController.text != ''
-                                    ? "Value not valid" 
+                                    ? AppLocalizations.of(context)!.valueNotValid 
                                     : null,
                                   border: const OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(10)
                                     )
                                   ),
-                                  labelText: 'Custom seconds',
+                                  labelText: AppLocalizations.of(context)!.customSeconds,
                                 ),
                               ),
                             ],
@@ -374,10 +375,10 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                           TextButton(
                             onPressed: () => Navigator.pop(context), 
                             child: Row(
-                              children: const [
-                                Icon(Icons.cancel),
-                                SizedBox(width: 10),
-                                Text("Cancel")
+                              children: [
+                                const Icon(Icons.cancel),
+                                const SizedBox(width: 10),
+                                Text(AppLocalizations.of(context)!.cancel)
                               ],
                             ),
                           ),
@@ -399,10 +400,10 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                               ),
                             ), 
                             child: Row(
-                              children: const [
-                                Icon(Icons.check),
-                                SizedBox(width: 10),
-                                Text("Confirm")
+                              children: [
+                                const Icon(Icons.check),
+                                const SizedBox(width: 10),
+                                Text(AppLocalizations.of(context)!.confirm)
                               ],
                             ),
                           ),

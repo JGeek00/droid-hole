@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/add_server_modal.dart';
 
@@ -49,9 +50,9 @@ class ServersTopBar extends StatelessWidget {
                 icon: const Icon(Icons.arrow_back)
               ),
               const SizedBox(width: 20),
-              const Text(
-                "Servers",
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.servers,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20
                 ),

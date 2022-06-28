@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -22,9 +23,9 @@ class SelectedServerDisconnected extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Selected server is disconnected",
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.selectedDisconnected,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 24
@@ -34,7 +35,7 @@ class SelectedServerDisconnected extends StatelessWidget {
                 TextButton.icon(
                   onPressed: () => refreshServerStatus(context, serversProvider),
                   icon: const Icon(Icons.refresh), 
-                  label: const Text("Try reconnect")
+                  label: Text(AppLocalizations.of(context)!.tryReconnect)
                 )
               ],
             ),

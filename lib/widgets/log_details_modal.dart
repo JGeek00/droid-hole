@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/log_status.dart';
 
@@ -64,7 +65,7 @@ class LogDetailsModal extends StatelessWidget {
             whiteBlackList('black', log);
           }, 
           icon: const Icon(Icons.block_rounded), 
-          label: const Text("Blacklist"),
+          label: Text(AppLocalizations.of(context)!.blacklist),
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all(Colors.red),
             overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1))
@@ -78,7 +79,7 @@ class LogDetailsModal extends StatelessWidget {
             whiteBlackList('white', log);
           },
           icon: const Icon(Icons.check), 
-          label: const Text("Whitelist"),
+          label: Text(AppLocalizations.of(context)!.whitelist),
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all(Colors.green),
             overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
@@ -101,12 +102,12 @@ class LogDetailsModal extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              const Center(
+              Center(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 10),
                   child: Text(
-                    "Log details",
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.logDetails,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20
                     ),
@@ -114,21 +115,21 @@ class LogDetailsModal extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-              _item(Icons.link, "URL", Text(log.url)),
+              _item(Icons.link, AppLocalizations.of(context)!.url, Text(log.url)),
               const SizedBox(height: 20),
-              _item(Icons.http_rounded, "Type", Text(log.type)),
+              _item(Icons.http_rounded, AppLocalizations.of(context)!.type, Text(log.type)),
               const SizedBox(height: 20),
-              _item(Icons.phone_android_rounded, "Device", Text(log.device)),
+              _item(Icons.phone_android_rounded, AppLocalizations.of(context)!.device, Text(log.device)),
               const SizedBox(height: 20),
-              _item(Icons.access_time_outlined, "Time", Text(formatTimestamp(log.dateTime, 'HH:mm:ss'))),
+              _item(Icons.access_time_outlined, AppLocalizations.of(context)!.time, Text(formatTimestamp(log.dateTime, 'HH:mm:ss'))),
               const SizedBox(height: 20),
-              _item(Icons.shield_outlined, "Status", LogStatus(status: log.status, showIcon: false)),
+              _item(Icons.shield_outlined, AppLocalizations.of(context)!.status, LogStatus(status: log.status, showIcon: false)),
               const SizedBox(height: 20),
               if (log.status == '2' && log.answeredBy != null) ...[
-                _item(Icons.domain, "Answered by", Text(log.answeredBy!)),
+                _item(Icons.domain, AppLocalizations.of(context)!.answeredBy, Text(log.answeredBy!)),
                 const SizedBox(height: 20),
               ],
-              _item(Icons.system_update_alt_outlined, "Reply", Text("${log.replyType} (${(log.replyTime/10)} ms)")),
+              _item(Icons.system_update_alt_outlined, AppLocalizations.of(context)!.reply, Text("${log.replyType} (${(log.replyTime/10)} ms)")),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,7 +138,7 @@ class LogDetailsModal extends StatelessWidget {
                   TextButton.icon(
                     onPressed: () => Navigator.pop(context), 
                     icon: const Icon(Icons.close),
-                    label: const Text("Close"),
+                    label: Text(AppLocalizations.of(context)!.close),
                   ),
                 ],
               )

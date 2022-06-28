@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ResetModal extends StatefulWidget {
   final void Function() onConfirm;
@@ -51,19 +52,19 @@ class _ResetModalState extends State<ResetModal> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
-                  children: const [
+                  children: [
                     Text(
-                      "Reset application data",
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.eraseAppData,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text(
-                      "Warning! This action will reset the application and remove all it's data.\n\nAre you sure you want to continue?"
+                      AppLocalizations.of(context)!.eraseWarning
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -80,7 +81,7 @@ class _ResetModalState extends State<ResetModal> {
                           _timer.cancel();
                           Navigator.pop(context);
                         }, 
-                        child: const Text("Cancel"),
+                        child: Text( AppLocalizations.of(context)!.cancel),
                       ), 
                       TextButton.icon(
                         onPressed: _timeRemaining == 0
@@ -89,8 +90,8 @@ class _ResetModalState extends State<ResetModal> {
                         icon: const Icon(Icons.delete), 
                         label: Text(
                           _timeRemaining > 0 
-                            ? "ERASE ALL ($_timeRemaining)"
-                            : "ERASE ALL"
+                            ? "${AppLocalizations.of(context)!.eraseAll} ($_timeRemaining)"
+                            :  AppLocalizations.of(context)!.eraseAll
                         ),
                         style: ButtonStyle(
                           foregroundColor: _timeRemaining == 0 

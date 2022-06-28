@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/status_filters_modal.dart';
 
@@ -49,13 +52,13 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
     String _statusText() {
       switch (filtersProvider.statusSelected.length) {
         case 0:
-          return "No items selected";
+          return AppLocalizations.of(context)!.noItemsSelected;
 
         case 14:
-          return "All items selected";
+          return AppLocalizations.of(context)!.allItemsSelected;
 
         default:
-          return "${filtersProvider.statusSelected.length} items selected";
+          return "${filtersProvider.statusSelected.length} ${AppLocalizations.of(context)!.itemsSelected}";
       }
     }
 
@@ -72,8 +75,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
           context: context, 
           initialTime: TimeOfDay.now(),
           helpText: time == 'from'
-            ? "Select start time"
-            : "Select end time"
+            ? AppLocalizations.of(context)!.selectStartTime
+            : AppLocalizations.of(context)!.selectEndTime
         );
         if (timeValue != null) {
           DateTime value = DateTime(
@@ -87,7 +90,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
           if (time == 'from') {
             if (filtersProvider.endTime != null && value.isAfter(filtersProvider.endTime!)) {
               setState(() {
-                timeError = "Start time is not before end time";
+                timeError = AppLocalizations.of(context)!.startTimeNotBeforeEndTime;
               });
             }
             else {
@@ -100,7 +103,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
           else {
             if (filtersProvider.startTime != null && value.isBefore(filtersProvider.startTime!)) {
               setState(() {
-                timeError = "End time is not after start time";
+                timeError = AppLocalizations.of(context)!.endTimeNotAfterStartTime;
               });
             }
             else {
@@ -148,10 +151,10 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                 Container(
                   width: (width-20)/3,
                   padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "Filters",
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.filters,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20
                       ),
@@ -192,9 +195,9 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Time",
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!.time,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16
                         ),
@@ -227,7 +230,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                     child: Column(
                                       children: [
                                         Text(
-                                          "From time",
+                                          AppLocalizations.of(context)!.fromTime,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
@@ -238,7 +241,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                         Text(
                                           filtersProvider.startTime != null 
                                             ? formatTimestamp(filtersProvider.startTime!, "dd/MM/yyyy - HH:mm")
-                                            : "Not selected",
+                                            : AppLocalizations.of(context)!.notSelected,
                                           style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 12
@@ -278,7 +281,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                     child: Column(
                                       children: [
                                         Text(
-                                          "To time",
+                                          AppLocalizations.of(context)!.toTime,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
@@ -289,7 +292,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                         Text(
                                           filtersProvider.endTime != null 
                                             ? formatTimestamp(filtersProvider.endTime!, "dd/MM/yyyy - HH:mm")
-                                            : "Not selected",
+                                            : AppLocalizations.of(context)!.notSelected,
                                           style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 12
@@ -335,9 +338,9 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Status",
-                                style: TextStyle(
+                              Text(
+                                AppLocalizations.of(context)!.status,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16
                                 ),
@@ -367,7 +370,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                   TextButton.icon(
                     onPressed: () => Navigator.pop(context), 
                     icon: const Icon(Icons.close),
-                    label: const Text("Close"),
+                    label: Text(AppLocalizations.of(context)!.close),
                   ),
                   const SizedBox(width: 10),
                   TextButton.icon(
@@ -378,7 +381,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                         }
                       : null, 
                     icon: const Icon(Icons.check), 
-                    label: const Text("Apply"),
+                    label: Text(AppLocalizations.of(context)!.apply),
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all(
                         isFilteringValid() == true

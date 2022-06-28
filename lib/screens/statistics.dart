@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
@@ -26,12 +27,12 @@ class Statistics extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                CircularProgressIndicator(),
-                SizedBox(height: 50),
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 50),
                 Text(
-                  "Loading stats...",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.loadingStats,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 22
@@ -49,31 +50,31 @@ class Statistics extends StatelessWidget {
                 data1: serversProvider.getRealtimeStatus!.topQueries.isNotEmpty == true 
                   ? {
                       "data": serversProvider.getRealtimeStatus!.topQueries,
-                      "label": "Top permitted domains"
+                      "label": AppLocalizations.of(context)!.topPermittedDomains
                     }
                   : null,
                 data2: serversProvider.getRealtimeStatus!.topAds.isNotEmpty == true 
                   ? {
                       "data": serversProvider.getRealtimeStatus!.topAds,
-                      "label": "Top blocked domains"
+                      "label": AppLocalizations.of(context)!.topBlockedDomains
                     }
                   : null,
-                countLabel: "Hits:",
+                countLabel: AppLocalizations.of(context)!.hits,
               ),
               StatisticsList(
                 data1: serversProvider.getRealtimeStatus!.topSources.isNotEmpty == true 
                   ? {
                       "data": serversProvider.getRealtimeStatus!.topSources,
-                      "label": "Top clients (total)"
+                      "label": AppLocalizations.of(context)!.topClients
                     }
                   : null,
                 data2: serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty == true 
                   ? {
                       "data": serversProvider.getRealtimeStatus!.topSourcesBlocked,
-                      "label": "Top clients (blocked only)"
+                      "label": AppLocalizations.of(context)!.topClientsBlocked
                     }
                   : null,
-                countLabel: "Requests:",
+                countLabel: AppLocalizations.of(context)!.requests,
               ),
             ]
           );
@@ -85,16 +86,16 @@ class Statistics extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Icon(
+              children: [
+                const Icon(
                   Icons.error,
                   size: 50,
                   color: Colors.red,
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Text(
-                  "Stats could not be loaded",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.statsNotLoaded,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 22

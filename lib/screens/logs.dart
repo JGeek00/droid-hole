@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/logs_filters_modal.dart';
@@ -49,9 +52,9 @@ class Logs extends StatelessWidget {
                 )
               )
             ),
-            child: const Text(
-              "Query logs",
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(context)!.queryLogs,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20
               ),
@@ -187,8 +190,8 @@ class _LogsListState extends State<LogsList> {
       final loading = ProcessModal(context: context);
       loading.open(
         list == 'white' 
-          ? "Adding to whitelist..." 
-          : "adding to blacklist..."
+          ? AppLocalizations.of(context)!.addingWhitelist
+          : AppLocalizations.of(context)!.addingBlacklist,
       );
       final result = await setWhiteBlacklist(
         server: serversProvider.selectedServer!, 
@@ -200,26 +203,25 @@ class _LogsListState extends State<LogsList> {
       loading.close();
       if (result['result'] == 'success') {
         if (result['data']['message'].toString().contains('Added')) {
-          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 list == 'white'
-                  ? "Domain added to whitelist."
-                  : "Domain added to blacklist."
+                  ? AppLocalizations.of(context)!.addedWhitelist
+                  : AppLocalizations.of(context)!.addedBlacklist,
               ),
               backgroundColor: Colors.green,
             )
           );
         }
         else {
-          // ignore: use_build_context_synchronously
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 list == 'white'
-                  ? "Domain is already on whitelist."
-                  : "Domain is already on blacklist."
+                  ? AppLocalizations.of(context)!.alreadyWhitelist
+                  : AppLocalizations.of(context)!.alreadyBlacklist,
               ),
               backgroundColor: Colors.grey,
             )
@@ -227,13 +229,12 @@ class _LogsListState extends State<LogsList> {
         }
       }
       else {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               list == 'white'
-                ? "Could not add domain to whitelist."
-                : "Could not add domain to blacklist."
+                ? AppLocalizations.of(context)!.couldntAddWhitelist
+                : AppLocalizations.of(context)!.couldntAddBlacklist,
             ),
             backgroundColor: Colors.red,
           )
@@ -297,12 +298,12 @@ class _LogsListState extends State<LogsList> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                CircularProgressIndicator(),
-                SizedBox(height: 50),
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 50),
                 Text(
-                  "Loading logs...",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.loadingLogs,
+                  style: const TextStyle(
                     fontSize: 24,
                     color: Colors.grey,
                     fontWeight: FontWeight.bold
@@ -376,10 +377,10 @@ class _LogsListState extends State<LogsList> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [ 
+                    children: [ 
                       Text(
-                        "No logs to display here.",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.noLogsDisplay,
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 24,
                           fontWeight: FontWeight.bold
@@ -396,16 +397,16 @@ class _LogsListState extends State<LogsList> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
+              children: [
+                const Icon(
                   Icons.error,
                   size: 50,
                   color: Colors.red,
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Text(
-                  "Logs couldn't be loaded",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.couldntLoadLogs,
+                  style: const TextStyle(
                     fontSize: 24,
                     color: Colors.grey,
                     fontWeight: FontWeight.bold
@@ -440,11 +441,11 @@ class _LogsListState extends State<LogsList> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
-                      "Query logs",
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.queryLogs,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20
                       ),
@@ -479,10 +480,10 @@ class _LogsListState extends State<LogsList> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
-                                  children: const [
-                                    Icon(Icons.arrow_downward_rounded),
-                                    SizedBox(width: 10),
-                                    Text("From latest to oldest"),
+                                  children: [
+                                    const Icon(Icons.arrow_downward_rounded),
+                                    const SizedBox(width: 15),
+                                    Text(AppLocalizations.of(context)!.fromLatestToOldest),
                                   ],
                                 ),
                                 CustomRadio(
@@ -498,10 +499,10 @@ class _LogsListState extends State<LogsList> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
-                                  children: const [
-                                    Icon(Icons.arrow_upward_rounded),
-                                    SizedBox(width: 10),
-                                    Text("From oldest to latest"),
+                                  children: [
+                                    const Icon(Icons.arrow_upward_rounded),
+                                    const SizedBox(width: 15),
+                                    Text(AppLocalizations.of(context)!.fromOldestToLatest),
                                   ],
                                 ),
                                 CustomRadio(
@@ -543,10 +544,10 @@ class _LogsListState extends State<LogsList> {
                     style: const TextStyle(
                       fontSize: 18
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Search by URL...",
-                      hintStyle: TextStyle(
+                      hintText: AppLocalizations.of(context)!.searchUrl,
+                      hintStyle: const TextStyle(
                         fontSize: 18
                       ),
                     ),

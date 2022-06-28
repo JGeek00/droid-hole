@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 
@@ -27,10 +28,10 @@ class StatisticsTopBar extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  "Statistics",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.statistics,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
                   ),
@@ -44,18 +45,18 @@ class StatisticsTopBar extends StatelessWidget {
           ) TabBar(
             labelColor: Theme.of(context).primaryColor,
             unselectedLabelColor: Colors.black,
-            tabs: const [
+            tabs: [
               Tab(
-                icon: Icon(Icons.dns_rounded),
-                text: "Queries & servers",
+                icon: const Icon(Icons.dns_rounded),
+                text: AppLocalizations.of(context)!.queriesServers,
               ),
               Tab(
-                icon: Icon(Icons.http_rounded),
-                text: "Domains",
+                icon: const Icon(Icons.http_rounded),
+                text: AppLocalizations.of(context)!.domains,
               ),
               Tab(
-                icon: Icon(Icons.devices_rounded),
-                text: "Clients",
+                icon: const Icon(Icons.devices_rounded),
+                text: AppLocalizations.of(context)!.clients,
               ),
             ]
           )

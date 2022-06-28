@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
 
@@ -110,12 +111,12 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Text(
-                  "Log details",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.logDetails,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
                   ),
@@ -130,9 +131,9 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                 child: InkWell(
                   onTap: _checkUncheckAll,
                   child: ListTile(
-                    title: const Text(
-                      "All status selected",
-                      style: TextStyle(
+                    title: Text(
+                      AppLocalizations.of(context)!.allStatusSelected,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18
                       ),
@@ -236,7 +237,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                 TextButton.icon(
                   onPressed: () => Navigator.pop(context), 
                   icon: const Icon(Icons.close),
-                  label: const Text("Close"),
+                  label: Text(AppLocalizations.of(context)!.close),
                 ),
                 const SizedBox(width: 10),
                 TextButton.icon(
@@ -245,7 +246,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                     Navigator.pop(context);
                   }, 
                   icon: const Icon(Icons.check), 
-                  label: const Text("Apply"),
+                  label: Text(AppLocalizations.of(context)!.apply),
                   style: ButtonStyle(
                     foregroundColor: MaterialStateProperty.all(Colors.green),
                     overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))

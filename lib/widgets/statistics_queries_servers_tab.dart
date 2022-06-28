@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/custom_pie_chart.dart';
 
@@ -14,7 +15,6 @@ class QueriesServersTab extends StatelessWidget {
     final serversProvider = Provider.of<ServersProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
 
     List<Widget> _generateLegendList(Map<String, double> data) {
       List<Widget> items = [];
@@ -63,9 +63,9 @@ class QueriesServersTab extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                const Text(
-                  "Query types",
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.queryTypes,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold
                   ),
@@ -96,9 +96,9 @@ class QueriesServersTab extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                const Text(
-                  "Upstream servers",
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.upstreamServers,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold
                   ),

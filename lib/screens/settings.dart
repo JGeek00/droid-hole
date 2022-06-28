@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:auto_route/auto_route.dart';
 import 'package:droid_hole/routers/router.gr.dart';
 import 'package:droid_hole/widgets/settings_top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
@@ -79,10 +82,9 @@ class Settings extends StatelessWidget {
 
     void _deleteApplicationData() async {
       final ProcessModal process = ProcessModal(context: context);
-      process.open("Deleting...");
+      process.open(AppLocalizations.of(context)!.deleting);
       await serversProvider.deleteDbData();
       process.close();
-      // ignore: use_build_context_synchronously
       Phoenix.rebirth(context);
     }
 
@@ -105,19 +107,17 @@ class Settings extends StatelessWidget {
           onChange: (time) async {
             final result = await appConfigProvider.setAutoRefreshTime(time);
             if (result == true) {
-              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Update time changed successfully."),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.updateTimeChanged),
                   backgroundColor: Colors.green,
                 )
               );
             }
             else {
-              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Cannot change update time"),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.cannotChangeUpdateTime),
                   backgroundColor: Colors.red,
                 )
               );
@@ -153,12 +153,12 @@ class Settings extends StatelessWidget {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
+                          children: [
                             Padding(
-                              padding: EdgeInsets.all(25),
+                              padding: const EdgeInsets.all(25),
                               child: Text(
-                                "Settings",
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.settings,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16
                                 ),
@@ -168,28 +168,26 @@ class Settings extends StatelessWidget {
                         ),
                         _listItem(
                           leadingIcon: Icons.storage_rounded,
-                          label: "Servers", 
+                          label: AppLocalizations.of(context)!.servers, 
                           description: serversProvider.selectedServer != null 
                             ? serversProvider.isServerConnected == true
-                              ? serversProvider.selectedServer!.alias != null
-                                ? "Connected to ${serversProvider.selectedServer!.alias}"
-                                : "Connected to ${serversProvider.selectedServer!.address}"
-                              : "Not connected"
-                            : "Not selected",
+                              ? "${AppLocalizations.of(context)!.connectedTo} ${serversProvider.selectedServer!.alias}"
+                              : AppLocalizations.of(context)!.notConnectServer
+                            : AppLocalizations.of(context)!.notSelected,
                           onTap: () => {
                             AutoRouter.of(context).push(const ServersRoute())
                           }
                         ),
                         _listItem(
                           leadingIcon: Icons.update,
-                          label: "Auto refresh time", 
-                          description: "${appConfigProvider.getAutoRefreshTime.toString()} seconds",
+                          label: AppLocalizations.of(context)!.autoRefreshTime, 
+                          description: "${appConfigProvider.getAutoRefreshTime.toString()} ${AppLocalizations.of(context)!.seconds}",
                           onTap: _openAutoRefreshTimeModal
                         ),
                         _listItem(
                           leadingIcon: Icons.delete,
-                          label: "Reset application", 
-                          description: "Deletes all application data",
+                          label: AppLocalizations.of(context)!.resetApplication, 
+                          description: AppLocalizations.of(context)!.erasesAppData,
                           color: Colors.red,
                           onTap: _openResetModal
                         )
@@ -208,12 +206,12 @@ class Settings extends StatelessWidget {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
+                          children: [
                             Padding(
-                              padding: EdgeInsets.all(25),
+                              padding: const EdgeInsets.all(25),
                               child: Text(
-                                "About",
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.about,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16
                                 ),
@@ -223,11 +221,11 @@ class Settings extends StatelessWidget {
                         ),
                         if (appConfigProvider.getAppInfo != null) 
                           _listItem(
-                            label: "App version", 
+                            label: AppLocalizations.of(context)!.appVersion, 
                             description: appConfigProvider.getAppInfo!.version
                           ),
                           _listItem(
-                            label: "Created by", 
+                            label: AppLocalizations.of(context)!.createdBy, 
                             description: "JGeek00"
                           ),
                       ],
