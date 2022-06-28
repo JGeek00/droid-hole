@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/home.dart';
 import 'package:droid_hole/screens/logs.dart';
@@ -20,25 +21,25 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<AppScreen> appScreens = [
-      const AppScreen(
-        screenIcon: Icon(Icons.home), 
-        screenName: "Home", 
-        screenWidget: Home(),
+      AppScreen(
+        screenIcon: const Icon(Icons.home), 
+        screenName: AppLocalizations.of(context)!.home, 
+        screenWidget: const Home(),
       ),
-      const AppScreen(
-        screenIcon: Icon(Icons.analytics_rounded), 
-        screenName: "Statistics", 
-        screenWidget: Statistics(),
+      AppScreen(
+        screenIcon: const Icon(Icons.analytics_rounded), 
+        screenName: AppLocalizations.of(context)!.statistics, 
+        screenWidget: const Statistics(),
       ),
-      const AppScreen(
-        screenIcon: Icon(Icons.list_alt_rounded), 
-        screenName: "Logs", 
-        screenWidget: Logs(),
+      AppScreen(
+        screenIcon: const Icon(Icons.list_alt_rounded), 
+        screenName: AppLocalizations.of(context)!.logs, 
+        screenWidget: const Logs(),
       ),
-      const AppScreen(
-        screenIcon: Icon(Icons.settings), 
-        screenName: "Settings", 
-        screenWidget: Settings(),
+      AppScreen(
+        screenIcon: const Icon(Icons.settings), 
+        screenName: AppLocalizations.of(context)!.settings, 
+        screenWidget: const Settings(),
       ),
     ];
 

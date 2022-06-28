@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/servers_list.dart';
 import 'package:droid_hole/widgets/add_server_modal.dart';
@@ -56,10 +57,10 @@ class _ServersListModalState extends State<ServersListModal> {
           Container(
             width: double.maxFinite,
             padding: const EdgeInsets.all(20),
-            child: const Center(
+            child: Center(
               child: Text(
-                "PiHole Servers",
-                style: TextStyle(
+                AppLocalizations.of(context)!.piHoleServers,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20
                 ),
@@ -95,12 +96,12 @@ class _ServersListModalState extends State<ServersListModal> {
                     TextButton.icon(
                       onPressed: () => _openAddServerBottomSheet(), 
                       icon: const Icon(Icons.add), 
-                      label: const Text("Add"),
+                      label: Text(AppLocalizations.of(context)!.add),
                     ),
                     TextButton.icon(
                       onPressed: () => Navigator.pop(context), 
                       icon: const Icon(Icons.close), 
-                      label: const Text("Close"),
+                      label: Text(AppLocalizations.of(context)!.close),
                     ),
                   ],
                 )

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
@@ -83,7 +84,7 @@ class _AddServerModalState extends State<AddServerModal> {
         });
         await Future.delayed(const Duration(milliseconds: 300), () {
           setState(() {
-            errorUrl = "This URL already exists";
+            errorUrl = AppLocalizations.of(context)!.urlAlreadyExists;
           });
         });
       }
@@ -92,7 +93,7 @@ class _AddServerModalState extends State<AddServerModal> {
           errorUrl = null;
         });
         setState(() {
-          errorMessage = "Cannot check if this URL is already saved.";
+          errorMessage = AppLocalizations.of(context)!.cannotCheckUrlSaved;
         });
         setState(() {
           status = 'failed';
@@ -142,21 +143,22 @@ class _AddServerModalState extends State<AddServerModal> {
         else {
           if (result['result'] == 'socket') {
             setState(() {
-              errorMessage = "Failed. Check address.";
+              errorMessage = AppLocalizations.of(context)!.checkAddress;
             });
           }
           if (result['result'] == 'timeout') {
             setState(() {
-              errorMessage = "Failed. Connection timeout.";
+              errorMessage = AppLocalizations.of(context)!.connectionTimeout;
             });
           }
           else if (result['result'] == 'token_invalid') {
             setState(() {
-              errorMessage = "Failed. Password not valid.";
+              errorMessage = AppLocalizations.of(context)!.passwordNotValid;
             });
           }
           else {
-            errorMessage = "Failed. Unknown error.";
+            // ignore: use_build_context_synchronously
+            errorMessage = AppLocalizations.of(context)!.unknownError;
           }
           setState(() {
             status = 'failed';
@@ -212,7 +214,7 @@ class _AddServerModalState extends State<AddServerModal> {
           }
           else {
             setState(() {
-              errorMessage = "Connection data couldn't be saved";
+              errorMessage = AppLocalizations.of(context)!.cantSaveConnectionData;
               status = 'failed';
               height = 200;
             });
@@ -222,16 +224,17 @@ class _AddServerModalState extends State<AddServerModal> {
       else {
         if (result['result'] == 'no_connection') {
           setState(() {
-            errorMessage = "Failed. Check address.";
+            errorMessage = AppLocalizations.of(context)!.checkAddress;
           });
         }
         else if (result['result'] == 'token_invalid') {
           setState(() {
-            errorMessage = "Failed. Check token.";
+            errorMessage = AppLocalizations.of(context)!.passwordNotValid;
           });
         }
         else {
-          errorMessage = "Failed. Unknown error.";
+          // ignore: use_build_context_synchronously
+          errorMessage = AppLocalizations.of(context)!.unknownError;
         }
         setState(() {
           status = 'failed';
@@ -303,12 +306,12 @@ class _AddServerModalState extends State<AddServerModal> {
   Widget _connecting() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
-        CircularProgressIndicator(),
-        SizedBox(height: 40),
+      children: [
+        const CircularProgressIndicator(),
+        const SizedBox(height: 40),
         Text(
-          "Connecting...",
-          style: TextStyle(
+          AppLocalizations.of(context)!.connecting,
+          style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
             color: Colors.grey
@@ -370,8 +373,8 @@ class _AddServerModalState extends State<AddServerModal> {
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Text(
             widget.server != null 
-              ? "Edit server connection" 
-              : "Add server connection",
+              ? AppLocalizations.of(context)!.editServer
+              : AppLocalizations.of(context)!.addServer,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -399,7 +402,7 @@ class _AddServerModalState extends State<AddServerModal> {
                             Radius.circular(10)
                           )
                         ),
-                        labelText: 'Server address',
+                        labelText: AppLocalizations.of(context)!.serverAddress,
                       ),
                     ),
                   ),
@@ -408,14 +411,14 @@ class _AddServerModalState extends State<AddServerModal> {
                     child: TextField(
                       controller: aliasFieldController,
                       onChanged: (value) => _checkDataValid('alias', value),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         prefixIcon: Icon(Icons.badge_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10)
                           )
                         ),
-                        labelText: 'Alias',
+                        labelText: AppLocalizations.of(context)!.alias,
                       ),
                     ),
                   ),
@@ -426,14 +429,14 @@ class _AddServerModalState extends State<AddServerModal> {
                       keyboardType: TextInputType.visiblePassword,
                       controller: passwordFieldController,
                       onChanged: (value) => _checkDataValid('password', value),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         prefixIcon: Icon(Icons.lock_outline),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10)
                           )
                         ),
-                        labelText: 'Password',
+                        labelText: AppLocalizations.of(context)!.password,
                       ),
                     ),
                   ),
@@ -458,7 +461,7 @@ class _AddServerModalState extends State<AddServerModal> {
                           })
                         }) : null,
                         child: Text(
-                          "Default connection",
+                          AppLocalizations.of(context)!.defaultConnection,
                           style: TextStyle(
                             color: widget.server != null 
                               ? Colors.grey
@@ -490,7 +493,7 @@ class _AddServerModalState extends State<AddServerModal> {
                       onPressed: (() => {
                         Navigator.pop(context)
                       }),
-                      label: const Text("Cancel"),
+                      label: Text(AppLocalizations.of(context)!.cancel),
                       icon: const Icon(Icons.cancel)
                     ),
                     TextButton.icon(
@@ -508,7 +511,9 @@ class _AddServerModalState extends State<AddServerModal> {
                         ),
                       ), 
                       label: Text(
-                        widget.server != null ? "Save" : "Connect"
+                        widget.server != null 
+                          ? AppLocalizations.of(context)!.save 
+                          : AppLocalizations.of(context)!.connect
                       ),
                       icon: Icon(
                         widget.server != null ? Icons.save : Icons.login

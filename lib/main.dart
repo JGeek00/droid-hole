@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
@@ -166,6 +168,16 @@ class _DroidHoleState extends State<DroidHole> {
       debugShowCheckedModeBanner: false,
       routerDelegate: _appRouter.delegate(),
       routeInformationParser: _appRouter.defaultRouteParser(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        AppLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('es', '')
+      ],
     );
   }
 }

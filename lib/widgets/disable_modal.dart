@@ -1,7 +1,8 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/option_box.dart';
 
@@ -112,11 +113,14 @@ class _DisableModalState extends State<DisableModal> {
             ),
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                    bottom: 17
+                  ),
                   child: Text(
-                    "Disable",
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.disable,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
@@ -151,7 +155,7 @@ class _DisableModalState extends State<DisableModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("30 seconds"),
+                                    child: Text(AppLocalizations.of(context)!.seconds30),
                                   ),
                                 ),
                               ),
@@ -177,7 +181,7 @@ class _DisableModalState extends State<DisableModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("1 minute"),
+                                    child: Text(AppLocalizations.of(context)!.minute1),
                                   ),
                                 ),
                               ),
@@ -207,7 +211,7 @@ class _DisableModalState extends State<DisableModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("2 minutes"),
+                                    child: Text(AppLocalizations.of(context)!.minutes2),
                                   ),
                                 ),
                               ),
@@ -233,7 +237,7 @@ class _DisableModalState extends State<DisableModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("5 minutes"),
+                                    child: Text(AppLocalizations.of(context)!.minutes5),
                                   ),
                                 ),
                               ),
@@ -263,7 +267,7 @@ class _DisableModalState extends State<DisableModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("Indefinitely"),
+                                    child: Text(AppLocalizations.of(context)!.indefinitely),
                                   ),
                                 ),
                               ),
@@ -289,7 +293,7 @@ class _DisableModalState extends State<DisableModal> {
                                         ? Theme.of(context).primaryColor
                                         : Colors.black87
                                     ),
-                                    child: const Text("Custom"),
+                                    child: Text(AppLocalizations.of(context)!.custom),
                                   ),
                                 ),
                               ),
@@ -308,14 +312,14 @@ class _DisableModalState extends State<DisableModal> {
                                 ),
                                 decoration: InputDecoration(
                                   errorText: !customTimeIsValid && customTimeController.text != ''
-                                    ? "Value not valid" 
+                                    ? AppLocalizations.of(context)!.valueNotValid 
                                     : null,
                                   border: const OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(10)
                                     )
                                   ),
-                                  labelText: 'Custom minutes',
+                                  labelText: AppLocalizations.of(context)!.customMinutes,
                                 ),
                               ),
                             ],
@@ -336,10 +340,10 @@ class _DisableModalState extends State<DisableModal> {
                             TextButton(
                               onPressed: () => Navigator.pop(context), 
                               child: Row(
-                                children: const [
-                                  Icon(Icons.cancel),
-                                  SizedBox(width: 10),
-                                  Text("Cancel")
+                                children: [
+                                  const Icon(Icons.cancel),
+                                  const SizedBox(width: 10),
+                                  Text(AppLocalizations.of(context)!.cancel)
                                 ],
                               ),
                             ),
@@ -361,10 +365,10 @@ class _DisableModalState extends State<DisableModal> {
                                 ),
                               ), 
                               child: Row(
-                                children: const [
-                                  Icon(Icons.gpp_bad_rounded),
-                                  SizedBox(width: 10),
-                                  Text("Disable")
+                                children: [
+                                  const Icon(Icons.gpp_bad_rounded),
+                                  const SizedBox(width: 10),
+                                  Text(AppLocalizations.of(context)!.disable)
                                 ],
                               ),
                             ),

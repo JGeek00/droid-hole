@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 import 'package:droid_hole/widgets/bar_chart.dart';
 import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
-import 'package:droid_hole/widgets/servers_list_modal.dart';
 
 import 'package:droid_hole/functions/bar_chart_format.dart';
 import 'package:droid_hole/functions/refresh_server_status.dart';
-import 'package:droid_hole/constants/colors.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
@@ -26,21 +25,9 @@ class Home extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final orientation = MediaQuery.of(context).orientation;
 
-    void _selectServer() {
-      Future.delayed(const Duration(seconds: 0), () => {
-        showModalBottomSheet(
-          context: context, 
-          builder: (context) => const ServersListModal(),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false
-        )
-      });
-    }
-
     void _disableServer(int time) async {
       final ProcessModal process = ProcessModal(context: context);
-      process.open('Disabling server...');
+      process.open(AppLocalizations.of(context)!.disablingServer);
       final result = await disableServer(
         serversProvider.selectedServer!, 
         serversProvider.selectedServerToken!['token'],
@@ -52,8 +39,9 @@ class Home extends StatelessWidget {
         serversProvider.updateselectedServerStatus(false);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Server disabled successfully."),
+          SnackBar(
+            // ignore: use_build_context_synchronously
+            content: Text(AppLocalizations.of(context)!.serverDisabled),
             backgroundColor: Colors.green,
           )
         );
@@ -61,8 +49,9 @@ class Home extends StatelessWidget {
       else {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Couldn't disable server."),
+          SnackBar(
+            // ignore: use_build_context_synchronously
+            content: Text(AppLocalizations.of(context)!.couldntDisableServer),
             backgroundColor: Colors.red,
           )
         );
@@ -71,7 +60,7 @@ class Home extends StatelessWidget {
 
     void _enableServer() async {
       final ProcessModal process = ProcessModal(context: context);
-      process.open('Enabling server...');
+      process.open(AppLocalizations.of(context)!.enablingServer);
       final result = await enableServer(
         serversProvider.selectedServer!,
         serversProvider.selectedServerToken!['token'],
@@ -82,8 +71,9 @@ class Home extends StatelessWidget {
         serversProvider.updateselectedServerStatus(true);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Server enabled successfully."),
+          SnackBar(
+            // ignore: use_build_context_synchronously
+            content: Text(AppLocalizations.of(context)!.serverEnabled),
             backgroundColor: Colors.green,
           )
         );
@@ -91,8 +81,9 @@ class Home extends StatelessWidget {
       else {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Couldn't enable server."),
+          SnackBar(
+            // ignore: use_build_context_synchronously
+            content: Text(AppLocalizations.of(context)!.couldntEnableServer),
             backgroundColor: Colors.red,
           )
         );
@@ -199,12 +190,12 @@ class Home extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                CircularProgressIndicator(),
-                SizedBox(height: 50),
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 50),
                 Text(
-                  "Loading stats...",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.loadingStats,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 22
@@ -226,7 +217,7 @@ class Home extends StatelessWidget {
                       icon: Icons.public, 
                       iconColor: const Color.fromARGB(255, 64, 146, 66), 
                       color: Colors.green, 
-                      label: "Total queries", 
+                      label: AppLocalizations.of(context)!.totalQueries, 
                       value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, "en_US"),
                       margin: const EdgeInsets.only(
                         top: 20,
@@ -241,7 +232,7 @@ class Home extends StatelessWidget {
                       icon: Icons.block, 
                       iconColor: const Color.fromARGB(255, 28, 127, 208), 
                       color: Colors.blue, 
-                      label: "Queries blocked", 
+                      label: AppLocalizations.of(context)!.queriesBlocked, 
                       value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, "en_US"),
                       margin: const EdgeInsets.only(
                         top: 20,
@@ -260,7 +251,7 @@ class Home extends StatelessWidget {
                       icon: Icons.pie_chart, 
                       iconColor: const Color.fromARGB(255, 219, 131, 0), 
                       color: Colors.orange, 
-                      label: "Percentage blocked", 
+                      label: AppLocalizations.of(context)!.percentageBlocked, 
                       value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday)}%",
                       margin: const EdgeInsets.only(
                         top: 8,
@@ -275,7 +266,7 @@ class Home extends StatelessWidget {
                       icon: Icons.list, 
                       iconColor: const Color.fromARGB(255, 211, 58, 47), 
                       color: Colors.red, 
-                      label: "Domains on Adlists", 
+                      label: AppLocalizations.of(context)!.domainsAdlists, 
                       value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, "en_US"),
                       margin: const EdgeInsets.only(
                         top: 8,
@@ -296,7 +287,7 @@ class Home extends StatelessWidget {
                     icon: Icons.public, 
                     iconColor: const Color.fromARGB(255, 64, 146, 66), 
                     color: Colors.green, 
-                    label: "Total queries", 
+                    label: AppLocalizations.of(context)!.totalQueries, 
                     value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, "en_US"),
                     margin: const EdgeInsets.only(
                       top: 20,
@@ -311,7 +302,7 @@ class Home extends StatelessWidget {
                     icon: Icons.block, 
                     iconColor: const Color.fromARGB(255, 28, 127, 208), 
                     color: Colors.blue, 
-                    label: "Queries blocked", 
+                    label: AppLocalizations.of(context)!.queriesBlocked, 
                     value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, "en_US"),
                     margin: const EdgeInsets.only(
                       top: 20,
@@ -326,7 +317,7 @@ class Home extends StatelessWidget {
                     icon: Icons.pie_chart, 
                     iconColor: const Color.fromARGB(255, 219, 131, 0), 
                     color: Colors.orange, 
-                    label: "Percentage blocked", 
+                    label: AppLocalizations.of(context)!.percentageBlocked, 
                     value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday)}%",
                     margin: const EdgeInsets.only(
                       top: 20,
@@ -341,7 +332,7 @@ class Home extends StatelessWidget {
                     icon: Icons.list, 
                     iconColor: const Color.fromARGB(255, 211, 58, 47), 
                     color: Colors.red, 
-                    label: "Domains on Adlists", 
+                    label: AppLocalizations.of(context)!.domainsAdlists, 
                     value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, "en_US"),
                     margin: const EdgeInsets.only(
                       top: 20,
@@ -472,12 +463,12 @@ class Home extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                CircularProgressIndicator(),
-                SizedBox(height: 50),
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 50),
                 Text(
-                  "Loading charts...",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.loadingCharts,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 22
@@ -496,9 +487,9 @@ class Home extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    const Text(
-                      "Total queries last 24 hours",
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.totalQueries24,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold
                       ),
@@ -525,7 +516,7 @@ class Home extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Text("Blocked")
+                            Text(AppLocalizations.of(context)!.blocked)
                           ],
                         ),
                         Row(
@@ -539,7 +530,7 @@ class Home extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Text("Not blocked")
+                            Text(AppLocalizations.of(context)!.notBlocked)
                           ],
                         ),
                       ],
@@ -554,9 +545,9 @@ class Home extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    const Text(
-                      "Client activity last 24 hours",
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.clientActivity24,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold
                       ),
@@ -590,16 +581,16 @@ class Home extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Icon(
+              children: [
+                const Icon(
                   Icons.error,
                   size: 50,
                   color: Colors.red,
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Text(
-                  "Charts could not be loaded",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.chartsNotLoaded,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 22

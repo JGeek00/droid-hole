@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/servers_list_modal.dart';
 
@@ -37,7 +38,7 @@ class TopBar extends StatelessWidget {
 
     void _refresh() async {
       final ProcessModal process = ProcessModal(context: context);
-      process.open("Refreshing data...");
+      process.open(AppLocalizations.of(context)!.refreshingData);
       final result = await realtimeStatus(
         serversProvider.selectedServer!,
         serversProvider.selectedServerToken!['phpSessId']
@@ -58,8 +59,9 @@ class TopBar extends StatelessWidget {
         }
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Could not connect to the server."),
+          SnackBar(
+            // ignore: use_build_context_synchronously
+            content: Text(AppLocalizations.of(context)!.notConnectServer),
             backgroundColor: Colors.red,
           )
         );
@@ -131,16 +133,16 @@ class TopBar extends StatelessWidget {
                       ],
                     ),
                   ]
-                : const [
-                  Icon(
+                : [
+                  const Icon(
                     Icons.shield,
                     color: Colors.grey,
                     size: 30,
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   Text(
-                    "No server is selected",
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.noServerSelected,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 22
                     ),
@@ -157,30 +159,30 @@ class TopBar extends StatelessWidget {
                       PopupMenuItem(
                         onTap: _refresh,
                         child: Row(
-                          children: const [
-                            Icon(Icons.refresh),
-                            SizedBox(width: 15),
-                            Text("Refresh")
+                          children: [
+                            const Icon(Icons.refresh),
+                            const SizedBox(width: 15),
+                            Text(AppLocalizations.of(context)!.refresh)
                           ],
                         )
                       ),
                       PopupMenuItem(
                         onTap: _openWebPanel,
                         child: Row(
-                          children: const [
-                            Icon(Icons.web),
-                            SizedBox(width: 15),
-                            Text("Open web panel")
+                          children: [
+                            const Icon(Icons.web),
+                            const SizedBox(width: 15),
+                            Text(AppLocalizations.of(context)!.openWebPanel)
                           ],
                         )
                       ),
                       PopupMenuItem(
                         onTap: _changeServer,
                         child: Row(
-                          children: const [
-                            Icon(Icons.storage_rounded),
-                            SizedBox(width: 15),
-                            Text("Change Server")
+                          children: [
+                            const Icon(Icons.storage_rounded),
+                            const SizedBox(width: 15),
+                            Text(AppLocalizations.of(context)!.changeServer)
                           ],
                         )
                       ),
@@ -189,10 +191,10 @@ class TopBar extends StatelessWidget {
                     PopupMenuItem(
                       onTap: _refresh,
                       child: Row(
-                        children: const [
-                          Icon(Icons.refresh_rounded),
-                          SizedBox(width: 15),
-                          Text("Try reconnect")
+                        children: [
+                          const Icon(Icons.refresh_rounded),
+                          const SizedBox(width: 15),
+                          Text(AppLocalizations.of(context)!.tryReconnect)
                         ],
                       )
                     ),
@@ -201,10 +203,10 @@ class TopBar extends StatelessWidget {
                   PopupMenuItem(
                     onTap: _changeServer,
                     child: Row(
-                      children: const [
-                        Icon(Icons.storage_rounded),
-                        SizedBox(width: 15),
-                        Text("Select Server")
+                      children: [
+                        const Icon(Icons.storage_rounded),
+                        const SizedBox(width: 15),
+                        Text(AppLocalizations.of(context)!.selectServer)
                       ],
                     )
                   ),

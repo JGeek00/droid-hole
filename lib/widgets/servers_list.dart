@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/add_server_modal.dart';
 import 'package:droid_hole/widgets/delete_modal.dart';
@@ -57,7 +58,7 @@ class ServersList extends StatelessWidget {
 
     void _connectToServer(Server server) async {
       final ProcessModal process = ProcessModal(context: context);
-      process.open("Connecting...");
+      process.open(AppLocalizations.of(context)!.connecting);
       final result = await login(server);
       process.close();
       if (result['result'] == 'success') {
@@ -74,8 +75,9 @@ class ServersList extends StatelessWidget {
         serversProvider.setRefreshServerStatus(true);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Connected to server successfully."),
+          SnackBar(
+            // ignore: use_build_context_synchronously
+            content: Text(AppLocalizations.of(context)!.connectedSuccessfully),
             backgroundColor: Colors.green,
           )
         );
@@ -97,8 +99,9 @@ class ServersList extends StatelessWidget {
       if (result == true) {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Connection set as default successfully."),
+          SnackBar(
+            // ignore: use_build_context_synchronously
+            content: Text(AppLocalizations.of(context)!.connectionDefaultSuccessfully),
             backgroundColor: Colors.green,
           )
         );
@@ -106,8 +109,9 @@ class ServersList extends StatelessWidget {
       else {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Connection could not be set as default."),
+          SnackBar(
+            // ignore: use_build_context_synchronously
+            content: Text(AppLocalizations.of(context)!.connectionDefaultFailed),
             backgroundColor: Colors.red,
           )
         );
@@ -231,8 +235,8 @@ class ServersList extends StatelessWidget {
                         const SizedBox(width: 15),
                         Text(
                           server.defaultServer == true 
-                            ? "Default connection"
-                            : "Set as default connection"
+                            ? AppLocalizations.of(context)!.defaultConnection
+                            : AppLocalizations.of(context)!.setDefault
                         )
                       ],
                     )
@@ -240,20 +244,20 @@ class ServersList extends StatelessWidget {
                   PopupMenuItem(
                     onTap: (() => _openAddServerBottomSheet(server: server)), 
                     child: Row(
-                      children: const [
-                        Icon(Icons.edit),
-                        SizedBox(width: 15),
-                        Text("Edit")
+                      children: [
+                        const Icon(Icons.edit),
+                        const SizedBox(width: 15),
+                        Text(AppLocalizations.of(context)!.edit)
                       ],
                     )
                   ),
                   PopupMenuItem(
                     onTap: (() => _showDeleteModal(server)), 
                     child: Row(
-                      children: const [
-                        Icon(Icons.delete),
-                        SizedBox(width: 15),
-                        Text("Delete")
+                      children: [
+                        const Icon(Icons.delete),
+                        const SizedBox(width: 15),
+                        Text(AppLocalizations.of(context)!.delete)
                       ],
                     )
                   ),
@@ -281,8 +285,8 @@ class ServersList extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           serversProvider.isServerConnected == true
-                            ? "Connected"
-                            : "Selected but disconnected",
+                            ? AppLocalizations.of(context)!.connected
+                            : AppLocalizations.of(context)!.selectedDisconnected,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold
@@ -296,7 +300,7 @@ class ServersList extends StatelessWidget {
                       child: TextButton.icon(
                         onPressed: () => _connectToServer(servers[index]), 
                         icon: const Icon(Icons.login), 
-                        label: const Text("Connect"),
+                        label: Text(AppLocalizations.of(context)!.connect),
                         style: ButtonStyle(
                           foregroundColor: MaterialStateProperty.all(Colors.green),
                           overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1)),
