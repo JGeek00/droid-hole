@@ -42,7 +42,7 @@ Future<Response> httpClient({
 Future realtimeStatus(Server server, String token) async {
     final response = await httpClient(
       method: 'get',
-      url: '${server.address}/admin/api.php?summaryRaw&topItems&getForwardDestinations&getQuerySources&topClientsBlocked',
+      url: '${server.address}/admin/api.php?summaryRaw&topItems&getForwardDestinations&getQuerySources&topClientsBlocked&getQueryTypes',
       headers: {
         'Cookie': "PHPSESSID=$token"
       }

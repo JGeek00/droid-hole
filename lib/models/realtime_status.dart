@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:droid_hole/functions/charts_data_functions.dart';
+
 RealtimeStatus realtimeStatusFromJson(String str) => RealtimeStatus.fromJson(json.decode(str));
 
 class RealtimeStatus {
@@ -30,11 +32,12 @@ class RealtimeStatus {
   final int dnsQueriesAllReplies;
   final int privacyLevel;
   final String status;
-  final Map<String, int> topQueries;
+  final Map<String, double> topQueries;
   final Map<String, int> topAds;
   final Map<String, int> topSources;
   final Map<String, int> topSourcesBlocked;
   final Map<String, double> forwardDestinations;
+  final Map<String, double> queryTypes;
     
   RealtimeStatus({
     required this.domainsBeingBlocked,
@@ -69,6 +72,7 @@ class RealtimeStatus {
     required this.topSources,
     required this.topSourcesBlocked,
     required this.forwardDestinations,
+    required this.queryTypes,
   });
 
   factory RealtimeStatus.fromJson(Map<String, dynamic> json) => RealtimeStatus(
@@ -99,9 +103,7 @@ class RealtimeStatus {
     dnsQueriesAllReplies: json["dns_queries_all_replies"],
     privacyLevel: json["privacy_level"],
     status: json["status"],
-    topQueries: (json["top_queries"] == MapEntry<String, int>)
-      ? Map.from(json["top_queries"]).map((k, v) => MapEntry<String, int>(k, v))
-      : {},
+    topQueries: Map.from(json["top_queries"]).map((k, v) => MapEntry<String, double>(k, v.toDouble())),
     topAds: (json["top_ads"] == MapEntry<String, int>)
       ? Map.from(json["top_ads"]).map((k, v) => MapEntry<String, int>(k, v))
       : {},
@@ -111,8 +113,15 @@ class RealtimeStatus {
     topSourcesBlocked: (json["top_sources_blocked"].runtimeType == MapEntry<String, int>) 
       ? Map.from(json["top_sources_blocked"]).map((k, v) => MapEntry<String, int>(k, v))
       : {},
-    forwardDestinations: (json["forward_destinations"] == MapEntry<String, int>) 
-      ? Map.from(json["forward_destinations"]).map((k, v) => MapEntry<String, double>(k, v.toDouble()))
-      : {},
+    forwardDestinations: sortValues(
+      removeZeroValues(
+        Map.from(json["forward_destinations"]).map((k, v) => MapEntry<String, double>(k, v.toDouble()))
+      )
+    ),
+    queryTypes: sortValues(
+      removeZeroValues(
+        Map.from(json["querytypes"]).map((k, v) => MapEntry<String, double>(k, v.toDouble()))
+      )
+    ),
   );
 }

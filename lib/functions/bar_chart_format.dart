@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-import 'package:droid_hole/constants/colors.dart';
-
 class ChartColumn {
   final String label;
   final int value;
