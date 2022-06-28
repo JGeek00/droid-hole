@@ -84,29 +84,27 @@ class _ServersListModalState extends State<ServersListModal> {
               ),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () => _openAddServerBottomSheet(), 
-                        icon: const Icon(Icons.add), 
-                        label: const Text("Add"),
-                      ),
-                      TextButton.icon(
-                        onPressed: () => Navigator.pop(context), 
-                        icon: const Icon(Icons.close), 
-                        label: const Text("Close"),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton.icon(
+                      onPressed: () => _openAddServerBottomSheet(), 
+                      icon: const Icon(Icons.add), 
+                      label: const Text("Add"),
+                    ),
+                    TextButton.icon(
+                      onPressed: () => Navigator.pop(context), 
+                      icon: const Icon(Icons.close), 
+                      label: const Text("Close"),
+                    ),
+                  ],
+                )
+              ],
             ),
           )
         ],
