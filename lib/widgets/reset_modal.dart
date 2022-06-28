@@ -16,11 +16,12 @@ class ResetModal extends StatefulWidget {
 }
 
 class _ResetModalState extends State<ResetModal> {
+  late Timer _timer;
   int _timeRemaining = 5;
 
   @override
   void initState() {
-    Timer.periodic(const Duration(seconds: 1), (timer) => {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) => {
       if (_timeRemaining > 0) {
         setState(() => _timeRemaining--)
       }
@@ -31,6 +32,9 @@ class _ResetModalState extends State<ResetModal> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10)
+      ),
       child: Container(
         height: 205,
         width: 500,
@@ -72,7 +76,10 @@ class _ResetModalState extends State<ResetModal> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: () => {Navigator.pop(context)}, 
+                        onPressed: () {
+                          _timer.cancel();
+                          Navigator.pop(context);
+                        }, 
                         child: const Text("Cancel"),
                       ), 
                       TextButton.icon(
