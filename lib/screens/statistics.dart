@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -120,8 +122,8 @@ class Statistics extends StatelessWidget {
             double.maxFinite, 
             serversProvider.selectedServer != null && serversProvider.isServerConnected == true 
               ? orientation == Orientation.portrait
-                ? 139
-                : 103
+                ? Platform.isIOS ? 139 : 138
+                : Platform.isIOS ? 103 : 102
               : 64
           ),
           child: const StatisticsTopBar()
