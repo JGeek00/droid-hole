@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -92,7 +94,11 @@ class LogDetailsModal extends StatelessWidget {
       height: mediaQuery.orientation == Orientation.landscape
         ? mediaQuery.size.height - (statusBarHeight+10)
         : null,
-      margin: const EdgeInsets.all(10),
+      margin: EdgeInsets.only(
+        left: 10,
+        right: 10,
+        bottom: Platform.isIOS ? 30 : 10,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Theme.of(context).dialogBackgroundColor,

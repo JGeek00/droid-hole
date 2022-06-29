@@ -159,8 +159,9 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                 height: mediaQuery.size.height >= (Platform.isIOS ? 993 : 973) 
                   ? (Platform.isIOS ? 807 : 787 )
                   : (Platform.isIOS 
-                    ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+228)
-                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+198)),
+                    ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+218)
+                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+198)
+                  ),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
