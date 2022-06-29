@@ -104,7 +104,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
+        color: Theme.of(context).dialogBackgroundColor,
       ),
       height: mediaQuery.size.height >= 972 ? 972 : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight),
       child: Column(

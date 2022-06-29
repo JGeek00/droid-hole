@@ -15,10 +15,10 @@ class StatisticsTopBar extends StatelessWidget {
     
     return Container(
       margin: EdgeInsets.only(top: topBarHeight),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.black12
+            color: Theme.of(context).dividerColor,
           )
         )
       ),
@@ -43,8 +43,6 @@ class StatisticsTopBar extends StatelessWidget {
             serversProvider.selectedServer != null &&
             serversProvider.isServerConnected == true  
           ) TabBar(
-            labelColor: Theme.of(context).primaryColor,
-            unselectedLabelColor: Colors.black,
             tabs: [
               Tab(
                 icon: const Icon(Icons.dns_rounded),

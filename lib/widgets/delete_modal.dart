@@ -43,7 +43,7 @@ class DeleteModal extends StatelessWidget {
     }
 
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10)
       ),

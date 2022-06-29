@@ -29,10 +29,10 @@ class ServersTopBar extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: statusBarHeight),
       padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.black12,
+            color: Theme.of(context).dividerColor,
             width: 1
           )
         )

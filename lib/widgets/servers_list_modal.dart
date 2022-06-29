@@ -49,7 +49,7 @@ class _ServersListModalState extends State<ServersListModal> {
     return Container(
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).dialogBackgroundColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -70,7 +70,7 @@ class _ServersListModalState extends State<ServersListModal> {
           Container(
             height: 1,
             width: double.maxFinite,
-            color: Colors.black12,
+            color: Theme.of(context).dividerColor
           ),
           Expanded(
             child: ClipRRect(

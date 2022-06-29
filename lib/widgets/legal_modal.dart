@@ -10,8 +10,9 @@ class LegalModal extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10)
       ),
-      child: SizedBox(
+      child: Container(
         height: 200,
+        color: Theme.of(context).dialogBackgroundColor,
         child: Column(
           children: [
             Padding(

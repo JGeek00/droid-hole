@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:auto_route/auto_route.dart';
+import 'package:droid_hole/widgets/theme_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,8 @@ class Settings extends StatelessWidget {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+
     Widget _listItem({
       IconData? leadingIcon, 
       required String label, 
@@ -32,6 +35,7 @@ class Settings extends StatelessWidget {
       void Function()? onTap
     }) {
       return Material(
+        color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
           child: Container(
@@ -67,7 +71,7 @@ class Settings extends StatelessWidget {
                         Text(
                           description,
                           style: TextStyle(
-                            color: color ?? Colors.black54
+                            color: color ?? Colors.grey
                           ),
                         )
                       ],
@@ -139,6 +143,34 @@ class Settings extends StatelessWidget {
       );
     }
 
+    void _openThemeModal() {
+      showModalBottomSheet(
+        context: context, 
+        isScrollControlled: true,
+        builder: (context) => ThemeModal(
+          statusBarHeight: statusBarHeight,
+          selectedTheme: appConfigProvider.selectedThemeNumber,
+        ),
+        backgroundColor: Colors.transparent,
+      );
+    }
+
+    String _getThemeString() {
+      switch (appConfigProvider.selectedThemeNumber) {
+        case 0:
+          return AppLocalizations.of(context)!.systemTheme;
+
+        case 1:
+          return AppLocalizations.of(context)!.light;
+
+        case 2:
+          return AppLocalizations.of(context)!.dark;
+
+        default:
+          return "";
+      }
+    }
+
     return  Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size(double.maxFinite, 120),
@@ -151,10 +183,10 @@ class Settings extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: Colors.black12
+                          color: Theme.of(context).dividerColor
                         )
                       )
                     ),
@@ -174,6 +206,12 @@ class Settings extends StatelessWidget {
                               ),
                             ),
                           ],
+                        ),
+                        _listItem(
+                          leadingIcon: Icons.light_mode_rounded,
+                          label: AppLocalizations.of(context)!.theme, 
+                          description: _getThemeString(),
+                          onTap: _openThemeModal,
                         ),
                         _listItem(
                           leadingIcon: Icons.storage_rounded,
@@ -204,10 +242,10 @@ class Settings extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: Colors.black12
+                          color: Theme.of(context).dividerColor
                         )
                       )
                     ),

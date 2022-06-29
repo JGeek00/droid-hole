@@ -80,7 +80,7 @@ class StatisticsList extends StatelessWidget {
                           width: 90,
                           height: 10,
                           decoration: BoxDecoration(
-                            color: Colors.black12,
+                            color: Theme.of(context).dividerColor,
                             borderRadius: BorderRadius.circular(10)
                           ),
                         ),
@@ -115,7 +115,7 @@ class StatisticsList extends StatelessWidget {
             Container(
               width: double.maxFinite,
               height: 1,
-              color: Colors.black12,
+              color: Theme.of(context).dividerColor,
             ),
           ],
           if (data2 != null) 

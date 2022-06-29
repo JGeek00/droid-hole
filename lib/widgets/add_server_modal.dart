@@ -292,7 +292,7 @@ class _AddServerModalState extends State<AddServerModal> {
               curve: Curves.easeInOut,
               margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).dialogBackgroundColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: _statusWidget()
@@ -412,8 +412,8 @@ class _AddServerModalState extends State<AddServerModal> {
                       controller: aliasFieldController,
                       onChanged: (value) => _checkDataValid('alias', value),
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.badge_outlined),
-                        border: OutlineInputBorder(
+                        prefixIcon: const Icon(Icons.badge_outlined),
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10)
                           )
@@ -430,8 +430,8 @@ class _AddServerModalState extends State<AddServerModal> {
                       controller: passwordFieldController,
                       onChanged: (value) => _checkDataValid('password', value),
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock_outline),
-                        border: OutlineInputBorder(
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10)
                           )

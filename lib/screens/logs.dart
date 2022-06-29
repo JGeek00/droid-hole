@@ -45,10 +45,10 @@ class Logs extends StatelessWidget {
           child: Container(
             margin: EdgeInsets.only(top: statusBarHeight),
             padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: Colors.black12
+                  color: Theme.of(context).dividerColor
                 )
               )
             ),
@@ -321,6 +321,7 @@ class _LogsListState extends State<LogsList> {
               ? ListView.builder(
                   itemCount: logsListDisplay.length,
                   itemBuilder: (context, index) => Material(
+                    color: Colors.transparent,
                     child: InkWell(
                       onTap: () => _showLogDetails(logsListDisplay[index]),
                       child: Container(
@@ -328,9 +329,9 @@ class _LogsListState extends State<LogsList> {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           border: index < logsListDisplay.length
-                            ? const Border(
+                            ? Border(
                                 bottom: BorderSide(
-                                  color: Colors.black12
+                                  color: Theme.of(context).dividerColor
                                 )
                               )
                             : null
@@ -426,10 +427,10 @@ class _LogsListState extends State<LogsList> {
         preferredSize: const Size(double.maxFinite, 70),
         child: Container(
           margin: EdgeInsets.only(top: statusBarHeight),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: Colors.black12,
+                color: Theme.of(context).dividerColor
               )
             )
           ),

@@ -145,5 +145,10 @@
     "seconds": "Seconds",
     "legal": "Legal",
     "legalInfo": "Legal information",
-    "legalText": "All registered trademarks which are present on this application are property of it's respective owners."
+    "legalText": "All registered trademarks which are present on this application are property of it's respective owners.",
+    "theme": "Theme",
+    "systemTheme": "System theme",
+    "light": "Light",
+    "dark": "Dark",
+    "changeTheme": "Change app theme"
 }

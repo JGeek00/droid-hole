@@ -108,7 +108,7 @@ class _DisableModalState extends State<DisableModal> {
             height: selectedOption == 5 ? 418 : 315,
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).dialogBackgroundColor,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -153,7 +153,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 0
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.seconds30),
                                   ),
@@ -179,7 +179,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 1
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.minute1),
                                   ),
@@ -209,7 +209,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 2
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.minutes2),
                                   ),
@@ -235,7 +235,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 3
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.minutes5),
                                   ),
@@ -265,7 +265,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 4
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.indefinitely),
                                   ),
@@ -291,7 +291,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 5
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.custom),
                                   ),

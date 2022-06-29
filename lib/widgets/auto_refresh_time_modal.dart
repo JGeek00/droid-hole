@@ -144,7 +144,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
           height: selectedOption == 5 ? 418 : 315,
           margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).dialogBackgroundColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -187,7 +187,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                       fontSize: 14,
                                       color: selectedOption == 0
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.second1),
                                   ),
@@ -213,7 +213,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                       fontSize: 14,
                                       color: selectedOption == 1
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.seconds2),
                                   ),
@@ -243,7 +243,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                       fontSize: 14,
                                       color: selectedOption == 2
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.seconds5),
                                   ),
@@ -269,7 +269,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                       fontSize: 14,
                                       color: selectedOption == 3
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.seconds10),
                                   ),
@@ -299,7 +299,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                       fontSize: 14,
                                       color: selectedOption == 4
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.seconds30),
                                   ),
@@ -325,7 +325,7 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                                       fontSize: 14,
                                       color: selectedOption == 5
                                         ? Theme.of(context).primaryColor
-                                        : Colors.black87
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.custom),
                                   ),

@@ -318,10 +318,10 @@ class ServersList extends StatelessWidget {
       ListView.builder(
         itemCount: servers.length,
         itemBuilder: (context, index) => Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: Colors.black12,
+                color: Theme.of(context).dividerColor,
                 width: 1
               )
             )

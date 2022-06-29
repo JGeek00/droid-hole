@@ -83,10 +83,10 @@ class TopBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       margin: EdgeInsets.only(top: statusBarHeight),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.black12
+            color: Theme.of(context).dividerColor,
           )
         )
       ),

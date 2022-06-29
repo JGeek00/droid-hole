@@ -90,7 +90,7 @@ class QueriesServersTab extends StatelessWidget {
           )  Container(
             width: double.maxFinite,
             height: 1,
-            color: Colors.black12,
+            color: Theme.of(context).dividerColor,
           ),
           if (serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false) Padding(
             padding: const EdgeInsets.all(20),

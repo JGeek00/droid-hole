@@ -138,7 +138,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
         bottom: 10
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).dialogBackgroundColor,
         borderRadius: BorderRadius.circular(10)
       ),
       child: SingleChildScrollView(

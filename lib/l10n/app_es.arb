@@ -145,5 +145,10 @@
     "seconds": "Segundos",
     "legal": "Legal",
     "legalInfo": "Información legal",
-    "legalText": "Todas las marcas comerciales presentes en esta aplicación son propiedad de sus respectivos dueños."
+    "legalText": "Todas las marcas comerciales presentes en esta aplicación son propiedad de sus respectivos dueños.",
+    "theme": "Tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "systemTheme": "Tema del sistema",
+    "changeTheme": "Cambiar tema de la app"
 }

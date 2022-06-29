@@ -45,6 +45,10 @@ class _ResetModalState extends State<ResetModal> {
           right: 10,
           bottom: Platform.isIOS ? 5 : 10
         ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).dialogBackgroundColor,
+          borderRadius: BorderRadius.circular(10)
+        ),
         child: Column(
           children: [
             Padding(

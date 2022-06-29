@@ -9,9 +9,9 @@ class ProcessDialog extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(_) {
+  Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 30,

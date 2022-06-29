@@ -13,6 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
+import 'package:droid_hole/config/theme.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/status_updater.dart';
 import 'package:auto_route/auto_route.dart';
@@ -33,15 +34,6 @@ void main() async {
 
   PackageInfo appInfo = await loadAppInfo();
   configProvider.setAppInfo(appInfo);
-
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent, 
-    statusBarIconBrightness: Brightness.dark,
-    statusBarBrightness: Brightness.dark,
-    systemNavigationBarColor: const Color.fromRGBO(250, 250, 250, 1),
-    systemNavigationBarDividerColor: Colors.black.withOpacity(0.05),
-    systemNavigationBarIconBrightness: Brightness.dark
-  ));
   runApp(
     MultiProvider(
       providers: [
@@ -64,21 +56,41 @@ Future upgradeDbToV3(Database db) async {
   await db.execute("ALTER TABLE servers RENAME COLUMN token TO password");
 }
 
+Future downgradeToV3(Database db) async {
+  await db.execute("DROP TABLE appConfig");
+  await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC)");
+  await db.execute("INSERT INTO appConfig (autoRefreshTime) VALUES (5)");
+}
+
+Future upgradeDbToV4(Database db) async {
+  await db.execute("ALTER TABLE appConfig ADD COLUMN theme NUMERIC");
+  await db.execute("UPDATE appConfig SET theme = 0");
+}
+
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
   List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 3,
+    version: 4,
     onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, isDefaultServer NUMERIC)");
-      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC)");
-      await db.execute("INSERT INTO appConfig (autoRefreshTime) VALUES (5)");
+      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC)");
+      await db.execute("INSERT INTO appConfig (autoRefreshTime, theme) VALUES (5, 0)");
     },
     onUpgrade: (Database db, int oldVersion, int newVersion) async {
       if (oldVersion == 2) {
         await upgradeDbToV3(db);
+        await upgradeDbToV4(db);
+      }
+      if (oldVersion == 3) {
+        await upgradeDbToV4(db);
+      }
+    },
+    onDowngrade: (Database db, int oldVersion, int newVersion) async {
+      if (oldVersion == 4 && newVersion == 3) {
+        await downgradeToV3(db);
       }
     },
     onOpen: (Database db) async {
@@ -149,6 +161,8 @@ class _DroidHoleState extends State<DroidHole> {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
+
     if (firstExec == true || serversProvider.getRefreshServerStatus == true) {
       if (serversProvider.getRefreshServerStatus == true) {
         serversProvider.setRefreshServerStatus(false);
@@ -162,9 +176,9 @@ class _DroidHoleState extends State<DroidHole> {
 
     return MaterialApp.router(
       title: 'Droid Hole',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: appConfigProvider.selectedTheme,
       debugShowCheckedModeBanner: false,
       routerDelegate: _appRouter.delegate(),
       routeInformationParser: _appRouter.defaultRouteParser(),
@@ -188,19 +202,36 @@ class Base extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AutoTabsScaffold(
-      routes: const [
-        HomeRouter(),
-        StatisticsRouter(),
-        ListsRouter(),
-        SettingsRouter()
-      ],
-      bottomNavigationBuilder: (context, tabsRouter) {
-        return BottomNavBar(
-          selectedScreen: tabsRouter.activeIndex,
-          onChange: tabsRouter.setActiveIndex,
-        );
-      },
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: Theme.of(context).brightness == Brightness.light
+          ? Brightness.dark
+          : Brightness.light,
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light
+          ? Brightness.dark
+          : Brightness.light,
+        systemNavigationBarColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light
+          ? Brightness.dark
+          : Brightness.light,
+      ),
+      child: AutoTabsScaffold(
+        routes: const [
+          HomeRouter(),
+          StatisticsRouter(),
+          ListsRouter(),
+          SettingsRouter()
+        ],
+        bottomNavigationBuilder: (context, tabsRouter) {
+          return BottomNavBar(
+            selectedScreen: tabsRouter.activeIndex,
+            onChange: tabsRouter.setActiveIndex,
+          );
+        },
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
+      ),
     );
   }
 }
