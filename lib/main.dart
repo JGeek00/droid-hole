@@ -135,14 +135,13 @@ class _DroidHoleState extends State<DroidHole> {
   Future<void> displayMode() async {
     try {
       modes = await FlutterDisplayMode.supported;
-    } on PlatformException catch (_) {
-      // --- //
+      preferred = await FlutterDisplayMode.preferred;
+      active = await FlutterDisplayMode.active;
+      await FlutterDisplayMode.setHighRefreshRate();
+      setState(() {});
+    } catch (_) {
+      // ---- //
     }
-
-    preferred = await FlutterDisplayMode.preferred;
-    active = await FlutterDisplayMode.active;
-    await FlutterDisplayMode.setHighRefreshRate();
-    setState(() {});
   }
 
   int selectedScreen = 0;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -99,14 +101,19 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
       margin: EdgeInsets.only(
         top: widget.statusBarHeight,
         left: 10,
-        bottom: 10,
+        bottom: Platform.isIOS ? 30 : 10,
         right: 10
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Theme.of(context).dialogBackgroundColor,
       ),
-      height: mediaQuery.size.height >= 972 ? 972 : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight),
+      height: mediaQuery.size.height >= (Platform.isIOS ? 993 : 973) 
+        ? (Platform.isIOS ? 993 : 973) 
+        : (Platform.isIOS 
+            ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight)+20 
+            : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight)+1
+          ),
       child: Column(
         children: [
           Row(
@@ -149,7 +156,11 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                 ),
               ),
               SizedBox(
-                height: mediaQuery.size.height >= 972 ? 785 : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+197),
+                height: mediaQuery.size.height >= (Platform.isIOS ? 993 : 973) 
+                  ? (Platform.isIOS ? 807 : 787 )
+                  : (Platform.isIOS 
+                    ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+228)
+                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+198)),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [

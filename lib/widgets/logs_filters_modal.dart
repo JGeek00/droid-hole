@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -135,7 +137,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
         top: widget.statusBarHeight,
         left: 10,
         right: 10,
-        bottom: 10
+        bottom: Platform.isIOS ? 30 : 10
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,

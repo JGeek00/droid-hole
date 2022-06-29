@@ -32,7 +32,7 @@ class _AddServerModalState extends State<AddServerModal> {
   bool allDataValid = false;
 
   String status = 'form';
-  double height = 406;
+  double height = 407;
   String errorMessage = 'Failed';
   
   void _checkDataValid(String field, String value) {
@@ -80,7 +80,7 @@ class _AddServerModalState extends State<AddServerModal> {
       final exists = await serversProvider.checkUrlExists(ipFieldController.text);
       if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
-          height = 428;
+          height = 429;
         });
         await Future.delayed(const Duration(milliseconds: 300), () {
           setState(() {
@@ -101,7 +101,7 @@ class _AddServerModalState extends State<AddServerModal> {
         });
         await Future.delayed(const Duration(seconds: 3), (() {
           setState(() {
-            height = 406;
+            height = 407;
           });
         }));
         await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -166,7 +166,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 406;
+              height = 407;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {

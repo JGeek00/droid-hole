@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +49,11 @@ class _ServersListModalState extends State<ServersListModal> {
     }
 
     return Container(
-      margin: const EdgeInsets.all(10),
+      margin: EdgeInsets.only(
+        left: 10,
+        right: 10,
+        bottom: Platform.isIOS ? 30 : 10
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,
         borderRadius: BorderRadius.circular(10),

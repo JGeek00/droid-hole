@@ -105,7 +105,7 @@ class _DisableModalState extends State<DisableModal> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 250),
             curve: Curves.easeInOut,
-            height: selectedOption == 5 ? 418 : 315,
+            height: selectedOption == 5 ? 422 : 316,
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Theme.of(context).dialogBackgroundColor,
