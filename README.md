@@ -18,12 +18,12 @@ DroidHole does not collect any personal user data. All data stored into the appl
 - [flutter phoenix](https://pub.dev/packages/flutter_phoenix)
 - [flutter displaymode](https://pub.dev/packages/flutter_displaymode)
 - [qr code scanner](https://pub.dev/packages/qr_code_scanner)
-- [permission handler](https://pub.dev/packages/permission_handler)
 - [flutter launcher icons](https://pub.dev/packages/flutter_launcher_icons)
 - [flutter native splash](https://pub.dev/packages/flutter_native_splash)
 - [intl](https://pub.dev/packages/intl)
 - [charts_flutter](https://pub.dev/packages/charts_flutter)
 - [html](https://pub.dev/packages/html)
+- [pie chart](https://pub.dev/packages/pie_chart)
 
 <br>
 
