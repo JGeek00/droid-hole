@@ -24,6 +24,7 @@ DroidHole does not collect any personal user data. All data stored into the appl
 - [charts_flutter](https://pub.dev/packages/charts_flutter)
 - [html](https://pub.dev/packages/html)
 - [pie chart](https://pub.dev/packages/pie_chart)
+- [flutter svg](https://pub.dev/packages/flutter_svg)
 
 <br>
 

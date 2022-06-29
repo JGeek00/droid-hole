@@ -21,6 +21,9 @@ ThemeData get lightTheme => ThemeData(
     bodyText1: TextStyle(
       color: Colors.black54
     ),
+    bodyText2: TextStyle(
+      color: Colors.black
+    ),
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     foregroundColor: Colors.white,
@@ -86,7 +89,10 @@ ThemeData get darkTheme => ThemeData(
   textTheme: const TextTheme(
     bodyText1: TextStyle(
       color: Colors.white70
-    )
+    ),
+    bodyText2: TextStyle(
+      color: Colors.white
+    ),
   ),
   dividerColor: Colors.white12,
     listTileTheme: const ListTileThemeData(

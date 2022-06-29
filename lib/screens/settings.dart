@@ -4,6 +4,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:droid_hole/widgets/theme_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -12,6 +14,7 @@ import 'package:droid_hole/widgets/legal_modal.dart';
 import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
+import 'package:droid_hole/config/urls.dart';
 import 'package:droid_hole/routers/router.gr.dart';
 import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -156,6 +159,24 @@ class Settings extends StatelessWidget {
       );
     }
 
+     void _openWeb(String url) {
+      if (serversProvider.isServerConnected == true) {
+        FlutterWebBrowser.openWebPage(
+          url: url,
+          customTabsOptions: const CustomTabsOptions(
+            instantAppsEnabled: true,
+            showTitle: true,
+            urlBarHidingEnabled: false,
+          ),
+          safariVCOptions: const SafariViewControllerOptions(
+            barCollapsingEnabled: true,
+            dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
+            modalPresentationCapturesStatusBarAppearance: true,
+          )
+        );
+      }
+    }
+
     String _getThemeString() {
       switch (appConfigProvider.selectedThemeNumber) {
         case 0:
@@ -281,6 +302,34 @@ class Settings extends StatelessWidget {
                             label: AppLocalizations.of(context)!.createdBy, 
                             description: "JGeek00"
                           ),
+                          Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+                                  onPressed: () => _openWeb(Urls.playStore), 
+                                  icon: SvgPicture.asset(
+                                    'assets/resources/google-play.svg',
+                                    color: Theme.of(context).textTheme.bodyText2!.color,
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                  tooltip: AppLocalizations.of(context)!.visitGooglePlay,
+                                ),
+                                IconButton(
+                                  onPressed: () => _openWeb(Urls.gitHub), 
+                                  icon: SvgPicture.asset(
+                                    'assets/resources/github.svg',
+                                    color: Theme.of(context).textTheme.bodyText2!.color,
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                  tooltip: AppLocalizations.of(context)!.gitHub,
+                                ),
+                              ],
+                            ),
+                          )
                       ],
                     ),
                   ),

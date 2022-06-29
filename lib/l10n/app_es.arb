@@ -85,7 +85,7 @@
     "addingWhitelist": "Añadiendo a lista blanca...",
     "addingBlacklist": "Añadiendo a lista negra...",
     "addedWhitelist": "Dominio añadido a lista blanca.",
-    "addedBlacklist": "Dominio añadido a lista negra.",s
+    "addedBlacklist": "Dominio añadido a lista negra.",
     "alreadyWhitelist": "El dominio ya está en lista blanca.",
     "alreadyBlacklist": "El dominio ya está en lista negra.",
     "couldntAddWhitelist": "No se ha podido añadir el dominio a lista negra.",
@@ -151,5 +151,7 @@
     "light": "Claro",
     "dark": "Oscuro",
     "systemTheme": "Tema del sistema",
-    "changeTheme": "Cambiar tema de la app"
+    "changeTheme": "Cambiar tema de la app",
+    "visitGooglePlay": "Visita la página de Google Play",
+    "gitHub": "Código de la app disponible en GitHub"
 }

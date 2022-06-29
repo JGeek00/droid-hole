@@ -12,7 +12,10 @@ class LegalModal extends StatelessWidget {
       ),
       child: Container(
         height: 200,
-        color: Theme.of(context).dialogBackgroundColor,
+        decoration: BoxDecoration(
+          color: Theme.of(context).dialogBackgroundColor,
+          borderRadius: BorderRadius.circular(10)
+        ),
         child: Column(
           children: [
             Padding(
