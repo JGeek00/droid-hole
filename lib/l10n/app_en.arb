@@ -142,5 +142,8 @@
     "about": "About",
     "appVersion": "App version",
     "createdBy": "Created by",
-    "seconds": "Seconds"
+    "seconds": "Seconds",
+    "legal": "Legal",
+    "legalInfo": "Legal information",
+    "legalText": "All registered trademarks which are present on this application are property of it's respective owners."
 }

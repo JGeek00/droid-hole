@@ -142,5 +142,8 @@
     "about": "Sobre la app",
     "appVersion": "Versión de la aplicación",
     "createdBy": "Creado por",
-    "seconds": "Segundos"
+    "seconds": "Segundos",
+    "legal": "Legal",
+    "legalInfo": "Información legal",
+    "legalText": "Todas las marcas comerciales presentes en esta aplicación son propiedad de sus respectivos dueños."
 }

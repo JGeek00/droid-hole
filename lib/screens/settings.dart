@@ -1,16 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:auto_route/auto_route.dart';
-import 'package:droid_hole/routers/router.gr.dart';
-import 'package:droid_hole/widgets/settings_top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/settings_top_bar.dart';
+import 'package:droid_hole/widgets/legal_modal.dart';
 import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
+import 'package:droid_hole/routers/router.gr.dart';
 import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -130,6 +131,14 @@ class Settings extends StatelessWidget {
       );
     }
 
+    void _openLegalModal() {
+      showDialog(
+        context: context, 
+        builder: (context) => const LegalModal(),
+        useSafeArea: true
+      );
+    }
+
     return  Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size(double.maxFinite, 120),
@@ -220,6 +229,11 @@ class Settings extends StatelessWidget {
                           ],
                         ),
                         if (appConfigProvider.getAppInfo != null) 
+                          _listItem(
+                            label: AppLocalizations.of(context)!.legal, 
+                            description: AppLocalizations.of(context)!.legalInfo, 
+                            onTap: _openLegalModal
+                          ),
                           _listItem(
                             label: AppLocalizations.of(context)!.appVersion, 
                             description: appConfigProvider.getAppInfo!.version
