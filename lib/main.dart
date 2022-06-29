@@ -205,8 +205,8 @@ class Base extends StatelessWidget {
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarBrightness: Theme.of(context).brightness == Brightness.light
-          ? Brightness.dark
-          : Brightness.light,
+          ? Brightness.light
+          : Brightness.dark,
         statusBarIconBrightness: Theme.of(context).brightness == Brightness.light
           ? Brightness.dark
           : Brightness.light,
