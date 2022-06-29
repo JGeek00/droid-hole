@@ -42,6 +42,7 @@
     "selectServer": "Select server",
     "notConnectServer": "Could not connect to the server",
     "piHoleServers": "PiHole servers",
+    "noSavedConnections": "No saved connections",
     "add": "Add",
     "close": "Close",
     "connected": "Connected",

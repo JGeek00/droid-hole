@@ -65,7 +65,7 @@ ThemeData get darkTheme => ThemeData(
   dialogBackgroundColor: const Color.fromRGBO(44, 44, 44, 1),
   snackBarTheme: SnackBarThemeData(
     contentTextStyle: const TextStyle(
-      color: Colors.black
+      color: Colors.white
     ),
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(

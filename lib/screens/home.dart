@@ -137,14 +137,14 @@ class Home extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              height: 78,
+              height: 100,
               padding: const EdgeInsets.only(left: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     icon,
-                    size: 50,
+                    size: 65,
                     color: iconColor,
                   ),
                 ],
@@ -152,9 +152,11 @@ class Home extends StatelessWidget {
             ),
             Container(
               width: innerWidth,
+              height: 100,
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
                     label,

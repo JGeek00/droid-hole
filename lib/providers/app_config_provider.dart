@@ -101,4 +101,19 @@ class AppConfigProvider with ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> restoreAppConfig() async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET autoRefreshTime = 5, theme = 0',
+        );
+        _autoRefreshTime = 5;
+        _selectedTheme = 0;
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
 }

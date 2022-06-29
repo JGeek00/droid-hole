@@ -12,6 +12,7 @@ class StatisticsTopBar extends StatelessWidget {
     final serversProvider = Provider.of<ServersProvider>(context);
 
     final topBarHeight = MediaQuery.of(context).viewPadding.top;
+    final orientation = MediaQuery.of(context).orientation;
     
     return Container(
       margin: EdgeInsets.only(top: topBarHeight),
@@ -25,7 +26,14 @@ class StatisticsTopBar extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.only(
+              top: 20,
+              bottom: orientation == Orientation.portrait
+                ? 20
+                : 10,
+              left: 20,
+              right: 20
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -43,20 +51,53 @@ class StatisticsTopBar extends StatelessWidget {
             serversProvider.selectedServer != null &&
             serversProvider.isServerConnected == true  
           ) TabBar(
-            tabs: [
-              Tab(
-                icon: const Icon(Icons.dns_rounded),
-                text: AppLocalizations.of(context)!.queriesServers,
-              ),
-              Tab(
-                icon: const Icon(Icons.http_rounded),
-                text: AppLocalizations.of(context)!.domains,
-              ),
-              Tab(
-                icon: const Icon(Icons.devices_rounded),
-                text: AppLocalizations.of(context)!.clients,
-              ),
-            ]
+            tabs: orientation == Orientation.portrait
+              ? [
+                  Tab(
+                    icon: const Icon(Icons.dns_rounded),
+                    text: AppLocalizations.of(context)!.queriesServers,
+                  ),
+                  Tab(
+                    icon: const Icon(Icons.http_rounded),
+                    text: AppLocalizations.of(context)!.domains,
+                  ),
+                  Tab(
+                    icon: const Icon(Icons.devices_rounded),
+                    text: AppLocalizations.of(context)!.clients,
+                  ),
+                ]
+              : [
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.dns_rounded),
+                      const SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.queriesServers)
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.http_rounded),
+                      const SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.domains)
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.devices_rounded),
+                      const SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.clients)
+                    ],
+                  ),
+                ),
+              ]
           )
         ],
       ),

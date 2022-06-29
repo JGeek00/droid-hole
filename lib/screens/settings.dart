@@ -89,6 +89,7 @@ class Settings extends StatelessWidget {
       final ProcessModal process = ProcessModal(context: context);
       process.open(AppLocalizations.of(context)!.deleting);
       await serversProvider.deleteDbData();
+      await appConfigProvider.restoreAppConfig();
       process.close();
       Phoenix.rebirth(context);
     }

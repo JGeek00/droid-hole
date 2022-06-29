@@ -361,12 +361,14 @@ class ServersList extends StatelessWidget {
             ),
           ),
         )
-    ) : const SizedBox(
+    ) : SizedBox(
           height: double.maxFinite,
+          width: width-40,
           child: Center(
             child: Text(
-              "No saved connections",
-              style: TextStyle(
+              AppLocalizations.of(context)!.noSavedConnections,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
                 fontSize: 24,
                 color: Colors.grey,
                 fontWeight: FontWeight.bold

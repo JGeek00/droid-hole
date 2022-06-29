@@ -18,6 +18,8 @@ class Statistics extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
+    final orientation = MediaQuery.of(context).orientation;
+
     Widget _generateBody() {
       switch (serversProvider.getStatusLoading) {
         case 0:
@@ -117,7 +119,9 @@ class Statistics extends StatelessWidget {
           preferredSize: Size(
             double.maxFinite, 
             serversProvider.selectedServer != null && serversProvider.isServerConnected == true 
-              ? 138
+              ? orientation == Orientation.portrait
+                ? 138
+                : 102
               : 64
           ),
           child: const StatisticsTopBar()
