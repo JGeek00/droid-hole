@@ -1,7 +1,9 @@
+import 'package:droid_hole/widgets/clients_last_hours.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/queries_last_hours.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 import 'package:droid_hole/widgets/bar_chart.dart';
@@ -499,10 +501,10 @@ class Home extends StatelessWidget {
                     const SizedBox(height: 10),
                     SizedBox(
                       width: double.maxFinite,
-                      height: 300,
-                      child: BarChart(
-                        seriesList: formatQueriesChart(serversProvider.getOvertimeDataJson!)
-                      ),
+                      height: 350,
+                      child: QueriesLastHours(
+                        data: serversProvider.getOvertimeDataJson!,
+                      )
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -558,9 +560,10 @@ class Home extends StatelessWidget {
                     SizedBox(
                       width: double.maxFinite,
                       height: 300,
-                      child: BarChart(
-                        seriesList: formatClientsChart(serversProvider.getOvertimeDataJson!)
-                      ),
+                      // child: BarChart(
+                      //   seriesList: formatClientsChart(serversProvider.getOvertimeDataJson!)
+                      // ),
+                      child: ClientsLastHours(data: serversProvider.getOvertimeDataJson!),
                     ),
                     SizedBox(
                       width: double.maxFinite,
