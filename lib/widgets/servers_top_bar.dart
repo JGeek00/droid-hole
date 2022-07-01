@@ -45,7 +45,7 @@ class ServersTopBar extends StatelessWidget {
               IconButton(
                 splashRadius: 20,
                 onPressed: () => {
-                  AutoRouter.of(context).pop(true)
+                  Navigator.of(context).pop()
                 }, 
                 icon: const Icon(Icons.arrow_back)
               ),

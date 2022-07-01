@@ -47,6 +47,7 @@
     "close": "Cerrar",
     "connected": "Conectado",
     "connecting": "Conectando...",
+    "saved": "Guardado",
     "connectedSuccessfully": "Conectado al servidor satisfactoriamente.",
     "cannotConnect": "No se ha podido conectar al servidor.",
     "connectionDefaultSuccessfully": "Conexión definida como por defecto.",

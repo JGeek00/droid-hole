@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
@@ -73,10 +75,8 @@ class ServersList extends StatelessWidget {
         serversProvider.setselectedServerToken('token', result['token']);
         serversProvider.setIsServerConnected(true);
         serversProvider.setRefreshServerStatus(true);
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            // ignore: use_build_context_synchronously
             content: Text(AppLocalizations.of(context)!.connectedSuccessfully),
             backgroundColor: Colors.green,
           )
@@ -84,10 +84,9 @@ class ServersList extends StatelessWidget {
       }
       else {
         serversProvider.setIsServerConnected(false);
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Cannot connect to server."),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.cannotConnect),
             backgroundColor: Colors.red,
           )
         );
@@ -97,20 +96,16 @@ class ServersList extends StatelessWidget {
     void _setDefaultServer(Server server) async {
       final result = await serversProvider.setDefaultServer(server);
       if (result == true) {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            // ignore: use_build_context_synchronously
             content: Text(AppLocalizations.of(context)!.connectionDefaultSuccessfully),
             backgroundColor: Colors.green,
           )
         );
       }
       else {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            // ignore: use_build_context_synchronously
             content: Text(AppLocalizations.of(context)!.connectionDefaultFailed),
             backgroundColor: Colors.red,
           )

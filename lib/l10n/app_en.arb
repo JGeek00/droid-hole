@@ -47,6 +47,7 @@
     "close": "Close",
     "connected": "Connected",
     "connecting": "Connecting...",
+    "saved": "Saved",
     "connectedSuccessfully": "Connected to server successfully.",
     "cannotConnect": "Cannot connect to server.",
     "connectionDefaultSuccessfully": "Connection set as default successfully.",

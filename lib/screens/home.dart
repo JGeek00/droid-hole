@@ -28,7 +28,7 @@ class Home extends StatelessWidget {
     void _disableServer(int time) async {
       final ProcessModal process = ProcessModal(context: context);
       process.open(AppLocalizations.of(context)!.disablingServer);
-      final result = await disableServer(
+      final result = await disableServerRequest(
         serversProvider.selectedServer!, 
         serversProvider.selectedServerToken!['token'],
         serversProvider.selectedServerToken!['phpSessId'],
@@ -61,7 +61,7 @@ class Home extends StatelessWidget {
     void _enableServer() async {
       final ProcessModal process = ProcessModal(context: context);
       process.open(AppLocalizations.of(context)!.enablingServer);
-      final result = await enableServer(
+      final result = await enableServerRequest(
         serversProvider.selectedServer!,
         serversProvider.selectedServerToken!['token'],
         serversProvider.selectedServerToken!['phpSessId']
@@ -610,15 +610,6 @@ class Home extends StatelessWidget {
         preferredSize: Size(double.maxFinite, 70),
         child: TopBar()
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: serversProvider.selectedServer != null
-        && serversProvider.isServerConnected == true
-          ? FloatingActionButton(
-              onPressed: _enableDisableServer,
-              backgroundColor: Theme.of(context).primaryColor,
-              child: const Icon(Icons.shield_rounded),
-            )
-          : null,
       body: serversProvider.selectedServer != null 
         ? serversProvider.isServerConnected == true 
           ? RefreshIndicator(

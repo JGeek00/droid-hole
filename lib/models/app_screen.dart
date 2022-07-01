@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 class AppScreen {
-  final String screenName;
-  final Icon screenIcon;
-  final Widget screenWidget;
+  final String name;
+  final Icon icon;
+  final Widget widget;
   
   const AppScreen({
-    required this.screenIcon,
-    required this.screenName,
-    required this.screenWidget,
+    required this.icon,
+    required this.name,
+    required this.widget,
   });
 }

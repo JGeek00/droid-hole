@@ -1,5 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
+import 'package:animations/animations.dart';
+import 'package:droid_hole/functions/server_management.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -11,13 +15,17 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/home.dart';
+import 'package:droid_hole/screens/logs.dart';
+import 'package:droid_hole/screens/settings.dart';
+import 'package:droid_hole/screens/statistics.dart';
+
+import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/config/theme.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/status_updater.dart';
-import 'package:auto_route/auto_route.dart';
-import 'package:droid_hole/routers/router.gr.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
@@ -126,8 +134,6 @@ class DroidHole extends StatefulWidget {
 }
 
 class _DroidHoleState extends State<DroidHole> {
-  final _appRouter = AppRouter();
-
   List<DisplayMode> modes = <DisplayMode>[];
   DisplayMode? active;
   DisplayMode? preferred;
@@ -143,8 +149,6 @@ class _DroidHoleState extends State<DroidHole> {
       // ---- //
     }
   }
-
-  int selectedScreen = 0;
 
   final StatusUpdater statusUpdater = StatusUpdater();
   bool firstExec = true;
@@ -173,14 +177,12 @@ class _DroidHoleState extends State<DroidHole> {
       });
     }
 
-    return MaterialApp.router(
+    return MaterialApp(
       title: 'Droid Hole',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: appConfigProvider.selectedTheme,
       debugShowCheckedModeBanner: false,
-      routerDelegate: _appRouter.delegate(),
-      routeInformationParser: _appRouter.defaultRouteParser(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -191,16 +193,56 @@ class _DroidHoleState extends State<DroidHole> {
         Locale('en', ''),
         Locale('es', '')
       ],
+      home: const Base()
     );
   }
 }
 
 
-class Base extends StatelessWidget {
-  const Base({Key? key}) : super(key: key);
+class Base extends StatefulWidget {
+  const Base({Key? key}) : super(key: key); 
+
+  @override
+  State<Base> createState() => _BaseState();
+}
+
+class _BaseState extends State<Base> {
+  int selectedScreen = 0;
+
+  final List<Widget> pages = [
+    const Home(),
+    const Statistics(),
+    const Logs(),
+    const Settings()
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final serversProvider = Provider.of<ServersProvider>(context);
+
+    void _enableDisableServer() async {
+      if (
+        serversProvider.isServerConnected == true &&
+        serversProvider.selectedServer != null
+      ) {
+        if (serversProvider.selectedServer?.enabled == true) {
+          showModalBottomSheet(
+            context: context, 
+            isScrollControlled: true,
+            builder: (_) => DisableModal(
+              onDisable: (time) => disableServer(time, context)
+            ),
+            backgroundColor: Colors.transparent,
+            isDismissible: false,
+            enableDrag: false,
+          );
+        }
+        else {
+          enableServer(context);
+        }
+      }
+    }
+    
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -215,21 +257,33 @@ class Base extends StatelessWidget {
           ? Brightness.dark
           : Brightness.light,
       ),
-      child: AutoTabsScaffold(
-        routes: const [
-          HomeRouter(),
-          StatisticsRouter(),
-          ListsRouter(),
-          SettingsRouter()
-        ],
-        bottomNavigationBuilder: (context, tabsRouter) {
-          return BottomNavBar(
-            selectedScreen: tabsRouter.activeIndex,
-            onChange: tabsRouter.setActiveIndex,
-          );
-        },
-        animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 300),
+      child: Scaffold(
+        body: PageTransitionSwitcher(
+          duration: const Duration(milliseconds: 200),
+          transitionBuilder: (
+            (child, primaryAnimation, secondaryAnimation) => FadeThroughTransition(
+              animation: primaryAnimation, 
+              secondaryAnimation: secondaryAnimation,
+              child: child,
+            )
+          ),
+          child: pages[selectedScreen],
+        ),
+        bottomNavigationBar: BottomNavBar(
+          selectedScreen: selectedScreen,
+          onChange: (selected) => setState((() => selectedScreen = selected)),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: selectedScreen == 0
+          ? serversProvider.selectedServer != null
+            && serversProvider.isServerConnected == true
+              ? FloatingActionButton(
+                  onPressed: _enableDisableServer,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: const Icon(Icons.shield_rounded),
+                )
+              : null
+          : null,
       ),
     );
   }

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:auto_route/auto_route.dart';
+import 'package:droid_hole/screens/servers.dart';
 import 'package:droid_hole/widgets/theme_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -244,7 +245,11 @@ class Settings extends StatelessWidget {
                               : AppLocalizations.of(context)!.notConnectServer
                             : AppLocalizations.of(context)!.notSelected,
                           onTap: () => {
-                            AutoRouter.of(context).push(const ServersRoute())
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const ServersPage()
+                              ),
+                            )
                           }
                         ),
                         _listItem(

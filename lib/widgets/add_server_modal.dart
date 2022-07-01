@@ -324,16 +324,16 @@ class _AddServerModalState extends State<AddServerModal> {
   Widget _success() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
-        Icon(
+      children: [
+        const Icon(
           Icons.check_circle,
           color: Colors.green,
           size: 50,
         ),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
         Text(
-          "Saved",
-          style: TextStyle(
+          AppLocalizations.of(context)!.saved,
+          style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
             color: Colors.grey

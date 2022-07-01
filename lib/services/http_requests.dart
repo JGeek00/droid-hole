@@ -124,7 +124,7 @@ dynamic login(Server server) async {
   }
 }
 
-dynamic disableServer(Server server, String token, String phpSessId, int time) async {
+dynamic disableServerRequest(Server server, String token, String phpSessId, int time) async {
   try {
     final response = await httpClient(
       method: 'get', 
@@ -153,7 +153,7 @@ dynamic disableServer(Server server, String token, String phpSessId, int time) a
   }
 }
 
-dynamic enableServer(Server server, String token, String phpSessId) async {
+dynamic enableServerRequest(Server server, String token, String phpSessId) async {
   try {
     final response = await httpClient(
       method: 'get', 
