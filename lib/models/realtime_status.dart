@@ -103,26 +103,26 @@ class RealtimeStatus {
     dnsQueriesAllReplies: json["dns_queries_all_replies"],
     privacyLevel: json["privacy_level"],
     status: json["status"],
-    topQueries: (json["top_queries"].runtimeType == Map<dynamic, dynamic>)
+    topQueries: (json["top_queries"].runtimeType != List<dynamic>)
       ? Map.from(json["top_queries"]).map((k, v) => MapEntry<String, int>(k, v))
       : {},
-    topAds: (json["top_ads"].runtimeType == Map<dynamic, dynamic>)
+    topAds: (json["top_ads"].runtimeType != List<dynamic>)
       ? Map.from(json["top_ads"]).map((k, v) => MapEntry<String, int>(k, v))
       : {},
-    topSources: (json["top_sources"].runtimeType == Map<dynamic, dynamic> )
+    topSources: (json["top_sources"].runtimeType != List<dynamic>)
       ? Map.from(json["top_sources"]).map((k, v) => MapEntry<String, int>(k, v))
       : {},
-    topSourcesBlocked: (json["top_sources_blocked"].runtimeType == Map<dynamic, dynamic>)
+    topSourcesBlocked: (json["top_sources_blocked"].runtimeType != List<dynamic>)
       ? Map.from(json["top_sources_blocked"]).map((k, v) => MapEntry<String, int>(k, v))
       : {},
-    forwardDestinations: (json["forward_destinations"].runtimeType == Map<dynamic, dynamic>) 
+    forwardDestinations: (json["forward_destinations"].runtimeType != List<dynamic>) 
       ? sortValues(
           removeZeroValues(
             Map.from(json["forward_destinations"]).map((k, v) => MapEntry<String, double>(k, v.toDouble()))
           )
         )
       : {},
-    queryTypes: (json["querytypes"].runtimeType == Map<dynamic, dynamic>)
+    queryTypes: (json["querytypes"].runtimeType != List<dynamic>)
       ? sortValues(
           removeZeroValues(
             Map.from(json["querytypes"]).map((k, v) => MapEntry<String, double>(k, v.toDouble()))
