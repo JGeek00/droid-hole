@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:auto_route/auto_route.dart';
 import 'package:droid_hole/screens/servers.dart';
 import 'package:droid_hole/widgets/theme_modal.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
 import 'package:droid_hole/config/urls.dart';
-import 'package:droid_hole/routers/router.gr.dart';
 import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
