@@ -121,6 +121,7 @@ class ClientsLastHours extends StatelessWidget {
             color: data['clients'][i]['color'],
             isCurved: true,
             barWidth: 2,
+            preventCurveOverShooting: true,
             isStrokeCapRound: true,
             dotData: FlDotData(
               show: false,

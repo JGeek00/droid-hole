@@ -76,6 +76,7 @@ class QueriesLastHours extends StatelessWidget {
           isCurved: true,
           barWidth: 2,
           isStrokeCapRound: true,
+          preventCurveOverShooting: true,
           dotData: FlDotData(
             show: false,
           ),
@@ -90,6 +91,7 @@ class QueriesLastHours extends StatelessWidget {
           isCurved: true,
           barWidth: 2,
           isStrokeCapRound: true,
+          preventCurveOverShooting: true,
           dotData: FlDotData(
             show: false,
           ),

@@ -6,11 +6,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/widgets/queries_last_hours.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
-import 'package:droid_hole/widgets/bar_chart.dart';
 import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
 
-import 'package:droid_hole/functions/bar_chart_format.dart';
 import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/process_modal.dart';
@@ -560,9 +558,6 @@ class Home extends StatelessWidget {
                     SizedBox(
                       width: double.maxFinite,
                       height: 300,
-                      // child: BarChart(
-                      //   seriesList: formatClientsChart(serversProvider.getOvertimeDataJson!)
-                      // ),
                       child: ClientsLastHours(data: serversProvider.getOvertimeDataJson!),
                     ),
                     SizedBox(
