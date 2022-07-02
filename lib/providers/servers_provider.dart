@@ -195,6 +195,7 @@ class ServersProvider with ChangeNotifier {
           address: server['address'], 
           alias: server['alias'],
           password: server['password'], 
+          pwHash: server['pwHash'],
           defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
         );
         _serversList.add(serverObj);
@@ -221,7 +222,7 @@ class ServersProvider with ChangeNotifier {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawInsert(
-          'INSERT INTO servers (address, alias, password, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.password}", 0)',
+          'INSERT INTO servers (address, alias, password, pwHash, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.password}", "${server.pwHash}", 0)',
         );
         return true;
       });
@@ -234,7 +235,7 @@ class ServersProvider with ChangeNotifier {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
-          'UPDATE servers SET alias = "${server.alias}", password = "${server.password}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)} WHERE address = "${server.address}"',
+          'UPDATE servers SET alias = "${server.alias}", password = "${server.password}", pwHash = "${server.pwHash}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)} WHERE address = "${server.address}"',
         );
         return true;
       });

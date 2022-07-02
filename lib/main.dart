@@ -75,15 +75,20 @@ Future upgradeDbToV4(Database db) async {
   await db.execute("UPDATE appConfig SET theme = 0");
 }
 
+Future upgradeDbToV5(Database db) async {
+  await db.execute("ALTER TABLE servers ADD COLUMN pwHash TEXT");
+  await db.execute("DELETE FROM servers");
+}
+
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
   List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 4,
+    version: 5,
     onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, isDefaultServer NUMERIC)");
+      await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, pwHash TEXT, isDefaultServer NUMERIC)");
       await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC)");
       await db.execute("INSERT INTO appConfig (autoRefreshTime, theme) VALUES (5, 0)");
     },
@@ -94,6 +99,9 @@ Future<Map<String, dynamic>> loadDb() async {
       }
       if (oldVersion == 3) {
         await upgradeDbToV4(db);
+      }
+      if (oldVersion == 4) {
+        await upgradeDbToV5(db);
       }
     },
     onDowngrade: (Database db, int oldVersion, int newVersion) async {

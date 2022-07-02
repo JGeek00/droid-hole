@@ -68,6 +68,7 @@ class ServersList extends StatelessWidget {
           address: server.address,
           alias: server.alias,
           password: server.password,
+          pwHash: server.pwHash,
           defaultServer: server.defaultServer,
           enabled: result['status'] == 'enabled' ? true : false
         ));

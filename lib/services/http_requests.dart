@@ -39,12 +39,13 @@ Future<Response> httpClient({
   }
 }
 
-Future realtimeStatus(Server server, String token) async {
+Future realtimeStatus(Server server, String token) async {;
+  try {
     final response = await httpClient(
       method: 'get',
       url: '${server.address}/admin/api.php?summaryRaw&topItems&getForwardDestinations&getQuerySources&topClientsBlocked&getQueryTypes',
       headers: {
-        'Cookie': "PHPSESSID=$token"
+        'Cookie': "persistentLogin=${server.pwHash};PHPSESSID=$token;"
       }
     );
     final body = jsonDecode(response.body);
@@ -54,14 +55,12 @@ Future realtimeStatus(Server server, String token) async {
         'data': RealtimeStatus.fromJson(body)
       };
     }
-  try {
   } on SocketException {
     return {'result': 'socket'};
   } on TimeoutException {
     return {'result': 'timeout'};
   }
   catch (e) {
-    print(e);
     return {'result': 'error'};
   }
 }
@@ -129,7 +128,7 @@ dynamic disableServerRequest(Server server, String token, String phpSessId, int 
   try {
     final response = await httpClient(
       method: 'get', 
-      url: '${server.address}/admin/api.php?token=$token&disable=$time',
+      url: '${server.address}/admin/api.php?auth=${server.pwHash}&disable=$time',
       headers: {
         'Cookie': 'PHPSESSID=$phpSessId'
       }
@@ -158,7 +157,7 @@ dynamic enableServerRequest(Server server, String token, String phpSessId) async
   try {
     final response = await httpClient(
       method: 'get', 
-      url: '${server.address}/admin/api.php?token=$token&enable',
+      url: '${server.address}/admin/api.php?auth=${server.pwHash}&enable',
       headers: {
         'Cookie': 'PHPSESSID=$phpSessId'
       }
@@ -280,3 +279,46 @@ Future setWhiteBlacklist({
     return {'result': 'error'};
   }
 } 
+
+dynamic testHash(Server server, String hash) async {
+  try {
+    final status = await httpClient(
+      method: 'get',
+      url: '${server.address}/admin/api.php',
+    );
+    if (status.statusCode == 200) {
+      final body = jsonDecode(status.body);
+      if (body.runtimeType != List && body['status'] != null) {
+        final response = await httpClient(
+          method: 'get', 
+          url: '${server.address}/admin/api.php?auth=$hash&${body['status'] == 'enabled' ? 'enable' : 'disable'}',
+        );
+        if (response.statusCode == 200) {
+          final body2 = jsonDecode(response.body);
+          if (body2.runtimeType != List && body2['status'] != null) {
+            return {'result': 'success'};
+          }
+          else {
+            return {'result': 'hash_not_valid'};
+          }
+        }
+        else {
+          return {'result': 'hash_not_valid'};
+        }
+      }
+      else {
+        return {'result': 'no_connection'};
+      }
+    }
+    else {
+      return {'result': 'no_connection'};
+    }
+  } on SocketException {
+    return {'result': 'no_connection'};
+  } on TimeoutException {
+    return {'result': 'no_connection'};
+  }
+  catch (e) {
+    return {'result': 'error'};
+  }
+}

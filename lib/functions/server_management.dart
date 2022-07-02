@@ -40,7 +40,6 @@ void enableServer(BuildContext context) async {
 
 void disableServer(int time, BuildContext context) async {
   final serversProvider = Provider.of<ServersProvider>(context, listen: false);
-
   final ProcessModal process = ProcessModal(context: context);
   process.open(AppLocalizations.of(context)!.disablingServer);
   final result = await disableServerRequest(

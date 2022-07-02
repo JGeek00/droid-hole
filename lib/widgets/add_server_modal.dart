@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:droid_hole/widgets/token_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/functions/hash.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/server.dart';
@@ -125,20 +127,72 @@ class _AddServerModalState extends State<AddServerModal> {
         );
         final result = await login(serverObj);
         if (result['result'] == 'success') {
-          setState(() {
-            height = 200;
-            status = 'success';
-          });
-          await Future.delayed(const Duration(seconds: 3), (() {
-            Navigator.pop(context);
-            serversProvider.addServer(Server(
-              address: serverObj.address,
-              alias: serverObj.alias,
-              password: serverObj.password,
-              defaultServer: defaultCheckbox,
-              enabled: result['status'] == 'enabled' ? true : false
-            ));
-          }));
+          final hash = hashPassword(serverObj.password);
+          final isHashValid = await testHash(serverObj, hash);
+          if (isHashValid['result'] == 'success') {
+            setState(() {
+              height = 200;
+              status = 'success';
+            });
+            await Future.delayed(const Duration(seconds: 3), (() {
+              Navigator.pop(context);
+              serversProvider.addServer(Server(
+                address: serverObj.address,
+                alias: serverObj.alias,
+                password: serverObj.password,
+                pwHash: hash,
+                defaultServer: defaultCheckbox,
+                enabled: result['status'] == 'enabled' ? true : false
+              ));
+            }));
+          }
+          else if (isHashValid['result'] == 'hash_not_valid') {
+            showDialog(
+              context: context, 
+              builder: (_) => TokenModal(
+                server: serverObj,
+                onCancel: () => Navigator.pop(context),
+                onConfirm: (value) async {
+                  setState(() {
+                    height = 200;
+                    status = 'success';
+                  });
+                  await Future.delayed(const Duration(seconds: 3), (() {
+                    Navigator.pop(context);
+                    serversProvider.addServer(Server(
+                      address: serverObj.address,
+                      alias: serverObj.alias,
+                      password: serverObj.password,
+                      pwHash: value,
+                      defaultServer: defaultCheckbox,
+                      enabled: result['status'] == 'enabled' ? true : false
+                    ));
+                  }));
+                },
+              ),
+              useSafeArea: true,
+              barrierDismissible: false
+            );
+          }
+          else {
+            setState(() {
+              errorMessage = AppLocalizations.of(context)!.checkAddress;
+            });
+            setState(() {
+              status = 'failed';
+              height = 200;
+            });
+            await Future.delayed(const Duration(seconds: 3), (() {
+              setState(() {
+                height = 407;
+              });
+            }));
+            await Future.delayed(const Duration(milliseconds: 300), (() => {
+              setState(() {
+                status = 'form';
+              })
+            }));
+          }
         }
         else {
           if (result['result'] == 'socket') {
@@ -203,6 +257,7 @@ class _AddServerModalState extends State<AddServerModal> {
             address: widget.server!.address, 
             alias: aliasFieldController.text,
             password: passwordFieldController.text, 
+            pwHash: hashPassword(passwordFieldController.text),
             defaultServer: defaultCheckbox,
           );
           final result = await serversProvider.editServer(server);
