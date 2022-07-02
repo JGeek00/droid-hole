@@ -289,17 +289,17 @@ class _TokenModalState extends State<TokenModal> {
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
+              children: [
+                const Icon(
                   Icons.no_photography,
                   size: 50,
                   color: Colors.grey,
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Text(
-                  "DroidHole does not have permission to access the camera.\n\nGo to settings and grant the permission.",
+                  AppLocalizations.of(context)!.cameraPermission,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 16,
                     fontWeight: FontWeight.bold

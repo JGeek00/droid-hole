@@ -36,6 +36,8 @@ class _AddServerModalState extends State<AddServerModal> {
   String status = 'form';
   double height = 407;
   String errorMessage = 'Failed';
+
+  bool isTokenModalOpen = false;
   
   void _checkDataValid(String field, String value) {
     if (
@@ -129,7 +131,7 @@ class _AddServerModalState extends State<AddServerModal> {
         if (result['result'] == 'success') {
           final hash = hashPassword(serverObj.password);
           final isHashValid = await testHash(serverObj, hash);
-          if (isHashValid['result'] == '<a>') {
+          if (isHashValid['result'] == 'success') {
             setState(() {
               height = 200;
               status = 'success';
@@ -146,13 +148,18 @@ class _AddServerModalState extends State<AddServerModal> {
               ));
             }));
           }
-          else if (isHashValid['result'] == 'success') {
+          else if (isHashValid['result'] == 'hash_not_valid') {
+            setState(() => isTokenModalOpen = true);
             showDialog(
               context: context, 
               builder: (ctx) => TokenModal(
                 server: serverObj,
-                onCancel: () => Navigator.pop(context),
+                onCancel: () {
+                  setState(() => isTokenModalOpen = false);
+                  Navigator.pop(context);
+                },
                 onConfirm: (value) async {
+                  setState(() => isTokenModalOpen = false);
                   setState(() {
                     height = 200;
                     status = 'success';
@@ -176,7 +183,7 @@ class _AddServerModalState extends State<AddServerModal> {
           }
           else {
             setState(() {
-              errorMessage = AppLocalizations.of(context)!.checkAddress;
+              errorMessage = AppLocalizations.of(context)!.noConnection;
             });
             setState(() {
               status = 'failed';
@@ -333,7 +340,9 @@ class _AddServerModalState extends State<AddServerModal> {
     }
 
     return Padding(
-      padding: mediaQueryData.viewInsets,
+      padding: isTokenModalOpen == true 
+        ? const EdgeInsets.all(0)
+        : mediaQueryData.viewInsets,
       child: Padding(
         padding: EdgeInsets.only(
           bottom: Platform.isIOS ? 20 : 0

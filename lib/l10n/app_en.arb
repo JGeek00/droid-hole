@@ -159,5 +159,7 @@
     "tokenInstructions": "Enter here the API token.\n\nYou can get it on the web interface on Settings > API/Web interface > Show API token.",
     "apiToken": "API token",
     "tokenNotValid": "Token not valid",
-    "scanQrCode": "Scan the QR code.\n\nYou can get it on the web interface on Settings > API/Web interface > Show API token."
+    "scanQrCode": "Scan the QR code.\n\nYou can get it on the web interface on Settings > API/Web interface > Show API token.",
+    "noConnection": "No connection",
+    "cameraPermission": "DroidHole does not have permission to access the camera.\n\nGo to settings and grant the permission."
 }
