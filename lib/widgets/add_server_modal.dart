@@ -129,7 +129,7 @@ class _AddServerModalState extends State<AddServerModal> {
         if (result['result'] == 'success') {
           final hash = hashPassword(serverObj.password);
           final isHashValid = await testHash(serverObj, hash);
-          if (isHashValid['result'] == 'success') {
+          if (isHashValid['result'] == '<a>') {
             setState(() {
               height = 200;
               status = 'success';
@@ -146,10 +146,10 @@ class _AddServerModalState extends State<AddServerModal> {
               ));
             }));
           }
-          else if (isHashValid['result'] == 'hash_not_valid') {
+          else if (isHashValid['result'] == 'success') {
             showDialog(
               context: context, 
-              builder: (_) => TokenModal(
+              builder: (ctx) => TokenModal(
                 server: serverObj,
                 onCancel: () => Navigator.pop(context),
                 onConfirm: (value) async {

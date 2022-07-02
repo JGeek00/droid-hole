@@ -158,5 +158,6 @@
     "tokenNeeded": "Token needed",
     "tokenInstructions": "Enter here the API token.\n\nYou can get it on the web interface on Settings > API/Web interface > Show API token.",
     "apiToken": "API token",
-    "tokenNotValid": "Token not valid"
+    "tokenNotValid": "Token not valid",
+    "scanQrCode": "Scan the QR code.\n\nYou can get it on the web interface on Settings > API/Web interface > Show API token."
 }
