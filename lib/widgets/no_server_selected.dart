@@ -17,7 +17,8 @@ class NoServerSelected extends StatelessWidget {
           builder: (context) => const ServersListModal(),
           backgroundColor: Colors.transparent,
           isDismissible: false,
-          enableDrag: false
+          enableDrag: false,
+          isScrollControlled: true
         )
       });
     }
@@ -27,7 +28,7 @@ class NoServerSelected extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          height: height-150 > 300 ? 300 : height-150,
+          height: height-162 > 300 ? 300 : height-162,
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

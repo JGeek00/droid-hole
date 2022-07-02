@@ -76,7 +76,8 @@ class TopBar extends StatelessWidget {
           builder: (context) => const ServersListModal(),
           backgroundColor: Colors.transparent,
           isDismissible: false,
-          enableDrag: false
+          enableDrag: false,
+          isScrollControlled: true
         )
       });
     }

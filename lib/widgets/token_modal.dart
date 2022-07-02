@@ -74,6 +74,7 @@ class _TokenModalState extends State<TokenModal> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final mediaQuery = MediaQuery.of(context);
 
     void _confirm({String? token}) async {
       final String checkToken = token ?? tokenTextController.text;
@@ -231,12 +232,12 @@ class _TokenModalState extends State<TokenModal> {
         padding: const EdgeInsets.all(20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            CircularProgressIndicator(),
-            SizedBox(width: 30),
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(width: 30),
             Text(
-              "Checking token...",
-              style: TextStyle(
+              AppLocalizations.of(context)!.checkingToken,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18
               ),
@@ -251,13 +252,13 @@ class _TokenModalState extends State<TokenModal> {
         case 0:
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              CircularProgressIndicator(),
-              SizedBox(height: 50),
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 50),
               Text(
-                "Getting permission...",
+                AppLocalizations.of(context)!.gettingPermission,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 16,
                   fontWeight: FontWeight.bold
@@ -267,12 +268,16 @@ class _TokenModalState extends State<TokenModal> {
           );
 
         case 1:
-          return QRView(
-            key: qrKey, 
-            onQRViewCreated: _onQrViewCreated,
-            formatsAllowed: const [
-              BarcodeFormat.qrcode
-            ],
+          return SizedBox(
+            width: width > 400 ? 400 : width,
+            height: width > 400 ? 400 : width,
+            child: QRView(
+              key: qrKey, 
+              onQRViewCreated: _onQrViewCreated,
+              formatsAllowed: const [
+                BarcodeFormat.qrcode
+              ],
+            ),
           );
 
         case 2: 
@@ -391,15 +396,22 @@ class _TokenModalState extends State<TokenModal> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10)
       ),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        height: height,
-        child: checkingToken == true 
-          ? _checkingToken()
-          : scanQr == true 
-            ? _qr()
-            : _form()
+      child: SizedBox(
+        height: mediaQuery.size.height - (mediaQuery.viewPadding.top+mediaQuery.viewPadding.bottom) - 120 > height
+          ? height
+          :  mediaQuery.size.height - (mediaQuery.viewPadding.top+mediaQuery.viewPadding.bottom),
+        child: SingleChildScrollView(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            height: height,
+            child: checkingToken == true 
+              ? _checkingToken()
+              : scanQr == true 
+                ? _qr()
+                : _form()
+          ),
+        ),
       ),
     );
   }

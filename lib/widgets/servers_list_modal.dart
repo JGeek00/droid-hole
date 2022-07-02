@@ -30,6 +30,8 @@ class _ServersListModalState extends State<ServersListModal> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    
     final serversProvider = Provider.of<ServersProvider>(context);
     for (var i = 0; i < serversProvider.getServersList.length; i++) {
       expandableControllerList.add(ExpandableController());
@@ -49,6 +51,7 @@ class _ServersListModalState extends State<ServersListModal> {
     }
 
     return Container(
+      height: height-50 < 500 ? height-50 : 500,
       margin: EdgeInsets.only(
         left: 10,
         right: 10,
