@@ -188,6 +188,28 @@ class ServersProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> setPwHash(Server server) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawInsert(
+          'UPDATE servers SET pwHash = "${server.pwHash}" WHERE address = "${server.address}"',
+        );
+        _serversList = _serversList.map((s) {
+          if (s.address == server.address) {
+            return server;
+          }
+          else {
+            return s;
+          }
+        }).toList();
+        notifyListeners();
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future saveFromDb(List<Map<String, dynamic>>? servers) async {
     if (servers != null) {
       for (var server in servers) {

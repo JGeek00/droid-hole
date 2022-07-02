@@ -161,5 +161,7 @@
     "tokenNotValid": "Token not valid",
     "scanQrCode": "Scan the QR code.\n\nYou can get it on the web interface on Settings > API/Web interface > Show API token.",
     "noConnection": "No connection",
-    "cameraPermission": "DroidHole does not have permission to access the camera.\n\nGo to settings and grant the permission."
+    "cameraPermission": "DroidHole does not have permission to access the camera.\n\nGo to settings and grant the permission.",
+    "serverInvalidData": "Server connection saved with invalid data. Add the connection again.",
+    "dbNotWorking": "Database is not working. Reinstall the application."
 }

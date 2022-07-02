@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:droid_hole/widgets/token_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/widgets/add_server_modal.dart';
 import 'package:droid_hole/widgets/delete_modal.dart';
 
+import 'package:droid_hole/functions/hash.dart';
 import 'package:droid_hole/models/process_modal.dart';
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -59,11 +61,7 @@ class ServersList extends StatelessWidget {
     }
 
     void _connectToServer(Server server) async {
-      final ProcessModal process = ProcessModal(context: context);
-      process.open(AppLocalizations.of(context)!.connecting);
-      final result = await login(server);
-      process.close();
-      if (result['result'] == 'success') {
+      void _connectSuccess(result) {
         serversProvider.setselectedServer(Server(
           address: server.address,
           alias: server.alias,
@@ -83,14 +81,107 @@ class ServersList extends StatelessWidget {
           )
         );
       }
+
+      final ProcessModal process = ProcessModal(context: context);
+      process.open(AppLocalizations.of(context)!.connecting);
+      if (server.pwHash == null) {
+        final hash = hashPassword(server.password);
+        final isHashValid = await testHash(server, hash);
+        if (isHashValid['result'] == 'success') {
+          final result = await login(server);
+          process.close();
+          if (result['result'] == 'success') {
+            final updated = await serversProvider.setPwHash(Server(
+              address: server.address,
+              alias: server.alias, 
+              password: server.password, 
+              pwHash: hash,
+              defaultServer: server.defaultServer
+            ));
+            if (updated == true) {
+              _connectSuccess(result);
+            }
+            else {
+              final res = await serversProvider.removeServer(server.address);
+              if (res == true) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.serverInvalidData),
+                    backgroundColor: Colors.red,
+                  )
+                );
+              }
+              else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.dbNotWorking),
+                    backgroundColor: Colors.red,
+                  )
+                );
+              }
+            }
+          }
+          else {
+            serversProvider.setIsServerConnected(false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.cannotConnect),
+                backgroundColor: Colors.red,
+              )
+            );
+          }
+        }
+        else if (isHashValid['result'] == 'hash_not_valid') {
+          showDialog(
+            context: context, 
+            builder: (ctx) => TokenModal(
+              server: server,
+              onCancel: () {},
+              onConfirm: (value) async {
+                final result = await login(server);
+                process.close();
+                if (result['result'] == 'success') {
+                  _connectSuccess(result);
+                }
+                else {
+                  serversProvider.setIsServerConnected(false);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.cannotConnect),
+                      backgroundColor: Colors.red,
+                    )
+                  );
+                }
+              },
+            ),
+            useSafeArea: true,
+            barrierDismissible: false
+          );
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.cannotConnect),
+              backgroundColor: Colors.red,
+            )
+          );
+        }
+      }
       else {
-        serversProvider.setIsServerConnected(false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.cannotConnect),
-            backgroundColor: Colors.red,
-          )
-        );
+        final result = await login(server);
+        process.close();
+        if (result['result'] == 'success') {
+          _connectSuccess(result);
+        }
+        else {
+          serversProvider.setIsServerConnected(false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.cannotConnect),
+              backgroundColor: Colors.red,
+            )
+          );
+        }
       }
     }
 
