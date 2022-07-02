@@ -254,34 +254,103 @@ class _AddServerModalState extends State<AddServerModal> {
       );
       final result = await login(serverObj);
       if (result['result'] == 'success') {
-        setState(() {
-          height = 200;
-          status = 'success';
-        });
-        await Future.delayed(const Duration(seconds: 3), (() async {
-          Navigator.pop(context);
-          Server server = Server(
-            address: widget.server!.address, 
-            alias: aliasFieldController.text,
-            password: passwordFieldController.text, 
-            pwHash: hashPassword(passwordFieldController.text),
-            defaultServer: defaultCheckbox,
+        final hash = hashPassword(serverObj.password);
+        final isHashValid = await testHash(serverObj, hash);
+        if (isHashValid['result'] == 'success') {
+          setState(() {
+            height = 200;
+            status = 'success';
+          });
+          await Future.delayed(const Duration(seconds: 3), (() async {
+            Navigator.pop(context);
+            Server server = Server(
+              address: widget.server!.address, 
+              alias: aliasFieldController.text,
+              password: passwordFieldController.text, 
+              pwHash: hash,
+              defaultServer: defaultCheckbox,
+            );
+            final result = await serversProvider.editServer(server);
+            if (result == true) {
+              setState(() {
+                height = 200;
+                status = 'success';
+              });
+            }
+            else {
+              setState(() {
+                errorMessage = AppLocalizations.of(context)!.cantSaveConnectionData;
+                status = 'failed';
+                height = 200;
+              });
+            }
+          }));
+        }
+        else if (isHashValid['result'] == 'hash_not_valid') {
+          setState(() => isTokenModalOpen = true);
+          showDialog(
+            useSafeArea: true,
+            barrierDismissible: false,
+            context: context, 
+            builder: (ctx) => TokenModal(
+              server: serverObj,
+              onCancel: () {
+                setState(() => isTokenModalOpen = false);
+                Navigator.pop(context);
+              },
+              onConfirm: (value) async {
+                setState(() => isTokenModalOpen = false);
+                setState(() {
+                  height = 200;
+                  status = 'success';
+                });
+                await Future.delayed(const Duration(seconds: 3), (() async {
+                  Navigator.pop(context);
+                  Server server = Server(
+                    address: widget.server!.address, 
+                    alias: aliasFieldController.text,
+                    password: passwordFieldController.text, 
+                    pwHash: hash,
+                    defaultServer: defaultCheckbox,
+                  );
+                  final result = await serversProvider.editServer(server);
+                  if (result == true) {
+                    setState(() {
+                      height = 200;
+                      status = 'success';
+                    });
+                  }
+                  else {
+                    setState(() {
+                      errorMessage = AppLocalizations.of(context)!.cantSaveConnectionData;
+                      status = 'failed';
+                      height = 200;
+                    });
+                  }
+                }));
+              },
+            ),
           );
-          final result = await serversProvider.editServer(server);
-          if (result == true) {
+        }
+        else {
+          setState(() {
+            errorMessage = AppLocalizations.of(context)!.noConnection;
+          });
+          setState(() {
+            status = 'failed';
+            height = 200;
+          });
+          await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 200;
-              status = 'success';
+              height = 407;
             });
-          }
-          else {
+          }));
+          await Future.delayed(const Duration(milliseconds: 300), (() => {
             setState(() {
-              errorMessage = AppLocalizations.of(context)!.cantSaveConnectionData;
-              status = 'failed';
-              height = 200;
-            });
-          }
-        }));
+              status = 'form';
+            })
+          }));
+        }
       }
       else {
         if (result['result'] == 'no_connection') {
