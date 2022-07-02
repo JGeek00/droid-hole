@@ -57,11 +57,11 @@ class _TokenModalState extends State<TokenModal> {
     Widget _form() {
       return Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(
-              "Token needed",
-              style: TextStyle(
+              AppLocalizations.of(context)!.tokenNeeded,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18
               ),
@@ -73,8 +73,8 @@ class _TokenModalState extends State<TokenModal> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Enter here the API token.\n\nYou can get it on Settings > API/Web interface > Show API token.",
+                  Text(
+                    AppLocalizations.of(context)!.tokenInstructions,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
@@ -90,10 +90,10 @@ class _TokenModalState extends State<TokenModal> {
                     controller: tokenTextController,
                     enabled: checkingToken == false ? true : false,
                     decoration: InputDecoration(
-                      label: const Text("API token"),
+                      label: Text(AppLocalizations.of(context)!.apiToken),
                       border: const OutlineInputBorder(),
                       errorText: tokenNotValid == true  
-                        ? "Token not valid"
+                        ? AppLocalizations.of(context)!.tokenNotValid
                         : null
                     ),
                   ),
@@ -111,7 +111,7 @@ class _TokenModalState extends State<TokenModal> {
                     Navigator.of(context).pop();
                     widget.onCancel();
                   },
-                  label: const Text("Cancel"),
+                  label: Text(AppLocalizations.of(context)!.cancel),
                   icon: const Icon(Icons.cancel),
                 ),
                 TextButton.icon(

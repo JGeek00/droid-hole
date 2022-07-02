@@ -154,5 +154,9 @@
     "systemTheme": "Tema del sistema",
     "changeTheme": "Cambiar tema de la app",
     "visitGooglePlay": "Visita la página de Google Play",
-    "gitHub": "Código de la app disponible en GitHub"
+    "gitHub": "Código de la app disponible en GitHub",
+    "tokenNeeded": "Se necesita token",
+    "tokenInstructions": "Introduce aquí el token de la API.\n\nPuedes obtenerlo en la interfaz web en Settings > API/Web interface > Show API token.",
+    "apiToken": "Token de la API",
+    "tokenNotValid": "Token no válido"
 }
