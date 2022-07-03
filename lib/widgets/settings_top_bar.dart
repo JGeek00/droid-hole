@@ -23,7 +23,7 @@ class SettingsTopBar extends StatelessWidget {
         children: [
           Image.asset(
             'assets/icon/icon-no-background.png',
-            width: 100,
+            width: 70,
           ),
           const SizedBox(width: 40),
           const Text(
