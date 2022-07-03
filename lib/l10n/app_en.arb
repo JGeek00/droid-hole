@@ -59,7 +59,7 @@
     "connect": "Connect",
     "save": "Save",
     "edit": "Edit",
-    "urlAlreadyExists": "This URL already exists",
+    "connectionAlreadyExists": "This connection already exists",
     "cannotCheckUrlSaved": "Cannot check if this URL is already saved.",
     "checkAddress": "Failed. Check address.",
     "connectionTimeout": "Failed. Connection timeout.",

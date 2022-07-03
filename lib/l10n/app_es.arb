@@ -59,7 +59,7 @@
     "connect": "Conectar",
     "save": "Guardar",
     "edit": "Editar",
-    "urlAlreadyExists": "Esta URL ya existe",
+    "connectionAlreadyExists": "Esta conexión ya existe",
     "cannotCheckUrlSaved": "No se ha podido comprobar si la URL ya existe.",
     "checkAddress": "Error. Comprueba la dirección.",
     "connectionTimeout": "Error. Timeout.",

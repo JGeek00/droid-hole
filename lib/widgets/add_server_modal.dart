@@ -135,7 +135,7 @@ class _AddServerModalState extends State<AddServerModal> {
         });
         await Future.delayed(const Duration(milliseconds: 300), () {
           setState(() {
-            errorUrl = AppLocalizations.of(context)!.urlAlreadyExists;
+            errorUrl = AppLocalizations.of(context)!.connectionAlreadyExists;
           });
         });
       }
