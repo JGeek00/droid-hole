@@ -110,7 +110,9 @@ class _AddServerModalState extends State<AddServerModal> {
   void initState() {
     super.initState();
     if (widget.server != null) {
-      ipFieldController.text = widget.server!.address;
+      final List<String> splitted = widget.server!.address.split(':');
+      ipFieldController.text = splitted[1].split('/')[2];
+      portFieldController.text = splitted[2];
       aliasFieldController.text = widget.server!.alias;
       passwordFieldController.text = widget.server!.password;
       setState(() {
@@ -173,7 +175,6 @@ class _AddServerModalState extends State<AddServerModal> {
           defaultServer: false,
         );
         final result = await login(serverObj);
-        print(result);
         if (result['result'] == 'success') {
           final hash = hashPassword(serverObj.password);
           final isHashValid = await testHash(serverObj, hash);
@@ -414,7 +415,6 @@ class _AddServerModalState extends State<AddServerModal> {
           });
         }
         else {
-          // ignore: use_build_context_synchronously
           errorMessage = AppLocalizations.of(context)!.unknownError;
         }
         setState(() {
