@@ -1,9 +1,16 @@
 # DroidHole
 DroidHole is a Pi-hole® client for Android. It allows the user to manage multiple Pi-hole® servers from one application and device.
 
-###### ⚠️ THIS APPLICATION IS UNDER DEVELOPMENT. IT MAY CONTAIN SOME BUGS AND MISSING FEATURES. ⚠️
-
 [<img src="/assets/other/get_google_play.png" width="300px">](https://play.google.com/store/apps/details?id=com.jgeek00.droid_hole)
+
+## Main features
+▶ Manage your Pi-hole® server on an easy way.
+▶ Enable and disable the server with only one button.
+▶ Beautiful charts with all the statistics you need to see.
+▶ Add multiple servers to the app, and manage all of them from here.
+▶ Explore the query logs list and see the log details.
+
+Requires Android 8.0+
 
 ## Privacy policy
 DroidHole does not collect any personal user data. All data stored into the application is kept on the user's device.
