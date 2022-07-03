@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:droid_hole/widgets/token_modal.dart';
@@ -25,26 +27,30 @@ class AddServerModal extends StatefulWidget {
 class _AddServerModalState extends State<AddServerModal> {
 
   TextEditingController ipFieldController = TextEditingController();
+  String? ipFieldError;
+  TextEditingController portFieldController = TextEditingController();
+  String? portFieldError;
   TextEditingController aliasFieldController = TextEditingController();
   TextEditingController passwordFieldController = TextEditingController();
   bool defaultCheckbox = false;
 
   String? errorUrl;
-
   bool allDataValid = false;
 
   String status = 'form';
-  double height = 407;
+  double height = 430;
   String errorMessage = 'Failed';
 
   bool isTokenModalOpen = false;
   
-  void _checkDataValid(String field, String value) {
+  void _checkDataValid() {
     if (
       ipFieldController.text != '' &&
+      ipFieldError == null &&
+      portFieldController.text != '' &&
+      portFieldError == null &&
       aliasFieldController.text != '' &&
-      passwordFieldController.text != '' &&
-      value != ''
+      passwordFieldController.text != ''
     ) {
       setState(() {
         allDataValid = true;
@@ -57,6 +63,49 @@ class _AddServerModalState extends State<AddServerModal> {
     }
   }
 
+  void _validateIpAddress(String? value) {
+    if (value != null && value != '') {
+      RegExp ipAddress = RegExp(r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$');
+      if (ipAddress.hasMatch(value) == true) {
+        setState(() {
+          ipFieldError = null;
+        });
+      }
+      else {
+        setState(() {
+          ipFieldError = AppLocalizations.of(context)!.invalidIp;
+        });
+      }
+    }
+    else {
+      setState(() {
+        ipFieldError = AppLocalizations.of(context)!.ipCannotEmpty;
+      });
+    }
+    _checkDataValid();
+  }
+
+  void _validatePort(String? value) {
+    if (value != null && value != '') {
+      if (int.tryParse(value) != null && int.parse(value) <= 65535) {
+        setState(() {
+          portFieldError = null;
+        });
+      }
+      else {
+        setState(() {
+          portFieldError = AppLocalizations.of(context)!.invalidPort;
+        });
+      }
+    }
+    else {
+      setState(() {
+        portFieldError = AppLocalizations.of(context)!.portCannotEmpty;
+      });
+    }
+    _checkDataValid();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -66,10 +115,6 @@ class _AddServerModalState extends State<AddServerModal> {
       passwordFieldController.text = widget.server!.password;
       setState(() {
         defaultCheckbox = widget.server!.defaultServer;
-      });
-      
-      setState(() {
-        allDataValid = true;
       });
     }
   }
@@ -81,7 +126,7 @@ class _AddServerModalState extends State<AddServerModal> {
     final width = MediaQuery.of(context).size.width;
 
     void _connect() async {
-      final exists = await serversProvider.checkUrlExists(ipFieldController.text);
+      final exists = await serversProvider.checkUrlExists("http://${ipFieldController.text}:${portFieldController.text}");
       if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
           height = 429;
@@ -105,7 +150,7 @@ class _AddServerModalState extends State<AddServerModal> {
         });
         await Future.delayed(const Duration(seconds: 3), (() {
           setState(() {
-            height = 407;
+            height = 430;
           });
         }));
         await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -122,12 +167,13 @@ class _AddServerModalState extends State<AddServerModal> {
           status = 'connecting';
         });
         final serverObj = Server(
-          address: ipFieldController.text, 
+          address: "http://${ipFieldController.text}:${portFieldController.text}", 
           alias: aliasFieldController.text,
           password: passwordFieldController.text, 
           defaultServer: false,
         );
         final result = await login(serverObj);
+        print(result);
         if (result['result'] == 'success') {
           final hash = hashPassword(serverObj.password);
           final isHashValid = await testHash(serverObj, hash);
@@ -191,7 +237,7 @@ class _AddServerModalState extends State<AddServerModal> {
             });
             await Future.delayed(const Duration(seconds: 3), (() {
               setState(() {
-                height = 407;
+                height = 430;
               });
             }));
             await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -212,13 +258,17 @@ class _AddServerModalState extends State<AddServerModal> {
               errorMessage = AppLocalizations.of(context)!.connectionTimeout;
             });
           }
+          if (result['result'] == 'no_connection') {
+            setState(() {
+              errorMessage = AppLocalizations.of(context)!.cantReaachServer;
+            });
+          }
           else if (result['result'] == 'token_invalid') {
             setState(() {
               errorMessage = AppLocalizations.of(context)!.passwordNotValid;
             });
           }
           else {
-            // ignore: use_build_context_synchronously
             errorMessage = AppLocalizations.of(context)!.unknownError;
           }
           setState(() {
@@ -227,7 +277,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 407;
+              height = 430;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -247,7 +297,7 @@ class _AddServerModalState extends State<AddServerModal> {
         status = 'connecting';
       });
       final serverObj = Server(
-        address: ipFieldController.text, 
+        address: "http://${ipFieldController.text}:${portFieldController.text}", 
         alias: aliasFieldController.text,
         password: passwordFieldController.text, 
         defaultServer: false,
@@ -342,7 +392,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 407;
+              height = 430;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -486,13 +536,16 @@ class _AddServerModalState extends State<AddServerModal> {
           size: 50,
         ),
         const SizedBox(height: 40),
-        Text(
-          errorMessage,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            errorMessage,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey
+            ),
           ),
         )
       ],
@@ -523,29 +576,53 @@ class _AddServerModalState extends State<AddServerModal> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: TextField(
-                      onChanged: (value) => _checkDataValid('address', value),
-                      controller: ipFieldController,
-                      enabled: widget.server != null ? false : true,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.http_outlined),
-                        errorText: errorUrl,
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10)
-                          )
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: (width-60)-120,
+                          child: TextFormField(
+                            onChanged: (value) => _validateIpAddress(value),
+                            controller: ipFieldController,
+                            enabled: widget.server != null ? false : true,
+                            decoration: InputDecoration(
+                              errorText: ipFieldError,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10)
+                                )
+                              ),
+                              labelText: AppLocalizations.of(context)!.ipAddress,
+                            ),
+                          ),
                         ),
-                        labelText: AppLocalizations.of(context)!.serverAddress,
-                      ),
+                        SizedBox(
+                          width: 100,
+                          child: TextFormField(
+                            onChanged: (value) => _validatePort(value),
+                            controller: portFieldController,
+                            enabled: widget.server != null ? false : true,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              errorText: portFieldError,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10)
+                                )
+                              ),
+                              labelText: AppLocalizations.of(context)!.port,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
                       controller: aliasFieldController,
-                      onChanged: (value) => _checkDataValid('alias', value),
+                      onChanged: (value) => _checkDataValid(),
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.badge_outlined),
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10)
@@ -561,9 +638,8 @@ class _AddServerModalState extends State<AddServerModal> {
                       obscureText: true,
                       keyboardType: TextInputType.visiblePassword,
                       controller: passwordFieldController,
-                      onChanged: (value) => _checkDataValid('password', value),
+                      onChanged: (value) => _checkDataValid(),
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock_outline),
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10)
@@ -607,6 +683,21 @@ class _AddServerModalState extends State<AddServerModal> {
                 ],
               ),
             ),
+          ),
+        ),
+        if (errorUrl != null) Padding(
+          padding: const EdgeInsets.only(top: 7),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                errorUrl!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red
+                ),
+              )
+            ],
           ),
         ),
         Expanded(

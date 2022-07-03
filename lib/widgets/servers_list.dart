@@ -450,7 +450,6 @@ class ServersList extends StatelessWidget {
         )
     ) : SizedBox(
           height: double.maxFinite,
-          width: width-40,
           child: Center(
             child: Text(
               AppLocalizations.of(context)!.noSavedConnections,

@@ -165,5 +165,13 @@
     "serverInvalidData": "Server connection saved with invalid data. Add the connection again.",
     "dbNotWorking": "Database is not working. Reinstall the application.",
     "checkingToken": "Checking token...",
-    "gettingPermission": "Getting permission..."
+    "gettingPermission": "Getting permission...",
+    "connectToServer": "Connect to server",
+    "ipAddress": "IP address",
+    "port": "Port",
+    "invalidIp": "Invalid IP",
+    "invalidPort": "Invalid port",
+    "ipCannotEmpty": "IP field cannot be empty",
+    "portCannotEmpty": "Port field cannot be empty",
+    "cantReaachServer": "Can't reach the server. Check IP address and port."
 }

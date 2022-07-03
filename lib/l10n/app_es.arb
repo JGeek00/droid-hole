@@ -165,5 +165,14 @@
     "serverInvalidData": "Conexión guardada con valores no válidos. Añade la conexión otra vez.",
     "dbNotWorking": "La base de datos no funciona. Reinstala la aplicación.",
     "checkingToken": "Comprobando token...",
-    "gettingPermission": "Obteniendo permiso..."
+    "gettingPermission": "Obteniendo permiso...",
+    "connectToServer": "Conectarse al servidor",
+    "ipAddress": "Dirección IP",
+    "port": "Puerto",
+    "invalidPort": "Puerto no válido",
+    "invalidIp": "IP no válida",
+    "invalidPort": "Puerto no válido",
+    "ipCannotEmpty": "IP no puede estar vacío",
+    "portCannotEmpty": "Puerto no puede estar vacío",
+    "cantReaachServer": "No se puede alcanzar el servidor. Comprueba la dirección IP y el puerto."
 }
