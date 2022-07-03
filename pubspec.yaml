@@ -1,5 +1,5 @@
 name: droid_hole
-description: PiHole client for Android.
+description: Pi-hole® client for Android.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

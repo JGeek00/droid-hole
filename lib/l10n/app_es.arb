@@ -42,7 +42,7 @@
     "noSavedConnections": "No hay conexiones guardadas",
     "selectServer": "Seleccionar servidor",
     "notConnectServer": "No se ha podido conectar al servidor",
-    "piHoleServers": "Servidores PiHole",
+    "piHoleServers": "Conexiones a servidores",
     "add": "Añadir",
     "close": "Cerrar",
     "connected": "Conectado",

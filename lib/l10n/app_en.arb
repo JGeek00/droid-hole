@@ -41,7 +41,7 @@
     "tryReconnect": "Try reconnect",
     "selectServer": "Select server",
     "notConnectServer": "Could not connect to the server",
-    "piHoleServers": "PiHole servers",
+    "piHoleServers": "Servers connections",
     "noSavedConnections": "No saved connections",
     "add": "Add",
     "close": "Close",
