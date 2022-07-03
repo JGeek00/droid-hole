@@ -53,7 +53,7 @@
     "connectionDefaultSuccessfully": "Conexión definida como por defecto.",
     "connectionDefaultFailed": "No se ha podido definir como conexión por defecto.",
     "defaultConnection": "Conexión por defecto",
-    "setDefault": "Definir como conexión por defecto",
+    "setDefault": "Hacer conexión por defecto",
     "delete": "Eliminar",
     "selectedDisconnected": "Seleccionado pero desconectado",
     "connect": "Conectar",
@@ -62,7 +62,7 @@
     "connectionAlreadyExists": "Esta conexión ya existe",
     "cannotCheckUrlSaved": "No se ha podido comprobar si la URL ya existe.",
     "checkAddress": "Error. Comprueba la dirección.",
-    "connectionTimeout": "Error. Timeout.",
+    "connectionTimeout": "Error. Tiempo de conexión agotado. Comprueba si el servidor está disponible.",
     "passwordNotValid": "Error. Contraseña no válida.",
     "unknownError": "Error desconocido.",
     "cantSaveConnectionData": "No se han podido guardar los datos de conexión.",
@@ -174,5 +174,8 @@
     "invalidPort": "Puerto no válido",
     "ipCannotEmpty": "IP no puede estar vacío",
     "portCannotEmpty": "Puerto no puede estar vacío",
-    "cantReaachServer": "No se puede alcanzar el servidor. Comprueba la dirección IP y el puerto."
+    "cantReaachServer": "No se puede alcanzar el servidor. Comprueba la dirección IP y el puerto.",
+    "noConnections": "Parece que no has añadido aún ninguna conexión.",
+    "createConnection": "Crear una conexión",
+    "beginAddConnection": "Para empezar, añade una conexión a un servidor."
 }

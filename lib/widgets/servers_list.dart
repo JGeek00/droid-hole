@@ -316,16 +316,18 @@ class ServersList extends StatelessWidget {
                     onTap: server.defaultServer == false 
                       ? (() => _setDefaultServer(server))
                       : null, 
-                    child: Row(
-                      children: [
-                        const Icon(Icons.star),
-                        const SizedBox(width: 15),
-                        Text(
-                          server.defaultServer == true 
-                            ? AppLocalizations.of(context)!.defaultConnection
-                            : AppLocalizations.of(context)!.setDefault
-                        )
-                      ],
+                    child: SizedBox(
+                      child: Row(
+                        children: [
+                          const Icon(Icons.star),
+                          const SizedBox(width: 15),
+                          Text(
+                            server.defaultServer == true 
+                              ? AppLocalizations.of(context)!.defaultConnection
+                              : AppLocalizations.of(context)!.setDefault,
+                          )
+                        ],
+                      ),
                     )
                   ),
                   PopupMenuItem(

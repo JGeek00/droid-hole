@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:animations/animations.dart';
-import 'package:droid_hole/functions/server_management.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -15,14 +14,18 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/connect.dart';
 import 'package:droid_hole/screens/home.dart';
 import 'package:droid_hole/screens/logs.dart';
 import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
 
 import 'package:droid_hole/widgets/disable_modal.dart';
+import 'package:droid_hole/widgets/add_server_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
+import 'package:droid_hole/functions/server_management.dart';
+import 'package:droid_hole/constants/app_screens.dart';
 import 'package:droid_hole/config/theme.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/status_updater.dart';
@@ -224,6 +227,11 @@ class _BaseState extends State<Base> {
     const Settings()
   ];
 
+  final List<Widget> pagesNotSelected = [
+    const Connect(),
+    const Settings()
+  ];
+
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
@@ -250,6 +258,19 @@ class _BaseState extends State<Base> {
         }
       }
     }
+
+    void _addServerModal() async {
+      await Future.delayed(const Duration(seconds: 0), (() => {
+        showModalBottomSheet(
+          context: context, 
+          isScrollControlled: true,
+          builder: (context) => const AddServerModal(),
+          backgroundColor: Colors.transparent,
+          isDismissible: false,
+          enableDrag: false,
+        )
+      }));
+    }
     
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -275,23 +296,36 @@ class _BaseState extends State<Base> {
               child: child,
             )
           ),
-          child: pages[selectedScreen],
+          child: serversProvider.selectedServer != null
+            ? pages[selectedScreen]
+            : pagesNotSelected[selectedScreen > 1 ? 0 : selectedScreen],
         ),
         bottomNavigationBar: BottomNavBar(
-          selectedScreen: selectedScreen,
+          screens: serversProvider.selectedServer != null
+            ? appScreens
+            : appScreensNotSelected,
+          selectedScreen: serversProvider.selectedServer != null
+            ? selectedScreen
+            : selectedScreen > 1 ? 0 : selectedScreen,
           onChange: (selected) => setState((() => selectedScreen = selected)),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: selectedScreen == 0
-          ? serversProvider.selectedServer != null
-            && serversProvider.isServerConnected == true
+        floatingActionButton: serversProvider.selectedServer != null
+          ? serversProvider.isServerConnected == true
+            && selectedScreen == 0
               ? FloatingActionButton(
                   onPressed: _enableDisableServer,
                   backgroundColor: Theme.of(context).primaryColor,
                   child: const Icon(Icons.shield_rounded),
                 )
               : null
-          : null,
+          : selectedScreen == 0 && serversProvider.getServersList.isNotEmpty
+            ? FloatingActionButton(
+                onPressed: _addServerModal,
+                backgroundColor: Theme.of(context).primaryColor,
+                child: const Icon(Icons.add),
+              )
+            : null,
       ),
     );
   }

@@ -254,12 +254,12 @@ class _AddServerModalState extends State<AddServerModal> {
               errorMessage = AppLocalizations.of(context)!.checkAddress;
             });
           }
-          if (result['result'] == 'timeout') {
+          else if (result['result'] == 'timeout') {
             setState(() {
               errorMessage = AppLocalizations.of(context)!.connectionTimeout;
             });
           }
-          if (result['result'] == 'no_connection') {
+          else if (result['result'] == 'no_connection') {
             setState(() {
               errorMessage = AppLocalizations.of(context)!.cantReaachServer;
             });
@@ -578,6 +578,7 @@ class _AddServerModalState extends State<AddServerModal> {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           width: (width-60)-120,

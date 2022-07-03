@@ -62,7 +62,7 @@
     "connectionAlreadyExists": "This connection already exists",
     "cannotCheckUrlSaved": "Cannot check if this URL is already saved.",
     "checkAddress": "Failed. Check address.",
-    "connectionTimeout": "Failed. Connection timeout.",
+    "connectionTimeout": "Failed. Connection timeout. Check if server is reachable.",
     "passwordNotValid": "Failed. Password not valid.",
     "unknownError": "Failed. Unknown error.",
     "cantSaveConnectionData": "Connection data couldn't be saved",
@@ -173,5 +173,8 @@
     "invalidPort": "Invalid port",
     "ipCannotEmpty": "IP field cannot be empty",
     "portCannotEmpty": "Port field cannot be empty",
-    "cantReaachServer": "Can't reach the server. Check IP address and port."
+    "cantReaachServer": "Can't reach the server. Check IP address and port.",
+    "noConnections": "Seems that you don't have added any connection yet.",
+    "createConnection": "Create a connection",
+    "beginAddConnection": "First of all, add a connection to a server."
 }
