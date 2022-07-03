@@ -1,4 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
@@ -20,10 +23,9 @@ Future refreshServerStatus(BuildContext context, ServersProvider serversProvider
     if (serversProvider.getStatusLoading == 0) {
       serversProvider.setStatusLoading(2);
     }
-    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Could not connect to the server."),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.couldNotConnectServer),
         backgroundColor: Colors.red,
       )
     );

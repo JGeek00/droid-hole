@@ -176,5 +176,6 @@
     "cantReaachServer": "Can't reach the server. Check IP address and port.",
     "noConnections": "Seems that you don't have added any connection yet.",
     "createConnection": "Create a connection",
-    "beginAddConnection": "First of all, add a connection to a server."
+    "beginAddConnection": "First of all, add a connection to a server.",
+    "couldNotConnectServer": "Could not connect to the server"
 }
