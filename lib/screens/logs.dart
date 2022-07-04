@@ -11,8 +11,9 @@ import 'package:droid_hole/widgets/log_details_modal.dart';
 import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
+import 'package:droid_hole/classes/no_scroll_behavior.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
-import 'package:droid_hole/models/process_modal.dart';
+import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/functions/format.dart';
 import 'package:droid_hole/models/log.dart';
 import 'package:droid_hole/services/http_requests.dart';
@@ -174,6 +175,7 @@ class _LogsListState extends State<LogsList> {
     final filtersProvider = Provider.of<FiltersProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;   
     final bottomNavBarHeight = MediaQuery.of(context).viewPadding.bottom;   
 
@@ -374,22 +376,32 @@ class _LogsListState extends State<LogsList> {
                     ),
                   )
                 )
-              : Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [ 
-                      Text(
-                        AppLocalizations.of(context)!.noLogsDisplay,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold
+              : ScrollConfiguration(
+                  behavior: NoScrollBehavior(),
+                  child: ListView(
+                    children: [
+                      SizedBox(
+                        height: height-144,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [ 
+                              Text(
+                                AppLocalizations.of(context)!.noLogsDisplay,
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      )
-                    ],
+                      ),
+                    ]
                   ),
-              )
+                )
           );
 
         case 2:

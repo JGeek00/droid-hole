@@ -10,7 +10,7 @@ import 'package:droid_hole/widgets/add_server_modal.dart';
 import 'package:droid_hole/widgets/delete_modal.dart';
 
 import 'package:droid_hole/functions/hash.dart';
-import 'package:droid_hole/models/process_modal.dart';
+import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';

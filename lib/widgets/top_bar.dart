@@ -8,7 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/widgets/servers_list_modal.dart';
 
 import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/models/process_modal.dart';
+import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 class TopBar extends StatelessWidget {

@@ -15,7 +15,7 @@ import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
 import 'package:droid_hole/config/urls.dart';
-import 'package:droid_hole/models/process_modal.dart';
+import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
