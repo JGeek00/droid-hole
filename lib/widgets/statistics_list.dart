@@ -112,16 +112,9 @@ class StatisticsList extends StatelessWidget {
                 data1['data'], 
                 data1['label']
               )
-            : Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                  left: 20,
-                  right: 20
-                ),
-                child: NoDataChart(
-                  topLabel: data1['label']
-                ),
-              ),
+            : NoDataChart(
+              topLabel: data1['label']
+            ),
           if (data1['data'] != null && data2['data'] != null) ...[
             Container(
               width: double.maxFinite,
@@ -134,16 +127,9 @@ class StatisticsList extends StatelessWidget {
                 data2['data'], 
                 data2['label']
               )
-            : Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                  left: 20,
-                  right: 20
-                ),
-                child: NoDataChart(
-                  topLabel: data2['label']
-                ),
-              ),
+            : NoDataChart(
+              topLabel: data2['label']
+            ),
         ],
       ),
     );

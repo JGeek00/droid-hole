@@ -86,16 +86,9 @@ class QueriesServersTab extends StatelessWidget {
                   ]
                 ),
               )
-            : Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                  left: 20,
-                  right: 20
-                ),
-                child: NoDataChart(
-                  topLabel: AppLocalizations.of(context)!.queryTypes,
-                ),
-              ),
+            : NoDataChart(
+              topLabel: AppLocalizations.of(context)!.queryTypes,
+            ),
           if (
             serversProvider.getRealtimeStatus!.queryTypes.isEmpty == false &&
             serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
@@ -130,16 +123,9 @@ class QueriesServersTab extends StatelessWidget {
                   ] 
                 ),
               )
-            : Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                  left: 20,
-                  right: 20
-                ),
-                child: NoDataChart(
-                  topLabel: AppLocalizations.of(context)!.upstreamServers,
-                ),
-              ),
+            : NoDataChart(
+              topLabel: AppLocalizations.of(context)!.upstreamServers,
+            ),
         ],
       ),
     );

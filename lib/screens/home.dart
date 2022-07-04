@@ -447,11 +447,8 @@ class Home extends StatelessWidget {
                       ],
                     ),
                   )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: NoDataChart(
-                      topLabel: AppLocalizations.of(context)!.totalQueries24,
-                    ),
+                : NoDataChart(
+                    topLabel: AppLocalizations.of(context)!.totalQueries24,
                   ),
               const SizedBox(height: 20),
               serversProvider.getOvertimeDataJson!['over_time'].keys.length > 0 &&
@@ -486,11 +483,8 @@ class Home extends StatelessWidget {
                       ],
                     ),
                   )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: NoDataChart(
-                      topLabel: AppLocalizations.of(context)!.clientActivity24,
-                    ),
+                : NoDataChart(
+                    topLabel: AppLocalizations.of(context)!.clientActivity24,
                   ),
             ],
           );
