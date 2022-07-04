@@ -61,7 +61,7 @@ class ServersList extends StatelessWidget {
     }
 
     void _connectToServer(Server server) async {
-      void _connectSuccess(result) {
+      Future _connectSuccess(result) async {
         serversProvider.setselectedServer(Server(
           address: server.address,
           alias: server.alias,
@@ -72,14 +72,20 @@ class ServersList extends StatelessWidget {
         ));
         serversProvider.setselectedServerToken('phpSessId', result['phpSessId']);
         serversProvider.setselectedServerToken('token', result['token']);
+        final statusResult = await realtimeStatus(server, result['phpSessId']);
+        if (statusResult['result'] == 'success') {
+          serversProvider.setRealtimeStatus(statusResult['data']);
+        }
+        final overtimeDataResult = await fetchOverTimeData(server, result['phpSessId']);
+        if (overtimeDataResult['result'] == 'success') {
+          serversProvider.setOvertimeData(overtimeDataResult['data']);
+          serversProvider.setOvertimeDataLoadingStatus(1);
+        }
+        else {
+          serversProvider.setOvertimeDataLoadingStatus(2);
+        }
         serversProvider.setIsServerConnected(true);
-        serversProvider.setRefreshServerStatus(true);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.connectedSuccessfully),
-            backgroundColor: Colors.green,
-          )
-        );
+        // serversProvider.setRefreshServerStatus(true);
       }
 
       final ProcessModal process = ProcessModal(context: context);
@@ -99,7 +105,7 @@ class ServersList extends StatelessWidget {
               defaultServer: server.defaultServer
             ));
             if (updated == true) {
-              _connectSuccess(result);
+              await _connectSuccess(result);
             }
             else {
               final res = await serversProvider.removeServer(server.address);
@@ -122,7 +128,6 @@ class ServersList extends StatelessWidget {
             }
           }
           else {
-            serversProvider.setIsServerConnected(false);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(AppLocalizations.of(context)!.cannotConnect),
@@ -144,7 +149,6 @@ class ServersList extends StatelessWidget {
                   _connectSuccess(result);
                 }
                 else {
-                  serversProvider.setIsServerConnected(false);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(AppLocalizations.of(context)!.cannotConnect),
@@ -171,10 +175,9 @@ class ServersList extends StatelessWidget {
         final result = await login(server);
         process.close();
         if (result['result'] == 'success') {
-          _connectSuccess(result);
+          await _connectSuccess(result);
         }
         else {
-          serversProvider.setIsServerConnected(false);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(AppLocalizations.of(context)!.cannotConnect),
