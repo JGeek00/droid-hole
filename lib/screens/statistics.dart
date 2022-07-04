@@ -51,33 +51,33 @@ class Statistics extends StatelessWidget {
             children: [
               const QueriesServersTab(),
               StatisticsList(
-                data1: serversProvider.getRealtimeStatus!.topQueries.isNotEmpty == true 
-                  ? {
-                      "data": serversProvider.getRealtimeStatus!.topQueries,
-                      "label": AppLocalizations.of(context)!.topPermittedDomains
-                    }
-                  : null,
-                data2: serversProvider.getRealtimeStatus!.topAds.isNotEmpty == true 
-                  ? {
-                      "data": serversProvider.getRealtimeStatus!.topAds,
-                      "label": AppLocalizations.of(context)!.topBlockedDomains
-                    }
-                  : null,
+                data1: {
+                  "data": serversProvider.getRealtimeStatus!.topQueries.isNotEmpty == true 
+                    ? serversProvider.getRealtimeStatus!.topQueries
+                    : null,
+                  "label": AppLocalizations.of(context)!.topPermittedDomains
+                },
+                data2: {
+                  "data": serversProvider.getRealtimeStatus!.topAds.isNotEmpty == true 
+                    ? serversProvider.getRealtimeStatus!.topAds
+                    : null,
+                  "label": AppLocalizations.of(context)!.topBlockedDomains
+                },
                 countLabel: AppLocalizations.of(context)!.hits,
               ),
               StatisticsList(
-                data1: serversProvider.getRealtimeStatus!.topSources.isNotEmpty == true 
-                  ? {
-                      "data": serversProvider.getRealtimeStatus!.topSources,
-                      "label": AppLocalizations.of(context)!.topClients
-                    }
-                  : null,
-                data2: serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty == true 
-                  ? {
-                      "data": serversProvider.getRealtimeStatus!.topSourcesBlocked,
-                      "label": AppLocalizations.of(context)!.topClientsBlocked
-                    }
-                  : null,
+                data1: {
+                  "data":  serversProvider.getRealtimeStatus!.topSources.isNotEmpty == true 
+                    ? serversProvider.getRealtimeStatus!.topSources
+                    : null,
+                  "label": AppLocalizations.of(context)!.topClients
+                },
+                data2: {
+                  "data": serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty == true 
+                    ? serversProvider.getRealtimeStatus!.topSourcesBlocked
+                    : null,
+                  "label": AppLocalizations.of(context)!.topClientsBlocked
+                },
                 countLabel: AppLocalizations.of(context)!.requests,
               ),
             ]

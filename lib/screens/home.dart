@@ -1,18 +1,16 @@
-import 'package:droid_hole/widgets/clients_last_hours.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/no_data_chart.dart';
 import 'package:droid_hole/widgets/queries_last_hours.dart';
+import 'package:droid_hole/widgets/clients_last_hours.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
-import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
 
 import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/functions/conversions.dart';
-import 'package:droid_hole/models/process_modal.dart';
-import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -24,98 +22,6 @@ class Home extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final orientation = MediaQuery.of(context).orientation;
-
-    void _disableServer(int time) async {
-      final ProcessModal process = ProcessModal(context: context);
-      process.open(AppLocalizations.of(context)!.disablingServer);
-      final result = await disableServerRequest(
-        serversProvider.selectedServer!, 
-        serversProvider.selectedServerToken!['token'],
-        serversProvider.selectedServerToken!['phpSessId'],
-        time
-      );
-      process.close();
-      if (result['result'] == 'success') {
-        serversProvider.updateselectedServerStatus(false);
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            // ignore: use_build_context_synchronously
-            content: Text(AppLocalizations.of(context)!.serverDisabled),
-            backgroundColor: Colors.green,
-          )
-        );
-      }
-      else {
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            // ignore: use_build_context_synchronously
-            content: Text(AppLocalizations.of(context)!.couldntDisableServer),
-            backgroundColor: Colors.red,
-          )
-        );
-      }
-    }
-
-    void _enableServer() async {
-      final ProcessModal process = ProcessModal(context: context);
-      process.open(AppLocalizations.of(context)!.enablingServer);
-      final result = await enableServerRequest(
-        serversProvider.selectedServer!,
-        serversProvider.selectedServerToken!['token'],
-        serversProvider.selectedServerToken!['phpSessId']
-      );
-      process.close();
-      if (result['result'] == 'success') {
-        serversProvider.updateselectedServerStatus(true);
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            // ignore: use_build_context_synchronously
-            content: Text(AppLocalizations.of(context)!.serverEnabled),
-            backgroundColor: Colors.green,
-          )
-        );
-      }
-      else {
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            // ignore: use_build_context_synchronously
-            content: Text(AppLocalizations.of(context)!.couldntEnableServer),
-            backgroundColor: Colors.red,
-          )
-        );
-      }
-    }
-
-    void _openDisableBottomSheet() {
-      showModalBottomSheet(
-        context: context, 
-        isScrollControlled: true,
-        builder: (context) => DisableModal(
-          onDisable: _disableServer 
-        ),
-        backgroundColor: Colors.transparent,
-        isDismissible: false,
-        enableDrag: false,
-      );
-    }
-
-    void _enableDisableServer() {
-      if (
-        serversProvider.isServerConnected == true &&
-        serversProvider.selectedServer != null
-      ) {
-        if (serversProvider.selectedServer?.enabled == true) {
-          _openDisableBottomSheet();
-        }
-        else {
-          _enableServer();
-        }
-      }
-    }
 
     Widget _tile({
       required double mainWidth,
@@ -483,94 +389,109 @@ class Home extends StatelessWidget {
         case 1:
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    Text(
-                      AppLocalizations.of(context)!.totalQueries24,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.maxFinite,
-                      height: 350,
-                      child: QueriesLastHours(
-                        data: serversProvider.getOvertimeDataJson!,
-                      )
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+              serversProvider.getOvertimeDataJson!['domains_over_time'].keys.length > 0
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.blue
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(AppLocalizations.of(context)!.blocked)
-                          ],
+                        const SizedBox(height: 20),
+                        Text(
+                          AppLocalizations.of(context)!.totalQueries24,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.maxFinite,
+                          height: 350,
+                          child: QueriesLastHours(
+                            data: serversProvider.getOvertimeDataJson!,
+                          )
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.green
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.blue
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(AppLocalizations.of(context)!.blocked)
+                              ],
                             ),
-                            const SizedBox(width: 10),
-                            Text(AppLocalizations.of(context)!.notBlocked)
+                            Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.green
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(AppLocalizations.of(context)!.notBlocked)
+                              ],
+                            ),
                           ],
-                        ),
+                        )
                       ],
-                    )
-                  ],
-                ),
-              ),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: NoDataChart(
+                      topLabel: AppLocalizations.of(context)!.totalQueries24,
+                    ),
+                  ),
               const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    Text(
-                      AppLocalizations.of(context)!.clientActivity24,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold
-                      ),
+              serversProvider.getOvertimeDataJson!['over_time'].keys.length > 0 &&
+              serversProvider.getOvertimeDataJson!['clients'].length > 0 
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        Text(
+                          AppLocalizations.of(context)!.clientActivity24,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.maxFinite,
+                          height: 300,
+                          child: ClientsLastHours(data: serversProvider.getOvertimeDataJson!),
+                        ),
+                        SizedBox(
+                          width: double.maxFinite,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: _generateLegend(serversProvider.getOvertimeData!.clients),
+                          ),
+                        ),
+                        const SizedBox(height: 60),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.maxFinite,
-                      height: 300,
-                      child: ClientsLastHours(data: serversProvider.getOvertimeDataJson!),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: NoDataChart(
+                      topLabel: AppLocalizations.of(context)!.clientActivity24,
                     ),
-                    SizedBox(
-                      width: double.maxFinite,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: _generateLegend(serversProvider.getOvertimeData!.clients),
-                      ),
-                    ),
-                    const SizedBox(height: 60),
-                  ],
-                ),
-              )
+                  ),
             ],
           );
 

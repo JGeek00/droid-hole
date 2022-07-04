@@ -1,10 +1,11 @@
+import 'package:droid_hole/widgets/no_data_chart.dart';
 import 'package:flutter/material.dart';
 
 import 'package:droid_hole/functions/conversions.dart';
 
 class StatisticsList extends StatelessWidget {
-  final Map<String, dynamic>? data1;
-  final Map<String, dynamic>? data2;
+  final Map<String, dynamic> data1;
+  final Map<String, dynamic> data2;
   final String countLabel;
 
   const StatisticsList({
@@ -106,23 +107,43 @@ class StatisticsList extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          if (data1 != null) 
-            _generateList(
-              data1!['data'], 
-              data1!['label']
-            ),
-          if (data1 != null && data2 != null) ...[
+          data1['data'] != null 
+            ? _generateList(
+                data1['data'], 
+                data1['label']
+              )
+            : Padding(
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  left: 20,
+                  right: 20
+                ),
+                child: NoDataChart(
+                  topLabel: data1['label']
+                ),
+              ),
+          if (data1['data'] != null && data2['data'] != null) ...[
             Container(
               width: double.maxFinite,
               height: 1,
               color: Theme.of(context).dividerColor,
             ),
           ],
-          if (data2 != null) 
-            _generateList(
-              data2!['data'], 
-              data2!['label']
-            ),
+          data2['data'] != null
+            ? _generateList(
+                data2['data'], 
+                data2['label']
+              )
+            : Padding(
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  left: 20,
+                  right: 20
+                ),
+                child: NoDataChart(
+                  topLabel: data2['label']
+                ),
+              ),
         ],
       ),
     );

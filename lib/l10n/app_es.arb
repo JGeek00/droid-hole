@@ -74,7 +74,7 @@
     "topPermittedDomains": "Top dominios permitidos",
     "topBlockedDomains": "Top dominios bloqueados",
     "topClients": "Top clientes (total)",
-    "topClientsBlocked": "Top clients (solo bloqueados)",
+    "topClientsBlocked": "Top clientes (solo bloqueados)",
     "requests": "Peticiones:",
     "hits": "Veces:",
     "queriesServers": "Peticiones y servidores",
@@ -178,5 +178,6 @@
     "noConnections": "Parece que no has añadido aún ninguna conexión.",
     "createConnection": "Crear una conexión",
     "beginAddConnection": "Para empezar, añade una conexión a un servidor.",
-    "couldNotConnectServer": "No se ha podido conectar con el servidor"
+    "couldNotConnectServer": "No se ha podido conectar con el servidor",
+    "noData": "No hay datos"
 }

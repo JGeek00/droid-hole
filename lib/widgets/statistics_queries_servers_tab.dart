@@ -1,3 +1,4 @@
+import 'package:droid_hole/widgets/no_data_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -59,31 +60,42 @@ class QueriesServersTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (serversProvider.getRealtimeStatus!.queryTypes.isEmpty == false) Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.queryTypes,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold
-                  ),
+          serversProvider.getRealtimeStatus!.queryTypes.isEmpty == false
+            ? Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.queryTypes,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: width-40,
+                      child: CustomPieChart(
+                        data: serversProvider.getRealtimeStatus!.queryTypes,
+                      )
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      children: _generateLegendList(serversProvider.getRealtimeStatus!.queryTypes),
+                    ),
+                  ]
                 ),
-                const SizedBox(height: 30),
-                SizedBox(
-                  width: width-40,
-                  child: CustomPieChart(
-                    data: serversProvider.getRealtimeStatus!.queryTypes,
-                  )
+              )
+            : Padding(
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  left: 20,
+                  right: 20
                 ),
-                const SizedBox(height: 20),
-                Column(
-                  children: _generateLegendList(serversProvider.getRealtimeStatus!.queryTypes),
+                child: NoDataChart(
+                  topLabel: AppLocalizations.of(context)!.queryTypes,
                 ),
-              ]
-            ),
-          ), 
+              ),
           if (
             serversProvider.getRealtimeStatus!.queryTypes.isEmpty == false &&
             serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
@@ -92,31 +104,42 @@ class QueriesServersTab extends StatelessWidget {
             height: 1,
             color: Theme.of(context).dividerColor,
           ),
-          if (serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false) Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.upstreamServers,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold
-                  ),
+          serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
+            ? Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.upstreamServers,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: width-40,
+                      child: CustomPieChart(
+                        data: serversProvider.getRealtimeStatus!.forwardDestinations,
+                      )
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      children: _generateLegendList(serversProvider.getRealtimeStatus!.forwardDestinations),
+                    )
+                  ] 
                 ),
-                const SizedBox(height: 30),
-                SizedBox(
-                  width: width-40,
-                  child: CustomPieChart(
-                    data: serversProvider.getRealtimeStatus!.forwardDestinations,
-                  )
+              )
+            : Padding(
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  left: 20,
+                  right: 20
                 ),
-                const SizedBox(height: 20),
-                Column(
-                  children: _generateLegendList(serversProvider.getRealtimeStatus!.forwardDestinations),
-                )
-              ] 
-            ),
-          )
+                child: NoDataChart(
+                  topLabel: AppLocalizations.of(context)!.upstreamServers,
+                ),
+              ),
         ],
       ),
     );
