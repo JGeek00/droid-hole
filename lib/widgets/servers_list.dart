@@ -85,7 +85,7 @@ class ServersList extends StatelessWidget {
           serversProvider.setOvertimeDataLoadingStatus(2);
         }
         serversProvider.setIsServerConnected(true);
-        // serversProvider.setRefreshServerStatus(true);
+        serversProvider.setRefreshServerStatus(true);
       }
 
       final ProcessModal process = ProcessModal(context: context);

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +46,6 @@ class TopBar extends StatelessWidget {
         serversProvider.selectedServer!,
         serversProvider.selectedServerToken!['phpSessId']
       );
-      // ignore: use_build_context_synchronously
       process.close();
       if (result['result'] == "success") {
         serversProvider.updateselectedServerStatus(
@@ -58,10 +59,8 @@ class TopBar extends StatelessWidget {
         if (serversProvider.getStatusLoading == 0) {
           serversProvider.setStatusLoading(2);
         }
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            // ignore: use_build_context_synchronously
             content: Text(AppLocalizations.of(context)!.notConnectServer),
             backgroundColor: Colors.red,
           )
@@ -201,6 +200,16 @@ class TopBar extends StatelessWidget {
                           const Icon(Icons.refresh_rounded),
                           const SizedBox(width: 15),
                           Text(AppLocalizations.of(context)!.tryReconnect)
+                        ],
+                      )
+                    ),
+                    PopupMenuItem(
+                      onTap: _changeServer,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.storage_rounded),
+                          const SizedBox(width: 15),
+                          Text(AppLocalizations.of(context)!.changeServer)
                         ],
                       )
                     ),

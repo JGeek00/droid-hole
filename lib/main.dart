@@ -178,15 +178,20 @@ class _DroidHoleState extends State<DroidHole> {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     if (firstExec == true || serversProvider.getRefreshServerStatus == true) {
+      if (firstExec == true) {
+        statusUpdater.context = context;
+      }
       if (serversProvider.getRefreshServerStatus == true) {
         serversProvider.setRefreshServerStatus(false);
       }
-      statusUpdater.statusData(context);
-      statusUpdater.overTimeData(context);
+      statusUpdater.statusData();
+      statusUpdater.overTimeData();
       setState(() {
         firstExec = false;
       });
     }
+
+
 
     return MaterialApp(
       title: 'Droid Hole',

@@ -74,6 +74,9 @@ class ServersProvider with ChangeNotifier {
 
   void setRefreshServerStatus(bool status) {
     _refreshServerStatus = status;
+    if (status == true) {
+      notifyListeners();
+    }
   }
 
   Future<bool> addServer(Server server) async {

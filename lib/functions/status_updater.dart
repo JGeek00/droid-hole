@@ -8,6 +8,7 @@ import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
 
 class StatusUpdater {
+  BuildContext? context;
   Timer? _statusDataTimer;
   Timer? _overTimeDataTimer;
 
@@ -30,6 +31,7 @@ class StatusUpdater {
       if (isRunning == false) {
         isRunning = true;
         if (serversProvider.selectedServer != null) {
+          String selectedUrlBefore = serversProvider.selectedServer!.address;
           final statusResult = await realtimeStatus(
             serversProvider.selectedServer!,
             serversProvider.selectedServerToken!['phpSessId']
@@ -39,11 +41,18 @@ class StatusUpdater {
               statusResult['data'].status == 'enabled' ? true : false
             );
             serversProvider.setRealtimeStatus(statusResult['data']);
+            if (serversProvider.isServerConnected == false) {
+              serversProvider.setIsServerConnected(true);
+            }
           }
           else {
-            serversProvider.setIsServerConnected(false);
-            if (serversProvider.getStatusLoading == 0) {
-              serversProvider.setStatusLoading(2);
+            if (selectedUrlBefore == serversProvider.selectedServer!.address) {
+              if (serversProvider.isServerConnected == true) {
+                serversProvider.setIsServerConnected(false);
+              }
+              if (serversProvider.getStatusLoading == 0) {
+                serversProvider.setStatusLoading(2);
+              }
             }
           }
           isRunning = false;
@@ -62,6 +71,7 @@ class StatusUpdater {
   void _updateOverTimeData(ServersProvider serversProvider) {
     void timerFn({Timer? timer}) async {
       if (serversProvider.selectedServer != null) {
+        String statusUrlBefore = serversProvider.selectedServer!.address;
         final statusResult = await fetchOverTimeData(
           serversProvider.selectedServer!,
           serversProvider.selectedServerToken!['phpSessId']
@@ -69,11 +79,18 @@ class StatusUpdater {
         if (statusResult['result'] == 'success') {
           serversProvider.setOvertimeData(statusResult['data']);
           serversProvider.setOvertimeDataLoadingStatus(1);
+          if (serversProvider.isServerConnected == false) {
+            serversProvider.setIsServerConnected(true);
+          }
         }
         else {
-          serversProvider.setIsServerConnected(false);
-          if (serversProvider.getOvertimeDataLoadStatus == 0) {
-            serversProvider.setOvertimeDataLoadingStatus(2);
+          if (statusUrlBefore == serversProvider.selectedServer!.address) {
+            if (serversProvider.isServerConnected == true) {
+              serversProvider.setIsServerConnected(false);
+            }
+            if (serversProvider.getOvertimeDataLoadStatus == 0) {
+              serversProvider.setOvertimeDataLoadingStatus(2);
+            }
           }
         }
       }
@@ -87,9 +104,9 @@ class StatusUpdater {
     timerFn();
   }
 
-  void statusData(BuildContext context) {
-    final serversProvider = Provider.of<ServersProvider>(context);
-    final appConfigProvider = Provider.of<AppConfigProvider>(context);
+  void statusData() {
+    final serversProvider = Provider.of<ServersProvider>(context!);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context!);
 
     if (serversProvider.isServerConnected == true && _statusDataTimer == null) {
       _updateStatusData(serversProvider, appConfigProvider);
@@ -102,8 +119,8 @@ class StatusUpdater {
     }
   }
 
-  void overTimeData(BuildContext context) {
-    final serversProvider = Provider.of<ServersProvider>(context);
+  void overTimeData() {
+    final serversProvider = Provider.of<ServersProvider>(context!);
 
     if (serversProvider.isServerConnected == true && _overTimeDataTimer == null) {
       _updateOverTimeData(serversProvider);
@@ -112,6 +129,16 @@ class StatusUpdater {
       _updateOverTimeData(serversProvider);
     }
     else if (serversProvider.isServerConnected == false && _overTimeDataTimer != null) {
+      _overTimeDataTimer!.cancel();
+    }
+  }
+
+  void cancelTimers() {
+    if (_statusDataTimer != null) {
+      _statusDataTimer!.cancel();
+    }
+
+    if (_overTimeDataTimer != null) {
       _overTimeDataTimer!.cancel();
     }
   }
