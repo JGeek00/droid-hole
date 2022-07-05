@@ -179,5 +179,6 @@
     "createConnection": "Crear una conexión",
     "beginAddConnection": "Para empezar, añade una conexión a un servidor.",
     "couldNotConnectServer": "No se ha podido conectar con el servidor",
-    "noData": "No hay datos"
+    "noData": "No hay datos",
+    "oneColumnLegend": "Usar una sola columna para la leyenda"
 }

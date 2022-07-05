@@ -12,8 +12,15 @@ import 'package:droid_hole/widgets/top_bar.dart';
 import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  bool oneColumnLegend = false;
 
   @override
   Widget build(BuildContext context) {
@@ -289,9 +296,11 @@ class Home extends StatelessWidget {
       List<Widget> _generateRow(int length) {
         Widget _generateItem(int i, int itemsPerRow) {
           return Container(
-            width: itemsPerRow == 2 
-              ? ((width-120)/itemsPerRow)
-              : ((width-200)/itemsPerRow),
+            width: oneColumnLegend == true
+              ? ((width-60)/itemsPerRow)
+              : itemsPerRow == 2 
+                ? ((width-120)/itemsPerRow)
+                : ((width-200)/itemsPerRow),
             margin: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 10
@@ -309,9 +318,11 @@ class Home extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 SizedBox(
-                  width: itemsPerRow == 2 
-                    ? ((width-120)/itemsPerRow)-20
-                    : ((width-120)/itemsPerRow)-40,
+                  width: oneColumnLegend == true
+                    ? ((width-60)/itemsPerRow)-20
+                    : itemsPerRow == 2 
+                      ? ((width-120)/itemsPerRow)-20
+                      : ((width-200)/itemsPerRow)-40,
                   child: Text(
                     serversProvider.getOvertimeData!.clients[i].ip,
                     overflow: TextOverflow.ellipsis,
@@ -323,8 +334,8 @@ class Home extends StatelessWidget {
         }
 
         List<Widget> widgets = [];
-        if (!(orientation == Orientation.landscape && height < 1000)) {
-          for (var i = 0; i < length; i+=2) {
+        if (oneColumnLegend == true) {
+          for (var i = 0; i < length; i++) {
             widgets.add(
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -332,8 +343,7 @@ class Home extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _generateItem(i, 2),
-                      i+1 < length ? _generateItem(i+1, 2) : const SizedBox(),
+                      _generateItem(i, 1),
                     ],
                   ),
                 ],
@@ -342,23 +352,43 @@ class Home extends StatelessWidget {
           }
         }
         else {
-          for (var i = 0; i < length; i+=4) {
-            widgets.add(
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _generateItem(i, 4),
-                      i+1 < length ? _generateItem(i+1, 4) : const SizedBox(),
-                      i+2 < length ? _generateItem(i+2, 4) : const SizedBox(),
-                      i+3 < length ? _generateItem(i+3, 4) : const SizedBox(),
-                    ],
-                  ),
-                ],
-              )
-            );
+          if (!(orientation == Orientation.landscape && height < 1000)) {
+            for (var i = 0; i < length; i+=2) {
+              widgets.add(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _generateItem(i, 2),
+                        i+1 < length ? _generateItem(i+1, 2) : const SizedBox(),
+                      ],
+                    ),
+                  ],
+                )
+              );
+            }
+          }
+          else {
+            for (var i = 0; i < length; i+=4) {
+              widgets.add(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _generateItem(i, 4),
+                        i+1 < length ? _generateItem(i+1, 4) : const SizedBox(),
+                        i+2 < length ? _generateItem(i+2, 4) : const SizedBox(),
+                        i+3 < length ? _generateItem(i+3, 4) : const SizedBox(),
+                      ],
+                    ),
+                  ],
+                )
+              );
+            }
           }
         }
         return widgets;
@@ -463,36 +493,75 @@ class Home extends StatelessWidget {
               const SizedBox(height: 20),
               serversProvider.getOvertimeDataJson!['over_time'].keys.length > 0 &&
               serversProvider.getOvertimeDataJson!['clients'].length > 0 
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        Text(
-                          AppLocalizations.of(context)!.clientActivity24,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold
+                ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 20),
+                          Text(
+                            AppLocalizations.of(context)!.clientActivity24,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: double.maxFinite,
-                          height: 300,
-                          child: ClientsLastHours(data: serversProvider.getOvertimeDataJson!),
-                        ),
-                        SizedBox(
-                          width: double.maxFinite,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: _generateLegend(serversProvider.getOvertimeData!.clients),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: double.maxFinite,
+                            height: 300,
+                            child: ClientsLastHours(data: serversProvider.getOvertimeDataJson!),
                           ),
-                        ),
-                        const SizedBox(height: 60),
-                      ],
+                        ],
+                      ),
                     ),
-                  )
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => setState(() => oneColumnLegend = !oneColumnLegend),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            right: 10
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.oneColumnLegend,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              SizedBox(
+                                height: 40,
+                                child: FittedBox(
+                                  fit: BoxFit.fill,
+                                  child: Switch(
+                                    value: oneColumnLegend, 
+                                    onChanged: (value) => setState(() => oneColumnLegend = value)
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: _generateLegend(serversProvider.getOvertimeData!.clients),
+                      ),
+                    ),
+                    const SizedBox(height: 60),
+                  ],
+                )
                 : NoDataChart(
                     topLabel: AppLocalizations.of(context)!.clientActivity24,
                   ),
