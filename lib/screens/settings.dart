@@ -133,8 +133,6 @@ class Settings extends StatelessWidget {
           },
         ),
         backgroundColor: Colors.transparent,
-        isDismissible: false,
-        enableDrag: false,
       );
     }
 

@@ -452,8 +452,9 @@ class _LogsListState extends State<LogsList> {
           ),
           child: _showSearchBar == false
             ? Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 10
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -479,13 +480,11 @@ class _LogsListState extends State<LogsList> {
                         icon: const Icon(Icons.search_rounded),
                         splashRadius: 20,
                       ),
-                      const SizedBox(width: 5),
                       IconButton(
                         onPressed: _showFiltersModal, 
                         icon: const Icon(Icons.filter_list_rounded),
                         splashRadius: 20,
                       ),
-                      const SizedBox(width: 5),
                       PopupMenuButton(
                         splashRadius: 20,
                         icon: const Icon(Icons.sort_rounded),
