@@ -6,6 +6,8 @@ class LegalModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10)
@@ -29,14 +31,23 @@ class LegalModal extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    AppLocalizations.of(context)!.legalText,
-                    textAlign: TextAlign.justify,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Icon(
+                      Icons.info,
+                      size: 30,
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    width: width-170,
+                    child: Text(
+                      AppLocalizations.of(context)!.legalText,
+                    ),
+                  ),
+                ],
               ),
             ),
             Column(
