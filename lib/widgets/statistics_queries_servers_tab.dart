@@ -38,15 +38,25 @@ class QueriesServersTab extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Text(
-                      key,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold
+                    SizedBox(
+                      width: width-160,
+                      child: Text(
+                        key,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold
+                        ),
                       ),
                     )
                   ],
                 ),
-                Text("${value.toString()} %"),
+                SizedBox(
+                  width: 65,
+                  child: Text(
+                    "${value.toString()} %",
+                    textAlign: TextAlign.end,
+                  )
+                ),
               ],
             ),
           ),

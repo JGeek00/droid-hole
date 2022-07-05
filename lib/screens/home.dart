@@ -287,9 +287,11 @@ class Home extends StatelessWidget {
 
     List<Widget> _generateLegend(List values) {
       List<Widget> _generateRow(int length) {
-        Widget _generateItem(int i) {
+        Widget _generateItem(int i, int itemsPerRow) {
           return Container(
-            width: 120,
+            width: itemsPerRow == 2 
+              ? ((width-120)/itemsPerRow)
+              : ((width-200)/itemsPerRow),
             margin: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 10
@@ -306,7 +308,15 @@ class Home extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Text(serversProvider.getOvertimeData!.clients[i].ip)
+                SizedBox(
+                  width: itemsPerRow == 2 
+                    ? ((width-120)/itemsPerRow)-20
+                    : ((width-120)/itemsPerRow)-40,
+                  child: Text(
+                    serversProvider.getOvertimeData!.clients[i].ip,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
               ],
             ),
           );
@@ -322,8 +332,8 @@ class Home extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _generateItem(i),
-                      i+1 < length ? _generateItem(i+1) : const SizedBox(),
+                      _generateItem(i, 2),
+                      i+1 < length ? _generateItem(i+1, 2) : const SizedBox(),
                     ],
                   ),
                 ],
@@ -340,10 +350,10 @@ class Home extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _generateItem(i),
-                      i+1 < length ? _generateItem(i+1) : const SizedBox(),
-                      i+2 < length ? _generateItem(i+2) : const SizedBox(),
-                      i+3 < length ? _generateItem(i+3) : const SizedBox(),
+                      _generateItem(i, 4),
+                      i+1 < length ? _generateItem(i+1, 4) : const SizedBox(),
+                      i+2 < length ? _generateItem(i+2, 4) : const SizedBox(),
+                      i+3 < length ? _generateItem(i+3, 4) : const SizedBox(),
                     ],
                   ),
                 ],

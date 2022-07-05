@@ -358,11 +358,15 @@ class _LogsListState extends State<LogsList> {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                Text(
-                                  logsListDisplay[index].device,
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13
+                                SizedBox(
+                                  width: width-100,
+                                  child: Text(
+                                    logsListDisplay[index].device,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13
+                                    ),
                                   ),
                                 )
                               ],
