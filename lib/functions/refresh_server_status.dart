@@ -18,6 +18,18 @@ Future refreshServerStatus(BuildContext context, ServersProvider serversProvider
     serversProvider.setIsServerConnected(true);
     serversProvider.setRealtimeStatus(result['data']);
   }
+  else if (result['result'] == 'ssl_error') {
+    serversProvider.setIsServerConnected(false);
+    if (serversProvider.getStatusLoading == 0) {
+      serversProvider.setStatusLoading(2);
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.sslErrorShort),
+        backgroundColor: Colors.red,
+      )
+    );
+  }
   else {
     serversProvider.setIsServerConnected(false);
     if (serversProvider.getStatusLoading == 0) {

@@ -272,7 +272,7 @@ class _AddServerModalState extends State<AddServerModal> {
           }
           else if (result['result'] == 'ssl_error') {
             setState(() {
-              errorMessage = AppLocalizations.of(context)!.sslError;
+              errorMessage = AppLocalizations.of(context)!.sslErrorLong;
             });
           }
           else {
@@ -418,6 +418,11 @@ class _AddServerModalState extends State<AddServerModal> {
         else if (result['result'] == 'token_invalid') {
           setState(() {
             errorMessage = AppLocalizations.of(context)!.passwordNotValid;
+          });
+        }
+        else if (result['result'] == 'ssl_error') {
+          setState(() {
+            errorMessage = AppLocalizations.of(context)!.sslErrorLong;
           });
         }
         else {

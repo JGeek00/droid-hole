@@ -59,6 +59,8 @@ Future realtimeStatus(Server server, String token) async {;
     return {'result': 'socket'};
   } on TimeoutException {
     return {'result': 'timeout'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
   }
   catch (e) {
     return {'result': 'error'};
@@ -118,6 +120,8 @@ dynamic login(Server server) async {
     return {'result': 'no_connection'};
   } on TimeoutException {
     return {'result': 'timeout'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
   }
   catch (e) {
     return {'result': 'error'};
@@ -147,6 +151,8 @@ dynamic disableServerRequest(Server server, String token, String phpSessId, int 
     return {'result': 'no_connection'};
   } on TimeoutException {
     return {'result': 'no_connection'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
   }
   catch (e) {
     return {'result': 'error'};
@@ -176,6 +182,8 @@ dynamic enableServerRequest(Server server, String token, String phpSessId) async
     return {'result': 'no_connection'};
   } on TimeoutException {
     return {'result': 'no_connection'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
   }
   catch (e) {
     return {'result': 'error'};
@@ -202,6 +210,8 @@ Future fetchOverTimeData(Server server, String phpSessId) async {
     return {'result': 'socket'};
   } on TimeoutException {
     return {'result': 'timeout'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
   }
   catch (e) {
     return {'result': 'error'};
@@ -226,6 +236,8 @@ Future fetchLogs(Server server, String phpSessId) async {
     return {'result': 'socket'};
   } on TimeoutException {
     return {'result': 'timeout'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
   }
   catch (e) {
     return {'result': 'error'};
@@ -274,6 +286,8 @@ Future setWhiteBlacklist({
     return {'result': 'socket'};
   } on TimeoutException {
     return {'result': 'timeout'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
   }
   catch (e) {
     return {'result': 'error'};
@@ -317,6 +331,8 @@ dynamic testHash(Server server, String hash) async {
     return {'result': 'no_connection'};
   } on TimeoutException {
     return {'result': 'no_connection'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
   }
   catch (e) {
     return {'result': 'error'};
