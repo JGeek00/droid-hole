@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:droid_hole/widgets/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -24,19 +25,22 @@ class _DisableModalState extends State<DisableModal> {
   bool showCustomDurationInput = false;
   bool customTimeIsValid = false;
 
+  GlobalKey<ExpandableBottomSheetState> key = GlobalKey();
+
   void _updateRadioValue(value) {
     setState(() {
       selectedOption = value;
       if (selectedOption != 5) {
         customTimeController.text = "";
+        FocusManager.instance.primaryFocus?.unfocus();
         showCustomDurationInput = false;
+        Future.delayed(const Duration(milliseconds: 140), (() => {
+          key.currentState!.contract()
+        }));
       }
       else {
-        Timer(const Duration(milliseconds: 250), () {
-          setState(() {
-            showCustomDurationInput = true;
-          });
-        });
+        key.currentState!.expand();
+        showCustomDurationInput = true;
       }
     });
   }
@@ -95,23 +99,53 @@ class _DisableModalState extends State<DisableModal> {
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);   
 
+    // mediaQueryData.viewInsets.bottom = 0 when keyboard is closed
+    if (mediaQueryData.viewInsets.bottom > 0 && key.currentState != null) {
+      if (showCustomDurationInput == true) {
+        Future.delayed(const Duration(milliseconds: 0), () => {
+          key.currentState!.expand()
+        });
+      }
+      else {
+        Future.delayed(const Duration(milliseconds: 0), () => {
+          key.currentState!.contract()
+        });
+      }
+    }
     return Padding(
       padding: mediaQueryData.viewInsets,
-      child: Padding(
+      child: Container(
         padding: EdgeInsets.only(
           bottom: Platform.isIOS ? 20 : 0
         ),
-        child: SingleChildScrollView(
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOut,
-            height: selectedOption == 5 ? 422 : 316,
-            margin: const EdgeInsets.all(10),
+        child: ExpandableBottomSheet(
+          key: key,
+          color: Theme.of(context).dialogBackgroundColor,
+          marginContent: const EdgeInsets.symmetric(horizontal: 10),
+          marginHeader: const EdgeInsets.symmetric(horizontal: 10),
+          marginFooter: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+            bottom: 10
+          ),
+          radiusHeader: const BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+          ),
+          radiusFooter: const BorderRadius.only(
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+          persistentHeader: Container(
             decoration: BoxDecoration(
               color: Theme.of(context).dialogBackgroundColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
@@ -300,78 +334,60 @@ class _DisableModalState extends State<DisableModal> {
                             ),
                           ],
                         ),
-                        if (showCustomDurationInput == true) 
-                          Column(
-                            children: [
-                              const SizedBox(height: 25),
-                              TextField(
-                                onChanged: _validateCustomMinutes,
-                                controller: customTimeController,
-                                keyboardType: const TextInputType.numberWithOptions(
-                                  decimal: false
-                                ),
-                                decoration: InputDecoration(
-                                  errorText: !customTimeIsValid && customTimeController.text != ''
-                                    ? AppLocalizations.of(context)!.valueNotValid 
-                                    : null,
-                                  border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10)
-                                    )
-                                  ),
-                                  labelText: AppLocalizations.of(context)!.customMinutes,
-                                ),
-                              ),
-                            ],
-                          ),
                       ],
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+              ],
+            ),
+          ),
+          persistentFooter: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).dialogBackgroundColor,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+              ),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context), 
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context), 
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.cancel),
-                                  const SizedBox(width: 10),
-                                  Text(AppLocalizations.of(context)!.cancel)
-                                ],
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: _selectionIsValid() == true 
-                                ? () {
-                                  Navigator.pop(context);
-                                  widget.onDisable(_getTime());
-                                }
-                                : null,
-                              style: ButtonStyle(
-                                overlayColor: MaterialStateProperty.all(
-                                  Colors.red.withOpacity(0.1)
-                                ),
-                                foregroundColor: MaterialStateProperty.all(
-                                  _selectionIsValid() == true 
-                                    ? Colors.red
-                                    : Colors.grey,
-                                ),
-                              ), 
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.gpp_bad_rounded),
-                                  const SizedBox(width: 10),
-                                  Text(AppLocalizations.of(context)!.disable)
-                                ],
-                              ),
-                            ),
+                            const Icon(Icons.cancel),
+                            const SizedBox(width: 10),
+                            Text(AppLocalizations.of(context)!.cancel)
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _selectionIsValid() == true 
+                          ? () {
+                            Navigator.pop(context);
+                            widget.onDisable(_getTime());
+                          }
+                          : null,
+                        style: ButtonStyle(
+                          overlayColor: MaterialStateProperty.all(
+                            Colors.red.withOpacity(0.1)
+                          ),
+                          foregroundColor: MaterialStateProperty.all(
+                            _selectionIsValid() == true 
+                              ? Colors.red
+                              : Colors.grey,
+                          ),
+                        ), 
+                        child: Row(
+                          children: [
+                            const Icon(Icons.gpp_bad_rounded),
+                            const SizedBox(width: 10),
+                            Text(AppLocalizations.of(context)!.disable)
                           ],
                         ),
                       ),
@@ -381,7 +397,39 @@ class _DisableModalState extends State<DisableModal> {
               ],
             ),
           ),
-        ),
+          expandableContent: Container(
+            color: Theme.of(context).dialogBackgroundColor,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                const SizedBox(height: 25),
+                Opacity(
+                  opacity: showCustomDurationInput == true ? 1 : 0,
+                  child: TextField(
+                    onChanged: _validateCustomMinutes,
+                    controller: customTimeController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: false
+                    ),
+                    enabled: showCustomDurationInput == true ? true : false,
+                    decoration: InputDecoration(
+                      errorText: !customTimeIsValid && customTimeController.text != ''
+                        ? AppLocalizations.of(context)!.valueNotValid 
+                        : null,
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10)
+                        )
+                      ),
+                      labelText: AppLocalizations.of(context)!.customMinutes,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          background: Container(),
+        )
       ),
     );
   }
