@@ -25,8 +25,8 @@ class AddServerModal extends StatefulWidget {
 }
 
 class _AddServerModalState extends State<AddServerModal> {
-  TextEditingController ipFieldController = TextEditingController();
-  String? ipFieldError;
+  TextEditingController addressFieldController = TextEditingController();
+  String? addressFieldError;
   TextEditingController portFieldController = TextEditingController();
   String? portFieldError;
   TextEditingController aliasFieldController = TextEditingController();
@@ -45,8 +45,8 @@ class _AddServerModalState extends State<AddServerModal> {
   
   void _checkDataValid() {
     if (
-      ipFieldController.text != '' &&
-      ipFieldError == null &&
+      addressFieldController.text != '' &&
+      addressFieldError == null &&
       portFieldError == null &&
       aliasFieldController.text != '' &&
       passwordFieldController.text != ''
@@ -62,23 +62,24 @@ class _AddServerModalState extends State<AddServerModal> {
     }
   }
 
-  void _validateIpAddress(String? value) {
+  void _validateAddress(String? value) {
     if (value != null && value != '') {
       RegExp ipAddress = RegExp(r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$');
-      if (ipAddress.hasMatch(value) == true) {
+      RegExp domain = RegExp(r'^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}\.(xn--)?([a-z0-9\-]{1,61}|[a-z0-9-]{1,30}\.[a-z]{2,})$');
+      if (ipAddress.hasMatch(value) == true || domain.hasMatch(value) == true) {
         setState(() {
-          ipFieldError = null;
+          addressFieldError = null;
         });
       }
       else {
         setState(() {
-          ipFieldError = AppLocalizations.of(context)!.invalidIp;
+          addressFieldError = AppLocalizations.of(context)!.invalidAddress;
         });
       }
     }
     else {
       setState(() {
-        ipFieldError = AppLocalizations.of(context)!.ipCannotEmpty;
+        addressFieldError = AppLocalizations.of(context)!.ipCannotEmpty;
       });
     }
     _checkDataValid();
@@ -110,7 +111,7 @@ class _AddServerModalState extends State<AddServerModal> {
     super.initState();
     if (widget.server != null) {
       final List<String> splitted = widget.server!.address.split(':');
-      ipFieldController.text = splitted[1].split('/')[2];
+      addressFieldController.text = splitted[1].split('/')[2];
       portFieldController.text = splitted.length == 3 ? splitted[2] : '';
       aliasFieldController.text = widget.server!.alias;
       passwordFieldController.text = widget.server!.password;
@@ -128,7 +129,7 @@ class _AddServerModalState extends State<AddServerModal> {
     final width = MediaQuery.of(context).size.width;
 
     void _connect() async {
-      final String url = "$selectedHttp://${ipFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}";
+      final String url = "$selectedHttp://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}";
       final exists = await serversProvider.checkUrlExists(url);
       if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
@@ -565,6 +566,7 @@ class _AddServerModalState extends State<AddServerModal> {
 
   Widget _form(Function done, double width) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -594,17 +596,17 @@ class _AddServerModalState extends State<AddServerModal> {
                         SizedBox(
                           width: (width-60)-120,
                           child: TextFormField(
-                            onChanged: (value) => _validateIpAddress(value),
-                            controller: ipFieldController,
+                            onChanged: (value) => _validateAddress(value),
+                            controller: addressFieldController,
                             enabled: widget.server != null ? false : true,
                             decoration: InputDecoration(
-                              errorText: ipFieldError,
+                              errorText: addressFieldError,
                               border: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10)
                                 )
                               ),
-                              labelText: AppLocalizations.of(context)!.ipAddress,
+                              labelText: AppLocalizations.of(context)!.address,
                             ),
                           ),
                         ),
@@ -747,54 +749,52 @@ class _AddServerModalState extends State<AddServerModal> {
             ],
           ),
         ),
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 10,
-                  left: 10,
-                  right: 10
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton.icon(
-                      onPressed: (() => {
-                        Navigator.pop(context)
-                      }),
-                      label: Text(AppLocalizations.of(context)!.cancel),
-                      icon: const Icon(Icons.cancel)
-                    ),
-                    TextButton.icon(
-                      onPressed: allDataValid == true 
-                        ? () => done()
-                        : null,
-                      style: ButtonStyle(
-                        overlayColor: MaterialStateProperty.all(
-                          Colors.green.withOpacity(0.1)
-                        ),
-                        foregroundColor: MaterialStateProperty.all(
-                          allDataValid == true 
-                            ? Colors.green
-                            : Colors.grey,
-                        ),
-                      ), 
-                      label: Text(
-                        widget.server != null 
-                          ? AppLocalizations.of(context)!.save 
-                          : AppLocalizations.of(context)!.connect
-                      ),
-                      icon: Icon(
-                        widget.server != null ? Icons.save : Icons.login
-                      ),
-                    ),
-                  ],
-                ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 10,
+                left: 10,
+                right: 10
               ),
-            ],
-          ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton.icon(
+                    onPressed: (() => {
+                      Navigator.pop(context)
+                    }),
+                    label: Text(AppLocalizations.of(context)!.cancel),
+                    icon: const Icon(Icons.cancel)
+                  ),
+                  TextButton.icon(
+                    onPressed: allDataValid == true 
+                      ? () => done()
+                      : null,
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateProperty.all(
+                        Colors.green.withOpacity(0.1)
+                      ),
+                      foregroundColor: MaterialStateProperty.all(
+                        allDataValid == true 
+                          ? Colors.green
+                          : Colors.grey,
+                      ),
+                    ), 
+                    label: Text(
+                      widget.server != null 
+                        ? AppLocalizations.of(context)!.save 
+                        : AppLocalizations.of(context)!.connect
+                    ),
+                    icon: Icon(
+                      widget.server != null ? Icons.save : Icons.login
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         )
       ],
     );
