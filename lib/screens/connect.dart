@@ -88,40 +88,42 @@ class _ConnectState extends State<Connect> {
           )
         : Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.noConnections,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  AppLocalizations.of(context)!.beginAddConnection,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey
-                  ),
-                ),
-                const SizedBox(height: 30),
-                OutlinedButton.icon(
-                  onPressed: _addServerModal, 
-                  label: Text(AppLocalizations.of(context)!.createConnection),
-                  icon: const Icon(Icons.add),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      width: 1.0, 
-                      color: Theme.of(context).primaryColor
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.noConnections,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                )
-              ],
+                  const SizedBox(height: 20),
+                  Text(
+                    AppLocalizations.of(context)!.beginAddConnection,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  OutlinedButton.icon(
+                    onPressed: _addServerModal, 
+                    label: Text(AppLocalizations.of(context)!.createConnection),
+                    icon: const Icon(Icons.add),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        width: 1.0, 
+                        color: Theme.of(context).primaryColor
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           )
     );

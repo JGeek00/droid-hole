@@ -470,27 +470,30 @@ class _AddServerModalState extends State<AddServerModal> {
       }
     }
 
-    return Padding(
-      padding: isTokenModalOpen == true 
-        ? const EdgeInsets.all(0)
-        : mediaQueryData.viewInsets,
+    return WillPopScope(
+      onWillPop: () async => false,
       child: Padding(
-        padding: EdgeInsets.only(
-          bottom: Platform.isIOS ? 20 : 0
-        ),
-        child: SizedBox(
-          child: SingleChildScrollView(
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              height: height,
-              width: mediaQueryData.size.width > 400 ? 400 : null,
-              curve: Curves.easeInOut,
-              margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Theme.of(context).dialogBackgroundColor,
-                borderRadius: BorderRadius.circular(10),
+        padding: isTokenModalOpen == true 
+          ? const EdgeInsets.all(0)
+          : mediaQueryData.viewInsets,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: Platform.isIOS ? 20 : 0
+          ),
+          child: SizedBox(
+            child: SingleChildScrollView(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                height: height,
+                width: mediaQueryData.size.width > 400 ? 400 : null,
+                curve: Curves.easeInOut,
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).dialogBackgroundColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: _statusWidget()
               ),
-              child: _statusWidget()
             ),
           ),
         ),

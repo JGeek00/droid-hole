@@ -324,10 +324,14 @@ class ServersList extends StatelessWidget {
                         children: [
                           const Icon(Icons.star),
                           const SizedBox(width: 15),
-                          Text(
-                            server.defaultServer == true 
-                              ? AppLocalizations.of(context)!.defaultConnection
-                              : AppLocalizations.of(context)!.setDefault,
+                          SizedBox(
+                            width: width-150,
+                            child: Text(
+                              server.defaultServer == true 
+                                ? AppLocalizations.of(context)!.defaultConnection
+                                : AppLocalizations.of(context)!.setDefault,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           )
                         ],
                       ),

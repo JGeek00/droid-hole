@@ -28,7 +28,7 @@ class TokenModal extends StatefulWidget {
 
 class _TokenModalState extends State<TokenModal> {
   final tokenTextController = TextEditingController();
-  double height = 300;
+  double height = 350;
   bool textToken = false;
   bool checkingToken = false;
   bool tokenNotValid = false;
@@ -74,13 +74,12 @@ class _TokenModalState extends State<TokenModal> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final mediaQuery = MediaQuery.of(context);
 
     void _confirm({String? token}) async {
       final String checkToken = token ?? tokenTextController.text;
       setState(() {
         checkingToken = true;
-        height = 120;
+        height = 200;
       });
       final result = await testHash(widget.server, checkToken);
       if (result['result'] == 'success') {
@@ -117,6 +116,7 @@ class _TokenModalState extends State<TokenModal> {
 
     Widget _form() {
       return Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
@@ -230,16 +230,20 @@ class _TokenModalState extends State<TokenModal> {
     Widget _checkingToken() {
       return Padding(
         padding: const EdgeInsets.all(20),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const CircularProgressIndicator(),
-            const SizedBox(width: 30),
-            Text(
-              AppLocalizations.of(context)!.checkingToken,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18
+            const SizedBox(height: 50),
+            SizedBox(
+              width: width-40,
+              child: Text(
+                AppLocalizations.of(context)!.checkingToken,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18
+                ),
               ),
             )
           ],
@@ -269,8 +273,6 @@ class _TokenModalState extends State<TokenModal> {
 
         case 1:
           return SizedBox(
-            width: width > 400 ? 400 : width,
-            height: width > 400 ? 400 : width,
             child: QRView(
               key: qrKey, 
               onQRViewCreated: _onQrViewCreated,
@@ -391,25 +393,25 @@ class _TokenModalState extends State<TokenModal> {
       );
     }
 
-    return Dialog(
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10)
-      ),
-      child: SizedBox(
-        height: mediaQuery.size.height - (mediaQuery.viewPadding.top+mediaQuery.viewPadding.bottom) - 120 > height
-          ? height
-          :  mediaQuery.size.height - (mediaQuery.viewPadding.top+mediaQuery.viewPadding.bottom),
-        child: SingleChildScrollView(
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOut,
-            height: height,
-            child: checkingToken == true 
-              ? _checkingToken()
-              : scanQr == true 
-                ? _qr()
-                : _form()
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        backgroundColor: Theme.of(context).dialogBackgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
+        child: SizedBox(
+          child: SingleChildScrollView(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              height: height,
+              child: checkingToken == true 
+                ? _checkingToken()
+                : scanQr == true 
+                  ? _qr()
+                  : _form()
+            ),
           ),
         ),
       ),
