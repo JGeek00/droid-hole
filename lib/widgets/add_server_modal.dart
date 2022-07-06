@@ -111,11 +111,11 @@ class _AddServerModalState extends State<AddServerModal> {
     if (widget.server != null) {
       final List<String> splitted = widget.server!.address.split(':');
       ipFieldController.text = splitted[1].split('/')[2];
-      portFieldController.text = splitted[2];
+      portFieldController.text = splitted.length == 3 ? splitted[2] : '';
       aliasFieldController.text = widget.server!.alias;
       passwordFieldController.text = widget.server!.password;
-      selectedHttp = widget.server!.address.split('/')[0];
       setState(() {
+        selectedHttp = widget.server!.address.split(':')[0];
         defaultCheckbox = widget.server!.defaultServer;
       });
     }
