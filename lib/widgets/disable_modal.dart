@@ -112,6 +112,17 @@ class _DisableModalState extends State<DisableModal> {
         });
       }
     }
+
+    if (
+      mediaQueryData.orientation == Orientation.portrait && 
+      key.currentState != null &&
+      selectedOption != 5
+    ) {
+      Future.delayed(const Duration(milliseconds: 0), () => {
+        key.currentState!.contract()
+      });
+    }
+
     return Padding(
       padding: mediaQueryData.viewInsets,
       child: Container(
