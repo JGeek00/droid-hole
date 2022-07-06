@@ -180,5 +180,19 @@
     "beginAddConnection": "Para empezar, añade una conexión a un servidor.",
     "couldNotConnectServer": "No se ha podido conectar con el servidor",
     "noData": "No hay datos",
-    "oneColumnLegend": "Usar una sola columna para la leyenda"
+    "oneColumnLegend": "Leyenda de una columna",
+    "oneColumnLegendDescription": "Usar solo una columna para la leyenda",
+    "sslError": "Error de SSL. Comprueba si el certificado del servidor es válido.",
+    "dontCheckCertificate": "No comprobar el certificado SSL",
+    "dontCheckCertificateDescription": "Anula la validación del certificado SSL del servidor",
+    "advancedSetup": "Configuración avanzada",
+    "advancedSetupDescription": "Opciones avanzadas",
+    "checkSslSettingsUpdated": "Ajustes de comprobación del certificado SSL actualizados correctamente.",
+    "cannotUpdateSslSettings": "No se han podido actualizar los ajustes de comprobación del certificado SSL.",
+    "security": "Seguridad",
+    "others": "Otros",
+    "charts": "Gráficos",
+    "settingsUpdatedSuccessfully": "Ajustes actualizados correctamente.",
+    "cannotUpdateSettings": "No se han podido actualizar los ajustes.",
+    "restartAppTakeEffect": "Reinicia la aplicación para que se apliquen los cambios."
 }

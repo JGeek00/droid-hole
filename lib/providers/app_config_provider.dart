@@ -7,6 +7,8 @@ class AppConfigProvider with ChangeNotifier {
   PackageInfo? _appInfo;
   int? _autoRefreshTime = 2;
   int _selectedTheme = 0;
+  int _overrideSslCheck = 0;
+  int _oneColumnLegend = 0;
 
   Database? _dbInstance;
 
@@ -40,6 +42,14 @@ class AppConfigProvider with ChangeNotifier {
     return _selectedTheme;
   }
 
+  bool get overrideSslCheck {
+    return _overrideSslCheck == 0 ? false : true;
+  }
+
+  bool get oneColumnLegend {
+    return _oneColumnLegend == 0 ? false : true;
+  }
+
   void setAppInfo(PackageInfo appInfo) {
     _appInfo = appInfo;
     notifyListeners();
@@ -60,8 +70,34 @@ class AppConfigProvider with ChangeNotifier {
   void saveFromDb(Database dbInstance, Map<String, dynamic> dbData) {
     _autoRefreshTime = dbData['autoRefreshTime'];
     _selectedTheme = dbData['theme'];
+    _overrideSslCheck = dbData['overrideSslCheck'];
+    _oneColumnLegend = dbData['oneColumnLegend'];
     _dbInstance = dbInstance;
     notifyListeners();
+  }
+
+  Future<bool> setOverrideSslCheck(bool status) async {
+    final updated = await _updateOverrideSslCheck(status == true ? 1 : 0);
+    if (updated == true) {
+      _overrideSslCheck = status == true ? 1 : 0;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  Future<bool> setOneColumnLegend(bool status) async {
+    final updated = await _updateOneColumnLegend(status == true ? 1 : 0);
+    if (updated == true) {
+      _oneColumnLegend = status == true ? 1 : 0;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   Future<bool> setSelectedTheme(int value) async {
@@ -94,6 +130,32 @@ class AppConfigProvider with ChangeNotifier {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
           'UPDATE appConfig SET theme = $value',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> _updateOverrideSslCheck(int value) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET overrideSslCheck = $value',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> _updateOneColumnLegend(int value) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET oneColumnLegend = $value',
         );
         return true;
       });

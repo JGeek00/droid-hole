@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ import 'package:droid_hole/widgets/add_server_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/functions/server_management.dart';
+import 'package:droid_hole/classes/http_override.dart';
 import 'package:droid_hole/constants/app_screens.dart';
 import 'package:droid_hole/config/theme.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
@@ -39,12 +41,18 @@ void main() async {
   AppConfigProvider configProvider = AppConfigProvider();
 
   Map<String, dynamic> dbData = await loadDb();
+
+  if (dbData['appConfig']['overrideSslCheck'] == 1) {
+    HttpOverrides.global = MyHttpOverrides();
+  }
+
   serversProvider.setDbInstance(dbData['dbInstance']);
-  await serversProvider.saveFromDb(dbData['servers']);
   configProvider.saveFromDb(dbData['dbInstance'], dbData['appConfig']);
+  await serversProvider.saveFromDb(dbData['servers']);
 
   PackageInfo appInfo = await loadAppInfo();
   configProvider.setAppInfo(appInfo);
+
   runApp(
     MultiProvider(
       providers: [
@@ -83,17 +91,27 @@ Future upgradeDbToV5(Database db) async {
   await db.execute("DELETE FROM servers");
 }
 
+Future upgradeDbToV6(Database db) async {
+  await db.execute("ALTER TABLE appConfig ADD COLUMN overrideSslCheck NUMERIC");
+  await db.execute("UPDATE appConfig SET overrideSslCheck = 0");
+}
+
+Future upgradeDbToV7(Database db) async {
+  await db.execute("ALTER TABLE appConfig ADD COLUMN oneColumnLegend NUMERIC");
+  await db.execute("UPDATE appConfig SET oneColumnLegend = 0");
+}
+
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
   List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 5,
+    version: 7,
     onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, pwHash TEXT, isDefaultServer NUMERIC)");
-      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC)");
-      await db.execute("INSERT INTO appConfig (autoRefreshTime, theme) VALUES (5, 0)");
+      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC, overrideSslCheck NUMERIC, oneColumnLegend NUMERIC)");
+      await db.execute("INSERT INTO appConfig (autoRefreshTime, theme, overrideSslCheck, oneColumnLegend) VALUES (5, 0, 0, 0)");
     },
     onUpgrade: (Database db, int oldVersion, int newVersion) async {
       if (oldVersion == 2) {
@@ -105,6 +123,12 @@ Future<Map<String, dynamic>> loadDb() async {
       }
       if (oldVersion == 4) {
         await upgradeDbToV5(db);
+      }
+      if (oldVersion == 5) {
+        await upgradeDbToV6(db);
+      }
+      if (oldVersion == 6) {
+        await upgradeDbToV7(db);
       }
     },
     onDowngrade: (Database db, int oldVersion, int newVersion) async {
@@ -190,8 +214,6 @@ class _DroidHoleState extends State<DroidHole> {
         firstExec = false;
       });
     }
-
-
 
     return MaterialApp(
       title: 'Droid Hole',

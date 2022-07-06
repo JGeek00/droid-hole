@@ -179,5 +179,17 @@
     "beginAddConnection": "First of all, add a connection to a server.",
     "couldNotConnectServer": "Could not connect to the server",
     "noData": "No data",
-    "oneColumnLegend": "Use only one column for legend"
+    "oneColumnLegend": "One column legend",
+    "oneColumnLegendDescription": "Use only one column for the legend",
+    "sslError": "SSL error. Check if the server's certificate is valid.",
+    "dontCheckCertificate": "Don't check SSL certificate",
+    "dontCheckCertificateDescription": "Overrides the server's SSL certificate validation",
+    "advancedSetup": "Advanced setup",
+    "advancedSetupDescription": "Advanced options",
+    "security": "Security",
+    "others": "Others",
+    "charts": "Charts",
+    "settingsUpdatedSuccessfully": "Settings updated successfully.",
+    "cannotUpdateSettings": "Settings cannot be updated.",
+    "restartAppTakeEffect": "Restart the application"
 }

@@ -25,20 +25,20 @@ class AddServerModal extends StatefulWidget {
 }
 
 class _AddServerModalState extends State<AddServerModal> {
-
   TextEditingController ipFieldController = TextEditingController();
   String? ipFieldError;
   TextEditingController portFieldController = TextEditingController();
   String? portFieldError;
   TextEditingController aliasFieldController = TextEditingController();
   TextEditingController passwordFieldController = TextEditingController();
+  String selectedHttp = 'http';
   bool defaultCheckbox = false;
 
   String? errorUrl;
   bool allDataValid = false;
 
   String status = 'form';
-  double height = 430;
+  double height = 476;
   String errorMessage = 'Failed';
 
   bool isTokenModalOpen = false;
@@ -47,7 +47,6 @@ class _AddServerModalState extends State<AddServerModal> {
     if (
       ipFieldController.text != '' &&
       ipFieldError == null &&
-      portFieldController.text != '' &&
       portFieldError == null &&
       aliasFieldController.text != '' &&
       passwordFieldController.text != ''
@@ -100,7 +99,7 @@ class _AddServerModalState extends State<AddServerModal> {
     }
     else {
       setState(() {
-        portFieldError = AppLocalizations.of(context)!.portCannotEmpty;
+        portFieldError = null;
       });
     }
     _checkDataValid();
@@ -115,6 +114,7 @@ class _AddServerModalState extends State<AddServerModal> {
       portFieldController.text = splitted[2];
       aliasFieldController.text = widget.server!.alias;
       passwordFieldController.text = widget.server!.password;
+      selectedHttp = widget.server!.address.split('/')[0];
       setState(() {
         defaultCheckbox = widget.server!.defaultServer;
       });
@@ -128,10 +128,11 @@ class _AddServerModalState extends State<AddServerModal> {
     final width = MediaQuery.of(context).size.width;
 
     void _connect() async {
-      final exists = await serversProvider.checkUrlExists("http://${ipFieldController.text}:${portFieldController.text}");
+      final String url = "$selectedHttp://${ipFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}";
+      final exists = await serversProvider.checkUrlExists(url);
       if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
-          height = 429;
+          height = 476;
         });
         await Future.delayed(const Duration(milliseconds: 300), () {
           setState(() {
@@ -152,7 +153,7 @@ class _AddServerModalState extends State<AddServerModal> {
         });
         await Future.delayed(const Duration(seconds: 3), (() {
           setState(() {
-            height = 430;
+            height = 476;
           });
         }));
         await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -169,7 +170,7 @@ class _AddServerModalState extends State<AddServerModal> {
           status = 'connecting';
         });
         final serverObj = Server(
-          address: "http://${ipFieldController.text}:${portFieldController.text}", 
+          address: url, 
           alias: aliasFieldController.text,
           password: passwordFieldController.text, 
           defaultServer: false,
@@ -238,7 +239,7 @@ class _AddServerModalState extends State<AddServerModal> {
             });
             await Future.delayed(const Duration(seconds: 3), (() {
               setState(() {
-                height = 430;
+                height = 476;
               });
             }));
             await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -269,6 +270,11 @@ class _AddServerModalState extends State<AddServerModal> {
               errorMessage = AppLocalizations.of(context)!.passwordNotValid;
             });
           }
+          else if (result['result'] == 'ssl_error') {
+            setState(() {
+              errorMessage = AppLocalizations.of(context)!.sslError;
+            });
+          }
           else {
             errorMessage = AppLocalizations.of(context)!.unknownError;
           }
@@ -278,7 +284,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 430;
+              height = 476;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -298,7 +304,7 @@ class _AddServerModalState extends State<AddServerModal> {
         status = 'connecting';
       });
       final serverObj = Server(
-        address: "http://${ipFieldController.text}:${portFieldController.text}", 
+        address: widget.server!.address, 
         alias: aliasFieldController.text,
         password: passwordFieldController.text, 
         defaultServer: false,
@@ -393,7 +399,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 430;
+              height = 476;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -617,6 +623,41 @@ class _AddServerModalState extends State<AddServerModal> {
                         ),
                       ],
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () => setState(() => selectedHttp = 'http'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Radio(
+                              value: 'http', 
+                              groupValue: selectedHttp, 
+                              onChanged: (value) => setState(() => selectedHttp = value.toString())
+                            ),
+                            const SizedBox(width: 5),
+                            const Text("HTTP")
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => setState(() => selectedHttp = 'https'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Radio(
+                              value: 'https', 
+                              groupValue: selectedHttp, 
+                              onChanged: (value) => setState(() => selectedHttp = value.toString())
+                            ),
+                            const SizedBox(width: 5),
+                            const Text("HTTPS")
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),

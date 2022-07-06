@@ -9,22 +9,18 @@ import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 import 'package:droid_hole/widgets/top_bar.dart';
 
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
-class Home extends StatefulWidget {
+
+class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  bool oneColumnLegend = false;
 
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -296,7 +292,7 @@ class _HomeState extends State<Home> {
       List<Widget> _generateRow(int length) {
         Widget _generateItem(int i, int itemsPerRow) {
           return Container(
-            width: oneColumnLegend == true
+            width: appConfigProvider.oneColumnLegend == true
               ? ((width-60)/itemsPerRow)
               : itemsPerRow == 2 
                 ? ((width-120)/itemsPerRow)
@@ -318,7 +314,7 @@ class _HomeState extends State<Home> {
                 ),
                 const SizedBox(width: 10),
                 SizedBox(
-                  width: oneColumnLegend == true
+                  width: appConfigProvider.oneColumnLegend == true
                     ? ((width-60)/itemsPerRow)-20
                     : itemsPerRow == 2 
                       ? ((width-120)/itemsPerRow)-20
@@ -334,7 +330,7 @@ class _HomeState extends State<Home> {
         }
 
         List<Widget> widgets = [];
-        if (oneColumnLegend == true) {
+        if (appConfigProvider.oneColumnLegend == true) {
           for (var i = 0; i < length; i++) {
             widgets.add(
               Row(
@@ -516,40 +512,6 @@ class _HomeState extends State<Home> {
                             child: ClientsLastHours(data: serversProvider.getOvertimeDataJson!),
                           ),
                         ],
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () => setState(() => oneColumnLegend = !oneColumnLegend),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            right: 10
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)!.oneColumnLegend,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              SizedBox(
-                                height: 40,
-                                child: FittedBox(
-                                  fit: BoxFit.fill,
-                                  child: Switch(
-                                    value: oneColumnLegend, 
-                                    onChanged: (value) => setState(() => oneColumnLegend = value)
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
                       ),
                     ),
                     SizedBox(

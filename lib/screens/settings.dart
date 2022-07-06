@@ -1,21 +1,21 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:droid_hole/screens/servers.dart';
-import 'package:droid_hole/widgets/theme_modal.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/advanced_options.dart';
+import 'package:droid_hole/screens/servers.dart';
+
+import 'package:droid_hole/widgets/theme_modal.dart';
+import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/widgets/settings_top_bar.dart';
 import 'package:droid_hole/widgets/legal_modal.dart';
-import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
 import 'package:droid_hole/config/urls.dart';
-import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
@@ -28,83 +28,6 @@ class Settings extends StatelessWidget {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-
-    Widget _listItem({
-      IconData? leadingIcon, 
-      required String label, 
-      String? description,
-      Color? color,
-      void Function()? onTap
-    }) {
-      return Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 25
-            ),
-            width: double.maxFinite,
-            child: Row(
-              children: [
-                if (leadingIcon != null) Row(
-                  children: [
-                    Icon(
-                      leadingIcon,
-                      color: color,
-                    ),
-                    const SizedBox(width: 20),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: color
-                      ),
-                    ),
-                    if (description != null) Column(
-                      children: [
-                        const SizedBox(height: 5),
-                        Text(
-                          description,
-                          style: TextStyle(
-                            color: color ?? Colors.grey
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    void _deleteApplicationData() async {
-      final ProcessModal process = ProcessModal(context: context);
-      process.open(AppLocalizations.of(context)!.deleting);
-      await serversProvider.deleteDbData();
-      await appConfigProvider.restoreAppConfig();
-      process.close();
-      Phoenix.rebirth(context);
-    }
-
-    void _openResetModal() {
-      showDialog(
-        context: context, 
-        builder: (context) => ResetModal(
-          onConfirm: _deleteApplicationData,
-        ),
-        useSafeArea: true
-      );
-    }
 
     void _openAutoRefreshTimeModal() {
       showModalBottomSheet(
@@ -226,13 +149,13 @@ class Settings extends StatelessWidget {
                             ),
                           ],
                         ),
-                        _listItem(
+                        CustomListTile(
                           leadingIcon: Icons.light_mode_rounded,
                           label: AppLocalizations.of(context)!.theme, 
                           description: _getThemeString(),
                           onTap: _openThemeModal,
                         ),
-                        _listItem(
+                        CustomListTile(
                           leadingIcon: Icons.storage_rounded,
                           label: AppLocalizations.of(context)!.servers, 
                           description: serversProvider.selectedServer != null 
@@ -248,19 +171,24 @@ class Settings extends StatelessWidget {
                             )
                           }
                         ),
-                        _listItem(
+                        CustomListTile(
                           leadingIcon: Icons.update,
                           label: AppLocalizations.of(context)!.autoRefreshTime, 
                           description: "${appConfigProvider.getAutoRefreshTime.toString()} ${AppLocalizations.of(context)!.seconds}",
                           onTap: _openAutoRefreshTimeModal
                         ),
-                        _listItem(
-                          leadingIcon: Icons.delete,
-                          label: AppLocalizations.of(context)!.resetApplication, 
-                          description: AppLocalizations.of(context)!.erasesAppData,
-                          color: Colors.red,
-                          onTap: _openResetModal
-                        )
+                        CustomListTile(
+                          leadingIcon: Icons.settings,
+                          label: AppLocalizations.of(context)!.advancedSetup, 
+                          description: AppLocalizations.of(context)!.advancedSetupDescription,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const AdvancedOptions()
+                              ),
+                            );
+                          }
+                        ),
                       ],
                     ),
                   ),
@@ -290,16 +218,16 @@ class Settings extends StatelessWidget {
                           ],
                         ),
                         if (appConfigProvider.getAppInfo != null) 
-                          _listItem(
+                          CustomListTile(
                             label: AppLocalizations.of(context)!.legal, 
                             description: AppLocalizations.of(context)!.legalInfo, 
                             onTap: _openLegalModal
                           ),
-                          _listItem(
+                          CustomListTile(
                             label: AppLocalizations.of(context)!.appVersion, 
                             description: appConfigProvider.getAppInfo!.version
                           ),
-                          _listItem(
+                          CustomListTile(
                             label: AppLocalizations.of(context)!.createdBy, 
                             description: "JGeek00"
                           ),
