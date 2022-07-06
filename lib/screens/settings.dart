@@ -63,7 +63,6 @@ class Settings extends StatelessWidget {
       showDialog(
         context: context, 
         builder: (context) => const LegalModal(),
-        useSafeArea: true
       );
     }
 

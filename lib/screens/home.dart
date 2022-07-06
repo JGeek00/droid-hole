@@ -65,7 +65,7 @@ class Home extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     label,
@@ -75,7 +75,6 @@ class Home extends StatelessWidget {
                       fontSize: 14
                     ),
                   ),
-                  const SizedBox(height: 15),
                   Text(
                     value,
                     style: const TextStyle(

@@ -136,18 +136,19 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
-        height: selectedOption == 5 ? 425 : 319,
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.all(20),
               child: Text(
                 AppLocalizations.of(context)!.autoRefreshTime,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -358,55 +359,53 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                 ),
               ),
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context), 
-                          child: Row(
-                            children: [
-                              const Icon(Icons.cancel),
-                              const SizedBox(width: 10),
-                              Text(AppLocalizations.of(context)!.cancel)
-                            ],
-                          ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context), 
+                        child: Row(
+                          children: [
+                            const Icon(Icons.cancel),
+                            const SizedBox(width: 10),
+                            Text(AppLocalizations.of(context)!.cancel)
+                          ],
                         ),
-                        TextButton(
-                          onPressed: _selectionIsValid() == true 
-                            ? () {
-                              Navigator.pop(context);
-                              widget.onChange(_getTime());
-                            }
-                            : null,
-                          style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.all(
-                              Colors.green.withOpacity(0.1)
-                            ),
-                            foregroundColor: MaterialStateProperty.all(
-                              _selectionIsValid() == true 
-                                ? Colors.green
-                                : Colors.grey,
-                            ),
-                          ), 
-                          child: Row(
-                            children: [
-                              const Icon(Icons.check),
-                              const SizedBox(width: 10),
-                              Text(AppLocalizations.of(context)!.confirm)
-                            ],
+                      ),
+                      TextButton(
+                        onPressed: _selectionIsValid() == true 
+                          ? () {
+                            Navigator.pop(context);
+                            widget.onChange(_getTime());
+                          }
+                          : null,
+                        style: ButtonStyle(
+                          overlayColor: MaterialStateProperty.all(
+                            Colors.green.withOpacity(0.1)
                           ),
+                          foregroundColor: MaterialStateProperty.all(
+                            _selectionIsValid() == true 
+                              ? Colors.green
+                              : Colors.grey,
+                          ),
+                        ), 
+                        child: Row(
+                          children: [
+                            const Icon(Icons.check),
+                            const SizedBox(width: 10),
+                            Text(AppLocalizations.of(context)!.confirm)
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             )
           ],
         ),

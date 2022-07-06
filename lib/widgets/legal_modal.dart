@@ -13,12 +13,12 @@ class LegalModal extends StatelessWidget {
         borderRadius: BorderRadius.circular(10)
       ),
       child: Container(
-        height: 200,
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
           borderRadius: BorderRadius.circular(10)
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
@@ -30,25 +30,23 @@ class LegalModal extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Icon(
-                      Icons.info,
-                      size: 30,
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Icon(
+                    Icons.info,
+                    size: 30,
                   ),
-                  SizedBox(
-                    width: width-170,
-                    child: Text(
-                      AppLocalizations.of(context)!.legalText,
-                    ),
+                ),
+                SizedBox(
+                  width: width-170,
+                  child: Text(
+                    AppLocalizations.of(context)!.legalText,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,

@@ -458,7 +458,7 @@ class ServersList extends StatelessWidget {
           child: Center(
             child: Text(
               AppLocalizations.of(context)!.noSavedConnections,
-              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 24,
                 color: Colors.grey,

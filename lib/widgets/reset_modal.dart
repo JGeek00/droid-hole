@@ -32,18 +32,20 @@ class _ResetModalState extends State<ResetModal> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10)
       ),
       child: Container(
-        height: 205,
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
           borderRadius: BorderRadius.circular(10)
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
@@ -55,13 +57,11 @@ class _ResetModalState extends State<ResetModal> {
                 ),
               ),
             ),
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    AppLocalizations.of(context)!.eraseWarning
-                  ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  AppLocalizations.of(context)!.eraseWarning
                 ),
               ),
             ),
@@ -75,17 +75,27 @@ class _ResetModalState extends State<ResetModal> {
                       _timer.cancel();
                       Navigator.pop(context);
                     }, 
-                    child: Text( AppLocalizations.of(context)!.cancel),
+                    child: SizedBox(
+                      width: width-285,
+                      child: Text(
+                        AppLocalizations.of(context)!.cancel,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ), 
                   TextButton.icon(
                     onPressed: _timeRemaining == 0
                       ? widget.onConfirm
                       : null, 
                     icon: const Icon(Icons.delete), 
-                    label: Text(
-                      _timeRemaining > 0 
-                        ? "${AppLocalizations.of(context)!.eraseAll} ($_timeRemaining)"
-                        :  AppLocalizations.of(context)!.eraseAll
+                    label: SizedBox(
+                      width: width-230,
+                      child: Text(
+                        _timeRemaining > 0 
+                          ? "${AppLocalizations.of(context)!.eraseAll} ($_timeRemaining)"
+                          :  AppLocalizations.of(context)!.eraseAll,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     style: ButtonStyle(
                       foregroundColor: _timeRemaining == 0 

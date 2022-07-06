@@ -47,31 +47,26 @@ class DeleteModal extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10)
       ),
-      child: Container(
-        padding: EdgeInsets.only(
-          top: 20,
-          left: 10,
-          right: 10,
-          bottom: Platform.isIOS ? 7 : 10
-        ),
-        height: 200,
-        width: 400,
+      child: SizedBox(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              AppLocalizations.of(context)!.remove,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                AppLocalizations.of(context)!.remove,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 10,
+                horizontal: 20,
               ),
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
                   Text(
                     AppLocalizations.of(context)!.removeWarning
                   ),
@@ -84,11 +79,11 @@ class DeleteModal extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
                 ],
               ),
             ),
-            Expanded(
+            Padding(
+              padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
