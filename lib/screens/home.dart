@@ -444,6 +444,7 @@ class Home extends StatelessWidget {
                           height: 350,
                           child: QueriesLastHours(
                             data: serversProvider.getOvertimeDataJson!,
+                            reducedData: appConfigProvider.reducedDataCharts,
                           )
                         ),
                         Row(
@@ -508,7 +509,10 @@ class Home extends StatelessWidget {
                           SizedBox(
                             width: double.maxFinite,
                             height: 300,
-                            child: ClientsLastHours(data: serversProvider.getOvertimeDataJson!),
+                            child: ClientsLastHours(
+                              data: serversProvider.getOvertimeDataJson!,
+                              reducedData: appConfigProvider.reducedDataCharts,
+                            ),
                           ),
                         ],
                       ),

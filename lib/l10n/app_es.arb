@@ -195,5 +195,7 @@
     "charts": "Gráficos",
     "settingsUpdatedSuccessfully": "Ajustes actualizados correctamente.",
     "cannotUpdateSettings": "No se han podido actualizar los ajustes.",
-    "restartAppTakeEffect": "Reinicia la aplicación para que se apliquen los cambios."
+    "restartAppTakeEffect": "Reinicia la aplicación para que se apliquen los cambios.",
+    "reducedDataCharts": "Usar datos reducidos",
+    "reducedDataChartsDescription": "Puede mejorar el rendimiento de la aplicación"
 }

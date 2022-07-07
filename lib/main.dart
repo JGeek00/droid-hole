@@ -101,17 +101,22 @@ Future upgradeDbToV7(Database db) async {
   await db.execute("UPDATE appConfig SET oneColumnLegend = 0");
 }
 
+Future upgradeDbToV8(Database db) async {
+  await db.execute("ALTER TABLE appConfig ADD COLUMN reducedDataCharts NUMERIC");
+  await db.execute("UPDATE appConfig SET reducedDataCharts = 0");
+}
+
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
   List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 7,
+    version: 8,
     onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, pwHash TEXT, isDefaultServer NUMERIC)");
-      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC, overrideSslCheck NUMERIC, oneColumnLegend NUMERIC)");
-      await db.execute("INSERT INTO appConfig (autoRefreshTime, theme, overrideSslCheck, oneColumnLegend) VALUES (5, 0, 0, 0)");
+      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC, overrideSslCheck NUMERIC, oneColumnLegend NUMERIC, reducedDataCharts NUMERIC)");
+      await db.execute("INSERT INTO appConfig (autoRefreshTime, theme, overrideSslCheck, oneColumnLegend, reducedDataCharts) VALUES (5, 0, 0, 0, 0)");
     },
     onUpgrade: (Database db, int oldVersion, int newVersion) async {
       if (oldVersion == 2) {
@@ -138,6 +143,10 @@ Future<Map<String, dynamic>> loadDb() async {
       }
       if (oldVersion == 6) {
         await upgradeDbToV7(db);
+        await upgradeDbToV8(db);
+      }
+      if (oldVersion == 7) {
+        await upgradeDbToV8(db);
       }
     },
     onDowngrade: (Database db, int oldVersion, int newVersion) async {

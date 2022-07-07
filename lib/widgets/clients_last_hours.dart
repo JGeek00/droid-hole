@@ -6,10 +6,12 @@ import 'package:droid_hole/providers/app_config_provider.dart';
 
 class ClientsLastHours extends StatelessWidget {
   final Map<String, dynamic> data;
+  final bool reducedData;
 
   const ClientsLastHours({
     Key? key,
     required this.data,
+    required this.reducedData,
   }) : super(key: key);
 
   LineChartData mainData(Map<String, dynamic> data, ThemeMode selectedTheme) {
@@ -100,21 +102,22 @@ class ClientsLastHours extends StatelessWidget {
       final List<LineChartBarData> items = [];
       final List<Map<String, dynamic>> clientsColors = [];
       int topPoint = 0;
+      List<String> keys = data['over_time'].keys.toList();
       for (var i = 0; i < data['clients'].length; i++) {
         final List<FlSpot> client = [];
         int xPosition = 0;
-        data['over_time'].keys.forEach((key) {
-          if (data['over_time'][key][i] > topPoint) {
-            topPoint = data['over_time'][key][i];
+        for (var j = 0; j < data['over_time'].entries.length; reducedData == true ? j+=6 : j++) {
+          if (data['over_time'][keys[j]][i] > topPoint) {
+            topPoint = data['over_time'][keys[j]][i];
           }
           client.add(
             FlSpot(
               xPosition.toDouble(),
-              data['over_time'][key][i].toDouble()
+              data['over_time'][keys[j]][i].toDouble()
             )
           );
           xPosition++;
-        });
+        }
         items.add(
           LineChartBarData(
             spots: client,

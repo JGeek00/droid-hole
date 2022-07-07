@@ -62,6 +62,26 @@ class AdvancedOptions extends StatelessWidget {
       }
     }
 
+    void _updateUseReducedData(bool newStatus) async {
+      final result = await appConfigProvider.setReducedDataCharts(newStatus);
+      if (result == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.settingsUpdatedSuccessfully),
+            backgroundColor: Colors.green,
+          )
+        );
+      }
+      else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.cannotUpdateSettings),
+            backgroundColor: Colors.red,
+          )
+        );
+      }
+    }
+
     void _deleteApplicationData() async {
       final ProcessModal process = ProcessModal(context: context);
       process.open(AppLocalizations.of(context)!.deleting);
@@ -192,6 +212,22 @@ class AdvancedOptions extends StatelessWidget {
             trailing: Switch(
               value: appConfigProvider.oneColumnLegend, 
               onChanged: _updateOneColumnLegend
+            ),
+          ),
+          CustomListTile(
+            leadingIcon: Icons.stacked_line_chart_rounded,
+            label: AppLocalizations.of(context)!.reducedDataCharts,
+            description: AppLocalizations.of(context)!.reducedDataChartsDescription,
+            onTap: () => _updateUseReducedData(!appConfigProvider.reducedDataCharts),
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+              left: 20,
+              right: 10
+            ),
+            trailing: Switch(
+              value: appConfigProvider.reducedDataCharts, 
+              onChanged: _updateUseReducedData
             ),
           ),
           Container(

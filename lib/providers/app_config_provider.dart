@@ -9,6 +9,7 @@ class AppConfigProvider with ChangeNotifier {
   int _selectedTheme = 0;
   int _overrideSslCheck = 0;
   int _oneColumnLegend = 0;
+  int _reducedDataCharts = 0;
 
   Database? _dbInstance;
 
@@ -50,6 +51,10 @@ class AppConfigProvider with ChangeNotifier {
     return _oneColumnLegend == 0 ? false : true;
   }
 
+  bool get reducedDataCharts {
+    return _reducedDataCharts == 0 ? false : true;
+  }
+
   void setAppInfo(PackageInfo appInfo) {
     _appInfo = appInfo;
     notifyListeners();
@@ -72,6 +77,7 @@ class AppConfigProvider with ChangeNotifier {
     _selectedTheme = dbData['theme'];
     _overrideSslCheck = dbData['overrideSslCheck'];
     _oneColumnLegend = dbData['oneColumnLegend'];
+    _reducedDataCharts = dbData['reducedDataCharts'];
     _dbInstance = dbInstance;
     notifyListeners();
   }
@@ -92,6 +98,18 @@ class AppConfigProvider with ChangeNotifier {
     final updated = await _updateOneColumnLegend(status == true ? 1 : 0);
     if (updated == true) {
       _oneColumnLegend = status == true ? 1 : 0;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  Future<bool> setReducedDataCharts(bool status) async {
+    final updated = await _updateReducedDataCharts(status == true ? 1 : 0);
+    if (updated == true) {
+      _reducedDataCharts = status == true ? 1 : 0;
       notifyListeners();
       return true;
     }
@@ -156,6 +174,19 @@ class AppConfigProvider with ChangeNotifier {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
           'UPDATE appConfig SET oneColumnLegend = $value',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> _updateReducedDataCharts(int value) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET reducedDataCharts = $value',
         );
         return true;
       });

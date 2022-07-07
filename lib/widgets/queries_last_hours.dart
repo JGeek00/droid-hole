@@ -6,10 +6,12 @@ import 'package:droid_hole/providers/app_config_provider.dart';
 
 class QueriesLastHours extends StatelessWidget {
   final Map<String, dynamic> data;
+  final bool reducedData;
 
   const QueriesLastHours({
     Key? key,
     required this.data,
+    required this.reducedData,
   }) : super(key: key);
 
   LineChartData mainData(Map<String, dynamic> data, ThemeMode selectedTheme) {
@@ -140,29 +142,31 @@ class QueriesLastHours extends StatelessWidget {
 
       int xPosition = 0;
       int topPoint = 0;
-      data['domains_over_time'].keys.forEach((key) {
-        if (data['domains_over_time'][key] > topPoint) {
-          topPoint = data['domains_over_time'][key];
+      List<String> domainsKeys = data['domains_over_time'].keys.toList();
+      for (var i = 0; i < data['domains_over_time'].entries.length; reducedData == true ? i+=6 : i++) {
+        if (data['domains_over_time'][domainsKeys[i]] > topPoint) {
+          topPoint = data['domains_over_time'][domainsKeys[i]];
         }
         domains.add(
           FlSpot(
             xPosition.toDouble(), 
-            data['domains_over_time'][key].toDouble()
+            data['domains_over_time'][domainsKeys[i]].toDouble()
           )
         );
         xPosition++;
-      });
+      }
       
       xPosition = 0;
-      data['ads_over_time'].keys.forEach((key) {
+      List<String> adsKeys = data['ads_over_time'].keys.toList();
+      for (var i = 0; i < data['ads_over_time'].entries.length; reducedData == true ? i+=6 : i++) {
         ads.add(
           FlSpot(
             xPosition.toDouble(), 
-            data['ads_over_time'][key].toDouble()
+            data['ads_over_time'][adsKeys[i]].toDouble()
           )
         );
         xPosition++;
-      });
+      }
 
       return {
         'data': {
