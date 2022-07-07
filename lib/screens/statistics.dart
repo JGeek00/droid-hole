@@ -21,6 +21,7 @@ class Statistics extends StatelessWidget {
     final serversProvider = Provider.of<ServersProvider>(context);
 
     final orientation = MediaQuery.of(context).orientation;
+    final textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
     Widget _generateBody() {
       switch (serversProvider.getStatusLoading) {

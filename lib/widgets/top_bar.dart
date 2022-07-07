@@ -20,6 +20,7 @@ class TopBar extends StatelessWidget {
 
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
     final width = MediaQuery.of(context).size.width;
+    final textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
     void _openWebPanel() {
       if (serversProvider.isServerConnected == true) {
@@ -119,15 +120,15 @@ class TopBar extends StatelessWidget {
                       children: [
                         Text(
                           serversProvider.selectedServer!.alias,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 22
+                            fontSize: 22-(22*(1-textScaleFactor).abs())
                           ),
                         ),
                         Text(
                           serversProvider.selectedServer!.address,
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: 14-(14*(1-textScaleFactor).abs()),
                             color: Colors.grey
                           )
                         )
@@ -146,9 +147,9 @@ class TopBar extends StatelessWidget {
                     child: Text(
                       AppLocalizations.of(context)!.noServerSelected,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 22
+                        fontSize: 22-(22*(1-textScaleFactor).abs())
                       ),
                     ),
                   ),
