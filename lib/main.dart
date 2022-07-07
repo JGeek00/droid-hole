@@ -117,15 +117,24 @@ Future<Map<String, dynamic>> loadDb() async {
       if (oldVersion == 2) {
         await upgradeDbToV3(db);
         await upgradeDbToV4(db);
+        await upgradeDbToV5(db);
+        await upgradeDbToV6(db);
+        await upgradeDbToV7(db);
       }
       if (oldVersion == 3) {
         await upgradeDbToV4(db);
+        await upgradeDbToV5(db);
+        await upgradeDbToV6(db);
+        await upgradeDbToV7(db);
       }
       if (oldVersion == 4) {
         await upgradeDbToV5(db);
+        await upgradeDbToV6(db);
+        await upgradeDbToV7(db);
       }
       if (oldVersion == 5) {
         await upgradeDbToV6(db);
+        await upgradeDbToV7(db);
       }
       if (oldVersion == 6) {
         await upgradeDbToV7(db);
