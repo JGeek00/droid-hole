@@ -17,44 +17,6 @@ class AdvancedOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appConfigProvider = Provider.of<AppConfigProvider>(context);
-
-    return AdvancedOptionsWidget(
-      checkSslStatus: appConfigProvider.overrideSslCheck,
-      oneColumnLegend: appConfigProvider.oneColumnLegend,
-    );
-  }
-}
-
-class AdvancedOptionsWidget extends StatefulWidget {
-  final bool checkSslStatus;
-  final bool oneColumnLegend;
-
-  const AdvancedOptionsWidget({
-    Key? key,
-    required this.checkSslStatus,
-    required this.oneColumnLegend
-  }) : super(key: key);
-
-  @override
-  State<AdvancedOptionsWidget> createState() => _AdvancedOptionsState();
-}
-
-class _AdvancedOptionsState extends State<AdvancedOptionsWidget> {
-  bool overrideSslCheck = false;
-  bool oneColumnLegend = false;
-
-  @override
-  void initState() {
-    setState(() {
-      overrideSslCheck = widget.checkSslStatus;
-      oneColumnLegend = widget.oneColumnLegend;
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
@@ -63,7 +25,6 @@ class _AdvancedOptionsState extends State<AdvancedOptionsWidget> {
     void _updateSslCheck(bool newStatus) async {
       final result = await appConfigProvider.setOverrideSslCheck(newStatus);
       if (result == true) {
-        setState(() => overrideSslCheck = newStatus);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.restartAppTakeEffect),
@@ -84,7 +45,6 @@ class _AdvancedOptionsState extends State<AdvancedOptionsWidget> {
     void _updateOneColumnLegend(bool newStatus) async {
       final result = await appConfigProvider.setOneColumnLegend(newStatus);
       if (result == true) {
-        setState(() => oneColumnLegend = newStatus);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.settingsUpdatedSuccessfully),
@@ -183,10 +143,10 @@ class _AdvancedOptionsState extends State<AdvancedOptionsWidget> {
             label: AppLocalizations.of(context)!.dontCheckCertificate,
             description: AppLocalizations.of(context)!.dontCheckCertificateDescription,
             trailing: Switch(
-              value: overrideSslCheck, 
-              onChanged: (value) => _updateSslCheck
+              value: appConfigProvider.overrideSslCheck, 
+              onChanged: _updateSslCheck
             ),
-            onTap: () => _updateSslCheck(!overrideSslCheck),
+            onTap: () => _updateSslCheck(!appConfigProvider.overrideSslCheck),
             padding: const EdgeInsets.only(
               top: 10,
               bottom: 10,
@@ -222,7 +182,7 @@ class _AdvancedOptionsState extends State<AdvancedOptionsWidget> {
             leadingIcon: Icons.list,
             label: AppLocalizations.of(context)!.oneColumnLegend,
             description: AppLocalizations.of(context)!.oneColumnLegendDescription,
-            onTap: () => _updateOneColumnLegend(!oneColumnLegend),
+            onTap: () => _updateOneColumnLegend(!appConfigProvider.oneColumnLegend),
             padding: const EdgeInsets.only(
               top: 10,
               bottom: 10,
@@ -230,8 +190,8 @@ class _AdvancedOptionsState extends State<AdvancedOptionsWidget> {
               right: 10
             ),
             trailing: Switch(
-              value: oneColumnLegend, 
-              onChanged: (value) => _updateOneColumnLegend
+              value: appConfigProvider.oneColumnLegend, 
+              onChanged: _updateOneColumnLegend
             ),
           ),
           Container(
