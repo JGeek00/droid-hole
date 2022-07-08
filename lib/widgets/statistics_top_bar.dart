@@ -11,8 +11,6 @@ class StatisticsTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
 
-    final width = MediaQuery.of(context).size.width;
-    final textScaleFactor = MediaQuery.of(context).textScaleFactor;
     final topBarHeight = MediaQuery.of(context).viewPadding.top;
     final orientation = MediaQuery.of(context).orientation;
     
@@ -41,9 +39,9 @@ class StatisticsTopBar extends StatelessWidget {
               children: [
                 Text(
                   AppLocalizations.of(context)!.statistics,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20-(20*(1-textScaleFactor).abs()),
+                    fontSize: 20
                   ),
                 )
               ],
@@ -56,77 +54,16 @@ class StatisticsTopBar extends StatelessWidget {
             tabs: orientation == Orientation.portrait
               ? [
                   Tab(
-                    height: 72,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.dns_rounded,
-                          size: 25-(25*(1-textScaleFactor).abs()),
-                        ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: width/3,
-                          child: Text(
-                            AppLocalizations.of(context)!.queriesServers,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14-(14*(1-textScaleFactor).abs())
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    icon: const Icon(Icons.dns_rounded),
+                    text: AppLocalizations.of(context)!.queriesServers,
                   ),
                   Tab(
-                    height: 72,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.http_rounded,
-                          size: 25-(25*(1-textScaleFactor).abs()),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: width/3,
-                          child: Text(
-                            AppLocalizations.of(context)!.domains,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14-(14*(1-textScaleFactor).abs())
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    icon: const Icon(Icons.http_rounded),
+                    text: AppLocalizations.of(context)!.domains,
                   ),
                   Tab(
-                    height: 72,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.devices_rounded,
-                          size: 25-(25*(1-textScaleFactor).abs()),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: width/3,
-                          child: Text(
-                            AppLocalizations.of(context)!.clients,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14-(14*(1-textScaleFactor).abs())
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    icon: const Icon(Icons.devices_rounded),
+                    text: AppLocalizations.of(context)!.clients,
                   ),
                 ]
               : [

@@ -38,7 +38,7 @@ class _AddServerModalState extends State<AddServerModal> {
   bool allDataValid = false;
 
   String status = 'form';
-  double height = 500;
+  double height = 476;
   String errorMessage = 'Failed';
 
   bool isTokenModalOpen = false;
@@ -133,7 +133,7 @@ class _AddServerModalState extends State<AddServerModal> {
       final exists = await serversProvider.checkUrlExists(url);
       if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
-          height = 500;
+          height = 476;
         });
         await Future.delayed(const Duration(milliseconds: 300), () {
           setState(() {
@@ -154,7 +154,7 @@ class _AddServerModalState extends State<AddServerModal> {
         });
         await Future.delayed(const Duration(seconds: 3), (() {
           setState(() {
-            height = 500;
+            height = 476;
           });
         }));
         await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -240,7 +240,7 @@ class _AddServerModalState extends State<AddServerModal> {
             });
             await Future.delayed(const Duration(seconds: 3), (() {
               setState(() {
-                height = 500;
+                height = 476;
               });
             }));
             await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -285,7 +285,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 500;
+              height = 476;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -400,7 +400,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 500;
+              height = 476;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -597,7 +597,7 @@ class _AddServerModalState extends State<AddServerModal> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: (width-60)-120,
+                          width: (((width-60)/3)*2)-20,
                           child: TextFormField(
                             onChanged: (value) => _validateAddress(value),
                             controller: addressFieldController,
@@ -614,7 +614,7 @@ class _AddServerModalState extends State<AddServerModal> {
                           ),
                         ),
                         SizedBox(
-                          width: 100,
+                          width: (width-60)/3,
                           child: TextFormField(
                             onChanged: (value) => _validatePort(value),
                             controller: portFieldController,

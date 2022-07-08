@@ -138,11 +138,15 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                 child: InkWell(
                   onTap: _checkUncheckAll,
                   child: ListTile(
-                    title: Text(
-                      AppLocalizations.of(context)!.allStatusSelected,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18
+                    title: SizedBox(
+                      width: 450,
+                      child: Text(
+                        AppLocalizations.of(context)!.allStatusSelected,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     trailing: Checkbox(
@@ -160,7 +164,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                   ? (Platform.isIOS ? 807 : 787 )
                   : (Platform.isIOS 
                     ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+218)
-                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+205)
+                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+198)
                   ),
                 child: SingleChildScrollView(
                   child: Column(
@@ -241,34 +245,27 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
               ),
             ],
           ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () => Navigator.pop(context), 
-                        icon: const Icon(Icons.close),
-                        label: Text(AppLocalizations.of(context)!.close),
-                      ),
-                      const SizedBox(width: 10),
-                      TextButton.icon(
-                        onPressed: () {
-                          updateList();
-                          Navigator.pop(context);
-                        }, 
-                        icon: const Icon(Icons.check), 
-                        label: Text(AppLocalizations.of(context)!.apply),
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all(Colors.green),
-                          overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
-                        ),
-                      ),
-                    ],
+                TextButton.icon(
+                  onPressed: () => Navigator.pop(context), 
+                  icon: const Icon(Icons.close),
+                  label: Text(AppLocalizations.of(context)!.close),
+                ),
+                const SizedBox(width: 10),
+                TextButton.icon(
+                  onPressed: () {
+                    updateList();
+                    Navigator.pop(context);
+                  }, 
+                  icon: const Icon(Icons.check), 
+                  label: Text(AppLocalizations.of(context)!.apply),
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(Colors.green),
+                    overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
                   ),
                 ),
               ],

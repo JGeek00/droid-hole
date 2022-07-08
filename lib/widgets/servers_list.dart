@@ -34,7 +34,6 @@ class ServersList extends StatelessWidget {
     List<Server> servers = serversProvider.getServersList;
 
     final width = MediaQuery.of(context).size.width;
-    final textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
     void _showDeleteModal(Server server) async {
       await Future.delayed(const Duration(seconds: 0), () => {
@@ -325,14 +324,10 @@ class ServersList extends StatelessWidget {
                         children: [
                           const Icon(Icons.star),
                           const SizedBox(width: 15),
-                          SizedBox(
-                            width: textScaleFactor > 1 ? 150 : null,
-                            child: Text(
-                              server.defaultServer == true 
-                                ? AppLocalizations.of(context)!.defaultConnection
-                                : AppLocalizations.of(context)!.setDefault,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                          Text(
+                            server.defaultServer == true 
+                              ? AppLocalizations.of(context)!.defaultConnection
+                              : AppLocalizations.of(context)!.setDefault,
                           )
                         ],
                       ),

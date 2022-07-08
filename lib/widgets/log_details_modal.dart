@@ -89,15 +89,15 @@ class LogDetailsModal extends StatelessWidget {
         );
       }
     }
-    
+
     return Container(
       height: log.status == '2' && log.answeredBy != null
-        ? mediaQuery.size.height > 690
-          ? 690
-          : mediaQuery.size.height - (statusBarHeight+10)
-        : mediaQuery.size.height > 690
-          ? 620
-          : mediaQuery.size.height - (statusBarHeight+10),
+        ? (mediaQuery.size.height-statusBarHeight) > 666
+          ? 666
+          : mediaQuery.size.height - (statusBarHeight+15)
+        : (mediaQuery.size.height-statusBarHeight) > 610
+          ? 596
+          : mediaQuery.size.height - (statusBarHeight+15),
       margin: EdgeInsets.only(
         left: 10,
         right: 10,
@@ -107,85 +107,76 @@ class LogDetailsModal extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: Theme.of(context).dialogBackgroundColor,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  AppLocalizations.of(context)!.logDetails,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
-                  ),
+      child: Column(
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                AppLocalizations.of(context)!.logDetails,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20
                 ),
               ),
             ),
-            SizedBox(
-              width: double.maxFinite,
-              height: mediaQuery.size.height > 690
-                ? log.status == '2' && log.answeredBy != null
-                  ? 585
-                  : 515
-                : log.status == '2' && log.answeredBy != null
-                  ? mediaQuery.size.height - (statusBarHeight+120)
-                  : mediaQuery.size.height - (statusBarHeight+120),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 30),
-                    _item(Icons.link, AppLocalizations.of(context)!.url, Text(
-                      log.url,
+          ),
+          Container(
+            width: double.maxFinite,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            height: log.status == '2' && log.answeredBy != null
+              ? (mediaQuery.size.height-statusBarHeight) > 666
+                ? 535
+                : mediaQuery.size.height - (statusBarHeight+146)
+              : (mediaQuery.size.height-statusBarHeight) > 610
+                ? 465
+                : mediaQuery.size.height - (statusBarHeight+146),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _item(Icons.link, AppLocalizations.of(context)!.url, Text(
+                    log.url,
+                    overflow: TextOverflow.ellipsis,
+                  )),
+                  const SizedBox(height: 20),
+                  _item(Icons.http_rounded, AppLocalizations.of(context)!.type, Text(log.type)),
+                  const SizedBox(height: 20),
+                  _item(Icons.phone_android_rounded, AppLocalizations.of(context)!.device, Text(
+                    log.device,
+                    overflow: TextOverflow.ellipsis,
+                  )),
+                  const SizedBox(height: 20),
+                  _item(Icons.access_time_outlined, AppLocalizations.of(context)!.time, Text(formatTimestamp(log.dateTime, 'HH:mm:ss'))),
+                  const SizedBox(height: 20),
+                  _item(Icons.shield_outlined, AppLocalizations.of(context)!.status, LogStatus(status: log.status, showIcon: false)),
+                  const SizedBox(height: 20),
+                  if (log.status == '2' && log.answeredBy != null) ...[
+                    _item(Icons.domain, AppLocalizations.of(context)!.answeredBy, Text(
+                      log.answeredBy!,
                       overflow: TextOverflow.ellipsis,
                     )),
-                    const SizedBox(height: 20),
-                    _item(Icons.http_rounded, AppLocalizations.of(context)!.type, Text(log.type)),
-                    const SizedBox(height: 20),
-                    _item(Icons.phone_android_rounded, AppLocalizations.of(context)!.device, Text(
-                      log.device,
-                      overflow: TextOverflow.ellipsis,
-                    )),
-                    const SizedBox(height: 20),
-                    _item(Icons.access_time_outlined, AppLocalizations.of(context)!.time, Text(formatTimestamp(log.dateTime, 'HH:mm:ss'))),
-                    const SizedBox(height: 20),
-                    _item(Icons.shield_outlined, AppLocalizations.of(context)!.status, LogStatus(status: log.status, showIcon: false)),
-                    const SizedBox(height: 20),
-                    if (log.status == '2' && log.answeredBy != null) ...[
-                      _item(Icons.domain, AppLocalizations.of(context)!.answeredBy, Text(
-                        log.answeredBy!,
-                        overflow: TextOverflow.ellipsis,
-                      )),
-                      const SizedBox(height: 20),
-                    ],
-                    _item(Icons.system_update_alt_outlined, AppLocalizations.of(context)!.reply, Text("${log.replyType} (${(log.replyTime/10)} ms)")),
                     const SizedBox(height: 20),
                   ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _blackWhiteListButton(),
-                      TextButton.icon(
-                        onPressed: () => Navigator.pop(context), 
-                        icon: const Icon(Icons.close),
-                        label: Text(AppLocalizations.of(context)!.close),
-                      ),
-                    ],
-                  ),
+                  _item(Icons.system_update_alt_outlined, AppLocalizations.of(context)!.reply, Text("${log.replyType} (${(log.replyTime/10)} ms)")),
                 ],
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _blackWhiteListButton(),
+                TextButton.icon(
+                  onPressed: () => Navigator.pop(context), 
+                  icon: const Icon(Icons.close),
+                  label: Text(AppLocalizations.of(context)!.close),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
