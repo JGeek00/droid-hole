@@ -218,11 +218,11 @@ Future fetchOverTimeData(Server server, String phpSessId) async {
   }
 }
 
-Future fetchLogs(Server server, String phpSessId) async {
+Future fetchLogs(Server server, String phpSessId, DateTime from, DateTime until) async {
   try {
     final response = await httpClient(
       method: 'get',
-      url: '${server.address}/admin/api.php?getAllQueries=100',
+      url: '${server.address}/admin/api.php?getAllQueries&from=${from.millisecondsSinceEpoch~/1000}&until=${until.millisecondsSinceEpoch~/1000}',
       headers: {
         'Cookie': 'PHPSESSID=$phpSessId'
       }

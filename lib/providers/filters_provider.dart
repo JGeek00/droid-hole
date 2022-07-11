@@ -50,6 +50,7 @@ class FiltersProvider with ChangeNotifier {
     ];
     _startTime = null;
     _endTime = null;
+    _selectedClients = _totalClients;
     notifyListeners();
   }
 
@@ -67,6 +68,9 @@ class FiltersProvider with ChangeNotifier {
   }
 
   void setClients(List<String> clients) {
+    if (_totalClients.isEmpty) {
+      _selectedClients = clients;
+    }
     _totalClients = clients;
     notifyListeners();
   }
@@ -77,7 +81,7 @@ class FiltersProvider with ChangeNotifier {
   }
   
   void resetClients() {
-    _selectedClients = [];
+    _selectedClients = _totalClients;
     notifyListeners();
   }
 }

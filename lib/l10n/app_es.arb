@@ -199,5 +199,6 @@
     "reducedDataCharts": "Usar datos reducidos",
     "reducedDataChartsDescription": "Puede mejorar el rendimiento de la aplicación",
     "statusSelected": "estados seleccionados",
-    "allClientsSelected": "Todos los clientes seleccionados"
+    "allClientsSelected": "Todos los clientes seleccionados",
+    "clientsSelected": "clientes seleccionados"
 }

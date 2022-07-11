@@ -52,9 +52,12 @@ class StatisticsList extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 if (type == 'clients') {
-                  filtersProvider.setSelectedClients([item['label']]);
+                  final isContained = filtersProvider.totalClients.where((client) => item['label'].contains(client)).toList();
+                  if (isContained.isNotEmpty) {
+                    filtersProvider.setSelectedClients([isContained[0]]);
+                    appConfigProvider.setSelectedTab(2);
+                  }
                 }
-                appConfigProvider.setSelectedTab(2);
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(

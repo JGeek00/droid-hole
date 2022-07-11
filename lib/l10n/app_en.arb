@@ -196,5 +196,6 @@
     "reducedDataCharts": "Use reduced data",
     "reducedDataChartsDescription": "Can improve application performance",
     "statusSelected": "status selected",
-    "allClientsSelected": "All clients selected"
+    "allClientsSelected": "All clients selected",
+    "clientsSelected": "clients selected"
 }

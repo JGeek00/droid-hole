@@ -96,6 +96,11 @@ class LogsList extends StatefulWidget {
 }
 
 class _LogsListState extends State<LogsList> {
+  DateTime? _lastTimestamp;
+  bool _isLoadingMore = false;
+
+  late ScrollController _scrollController;
+
   bool _showSearchBar = false;
   final TextEditingController _searchController = TextEditingController();
 
@@ -107,22 +112,47 @@ class _LogsListState extends State<LogsList> {
     List<int>? statusSelected,
     DateTime? startTime,
     DateTime? endTime, 
+    required bool replaceOldLogs,
   }) async {
     setState(() {
       _showSearchBar = false;
       _searchController.text = "";
     });
+    late DateTime timestamp;
+    late DateTime minusHoursTimestamp;
+    if (_lastTimestamp == null) {
+      final now = DateTime.now();
+      timestamp = now;
+      minusHoursTimestamp = DateTime(now.year, now.month, now.day, now.hour-2, now.minute, now.second);
+    }
+    else {
+      timestamp = _lastTimestamp!;
+      minusHoursTimestamp = DateTime(_lastTimestamp!.year, _lastTimestamp!.month, _lastTimestamp!.day, _lastTimestamp!.hour-2, _lastTimestamp!.minute, _lastTimestamp!.second);
+    }
     final result = await fetchLogs(
       widget.server,
-      widget.token
+      widget.token,
+      minusHoursTimestamp,
+      timestamp
     );
+    _isLoadingMore = false;
     if (result['result'] == 'success') {
       List<Log> items = [];
       result['data'].forEach((item) => items.add(Log.fromJson(item)));
-      setState(() {
-        loadStatus = 1;
-        logsList = items.reversed.toList();
-      });
+      if (replaceOldLogs == true) {
+        setState(() {
+          loadStatus = 1;
+          logsList = items.reversed.toList();
+          _lastTimestamp = minusHoursTimestamp;
+        });
+      }
+      else {
+        setState(() {
+          loadStatus = 1;
+          logsList = [...logsList, ...items.reversed.toList()];
+          _lastTimestamp = minusHoursTimestamp;
+        });
+      }
     }
     else {
       setState(() => loadStatus = 2);
@@ -168,9 +198,19 @@ class _LogsListState extends State<LogsList> {
     return tempLogs;
   } 
 
+
+  void _scrollListener() {
+    if (_scrollController.position.extentAfter < 500 && _isLoadingMore == false) {
+      _isLoadingMore = true;
+      loadLogs(replaceOldLogs: false);
+    }
+  }
+
+
   @override
   void initState() {
-    loadLogs();
+    _scrollController = ScrollController()..addListener(_scrollListener);
+    loadLogs(replaceOldLogs: true);
     super.initState();
   }
 
@@ -320,68 +360,84 @@ class _LogsListState extends State<LogsList> {
         case 1:
           return RefreshIndicator(
             onRefresh: (() async {
-              await loadLogs();
+              _lastTimestamp = DateTime.now();
+              await loadLogs(replaceOldLogs: true);
             }),
             child: logsListDisplay.isNotEmpty
               ? ListView.builder(
-                  itemCount: logsListDisplay.length,
-                  itemBuilder: (context, index) => Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => _showLogDetails(logsListDisplay[index]),
-                      child: Container(
-                        width: double.maxFinite,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: index < logsListDisplay.length
-                            ? Border(
-                                bottom: BorderSide(
-                                  color: Theme.of(context).dividerColor
-                                )
-                              )
-                            : null
+                  controller: _scrollController,
+                  itemCount: _isLoadingMore == true 
+                    ? logsListDisplay.length+1
+                    : logsListDisplay.length,
+                  itemBuilder: (context, index) {
+                    if (_isLoadingMore == true && index == logsListDisplay.length) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: Center(
+                          child: CircularProgressIndicator(),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      );
+                    }
+                    else {
+                      return Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => _showLogDetails(logsListDisplay[index]),
+                          child: Container(
+                            width: double.maxFinite,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: index < logsListDisplay.length
+                                ? Border(
+                                    bottom: BorderSide(
+                                      color: Theme.of(context).dividerColor
+                                    )
+                                  )
+                                : null
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                LogStatus(status: logsListDisplay[index].status, showIcon: true),
-                                const SizedBox(height: 10),
-                                SizedBox(
-                                  width: width-100,
-                                  child: Text(
-                                    logsListDisplay[index].url,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    LogStatus(status: logsListDisplay[index].status, showIcon: true),
+                                    const SizedBox(height: 10),
+                                    SizedBox(
+                                      width: width-100,
+                                      child: Text(
+                                        logsListDisplay[index].url,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    const SizedBox(height: 10),
+                                    SizedBox(
+                                      width: width-100,
+                                      child: Text(
+                                        logsListDisplay[index].device,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                const SizedBox(height: 10),
-                                SizedBox(
-                                  width: width-100,
-                                  child: Text(
-                                    logsListDisplay[index].device,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13
-                                    ),
-                                  ),
-                                )
+                                Text(
+                                  formatTimestamp(logsListDisplay[index].dateTime, 'HH:mm:ss')
+                                ),
                               ],
                             ),
-                            Text(
-                              formatTimestamp(logsListDisplay[index].dateTime, 'HH:mm:ss')
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  )
+                      );
+                    }
+                  }
                 )
               : ScrollConfiguration(
                   behavior: NoScrollBehavior(),
@@ -462,7 +518,7 @@ class _LogsListState extends State<LogsList> {
         filtersProvider.statusSelected.length < 13 ||
         filtersProvider.startTime != null ||
         filtersProvider.endTime != null ||
-        filtersProvider.selectedClients.isNotEmpty
+        filtersProvider.selectedClients.length < filtersProvider.totalClients.length
       ) {
         return true;
       }
@@ -644,7 +700,7 @@ class _LogsListState extends State<LogsList> {
                         if (filtersProvider.selectedClients.isNotEmpty) _buildChip(
                           filtersProvider.selectedClients.length == 1
                             ? filtersProvider.selectedClients[0]
-                            : "${filtersProvider.selectedClients.length} ${AppLocalizations.of(context)!.statusSelected}",
+                            : "${filtersProvider.selectedClients.length} ${AppLocalizations.of(context)!.clientsSelected}",
                           const Icon(Icons.devices),
                           () => filtersProvider.resetClients(),
                         ),
