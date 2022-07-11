@@ -479,6 +479,7 @@ class _LogsListState extends State<LogsList> {
               )
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   child: _showSearchBar == false
@@ -614,9 +615,10 @@ class _LogsListState extends State<LogsList> {
                     ),
                   ),
                 ),
-                if (_areFiltersApplied() == true) SizedBox(
+                if (_areFiltersApplied() == true) Container(
                     width: double.maxFinite,
-                    height: 40,
+                    height: 50,
+                    padding: const EdgeInsets.only(bottom: 10),
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
