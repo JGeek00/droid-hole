@@ -134,6 +134,7 @@ class _LogsListState extends State<LogsList> {
     required List<int> statusSelected,
     required DateTime? startTime,
     required DateTime? endTime, 
+    required List<String> devicesSelected,
   }) {
     List<Log> tempLogs = logs != null ? [...logs] : [...logsList];
 
@@ -152,6 +153,17 @@ class _LogsListState extends State<LogsList> {
         return false;
       }
     }).toList();
+
+    if (devicesSelected.isNotEmpty) {
+      tempLogs = tempLogs.where((log) {
+        if (devicesSelected.contains(log.device)) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }).toList();
+    }
 
     return tempLogs;
   } 
@@ -175,7 +187,8 @@ class _LogsListState extends State<LogsList> {
     List<Log> logsListDisplay = filterLogs(
       statusSelected: filtersProvider.statusSelected, 
       startTime: filtersProvider.startTime, 
-      endTime: filtersProvider.endTime
+      endTime: filtersProvider.endTime,
+      devicesSelected: filtersProvider.selectedClients
     );
 
     void _updateSortStatus(value) {
@@ -263,15 +276,7 @@ class _LogsListState extends State<LogsList> {
         builder: (context) => LogsFiltersModal(
           statusBarHeight: statusBarHeight,
           bottomNavBarHeight: bottomNavBarHeight,
-          filterLogs: () {
-            setState(() {
-              logsListDisplay = filterLogs(
-                statusSelected: filtersProvider.statusSelected,
-                startTime: filtersProvider.startTime,
-                endTime: filtersProvider.endTime
-              );
-            });
-          },
+          filterLogs: () {},
         ),
         backgroundColor: Colors.transparent,
         isDismissible: true, 
@@ -456,7 +461,8 @@ class _LogsListState extends State<LogsList> {
       if (
         filtersProvider.statusSelected.length < 13 ||
         filtersProvider.startTime != null ||
-        filtersProvider.endTime != null
+        filtersProvider.endTime != null ||
+        filtersProvider.selectedClients.isNotEmpty
       ) {
         return true;
       }
@@ -634,6 +640,13 @@ class _LogsListState extends State<LogsList> {
                             : "${filtersProvider.statusSelected.length} ${AppLocalizations.of(context)!.statusSelected}",
                           const Icon(Icons.shield),
                           () => filtersProvider.resetStatus(),
+                        ),
+                        if (filtersProvider.selectedClients.isNotEmpty) _buildChip(
+                          filtersProvider.selectedClients.length == 1
+                            ? filtersProvider.selectedClients[0]
+                            : "${filtersProvider.selectedClients.length} ${AppLocalizations.of(context)!.statusSelected}",
+                          const Icon(Icons.devices),
+                          () => filtersProvider.resetClients(),
                         ),
                         const SizedBox(width: 5),
                       ],

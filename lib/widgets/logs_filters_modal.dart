@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:droid_hole/widgets/clients_filters_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -50,17 +51,30 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
         isScrollControlled: true,
       );
     }
+    void _openClientsModal() {
+      showModalBottomSheet(
+        context: context, 
+        builder: (context) => ClientsFiltersModal(
+          statusBarHeight: widget.statusBarHeight,
+          bottomNavBarHeight: widget.bottomNavBarHeight,
+          selectedClients: filtersProvider.selectedClients
+        ),
+        backgroundColor: Colors.transparent,
+        isDismissible: true, 
+        enableDrag: true,
+        isScrollControlled: true,
+      );
+    }
 
-    String _statusText() {
-      switch (filtersProvider.statusSelected.length) {
-        case 0:
-          return AppLocalizations.of(context)!.noItemsSelected;
-
-        case 14:
-          return AppLocalizations.of(context)!.allItemsSelected;
-
-        default:
-          return "${filtersProvider.statusSelected.length} ${AppLocalizations.of(context)!.itemsSelected}";
+    String _statusText(items, maxItems) {
+      if (items == 0) {
+        return AppLocalizations.of(context)!.noItemsSelected;
+      }
+      else if (items == maxItems) {
+        return AppLocalizations.of(context)!.allItemsSelected;
+      }
+      else {
+        return "$items ${AppLocalizations.of(context)!.itemsSelected}";
       }
     }
 
@@ -349,7 +363,52 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                _statusText(),
+                                _statusText(
+                                  filtersProvider.statusSelected.length,
+                                  14
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.grey
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Icon(Icons.arrow_right)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: _openClientsModal,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.clients,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                _statusText(
+                                  filtersProvider.selectedClients.length,
+                                  filtersProvider.totalClients.length
+                                ),
                                 style: const TextStyle(
                                   color: Colors.grey
                                 ),

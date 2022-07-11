@@ -269,8 +269,6 @@ class Base extends StatefulWidget {
 }
 
 class _BaseState extends State<Base> {
-  int selectedScreen = 0;
-
   final List<Widget> pages = [
     const Home(),
     const Statistics(),
@@ -286,6 +284,7 @@ class _BaseState extends State<Base> {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     void _enableDisableServer() async {
       if (
@@ -348,29 +347,29 @@ class _BaseState extends State<Base> {
             )
           ),
           child: serversProvider.selectedServer != null
-            ? pages[selectedScreen]
-            : pagesNotSelected[selectedScreen > 1 ? 0 : selectedScreen],
+            ? pages[appConfigProvider.selectedTab]
+            : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab],
         ),
         bottomNavigationBar: BottomNavBar(
           screens: serversProvider.selectedServer != null
             ? appScreens
             : appScreensNotSelected,
           selectedScreen: serversProvider.selectedServer != null
-            ? selectedScreen
-            : selectedScreen > 1 ? 0 : selectedScreen,
-          onChange: (selected) => setState((() => selectedScreen = selected)),
+            ? appConfigProvider.selectedTab
+            : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
+          onChange: (selected) => appConfigProvider.setSelectedTab(selected),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: serversProvider.selectedServer != null
           ? serversProvider.isServerConnected == true
-            && selectedScreen == 0
+            && appConfigProvider.selectedTab == 0
               ? FloatingActionButton(
                   onPressed: _enableDisableServer,
                   backgroundColor: Theme.of(context).primaryColor,
                   child: const Icon(Icons.shield_rounded),
                 )
               : null
-          : selectedScreen == 0 && serversProvider.getServersList.isNotEmpty
+          : appConfigProvider.selectedTab == 0 && serversProvider.getServersList.isNotEmpty
             ? FloatingActionButton(
                 onPressed: _addServerModal,
                 backgroundColor: Theme.of(context).primaryColor,

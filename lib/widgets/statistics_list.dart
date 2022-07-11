@@ -1,22 +1,31 @@
-import 'package:droid_hole/widgets/no_data_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/no_data_chart.dart';
+
+import 'package:droid_hole/providers/filters_provider.dart';
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/conversions.dart';
 
 class StatisticsList extends StatelessWidget {
   final Map<String, dynamic> data1;
   final Map<String, dynamic> data2;
   final String countLabel;
+  final String type;
 
   const StatisticsList({
     Key? key,
     required this.data1,
     required this.data2,
     required this.countLabel,
+    required this.type,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
+    final filtersProvider = Provider.of<FiltersProvider>(context);
+
     final width = MediaQuery.of(context).size.width;
 
     Widget _generateList(Map<String, int> values, String label) {
@@ -26,81 +35,95 @@ class StatisticsList extends StatelessWidget {
         totalHits = totalHits + item['value'].toInt() as int;
       }
 
-      return Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Text(
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text(
               label,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20
               ),
             ),
-            const SizedBox(height: 20),
-            ...topQueriesList.map((item) => Container(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: width - 170,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item['label'],
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          softWrap: false,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16
+          ),
+          ...topQueriesList.map((item) => Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                if (type == 'clients') {
+                  filtersProvider.setSelectedClients([item['label']]);
+                }
+                appConfigProvider.setSelectedTab(2);
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: width - 150,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item['label'],
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          "$countLabel ${item['value'].toInt().toString()}",
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          softWrap: false,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey
+                          const SizedBox(height: 10),
+                          Text(
+                            "$countLabel ${item['value'].toInt().toString()}",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 20),
-                  SizedBox(
-                    width: 90,
-                    child: Stack(
-                      alignment: AlignmentDirectional.centerEnd,
-                      children: [
-                        Container(
-                          width: 90,
-                          height: 10,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).dividerColor,
-                            borderRadius: BorderRadius.circular(10)
+                    const SizedBox(width: 20),
+                    SizedBox(
+                      width: 90,
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Container(
+                            width: 90,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).dividerColor,
+                              borderRadius: BorderRadius.circular(10)
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: (((item['value']*100)/totalHits)*90)/100,
-                          height: 10,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(10)
+                          Container(
+                            width: (((item['value']*100)/totalHits)*90)/100,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.circular(10)
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            )).toList()
-          ],
-        ),
+            ),
+          )).toList()
+        ],
       );
     }
 

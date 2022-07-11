@@ -198,5 +198,6 @@
     "restartAppTakeEffect": "Reinicia la aplicación para que se apliquen los cambios.",
     "reducedDataCharts": "Usar datos reducidos",
     "reducedDataChartsDescription": "Puede mejorar el rendimiento de la aplicación",
-    "statusSelected": "estados seleccionados"
+    "statusSelected": "estados seleccionados",
+    "allClientsSelected": "Todos los clientes seleccionados"
 }

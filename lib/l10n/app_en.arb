@@ -195,5 +195,6 @@
     "restartAppTakeEffect": "Restart the application",
     "reducedDataCharts": "Use reduced data",
     "reducedDataChartsDescription": "Can improve application performance",
-    "statusSelected": "status selected"
+    "statusSelected": "status selected",
+    "allClientsSelected": "All clients selected"
 }

@@ -65,6 +65,7 @@ class Statistics extends StatelessWidget {
                   "label": AppLocalizations.of(context)!.topBlockedDomains
                 },
                 countLabel: AppLocalizations.of(context)!.hits,
+                type: "domains",
               ),
               StatisticsList(
                 data1: {
@@ -80,6 +81,7 @@ class Statistics extends StatelessWidget {
                   "label": AppLocalizations.of(context)!.topClientsBlocked
                 },
                 countLabel: AppLocalizations.of(context)!.requests,
+                type: "clients",
               ),
             ]
           );

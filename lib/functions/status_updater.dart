@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
@@ -68,7 +69,7 @@ class StatusUpdater {
     timerFn();
   }
 
-  void _updateOverTimeData(ServersProvider serversProvider) {
+  void _updateOverTimeData(ServersProvider serversProvider, FiltersProvider filtersProvider) {
     void timerFn({Timer? timer}) async {
       if (serversProvider.selectedServer != null) {
         String statusUrlBefore = serversProvider.selectedServer!.address;
@@ -78,6 +79,15 @@ class StatusUpdater {
         );
         if (statusResult['result'] == 'success') {
           serversProvider.setOvertimeData(statusResult['data']);
+          List<dynamic> clients = statusResult['data'].clients.map((client) {
+            if (client.name != '') {
+              return client.name.toString();
+            }
+            else {
+              return client.ip.toString();
+            }
+          }).toList();
+          filtersProvider.setClients(List<String>.from(clients));
           serversProvider.setOvertimeDataLoadingStatus(1);
           if (serversProvider.isServerConnected == false) {
             serversProvider.setIsServerConnected(true);
@@ -121,12 +131,13 @@ class StatusUpdater {
 
   void overTimeData() {
     final serversProvider = Provider.of<ServersProvider>(context!);
+    final filtersProvider = Provider.of<FiltersProvider>(context!);
 
     if (serversProvider.isServerConnected == true && _overTimeDataTimer == null) {
-      _updateOverTimeData(serversProvider);
+      _updateOverTimeData(serversProvider, filtersProvider);
     }
     else if (serversProvider.isServerConnected == true && _overTimeDataTimer != null && _overTimeDataTimer!.isActive == false) {
-      _updateOverTimeData(serversProvider);
+      _updateOverTimeData(serversProvider, filtersProvider);
     }
     else if (serversProvider.isServerConnected == false && _overTimeDataTimer != null) {
       _overTimeDataTimer!.cancel();

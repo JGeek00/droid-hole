@@ -6,6 +6,8 @@ class FiltersProvider with ChangeNotifier {
   ];
   DateTime? _startTime;
   DateTime? _endTime;
+  List<String> _totalClients = [];
+  List<String> _selectedClients = [];
 
   List<int> get statusSelected {
     return _statusSelected;
@@ -17,6 +19,14 @@ class FiltersProvider with ChangeNotifier {
 
   DateTime? get endTime {
     return _endTime;
+  }
+
+  List<String> get totalClients {
+    return _totalClients;
+  }
+
+  List<String> get selectedClients {
+    return _selectedClients;
   }
 
   void setStatusSelected(List<int> values) {
@@ -53,6 +63,21 @@ class FiltersProvider with ChangeNotifier {
     _statusSelected = [
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
     ];
+    notifyListeners();
+  }
+
+  void setClients(List<String> clients) {
+    _totalClients = clients;
+    notifyListeners();
+  }
+
+  void setSelectedClients(List<String> selectedClients) {
+    _selectedClients = selectedClients;
+    notifyListeners();
+  }
+  
+  void resetClients() {
+    _selectedClients = [];
     notifyListeners();
   }
 }

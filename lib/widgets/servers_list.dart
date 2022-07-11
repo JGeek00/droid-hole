@@ -1,14 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:droid_hole/widgets/token_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/token_modal.dart';
 import 'package:droid_hole/widgets/add_server_modal.dart';
 import 'package:droid_hole/widgets/delete_modal.dart';
 
+import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/hash.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/models/server.dart';
@@ -31,6 +32,7 @@ class ServersList extends StatelessWidget {
   // ignore: avoid_renaming_method_parameters
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final filtersProvider = Provider.of<FiltersProvider>(context);
     List<Server> servers = serversProvider.getServersList;
 
     final width = MediaQuery.of(context).size.width;
@@ -79,6 +81,15 @@ class ServersList extends StatelessWidget {
         final overtimeDataResult = await fetchOverTimeData(server, result['phpSessId']);
         if (overtimeDataResult['result'] == 'success') {
           serversProvider.setOvertimeData(overtimeDataResult['data']);
+          List<dynamic> clients = statusResult['data'].clients.map((client) {
+            if (client.name != '') {
+              return client.name.toString();
+            }
+            else {
+              return client.ip.toString();
+            }
+          }).toList();
+          filtersProvider.setClients(List<String>.from(clients));
           serversProvider.setOvertimeDataLoadingStatus(1);
         }
         else {

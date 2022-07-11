@@ -4,6 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class AppConfigProvider with ChangeNotifier {
+  int _selectedTab = 0;
   PackageInfo? _appInfo;
   int? _autoRefreshTime = 2;
   int _selectedTheme = 0;
@@ -12,6 +13,10 @@ class AppConfigProvider with ChangeNotifier {
   int _reducedDataCharts = 0;
 
   Database? _dbInstance;
+
+  int get selectedTab {
+    return _selectedTab;
+  }
 
   PackageInfo? get getAppInfo {
     return _appInfo;
@@ -53,6 +58,11 @@ class AppConfigProvider with ChangeNotifier {
 
   bool get reducedDataCharts {
     return _reducedDataCharts == 0 ? false : true;
+  }
+
+  void setSelectedTab(int selectedTab) {
+    _selectedTab = selectedTab;
+    notifyListeners();
   }
 
   void setAppInfo(PackageInfo appInfo) {
