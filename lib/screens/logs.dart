@@ -12,6 +12,7 @@ import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
 import 'package:droid_hole/classes/no_scroll_behavior.dart';
+import 'package:droid_hole/constants/log_status.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/functions/format.dart';
@@ -100,7 +101,6 @@ class _LogsListState extends State<LogsList> {
 
   int loadStatus = 0;
   List<Log> logsList = [];
-  List<Log> logsListDisplay = [];
   int sortStatus = 0;
 
   Future loadLogs({
@@ -119,16 +119,9 @@ class _LogsListState extends State<LogsList> {
     if (result['result'] == 'success') {
       List<Log> items = [];
       result['data'].forEach((item) => items.add(Log.fromJson(item)));
-      List<Log> filtered = filterLogs(
-        logs: items.reversed.toList(),
-        statusSelected: statusSelected ?? widget.selectedStatus,
-        startTime: startTime ?? widget.startTime,
-        endTime: endTime ?? widget.endTime,
-      );
       setState(() {
         loadStatus = 1;
         logsList = items.reversed.toList();
-        logsListDisplay = filtered;
       });
     }
     else {
@@ -179,6 +172,12 @@ class _LogsListState extends State<LogsList> {
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;   
     final bottomNavBarHeight = MediaQuery.of(context).viewPadding.bottom;   
 
+    List<Log> logsListDisplay = filterLogs(
+      statusSelected: filtersProvider.statusSelected, 
+      startTime: filtersProvider.startTime, 
+      endTime: filtersProvider.endTime
+    );
+
     void _updateSortStatus(value) {
       if (sortStatus != value) {
         setState(() {
@@ -217,7 +216,6 @@ class _LogsListState extends State<LogsList> {
           );
         }
         else {
-
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -438,144 +436,207 @@ class _LogsListState extends State<LogsList> {
       }
     }
 
+    Widget _buildChip(String label, Icon icon, Function() onDeleted) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: Chip(
+          label: Text(label),
+          avatar: icon,
+          deleteIcon: const Icon(
+            Icons.cancel,
+            size: 18,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          onDeleted: onDeleted,
+        ),
+      );
+    }
+
+    bool _areFiltersApplied() {
+      if (
+        filtersProvider.statusSelected.length < 13 ||
+        filtersProvider.startTime != null ||
+        filtersProvider.endTime != null
+      ) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size(double.maxFinite, 70),
+        preferredSize: Size(double.maxFinite, _areFiltersApplied() == true ? 110 : 60),
         child: Container(
           margin: EdgeInsets.only(top: statusBarHeight),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).dividerColor
-              )
-            )
-          ),
-          child: _showSearchBar == false
-            ? Padding(
-              padding: const EdgeInsets.only(
-                left: 20,
-                right: 10
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Text(
-                      AppLocalizations.of(context)!.queryLogs,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _showSearchBar = true;
-                          });
-                        }, 
-                        icon: const Icon(Icons.search_rounded),
-                        splashRadius: 20,
-                      ),
-                      IconButton(
-                        onPressed: _showFiltersModal, 
-                        icon: const Icon(Icons.filter_list_rounded),
-                        splashRadius: 20,
-                      ),
-                      PopupMenuButton(
-                        splashRadius: 20,
-                        icon: const Icon(Icons.sort_rounded),
-                        onSelected: (value) => _updateSortStatus(value),
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(Icons.arrow_downward_rounded),
-                                    const SizedBox(width: 15),
-                                    Text(AppLocalizations.of(context)!.fromLatestToOldest),
-                                  ],
-                                ),
-                                CustomRadio(
-                                  value: 0, 
-                                  groupValue: sortStatus, 
-                                )
-                              ],
-                            )
-                          ),
-                          PopupMenuItem(
-                            value: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(Icons.arrow_upward_rounded),
-                                    const SizedBox(width: 15),
-                                    Text(AppLocalizations.of(context)!.fromOldestToLatest),
-                                  ],
-                                ),
-                                CustomRadio(
-                                  value: 1, 
-                                  groupValue: sortStatus, 
-                                )
-                              ],
-                            )
-                          ),
-                        ]
-                      )
-                    ],
-                  )
-                ]
-              ),
-            )
-          : SizedBox(
-            height: 63,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  onPressed: () => setState(() {
-                    _showSearchBar = false;
-                    _searchController.text = "";
-                    logsListDisplay = logsList;
-                    sortStatus = 0;
-                  }),
-                  icon: const Icon(Icons.arrow_back),
-                  splashRadius: 20,
-                ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: width-116,
-                  height: 50,
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: _searchLogs,
-                    style: const TextStyle(
-                      fontSize: 18
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: AppLocalizations.of(context)!.searchUrl,
-                      hintStyle: const TextStyle(
-                        fontSize: 18
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                IconButton(
-                  onPressed: () => setState(() => _searchController.text = ""), 
-                  icon: const Icon(Icons.clear_rounded),
-                  splashRadius: 20,
-                  color: Colors.black,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).dividerColor
                 )
+              )
+            ),
+            child: Column(
+              children: [
+                Container(
+                  child: _showSearchBar == false
+                    ? Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 10
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 20,
+                              bottom: 15
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.queryLogs,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _showSearchBar = true;
+                                  });
+                                }, 
+                                icon: const Icon(Icons.search_rounded),
+                                splashRadius: 20,
+                              ),
+                              IconButton(
+                                onPressed: _showFiltersModal, 
+                                icon: const Icon(Icons.filter_list_rounded),
+                                splashRadius: 20,
+                              ),
+                              PopupMenuButton(
+                                splashRadius: 20,
+                                icon: const Icon(Icons.sort_rounded),
+                                onSelected: (value) => _updateSortStatus(value),
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 0,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.arrow_downward_rounded),
+                                            const SizedBox(width: 15),
+                                            Text(AppLocalizations.of(context)!.fromLatestToOldest),
+                                          ],
+                                        ),
+                                        CustomRadio(
+                                          value: 0, 
+                                          groupValue: sortStatus, 
+                                        )
+                                      ],
+                                    )
+                                  ),
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.arrow_upward_rounded),
+                                            const SizedBox(width: 15),
+                                            Text(AppLocalizations.of(context)!.fromOldestToLatest),
+                                          ],
+                                        ),
+                                        CustomRadio(
+                                          value: 1, 
+                                          groupValue: sortStatus, 
+                                        )
+                                      ],
+                                    )
+                                  ),
+                                ]
+                              )
+                            ],
+                          )
+                        ]
+                      ),
+                    )
+                  : SizedBox(
+                    height: 63,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          onPressed: () => setState(() {
+                            _showSearchBar = false;
+                            _searchController.text = "";
+                            logsListDisplay = logsList;
+                            sortStatus = 0;
+                          }),
+                          icon: const Icon(Icons.arrow_back),
+                          splashRadius: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: width-116,
+                          height: 50,
+                          child: TextField(
+                            controller: _searchController,
+                            onChanged: _searchLogs,
+                            style: const TextStyle(
+                              fontSize: 18
+                            ),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: AppLocalizations.of(context)!.searchUrl,
+                              hintStyle: const TextStyle(
+                                fontSize: 18
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        IconButton(
+                          onPressed: () => setState(() => _searchController.text = ""), 
+                          icon: const Icon(Icons.clear_rounded),
+                          splashRadius: 20,
+                          color: Colors.black,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                if (_areFiltersApplied() == true) SizedBox(
+                    width: double.maxFinite,
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        const SizedBox(width: 5),
+                        if (filtersProvider.startTime != null || filtersProvider.endTime != null) _buildChip(
+                          AppLocalizations.of(context)!.time, 
+                          const Icon(Icons.access_time_rounded),
+                          () => filtersProvider.resetTime()
+                        ),
+                        if (filtersProvider.statusSelected.length < 13) _buildChip(
+                          filtersProvider.statusSelected.length == 1
+                            ? logStatusString[filtersProvider.statusSelected[0]-1]
+                            : "${filtersProvider.statusSelected.length} ${AppLocalizations.of(context)!.statusSelected}",
+                          const Icon(Icons.shield),
+                          () => filtersProvider.resetStatus(),
+                        ),
+                        const SizedBox(width: 5),
+                      ],
+                    )
+                  )
               ],
             ),
           )

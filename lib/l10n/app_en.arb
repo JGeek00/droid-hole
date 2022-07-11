@@ -194,5 +194,6 @@
     "cannotUpdateSettings": "Settings cannot be updated.",
     "restartAppTakeEffect": "Restart the application",
     "reducedDataCharts": "Use reduced data",
-    "reducedDataChartsDescription": "Can improve application performance"
+    "reducedDataChartsDescription": "Can improve application performance",
+    "statusSelected": "status selected"
 }

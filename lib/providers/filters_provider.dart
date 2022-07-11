@@ -42,4 +42,17 @@ class FiltersProvider with ChangeNotifier {
     _endTime = null;
     notifyListeners();
   }
+
+  void resetTime() {
+    _startTime = null;
+    _endTime = null;
+    notifyListeners();
+  }
+
+  void resetStatus() {
+    _statusSelected = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+    ];
+    notifyListeners();
+  }
 }
