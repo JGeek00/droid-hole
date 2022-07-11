@@ -149,7 +149,7 @@ class _LogsListState extends State<LogsList> {
       else {
         setState(() {
           loadStatus = 1;
-          logsList = [...logsList, ...items.reversed.toList()];
+          logsList = logsList+items.reversed.toList();
           _lastTimestamp = minusHoursTimestamp;
         });
       }
@@ -195,6 +195,25 @@ class _LogsListState extends State<LogsList> {
       }).toList();
     }
 
+    if (_searchController.text != '') {
+      tempLogs = tempLogs.where((log) {
+        if (log.url.contains(_searchController.text)) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }).toList();
+    }
+
+    if (sortStatus == 1) {
+      tempLogs.sort((a,b) => a.dateTime.compareTo(b.dateTime));
+    }
+    else {
+      tempLogs.sort((a,b) => a.dateTime.compareTo(b.dateTime));
+      tempLogs = tempLogs.reversed.toList();
+    }
+
     return tempLogs;
   } 
 
@@ -233,6 +252,11 @@ class _LogsListState extends State<LogsList> {
 
     void _updateSortStatus(value) {
       if (sortStatus != value) {
+        _scrollController.animateTo(
+          0, 
+          duration: const Duration(milliseconds: 250), 
+          curve: Curves.easeInOut
+        );
         setState(() {
           sortStatus = value;
           logsListDisplay = logsListDisplay.reversed.toList();
@@ -633,17 +657,17 @@ class _LogsListState extends State<LogsList> {
                       ),
                     )
                   : SizedBox(
-                    height: 63,
+                    height: 59,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
-                          onPressed: () => setState(() {
-                            _showSearchBar = false;
-                            _searchController.text = "";
-                            logsListDisplay = logsList;
-                            sortStatus = 0;
-                          }),
+                          onPressed: () {
+                            setState(() {
+                              _showSearchBar = false;
+                              _searchController.text = "";
+                            });
+                          },
                           icon: const Icon(Icons.arrow_back),
                           splashRadius: 20,
                         ),
