@@ -144,7 +144,7 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
                       ),
                     ),
                     trailing: Checkbox(
-                      value: _selectedClients.length == 14 ? true : false, 
+                      value: _selectedClients.length == filtersProvider.totalClients.length ? true : false, 
                       onChanged: (_) => _checkUncheckAll(),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)
