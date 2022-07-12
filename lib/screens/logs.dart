@@ -420,8 +420,6 @@ class _LogsListState extends State<LogsList> {
                     ? logsListDisplay.length+1
                     : logsListDisplay.length,
                   itemBuilder: (context, index) {
-                      print(_isLoadingMore);
-                      print( logsListDisplay.length);
                     if (_isLoadingMore == true && index == logsListDisplay.length) {
                       return const Padding(
                         padding: EdgeInsets.symmetric(vertical: 20),
