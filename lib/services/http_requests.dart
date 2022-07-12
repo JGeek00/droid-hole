@@ -218,7 +218,12 @@ Future fetchOverTimeData(Server server, String phpSessId) async {
   }
 }
 
-Future fetchLogs(Server server, String phpSessId, DateTime from, DateTime until) async {
+Future fetchLogs({
+  required Server server, 
+  required String phpSessId, 
+  required DateTime from, 
+  required DateTime until, 
+}) async {
   try {
     final response = await httpClient(
       method: 'get',

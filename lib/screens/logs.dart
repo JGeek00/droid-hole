@@ -108,68 +108,85 @@ class _LogsListState extends State<LogsList> {
   List<Log> logsList = [];
   int sortStatus = 0;
 
+  DateTime? masterStartTime;
+  DateTime? masterEndTime;
+
   Future loadLogs({
     List<int>? statusSelected,
-    DateTime? startTime,
-    DateTime? endTime, 
+    DateTime? inStartTime,
+    DateTime? inEndTime, 
     required bool replaceOldLogs,
   }) async {
-    late DateTime timestamp;
-    late DateTime minusHoursTimestamp;
-    if (_lastTimestamp == null) {
+    DateTime? startTime = masterStartTime ?? inStartTime;
+    DateTime? endTime = masterEndTime ?? inEndTime;
+    late DateTime? timestamp;
+    late DateTime? minusHoursTimestamp;
+    if (replaceOldLogs == true) {
+      _lastTimestamp = null;
+    }
+    if (_lastTimestamp == null || replaceOldLogs == true) {
       final now = DateTime.now();
-      timestamp = now;
-      minusHoursTimestamp = DateTime(now.year, now.month, now.day, now.hour-2, now.minute, now.second);
+      timestamp = endTime ?? now;
+      DateTime newOldTimestamp = DateTime(timestamp.year, timestamp.month, timestamp.day, timestamp.hour-2, timestamp.minute, timestamp.second);
+      if (startTime != null) {
+        minusHoursTimestamp = newOldTimestamp.isAfter(startTime) ? newOldTimestamp : startTime;
+      }
+      else {
+        minusHoursTimestamp = newOldTimestamp;
+      }
     }
     else {
       timestamp = _lastTimestamp!;
-      minusHoursTimestamp = DateTime(_lastTimestamp!.year, _lastTimestamp!.month, _lastTimestamp!.day, _lastTimestamp!.hour-2, _lastTimestamp!.minute, _lastTimestamp!.second);
-    }
-    final result = await fetchLogs(
-      widget.server,
-      widget.token,
-      minusHoursTimestamp,
-      timestamp
-    );
-    _isLoadingMore = false;
-    if (result['result'] == 'success') {
-      List<Log> items = [];
-      result['data'].forEach((item) => items.add(Log.fromJson(item)));
-      if (replaceOldLogs == true) {
-        setState(() {
-          loadStatus = 1;
-          logsList = items.reversed.toList();
-          _lastTimestamp = minusHoursTimestamp;
-        });
+      DateTime newOldTimestamp = DateTime(_lastTimestamp!.year, _lastTimestamp!.month, _lastTimestamp!.day, _lastTimestamp!.hour-2, _lastTimestamp!.minute, _lastTimestamp!.second);
+      if (startTime != null) {
+        minusHoursTimestamp = newOldTimestamp.isAfter(startTime) ? newOldTimestamp : startTime;
       }
       else {
-        setState(() {
-          loadStatus = 1;
-          logsList = logsList+items.reversed.toList();
-          _lastTimestamp = minusHoursTimestamp;
-        });
+        minusHoursTimestamp = newOldTimestamp;
       }
     }
+    if (startTime != null && minusHoursTimestamp.isBefore(startTime)) {
+      _isLoadingMore = false;
+      setState(() => loadStatus = 1);
+    }
     else {
-      setState(() => loadStatus = 2);
+      final result = await fetchLogs(
+        server: widget.server,
+        phpSessId: widget.token,
+        from:  minusHoursTimestamp,
+        until: timestamp
+      );
+      _isLoadingMore = false;
+      if (result['result'] == 'success') {
+        List<Log> items = [];
+        result['data'].forEach((item) => items.add(Log.fromJson(item)));
+        if (replaceOldLogs == true) {
+          setState(() {
+            loadStatus = 1;
+            logsList = items.reversed.toList();
+            _lastTimestamp = minusHoursTimestamp;
+          });
+        }
+        else {
+          setState(() {
+            loadStatus = 1;
+            logsList = logsList+items.reversed.toList();
+            _lastTimestamp = minusHoursTimestamp;
+          });
+        }
+      }
+      else {
+        setState(() => loadStatus = 2);
+      }
     }
   }
 
   List<Log> filterLogs({
     List<Log>? logs,
     required List<int> statusSelected,
-    required DateTime? startTime,
-    required DateTime? endTime, 
     required List<String> devicesSelected,
   }) {
     List<Log> tempLogs = logs != null ? [...logs] : [...logsList];
-
-    if (startTime != null) {
-      tempLogs = tempLogs.where((log) => log.dateTime.isAfter(startTime)).toList();
-    }
-    if (endTime != null) {
-      tempLogs = tempLogs.where((log) => log.dateTime.isBefore(endTime)).toList();
-    }
 
     tempLogs = tempLogs.where((log) {
       if (statusSelected.contains(int.parse(log.status))) {
@@ -241,8 +258,6 @@ class _LogsListState extends State<LogsList> {
 
     List<Log> logsListDisplay = filterLogs(
       statusSelected: filtersProvider.statusSelected, 
-      startTime: filtersProvider.startTime, 
-      endTime: filtersProvider.endTime,
       devicesSelected: filtersProvider.selectedClients
     );
 
@@ -336,7 +351,18 @@ class _LogsListState extends State<LogsList> {
         builder: (context) => LogsFiltersModal(
           statusBarHeight: statusBarHeight,
           bottomNavBarHeight: bottomNavBarHeight,
-          filterLogs: () {},
+          filterLogs: () {
+            setState(() {
+              masterStartTime = filtersProvider.startTime;
+              masterEndTime = filtersProvider.endTime;
+              loadStatus = 0;
+            });
+            loadLogs(
+              replaceOldLogs: true,
+              inStartTime: filtersProvider.startTime,
+              inEndTime: filtersProvider.endTime
+            );
+          },
         ),
         backgroundColor: Colors.transparent,
         isDismissible: true, 
@@ -720,7 +746,13 @@ class _LogsListState extends State<LogsList> {
                         if (filtersProvider.startTime != null || filtersProvider.endTime != null) _buildChip(
                           AppLocalizations.of(context)!.time, 
                           const Icon(Icons.access_time_rounded),
-                          () => filtersProvider.resetTime()
+                          () {
+                            filtersProvider.resetTime();
+                            setState(() {
+                              loadStatus = 0;
+                            });
+                            loadLogs(replaceOldLogs: true);
+                          }
                         ),
                         if (filtersProvider.statusSelected.length < 13) _buildChip(
                           filtersProvider.statusSelected.length == 1
@@ -729,7 +761,7 @@ class _LogsListState extends State<LogsList> {
                           const Icon(Icons.shield),
                           () => filtersProvider.resetStatus(),
                         ),
-                        if (filtersProvider.selectedClients.isNotEmpty) _buildChip(
+                        if (filtersProvider.selectedClients.isNotEmpty && filtersProvider.selectedClients.length < filtersProvider.totalClients.length) _buildChip(
                           filtersProvider.selectedClients.length == 1
                             ? filtersProvider.selectedClients[0]
                             : "${filtersProvider.selectedClients.length} ${AppLocalizations.of(context)!.clientsSelected}",
