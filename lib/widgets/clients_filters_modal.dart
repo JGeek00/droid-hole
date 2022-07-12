@@ -182,14 +182,18 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
                 ),
                 const SizedBox(width: 10),
                 TextButton.icon(
-                  onPressed: () {
-                    updateList();
-                    Navigator.pop(context);
-                  }, 
+                  onPressed: _selectedClients.isNotEmpty
+                    ? () {
+                        updateList();
+                        Navigator.pop(context);
+                      }
+                    : null, 
                   icon: const Icon(Icons.check), 
                   label: Text(AppLocalizations.of(context)!.apply),
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(Colors.green),
+                    foregroundColor: MaterialStateProperty.all(
+                      _selectedClients.isNotEmpty ? Colors.green : Colors.grey
+                    ),
                     overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
                   ),
                 ),

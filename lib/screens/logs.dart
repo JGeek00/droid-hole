@@ -114,10 +114,6 @@ class _LogsListState extends State<LogsList> {
     DateTime? endTime, 
     required bool replaceOldLogs,
   }) async {
-    setState(() {
-      _showSearchBar = false;
-      _searchController.text = "";
-    });
     late DateTime timestamp;
     late DateTime minusHoursTimestamp;
     if (_lastTimestamp == null) {
@@ -394,7 +390,7 @@ class _LogsListState extends State<LogsList> {
                     ? logsListDisplay.length+1
                     : logsListDisplay.length,
                   itemBuilder: (context, index) {
-                    if (_isLoadingMore == true && index == logsListDisplay.length) {
+                    if (_isLoadingMore == true && index == logsListDisplay.length-1) {
                       return const Padding(
                         padding: EdgeInsets.symmetric(vertical: 20),
                         child: Center(
@@ -667,6 +663,11 @@ class _LogsListState extends State<LogsList> {
                               _showSearchBar = false;
                               _searchController.text = "";
                             });
+                            _scrollController.animateTo(
+                              0, 
+                              duration: const Duration(milliseconds: 250), 
+                              curve: Curves.easeInOut
+                            );
                           },
                           icon: const Icon(Icons.arrow_back),
                           splashRadius: 20,
@@ -692,7 +693,14 @@ class _LogsListState extends State<LogsList> {
                         ),
                         const SizedBox(width: 10),
                         IconButton(
-                          onPressed: () => setState(() => _searchController.text = ""), 
+                          onPressed: () {
+                            setState(() => _searchController.text = "");
+                            _scrollController.animateTo(
+                              0, 
+                              duration: const Duration(milliseconds: 250), 
+                              curve: Curves.easeInOut
+                            );
+                          }, 
                           icon: const Icon(Icons.clear_rounded),
                           splashRadius: 20,
                           color: Colors.black,
