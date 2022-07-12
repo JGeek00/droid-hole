@@ -81,15 +81,6 @@ class ServersList extends StatelessWidget {
         final overtimeDataResult = await fetchOverTimeData(server, result['phpSessId']);
         if (overtimeDataResult['result'] == 'success') {
           serversProvider.setOvertimeData(overtimeDataResult['data']);
-          List<dynamic> clients = statusResult['data'].clients.map((client) {
-            if (client.name != '') {
-              return client.name.toString();
-            }
-            else {
-              return client.ip.toString();
-            }
-          }).toList();
-          filtersProvider.setClients(List<String>.from(clients));
           serversProvider.setOvertimeDataLoadingStatus(1);
         }
         else {
