@@ -124,6 +124,9 @@ class _LogsListState extends State<LogsList> {
     if (replaceOldLogs == true) {
       _lastTimestamp = null;
     }
+    else {
+      setState(() => _isLoadingMore = true);
+    }
     if (_lastTimestamp == null || replaceOldLogs == true) {
       final now = DateTime.now();
       timestamp = endTime ?? now;
@@ -146,8 +149,10 @@ class _LogsListState extends State<LogsList> {
       }
     }
     if (startTime != null && minusHoursTimestamp.isBefore(startTime)) {
-      _isLoadingMore = false;
-      setState(() => loadStatus = 1);
+      setState(() {
+        _isLoadingMore = false;
+        loadStatus = 1;
+      });
     }
     else {
       final result = await fetchLogs(
@@ -156,7 +161,7 @@ class _LogsListState extends State<LogsList> {
         from:  minusHoursTimestamp,
         until: timestamp
       );
-      _isLoadingMore = false;
+      setState(() => _isLoadingMore = false);
       if (result['result'] == 'success') {
         List<Log> items = [];
         result['data'].forEach((item) => items.add(Log.fromJson(item)));
@@ -233,7 +238,6 @@ class _LogsListState extends State<LogsList> {
 
   void _scrollListener() {
     if (_scrollController.position.extentAfter < 500 && _isLoadingMore == false) {
-      _isLoadingMore = true;
       loadLogs(replaceOldLogs: false);
     }
   }
@@ -416,7 +420,9 @@ class _LogsListState extends State<LogsList> {
                     ? logsListDisplay.length+1
                     : logsListDisplay.length,
                   itemBuilder: (context, index) {
-                    if (_isLoadingMore == true && index == logsListDisplay.length-1) {
+                      print(_isLoadingMore);
+                      print( logsListDisplay.length);
+                    if (_isLoadingMore == true && index == logsListDisplay.length) {
                       return const Padding(
                         padding: EdgeInsets.symmetric(vertical: 20),
                         child: Center(
