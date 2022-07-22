@@ -190,6 +190,7 @@ class _LogsListState extends State<LogsList> {
     List<Log>? logs,
     required List<int> statusSelected,
     required List<String> devicesSelected,
+    required String? selectedDomain,
   }) {
     List<Log> tempLogs = logs != null ? [...logs] : [...logsList];
 
@@ -211,6 +212,10 @@ class _LogsListState extends State<LogsList> {
           return false;
         }
       }).toList();
+    }
+
+    if (selectedDomain != null) {
+      tempLogs = tempLogs.where((log) => log.url == selectedDomain).toList();
     }
 
     if (_searchController.text != '') {
@@ -262,7 +267,8 @@ class _LogsListState extends State<LogsList> {
 
     List<Log> logsListDisplay = filterLogs(
       statusSelected: filtersProvider.statusSelected, 
-      devicesSelected: filtersProvider.selectedClients
+      devicesSelected: filtersProvider.selectedClients,
+      selectedDomain: filtersProvider.selectedDomain
     );
 
     void _updateSortStatus(value) {
@@ -581,12 +587,23 @@ class _LogsListState extends State<LogsList> {
         filtersProvider.statusSelected.length < 13 ||
         filtersProvider.startTime != null ||
         filtersProvider.endTime != null ||
-        filtersProvider.selectedClients.length < filtersProvider.totalClients.length
+        filtersProvider.selectedClients.length < filtersProvider.totalClients.length ||
+        filtersProvider.selectedDomain != null
       ) {
         return true;
       }
       else {
         return false;
+      }
+    }
+
+    void _scrollToTop() {
+      if (logsListDisplay.isNotEmpty) {
+        _scrollController.animateTo(
+          0, 
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut
+        );
       }
     }
 
@@ -776,14 +793,28 @@ class _LogsListState extends State<LogsList> {
                             ? logStatusString[filtersProvider.statusSelected[0]-1]
                             : "${filtersProvider.statusSelected.length} ${AppLocalizations.of(context)!.statusSelected}",
                           const Icon(Icons.shield),
-                          () => filtersProvider.resetStatus(),
+                          () {
+                            _scrollToTop();
+                            filtersProvider.resetStatus();
+                          },
                         ),
                         if (filtersProvider.selectedClients.isNotEmpty && filtersProvider.selectedClients.length < filtersProvider.totalClients.length) _buildChip(
                           filtersProvider.selectedClients.length == 1
                             ? filtersProvider.selectedClients[0]
                             : "${filtersProvider.selectedClients.length} ${AppLocalizations.of(context)!.clientsSelected}",
                           const Icon(Icons.devices),
-                          () => filtersProvider.resetClients(),
+                          () {
+                            _scrollToTop();
+                            filtersProvider.resetClients();
+                          },
+                        ),
+                        if (filtersProvider.selectedDomain != null) _buildChip(
+                          filtersProvider.selectedDomain!,
+                          const Icon(Icons.http_rounded),
+                          () {
+                            _scrollToTop();
+                            filtersProvider.setSelectedDomain(null);
+                          },
                         ),
                         const SizedBox(width: 5),
                       ],

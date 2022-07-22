@@ -8,6 +8,7 @@ class FiltersProvider with ChangeNotifier {
   DateTime? _endTime;
   List<String> _totalClients = [];
   List<String> _selectedClients = [];
+  String? _selectedDomain;
 
   List<int> get statusSelected {
     return _statusSelected;
@@ -27,6 +28,10 @@ class FiltersProvider with ChangeNotifier {
 
   List<String> get selectedClients {
     return _selectedClients;
+  }
+
+  String? get selectedDomain {
+    return _selectedDomain;
   }
 
   void setStatusSelected(List<int> values) {
@@ -77,6 +82,11 @@ class FiltersProvider with ChangeNotifier {
 
   void setSelectedClients(List<String> selectedClients) {
     _selectedClients = selectedClients;
+    notifyListeners();
+  }
+
+  void setSelectedDomain(String? domain) {
+    _selectedDomain = domain;
     notifyListeners();
   }
   

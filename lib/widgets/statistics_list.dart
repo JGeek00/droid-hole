@@ -58,6 +58,10 @@ class StatisticsList extends StatelessWidget {
                     appConfigProvider.setSelectedTab(2);
                   }
                 }
+                if (type == 'domains') {
+                  filtersProvider.setSelectedDomain(item['label']);
+                  appConfigProvider.setSelectedTab(2);
+                }
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(
