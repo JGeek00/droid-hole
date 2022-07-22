@@ -21,7 +21,6 @@ class Statistics extends StatelessWidget {
     final serversProvider = Provider.of<ServersProvider>(context);
 
     final orientation = MediaQuery.of(context).orientation;
-    final textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
     Widget _generateBody() {
       switch (serversProvider.getStatusLoading) {
@@ -120,16 +119,61 @@ class Statistics extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size(
-            double.maxFinite, 
-            serversProvider.selectedServer != null && serversProvider.isServerConnected == true 
-              ? orientation == Orientation.portrait
-                ? Platform.isIOS ? 145 : 144
-                : Platform.isIOS ? 109 : 108
-              : 64
-          ),
-          child: const StatisticsTopBar()
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.statistics),
+          centerTitle: true,
+          elevation: 4,
+          bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
+            ? TabBar(
+              tabs: orientation == Orientation.portrait
+                ? [
+                    Tab(
+                      icon: const Icon(Icons.dns_rounded),
+                      text: AppLocalizations.of(context)!.queriesServers,
+                    ),
+                    Tab(
+                      icon: const Icon(Icons.http_rounded),
+                      text: AppLocalizations.of(context)!.domains,
+                    ),
+                    Tab(
+                      icon: const Icon(Icons.devices_rounded),
+                      text: AppLocalizations.of(context)!.clients,
+                    ),
+                  ]
+                : [
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.dns_rounded),
+                        const SizedBox(width: 10),
+                        Text(AppLocalizations.of(context)!.queriesServers)
+                      ],
+                    ),
+                  ),
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.http_rounded),
+                        const SizedBox(width: 10),
+                        Text(AppLocalizations.of(context)!.domains)
+                      ],
+                    ),
+                  ),
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.devices_rounded),
+                        const SizedBox(width: 10),
+                        Text(AppLocalizations.of(context)!.clients)
+                      ],
+                    ),
+                  ),
+                ]
+            )
+          : null
         ),
         body: serversProvider.selectedServer != null 
         ? serversProvider.isServerConnected == true 

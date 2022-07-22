@@ -4,7 +4,6 @@ const MaterialColor primaryColorLight = Colors.blue;
 const MaterialColor primaryColorDark = Colors.lightBlue;
 
 ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
-  print(dynamicColorScheme?.background);
   return ThemeData(
   useMaterial3: true,
   colorScheme: dynamicColorScheme ?? ColorScheme.fromSwatch(primarySwatch: primaryColorLight),
@@ -51,15 +50,15 @@ ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
       dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight
     ),
   ),
-  tabBarTheme: const TabBarTheme(
+  tabBarTheme: TabBarTheme(
     unselectedLabelColor: Colors.black,
-    unselectedLabelStyle: TextStyle(
+    unselectedLabelStyle: const TextStyle(
       color: Colors.black
     ),
-    labelColor: primaryColorLight,
+    labelColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight,
     indicator: UnderlineTabIndicator(
       borderSide: BorderSide(
-        color: primaryColorLight,
+        color: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight,
         width: 2
       )
     )
