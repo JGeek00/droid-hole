@@ -682,6 +682,7 @@ class _LogsListState extends State<LogsList> {
                                         CustomRadio(
                                           value: 0, 
                                           groupValue: sortStatus, 
+                                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                                         )
                                       ],
                                     )
@@ -701,6 +702,7 @@ class _LogsListState extends State<LogsList> {
                                         CustomRadio(
                                           value: 1, 
                                           groupValue: sortStatus, 
+                                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                                         )
                                       ],
                                     )

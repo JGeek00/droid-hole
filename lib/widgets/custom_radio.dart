@@ -4,12 +4,14 @@ class CustomRadio extends StatelessWidget {
   final int value;
   final int groupValue;
   final Function(int)? onChange;
+  final Color backgroundColor;
 
   const CustomRadio({
     Key? key,
     required this.value,
     required this.groupValue,
-    this.onChange
+    this.onChange,
+    required this.backgroundColor,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,9 @@ class CustomRadio extends StatelessWidget {
             borderRadius: BorderRadius.circular(40),
             color: value == groupValue 
               ? Theme.of(context).primaryColor
-              : Colors.grey
+              : Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromRGBO(184, 184, 184, 1)
+                : const Color.fromRGBO(104, 104, 104, 1)
           ),
         ),
         Container(
@@ -32,7 +36,7 @@ class CustomRadio extends StatelessWidget {
           height: 16,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(35),
-            color: Colors.white
+            color: backgroundColor
           ),
         ),
         Container(
@@ -42,7 +46,7 @@ class CustomRadio extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
             color: value == groupValue 
               ? Theme.of(context).primaryColor
-              : Colors.white
+              : backgroundColor
           ),
         ),
       ],

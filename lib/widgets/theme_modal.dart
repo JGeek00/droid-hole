@@ -75,7 +75,8 @@ class _ThemeModalState extends State<ThemeModal> {
                           title: Text(AppLocalizations.of(context)!.systemTheme),
                           trailing: CustomRadio(
                             value: 0, 
-                            groupValue: _selectedItem
+                            groupValue: _selectedItem,
+                            backgroundColor: Theme.of(context).dialogBackgroundColor,
                           ),
                         ),
                       ),
@@ -95,7 +96,8 @@ class _ThemeModalState extends State<ThemeModal> {
                           title: Text(AppLocalizations.of(context)!.light),
                           trailing: CustomRadio(
                             value: 1, 
-                            groupValue: _selectedItem
+                            groupValue: _selectedItem,
+                            backgroundColor: Theme.of(context).dialogBackgroundColor,
                           ),
                         ),
                       ),
@@ -115,7 +117,8 @@ class _ThemeModalState extends State<ThemeModal> {
                           title: Text(AppLocalizations.of(context)!.dark),
                           trailing: CustomRadio(
                             value: 2, 
-                            groupValue: _selectedItem
+                            groupValue: _selectedItem,
+                            backgroundColor: Theme.of(context).dialogBackgroundColor,
                           ),
                         ),
                       ),
