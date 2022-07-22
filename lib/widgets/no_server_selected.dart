@@ -50,12 +50,6 @@ class NoServerSelected extends StatelessWidget {
                   onPressed: _selectServer, 
                   label: Text(AppLocalizations.of(context)!.selectConnection),
                   icon: const Icon(Icons.storage_rounded),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      width: 1.0, 
-                      color: Theme.of(context).primaryColor
-                    ),
-                  ),
                 )
               ],
             ),

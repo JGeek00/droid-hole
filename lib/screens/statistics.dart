@@ -125,8 +125,8 @@ class Statistics extends StatelessWidget {
             double.maxFinite, 
             serversProvider.selectedServer != null && serversProvider.isServerConnected == true 
               ? orientation == Orientation.portrait
-                ? Platform.isIOS ? 139 : 138
-                : Platform.isIOS ? 103 : 102
+                ? Platform.isIOS ? 145 : 144
+                : Platform.isIOS ? 109 : 108
               : 64
           ),
           child: const StatisticsTopBar()

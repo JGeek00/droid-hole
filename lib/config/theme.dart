@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-const Color primaryColorLight = Colors.blue;
-const Color primaryColorDark = Colors.lightBlue;
+const MaterialColor primaryColorLight = Colors.blue;
+const MaterialColor primaryColorDark = Colors.lightBlue;
 
-ThemeData get lightTheme => ThemeData(
-  primaryColor: primaryColorLight,
-  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    backgroundColor: Color.fromRGBO(255, 255, 255, 1)
-  ),
+ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
+  print(dynamicColorScheme?.background);
+  return ThemeData(
+  useMaterial3: true,
+  colorScheme: dynamicColorScheme ?? ColorScheme.fromSwatch(primarySwatch: primaryColorLight),
+  primaryColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight,
+  scaffoldBackgroundColor: dynamicColorScheme != null ? dynamicColorScheme.background : Colors.white,
   snackBarTheme: SnackBarThemeData(
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(
@@ -16,7 +18,7 @@ ThemeData get lightTheme => ThemeData(
     elevation: 4,
   ),
   brightness: Brightness.light,
-  dialogBackgroundColor: Colors.white,
+  dialogBackgroundColor: dynamicColorScheme != null ? dynamicColorScheme.surface : Colors.white,
   textTheme: const TextTheme(
     bodyText1: TextStyle(
       color: Colors.black54
@@ -25,13 +27,18 @@ ThemeData get lightTheme => ThemeData(
       color: Colors.black
     ),
   ),
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
     foregroundColor: Colors.white,
+    backgroundColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all(primaryColorLight),
-      overlayColor: MaterialStateProperty.all(primaryColorLight.withOpacity(0.1))
+      foregroundColor: MaterialStateProperty.all(
+        dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight
+      ),
+      overlayColor: MaterialStateProperty.all(
+        dynamicColorScheme != null ? dynamicColorScheme.primary.withOpacity(0.1) : primaryColorLight.withOpacity(0.1)
+      ),
     ),
   ),
   dividerColor: Colors.black12,
@@ -40,7 +47,9 @@ ThemeData get lightTheme => ThemeData(
   ),
   checkboxTheme: CheckboxThemeData(
     checkColor: MaterialStateProperty.all(Colors.white),
-    fillColor: MaterialStateProperty.all(primaryColorLight),
+    fillColor: MaterialStateProperty.all(
+      dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight
+    ),
   ),
   tabBarTheme: const TabBarTheme(
     unselectedLabelColor: Colors.black,
@@ -57,15 +66,18 @@ ThemeData get lightTheme => ThemeData(
   ),
   androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
 );
+}
 
-ThemeData get darkTheme => ThemeData(
-  primaryColor: primaryColorDark,
-  scaffoldBackgroundColor: const Color.fromRGBO(18, 18, 18, 1),
-  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    backgroundColor: Color.fromRGBO(30, 30, 30, 1),
-    selectedItemColor: primaryColorDark
+ThemeData darkTheme(ColorScheme? dynamicColorScheme) => ThemeData(
+  useMaterial3: true,
+  colorScheme: dynamicColorScheme ?? ColorScheme.fromSwatch(primarySwatch: primaryColorDark).copyWith(
+    brightness: Brightness.dark
   ),
+  scaffoldBackgroundColor: const Color.fromRGBO(18, 18, 18, 1),
   dialogBackgroundColor: const Color.fromRGBO(44, 44, 44, 1),
+  navigationBarTheme: NavigationBarThemeData(
+    indicatorColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight,
+  ),
   snackBarTheme: SnackBarThemeData(
     contentTextStyle: const TextStyle(
       color: Colors.white
@@ -76,8 +88,9 @@ ThemeData get darkTheme => ThemeData(
     ),
     elevation: 4,
   ),
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    foregroundColor: Colors.white
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    foregroundColor: Colors.white,
+    backgroundColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(

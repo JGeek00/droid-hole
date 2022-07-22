@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:animations/animations.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -251,29 +252,33 @@ class _DroidHoleState extends State<DroidHole> {
       });
     }
 
-    return MaterialApp(
-      title: 'Droid Hole',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: appConfigProvider.selectedTheme,
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        AppLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', ''),
-        Locale('es', '')
-      ],
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: child!,
-        );
-      },
-      home: const Base()
+    return DynamicColorBuilder(
+      builder: ((lightDynamic, darkDynamic) {
+        return MaterialApp(
+          title: 'Droid Hole',
+          theme: lightTheme(lightDynamic),
+          darkTheme: darkTheme(darkDynamic),
+          themeMode: appConfigProvider.selectedTheme,
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            AppLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', ''),
+            Locale('es', '')
+          ],
+          builder: (context, child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: child!,
+            );
+          },
+          home: const Base()
+          );
+      }),
     );
   }
 }
@@ -383,14 +388,12 @@ class _BaseState extends State<Base> {
             && appConfigProvider.selectedTab == 0
               ? FloatingActionButton(
                   onPressed: _enableDisableServer,
-                  backgroundColor: Theme.of(context).primaryColor,
                   child: const Icon(Icons.shield_rounded),
                 )
               : null
           : appConfigProvider.selectedTab == 0 && serversProvider.getServersList.isNotEmpty
             ? FloatingActionButton(
                 onPressed: _addServerModal,
-                backgroundColor: Theme.of(context).primaryColor,
                 child: const Icon(Icons.add),
               )
             : null,

@@ -59,7 +59,7 @@ class _ServersListModalState extends State<ServersListModal> {
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Column(
         children: [

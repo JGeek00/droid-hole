@@ -92,11 +92,11 @@ class LogDetailsModal extends StatelessWidget {
 
     return Container(
       height: log.status == '2' && log.answeredBy != null
-        ? (mediaQuery.size.height-statusBarHeight) > 666
-          ? 666
+        ? (mediaQuery.size.height-statusBarHeight) > 727
+          ? 727
           : mediaQuery.size.height - (statusBarHeight+15)
-        : (mediaQuery.size.height-statusBarHeight) > 610
-          ? 596
+        : (mediaQuery.size.height-statusBarHeight) > 632
+          ? 632
           : mediaQuery.size.height - (statusBarHeight+15),
       margin: EdgeInsets.only(
         left: 10,
@@ -126,11 +126,11 @@ class LogDetailsModal extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             height: log.status == '2' && log.answeredBy != null
               ? (mediaQuery.size.height-statusBarHeight) > 666
-                ? 535
-                : mediaQuery.size.height - (statusBarHeight+146)
-              : (mediaQuery.size.height-statusBarHeight) > 610
-                ? 465
-                : mediaQuery.size.height - (statusBarHeight+146),
+                ? 590
+                : mediaQuery.size.height - (statusBarHeight+152)
+              : (mediaQuery.size.height-statusBarHeight) > 632
+                ? 495
+                : mediaQuery.size.height - (statusBarHeight+152),
             child: SingleChildScrollView(
               child: Column(
                 children: [

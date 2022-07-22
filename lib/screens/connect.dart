@@ -115,12 +115,6 @@ class _ConnectState extends State<Connect> {
                     onPressed: _addServerModal, 
                     label: Text(AppLocalizations.of(context)!.createConnection),
                     icon: const Icon(Icons.add),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                        width: 1.0, 
-                        color: Theme.of(context).primaryColor
-                      ),
-                    ),
                   )
                 ],
               ),

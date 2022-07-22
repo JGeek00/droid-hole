@@ -38,7 +38,7 @@ class _AddServerModalState extends State<AddServerModal> {
   bool allDataValid = false;
 
   String status = 'form';
-  double height = 476;
+  double height = 500;
   String errorMessage = 'Failed';
 
   bool isTokenModalOpen = false;
@@ -133,7 +133,7 @@ class _AddServerModalState extends State<AddServerModal> {
       final exists = await serversProvider.checkUrlExists(url);
       if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
-          height = 476;
+          height = 500;
         });
         await Future.delayed(const Duration(milliseconds: 300), () {
           setState(() {
@@ -154,7 +154,7 @@ class _AddServerModalState extends State<AddServerModal> {
         });
         await Future.delayed(const Duration(seconds: 3), (() {
           setState(() {
-            height = 476;
+            height = 500;
           });
         }));
         await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -240,7 +240,7 @@ class _AddServerModalState extends State<AddServerModal> {
             });
             await Future.delayed(const Duration(seconds: 3), (() {
               setState(() {
-                height = 476;
+                height = 500;
               });
             }));
             await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -285,7 +285,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 476;
+              height = 500;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -400,7 +400,7 @@ class _AddServerModalState extends State<AddServerModal> {
           });
           await Future.delayed(const Duration(seconds: 3), (() {
             setState(() {
-              height = 476;
+              height = 500;
             });
           }));
           await Future.delayed(const Duration(milliseconds: 300), (() => {
@@ -644,7 +644,8 @@ class _AddServerModalState extends State<AddServerModal> {
                           children: [
                             Radio(
                               value: 'http', 
-                              groupValue: selectedHttp, 
+                              groupValue: selectedHttp,
+                              activeColor: Theme.of(context).primaryColor,
                               onChanged: (value) => setState(() => selectedHttp = value.toString())
                             ),
                             const SizedBox(width: 5),
@@ -659,7 +660,8 @@ class _AddServerModalState extends State<AddServerModal> {
                           children: [
                             Radio(
                               value: 'https', 
-                              groupValue: selectedHttp, 
+                              groupValue: selectedHttp,
+                              activeColor: Theme.of(context).primaryColor,
                               onChanged: (value) => setState(() => selectedHttp = value.toString())
                             ),
                             const SizedBox(width: 5),

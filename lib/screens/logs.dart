@@ -618,7 +618,7 @@ class _LogsListState extends State<LogsList> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size(double.maxFinite, _areFiltersApplied() == true ? 110 : 60),
+        preferredSize: Size(double.maxFinite, _areFiltersApplied() == true ? 115 : 65),
         child: Container(
           margin: EdgeInsets.only(top: statusBarHeight),
           child: Container(

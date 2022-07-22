@@ -566,7 +566,7 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       appBar: const PreferredSize(
-        preferredSize: Size(double.maxFinite, 70),
+        preferredSize: Size(double.maxFinite, 72),
         child: TopBar()
       ),
       body: serversProvider.selectedServer != null 
