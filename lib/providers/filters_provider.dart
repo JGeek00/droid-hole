@@ -56,6 +56,7 @@ class FiltersProvider with ChangeNotifier {
     _startTime = null;
     _endTime = null;
     _selectedClients = _totalClients;
+    _selectedDomain = null;
     notifyListeners();
   }
 
