@@ -385,6 +385,15 @@ class _LogsListState extends State<LogsList> {
       filtersProvider.resetFilters();
     }
 
+    String _noLogsMessage() {
+      if (filtersProvider.startTime != null || filtersProvider.endTime != null) {
+        return "${AppLocalizations.of(context)!.noLogsDisplay} ${AppLocalizations.of(context)!.between}\n${filtersProvider.startTime != null ? formatTimestamp(filtersProvider.startTime!, "dd/MM/yyyy - HH:mm") : AppLocalizations.of(context)!.now}\n${AppLocalizations.of(context)!.and}\n${filtersProvider.startTime != null ? formatTimestamp(filtersProvider.endTime!, "dd/MM/yyyy - HH:mm") : AppLocalizations.of(context)!.now} ";
+      }
+      else {
+        return "${AppLocalizations.of(context)!.noLogsDisplay} ${AppLocalizations.of(context)!.fromLast} 2 ${AppLocalizations.of(context)!.hours}";
+      }
+    }
+
     Widget _status() {
       switch (loadStatus) {
         case 0:
@@ -500,12 +509,16 @@ class _LogsListState extends State<LogsList> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [ 
-                              Text(
-                                AppLocalizations.of(context)!.noLogsDisplay,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  _noLogsMessage(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold
+                                  ),
                                 ),
                               )
                             ],
