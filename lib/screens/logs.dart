@@ -11,6 +11,7 @@ import 'package:droid_hole/widgets/log_details_modal.dart';
 import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/classes/no_scroll_behavior.dart';
 import 'package:droid_hole/constants/log_status.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
@@ -28,6 +29,7 @@ class Logs extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final filtersProvider = Provider.of<FiltersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
@@ -38,6 +40,7 @@ class Logs extends StatelessWidget {
         selectedStatus: filtersProvider.statusSelected,
         startTime: filtersProvider.startTime,
         endTime: filtersProvider.endTime,
+        logsPerQuery: appConfigProvider.logsPerQuery,
       ); 
     }
     else {
@@ -81,6 +84,7 @@ class LogsList extends StatefulWidget {
   final List<int> selectedStatus;
   final DateTime? startTime;
   final DateTime? endTime;
+  final double logsPerQuery;
 
   const LogsList({
     Key? key,
@@ -89,6 +93,7 @@ class LogsList extends StatefulWidget {
     required this.selectedStatus,
     required this.startTime,
     required this.endTime,
+    required this.logsPerQuery
   }) : super(key: key);
 
   @override
@@ -130,7 +135,9 @@ class _LogsListState extends State<LogsList> {
     if (_lastTimestamp == null || replaceOldLogs == true) {
       final now = DateTime.now();
       timestamp = endTime ?? now;
-      DateTime newOldTimestamp = DateTime(timestamp.year, timestamp.month, timestamp.day, timestamp.hour-2, timestamp.minute, timestamp.second);
+      DateTime newOldTimestamp = widget.logsPerQuery == 0.5 
+        ? DateTime(timestamp.year, timestamp.month, timestamp.day, timestamp.hour, timestamp.minute-30, timestamp.second)
+        : DateTime(timestamp.year, timestamp.month, timestamp.day, timestamp.hour-widget.logsPerQuery.toInt(), timestamp.minute, timestamp.second);
       if (startTime != null) {
         minusHoursTimestamp = newOldTimestamp.isAfter(startTime) ? newOldTimestamp : startTime;
       }
@@ -140,7 +147,9 @@ class _LogsListState extends State<LogsList> {
     }
     else {
       timestamp = _lastTimestamp!;
-      DateTime newOldTimestamp = DateTime(_lastTimestamp!.year, _lastTimestamp!.month, _lastTimestamp!.day, _lastTimestamp!.hour-2, _lastTimestamp!.minute, _lastTimestamp!.second);
+      DateTime newOldTimestamp = widget.logsPerQuery == 0.5 
+        ? DateTime(_lastTimestamp!.year, _lastTimestamp!.month, _lastTimestamp!.day, _lastTimestamp!.hour, _lastTimestamp!.minute-30, _lastTimestamp!.second)
+        : DateTime(_lastTimestamp!.year, _lastTimestamp!.month, _lastTimestamp!.day, _lastTimestamp!.hour-widget.logsPerQuery.toInt(), _lastTimestamp!.minute, _lastTimestamp!.second);
       if (startTime != null) {
         minusHoursTimestamp = newOldTimestamp.isAfter(startTime) ? newOldTimestamp : startTime;
       }
@@ -396,7 +405,7 @@ class _LogsListState extends State<LogsList> {
         return "${AppLocalizations.of(context)!.noLogsDisplay} ${AppLocalizations.of(context)!.between}\n${filtersProvider.startTime != null ? formatTimestamp(filtersProvider.startTime!, "dd/MM/yyyy - HH:mm") : AppLocalizations.of(context)!.now}\n${AppLocalizations.of(context)!.and}\n${filtersProvider.startTime != null ? formatTimestamp(filtersProvider.endTime!, "dd/MM/yyyy - HH:mm") : AppLocalizations.of(context)!.now} ";
       }
       else {
-        return "${AppLocalizations.of(context)!.noLogsDisplay} ${AppLocalizations.of(context)!.fromLast} 2 ${AppLocalizations.of(context)!.hours}";
+        return "${AppLocalizations.of(context)!.noLogsDisplay} ${AppLocalizations.of(context)!.fromLast} ${widget.logsPerQuery == 0.5 ? '30' : widget.logsPerQuery.toInt()} ${widget.logsPerQuery == 0.5 ? AppLocalizations.of(context)!.minutes : AppLocalizations.of(context)!.hours}";
       }
     }
 

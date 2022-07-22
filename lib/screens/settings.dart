@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:droid_hole/widgets/logs_quantity_load_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
@@ -49,6 +50,36 @@ class Settings extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(AppLocalizations.of(context)!.cannotChangeUpdateTime),
+                  backgroundColor: Colors.red,
+                )
+              );
+            }
+          },
+        ),
+        backgroundColor: Colors.transparent,
+      );
+    }
+
+    void _openLogsQuantityPerLoad() {
+      showModalBottomSheet(
+        context: context, 
+        isScrollControlled: true,
+        builder: (context) => LogsQuantityPerLoadModal(
+          time: appConfigProvider.logsPerQuery,
+          onChange: (time) async {
+            final result = await appConfigProvider.setLogsPerQuery(time);
+            if (result == true) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.logsPerQueryUpdated),
+                  backgroundColor: Colors.green,
+                )
+              );
+            }
+            else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.cantUpdateLogsPerQuery),
                   backgroundColor: Colors.red,
                 )
               );
@@ -175,6 +206,12 @@ class Settings extends StatelessWidget {
                           label: AppLocalizations.of(context)!.autoRefreshTime, 
                           description: "${appConfigProvider.getAutoRefreshTime.toString()} ${AppLocalizations.of(context)!.seconds}",
                           onTap: _openAutoRefreshTimeModal
+                        ),
+                        CustomListTile(
+                          leadingIcon: Icons.list_rounded,
+                          label: AppLocalizations.of(context)!.logsQuantityPerLoad, 
+                          description: "${appConfigProvider.logsPerQuery == 0.5 ? '30' : appConfigProvider.logsPerQuery.toInt()} ${appConfigProvider.logsPerQuery == 0.5 ? AppLocalizations.of(context)!.minutes : AppLocalizations.of(context)!.hours}",
+                          onTap: _openLogsQuantityPerLoad
                         ),
                         CustomListTile(
                           leadingIcon: Icons.settings,

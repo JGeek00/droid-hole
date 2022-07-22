@@ -18,6 +18,7 @@ Future<Response> httpClient({
   required String url,
   Map<String, String>? headers,
   Map<String, dynamic>? body,
+  int? timeout,
 }) async {  
   switch (method) {
     case 'post':
@@ -34,7 +35,7 @@ Future<Response> httpClient({
         Uri.parse(url),
         headers: headers
       ).timeout(
-        const Duration(seconds: 10)
+        Duration(seconds: timeout ??  10)
       );
   }
 }
@@ -230,7 +231,8 @@ Future fetchLogs({
       url: '${server.address}/admin/api.php?getAllQueries&from=${from.millisecondsSinceEpoch~/1000}&until=${until.millisecondsSinceEpoch~/1000}',
       headers: {
         'Cookie': 'PHPSESSID=$phpSessId'
-      }
+      },
+      timeout: 20
     );
     final body = jsonDecode(response.body);
     return {

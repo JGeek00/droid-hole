@@ -11,6 +11,7 @@ class AppConfigProvider with ChangeNotifier {
   int _overrideSslCheck = 0;
   int _oneColumnLegend = 0;
   int _reducedDataCharts = 0;
+  double _logsPerQuery = 2;
 
   Database? _dbInstance;
 
@@ -60,6 +61,10 @@ class AppConfigProvider with ChangeNotifier {
     return _reducedDataCharts == 0 ? false : true;
   }
 
+  double get logsPerQuery {
+    return _logsPerQuery;
+  }
+
   void setSelectedTab(int selectedTab) {
     _selectedTab = selectedTab;
     notifyListeners();
@@ -82,12 +87,25 @@ class AppConfigProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> setLogsPerQuery(double time) async {
+    final updated = await updateLogsPerQueryDb(time);
+    if (updated == true) {
+      _logsPerQuery = time;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   void saveFromDb(Database dbInstance, Map<String, dynamic> dbData) {
     _autoRefreshTime = dbData['autoRefreshTime'];
     _selectedTheme = dbData['theme'];
     _overrideSslCheck = dbData['overrideSslCheck'];
     _oneColumnLegend = dbData['oneColumnLegend'];
     _reducedDataCharts = dbData['reducedDataCharts'];
+    _logsPerQuery = dbData['logsPerQuery'].toDouble();
     _dbInstance = dbInstance;
     notifyListeners();
   }
@@ -145,6 +163,19 @@ class AppConfigProvider with ChangeNotifier {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
           'UPDATE appConfig SET autoRefreshTime = $value',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> updateLogsPerQueryDb(double value) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET logsPerQuery = $value',
         );
         return true;
       });

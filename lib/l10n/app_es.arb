@@ -206,5 +206,17 @@
     "reducedDataChartsDescription": "Puede mejorar el rendimiento de la aplicación",
     "statusSelected": "estados seleccionados",
     "allClientsSelected": "Todos los clientes seleccionados",
-    "clientsSelected": "clientes seleccionados"
+    "clientsSelected": "clientes seleccionados",
+    "logsQuantityPerLoad": "Cantidad de registros por petición",
+    "minutes30": "30 minutos",
+    "hour1": "1 hora",
+    "hours2": "2 horas",
+    "hours4": "4 horas",
+    "hours6": "6 horas",
+    "hours8": "8 horas",
+    "logsPerQueryUpdated": "Cantidad de registros por petición actualizado correctamente.",
+    "cantUpdateLogsPerQuery": "No se ha podido actualizar la cantidad de registros por petición.",
+    "logsPerQueryLabel": "Selecciona el intervalo de tiempo que se va a utilizar para cada petición de registros a la API.",
+    "logsPerQueryWarning": "Seleccionar un tiempo largo podría resultar en tiempos de carga lentos.\nDependerá de la velocidad del servidor.",
+    "logsWillBeRequested": "Los registros se pedirán en grupos de"
 }
