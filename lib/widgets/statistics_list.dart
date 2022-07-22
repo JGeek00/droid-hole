@@ -116,10 +116,21 @@ class StatisticsList extends StatelessWidget {
                           ),
                           Container(
                             width: (((item['value']*100)/totalHits)*90)/100,
-                            height: 10,
+                            height: (((item['value']*100)/totalHits)*90)/100 < 3
+                              ? ((((item['value']*100)/totalHits)*90)/100)*3
+                              : 10,
                             decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.only(
+                                topRight: const Radius.circular(10),
+                                bottomRight: const Radius.circular(10),
+                                topLeft: (((item['value']*100)/totalHits)*90)/100 > 7
+                                  ? const Radius.circular(10) 
+                                  : const Radius.circular(0),
+                                bottomLeft: (((item['value']*100)/totalHits)*90)/100 > 7
+                                  ? const Radius.circular(10) 
+                                  : const Radius.circular(0),
+                              )
                             ),
                           ),
                         ],
