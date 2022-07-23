@@ -186,7 +186,7 @@ class Settings extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context)!.settings,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 16
                                 ),
                               ),
@@ -260,7 +260,7 @@ class Settings extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context)!.about,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 16
                                 ),
                               ),
