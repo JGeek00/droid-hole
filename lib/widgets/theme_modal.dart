@@ -38,23 +38,47 @@ class _ThemeModalState extends State<ThemeModal> {
 
     return Container(
       height: mediaQuery.orientation == Orientation.landscape
-        ? mediaQuery.size.height - (widget.statusBarHeight+10)
-        : 300,
-      margin: const EdgeInsets.all(10),
+        ? mediaQuery.size.height - (widget.statusBarHeight)
+        : 280,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30)
+        ),
         color: Theme.of(context).dialogBackgroundColor,
       ),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              AppLocalizations.of(context)!.theme,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20
-              ),
+            padding: const EdgeInsets.only(
+              top: 30,
+              left: 20,
+              right: 20,
+              bottom: 20
+            ),
+            child: Row(
+              children: [
+                Material(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(30),
+                  child: InkWell(
+                    onTap: () => Navigator.pop(context),
+                    borderRadius: BorderRadius.circular(30),
+                    child: const Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Icon(Icons.close),
+                    )
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  AppLocalizations.of(context)!.theme,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -72,7 +96,12 @@ class _ThemeModalState extends State<ThemeModal> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: ListTile(
                           leading: const Icon(Icons.phone_android_rounded),
-                          title: Text(AppLocalizations.of(context)!.systemTheme),
+                          title: Text(
+                            AppLocalizations.of(context)!.systemTheme,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal
+                            ),
+                          ),
                           trailing: CustomRadio(
                             value: 0, 
                             groupValue: _selectedItem,
@@ -93,7 +122,12 @@ class _ThemeModalState extends State<ThemeModal> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: ListTile(
                           leading: const Icon(Icons.light_mode_rounded),
-                          title: Text(AppLocalizations.of(context)!.light),
+                          title: Text(
+                            AppLocalizations.of(context)!.light,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal
+                            ),
+                          ),
                           trailing: CustomRadio(
                             value: 1, 
                             groupValue: _selectedItem,
@@ -114,7 +148,12 @@ class _ThemeModalState extends State<ThemeModal> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: ListTile(
                           leading: const Icon(Icons.dark_mode_rounded),
-                          title: Text(AppLocalizations.of(context)!.dark),
+                          title: Text(
+                            AppLocalizations.of(context)!.dark,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal
+                            ),
+                          ),
                           trailing: CustomRadio(
                             value: 2, 
                             groupValue: _selectedItem,
@@ -128,19 +167,6 @@ class _ThemeModalState extends State<ThemeModal> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  label: Text(AppLocalizations.of(context)!.close),
-                  icon: const Icon(Icons.close)
-                )
-              ],
-            ),
-          )
         ],
       )
     );

@@ -37,7 +37,7 @@ class LogDetailsModal extends StatelessWidget {
                 Text(
                   label,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 15
                   ),
                 ),
@@ -61,30 +61,46 @@ class LogDetailsModal extends StatelessWidget {
         log.status == '13' ||
         log.status == '14'
       ) {
-        return TextButton.icon(
-          onPressed: () {
-            Navigator.pop(context);
-            whiteBlackList('black', log);
-          }, 
-          icon: const Icon(Icons.block_rounded), 
-          label: Text(AppLocalizations.of(context)!.blacklist),
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all(Colors.red),
-            overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1))
+        return Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              whiteBlackList('black', log);
+            },
+            borderRadius: BorderRadius.circular(30),
+            splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Icon(
+                Icons.block,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
           ),
         );
       }
       else {
-        return TextButton.icon(
-          onPressed: () {
-            Navigator.pop(context);
-            whiteBlackList('white', log);
-          },
-          icon: const Icon(Icons.check), 
-          label: Text(AppLocalizations.of(context)!.whitelist),
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all(Colors.green),
-            overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
+        return Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              whiteBlackList('white', log);
+            },
+            borderRadius: BorderRadius.circular(30),
+            splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Icon(
+                Icons.check,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
           ),
         );
       }
@@ -94,88 +110,90 @@ class LogDetailsModal extends StatelessWidget {
       height: log.status == '2' && log.answeredBy != null
         ? (mediaQuery.size.height-statusBarHeight) > 727
           ? 727
-          : mediaQuery.size.height - (statusBarHeight+15)
+          : mediaQuery.size.height - (statusBarHeight)
         : (mediaQuery.size.height-statusBarHeight) > 632
           ? 632
-          : mediaQuery.size.height - (statusBarHeight+15),
-      margin: EdgeInsets.only(
-        left: 10,
-        right: 10,
-        bottom: Platform.isIOS ? 30 : 10,
-      ),
+          : mediaQuery.size.height - (statusBarHeight),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30)
+        ),
         color: Theme.of(context).dialogBackgroundColor,
       ),
       child: Column(
         children: [
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text(
-                AppLocalizations.of(context)!.logDetails,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
-                ),
-              ),
-            ),
-          ),
-          Container(
-            width: double.maxFinite,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            height: log.status == '2' && log.answeredBy != null
-              ? (mediaQuery.size.height-statusBarHeight) > 666
-                ? 590
-                : mediaQuery.size.height - (statusBarHeight+152)
-              : (mediaQuery.size.height-statusBarHeight) > 632
-                ? 495
-                : mediaQuery.size.height - (statusBarHeight+152),
-            child: SingleChildScrollView(
-              child: Column(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _item(Icons.link, AppLocalizations.of(context)!.url, Text(
-                    log.url,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-                  const SizedBox(height: 20),
-                  _item(Icons.http_rounded, AppLocalizations.of(context)!.type, Text(log.type)),
-                  const SizedBox(height: 20),
-                  _item(Icons.phone_android_rounded, AppLocalizations.of(context)!.device, Text(
-                    log.device,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-                  const SizedBox(height: 20),
-                  _item(Icons.access_time_outlined, AppLocalizations.of(context)!.time, Text(formatTimestamp(log.dateTime, 'HH:mm:ss'))),
-                  const SizedBox(height: 20),
-                  _item(Icons.shield_outlined, AppLocalizations.of(context)!.status, LogStatus(status: log.status, showIcon: false)),
-                  const SizedBox(height: 20),
-                  if (log.status == '2' && log.answeredBy != null) ...[
-                    _item(Icons.domain, AppLocalizations.of(context)!.answeredBy, Text(
-                      log.answeredBy!,
-                      overflow: TextOverflow.ellipsis,
-                    )),
-                    const SizedBox(height: 20),
-                  ],
-                  _item(Icons.system_update_alt_outlined, AppLocalizations.of(context)!.reply, Text("${log.replyType} (${(log.replyTime/10)} ms)")),
+                  Row(
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(40),
+                        child: InkWell(
+                          onTap: () => Navigator.pop(context),
+                          borderRadius: BorderRadius.circular(40),
+                          child: const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Icon(Icons.close),
+                          )
+                        )
+                      ),
+                      const SizedBox(width: 20),
+                      Text(
+                        AppLocalizations.of(context)!.logDetails,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    ],
+                  ),
+                  _blackWhiteListButton()
                 ],
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _blackWhiteListButton(),
-                TextButton.icon(
-                  onPressed: () => Navigator.pop(context), 
-                  icon: const Icon(Icons.close),
-                  label: Text(AppLocalizations.of(context)!.close),
+          Expanded(
+            child: Container(
+              width: double.maxFinite,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _item(Icons.link, AppLocalizations.of(context)!.url, Text(
+                      log.url,
+                      overflow: TextOverflow.ellipsis,
+                    )),
+                    const SizedBox(height: 20),
+                    _item(Icons.http_rounded, AppLocalizations.of(context)!.type, Text(log.type)),
+                    const SizedBox(height: 20),
+                    _item(Icons.phone_android_rounded, AppLocalizations.of(context)!.device, Text(
+                      log.device,
+                      overflow: TextOverflow.ellipsis,
+                    )),
+                    const SizedBox(height: 20),
+                    _item(Icons.access_time_outlined, AppLocalizations.of(context)!.time, Text(formatTimestamp(log.dateTime, 'HH:mm:ss'))),
+                    const SizedBox(height: 20),
+                    _item(Icons.shield_outlined, AppLocalizations.of(context)!.status, LogStatus(status: log.status, showIcon: false)),
+                    const SizedBox(height: 20),
+                    if (log.status == '2' && log.answeredBy != null) ...[
+                      _item(Icons.domain, AppLocalizations.of(context)!.answeredBy, Text(
+                        log.answeredBy!,
+                        overflow: TextOverflow.ellipsis,
+                      )),
+                      const SizedBox(height: 20),
+                    ],
+                    _item(Icons.system_update_alt_outlined, AppLocalizations.of(context)!.reply, Text("${log.replyType} (${(log.replyTime/10)} ms)")),
+                  ],
                 ),
-              ],
+              ),
             ),
-          )
+          ),
         ],
       ),
     );

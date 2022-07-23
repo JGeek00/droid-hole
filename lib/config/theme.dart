@@ -72,10 +72,11 @@ ThemeData darkTheme(ColorScheme? dynamicColorScheme) => ThemeData(
   colorScheme: dynamicColorScheme ?? ColorScheme.fromSwatch(primarySwatch: primaryColorDark).copyWith(
     brightness: Brightness.dark
   ),
-  scaffoldBackgroundColor: const Color.fromRGBO(18, 18, 18, 1),
-  dialogBackgroundColor: const Color.fromRGBO(44, 44, 44, 1),
+  primaryColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorDark,
+  scaffoldBackgroundColor: dynamicColorScheme != null ? dynamicColorScheme.background :const Color.fromRGBO(18, 18, 18, 1),
+  dialogBackgroundColor: dynamicColorScheme != null ? dynamicColorScheme.background : const Color.fromRGBO(44, 44, 44, 1),
   navigationBarTheme: NavigationBarThemeData(
-    indicatorColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight,
+    indicatorColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorDark,
   ),
   snackBarTheme: SnackBarThemeData(
     contentTextStyle: const TextStyle(
@@ -89,12 +90,16 @@ ThemeData darkTheme(ColorScheme? dynamicColorScheme) => ThemeData(
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     foregroundColor: Colors.white,
-    backgroundColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight
+    backgroundColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorDark
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all(primaryColorDark),
-      overlayColor: MaterialStateProperty.all(primaryColorDark.withOpacity(0.1))
+      foregroundColor: MaterialStateProperty.all(
+        dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorDark
+      ),
+      overlayColor: MaterialStateProperty.all(
+        dynamicColorScheme != null ? dynamicColorScheme.primary.withOpacity(0.1) : primaryColorDark.withOpacity(0.1)
+      ),
     ),
   ),
   brightness: Brightness.dark,
@@ -112,17 +117,19 @@ ThemeData darkTheme(ColorScheme? dynamicColorScheme) => ThemeData(
   ),
   checkboxTheme: CheckboxThemeData(
     checkColor: MaterialStateProperty.all(Colors.white),
-    fillColor: MaterialStateProperty.all(Colors.blue),
+    fillColor: MaterialStateProperty.all(
+      dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorDark
+    ),
   ),
-  tabBarTheme: const TabBarTheme(
+  tabBarTheme: TabBarTheme(
     unselectedLabelColor: Colors.white,
-    unselectedLabelStyle: TextStyle(
+    unselectedLabelStyle: const TextStyle(
       color: Colors.white
     ),
-    labelColor: primaryColorDark,
+    labelColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorDark,
     indicator: UnderlineTabIndicator(
       borderSide: BorderSide(
-        color: primaryColorDark,
+        color: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorDark,
         width: 2
       )
     )

@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:droid_hole/widgets/logs_quantity_load_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
@@ -10,9 +9,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/advanced_options.dart';
 import 'package:droid_hole/screens/servers.dart';
 
+import 'package:droid_hole/widgets/logs_quantity_load_modal.dart';
 import 'package:droid_hole/widgets/theme_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
-import 'package:droid_hole/widgets/settings_top_bar.dart';
 import 'package:droid_hole/widgets/legal_modal.dart';
 import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
@@ -144,9 +143,24 @@ class Settings extends StatelessWidget {
     }
 
     return  Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size(double.maxFinite, 120),
-        child: SettingsTopBar()
+      appBar: AppBar(
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/icon/icon-no-background.png',
+              width: 40,
+            ),
+            const SizedBox(width: 20),
+            const Text(
+              "DroidHole",
+              style: TextStyle(
+                fontSize: 24
+              ),
+            )
+          ],
+        ),
       ),
       body: Column(
         children: [

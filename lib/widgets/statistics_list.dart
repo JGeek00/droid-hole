@@ -37,13 +37,19 @@ class StatisticsList extends StatelessWidget {
 
       return Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
+          Container(
+            margin: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(
+                color: Colors.black12,
+              )
+            ),
             child: Text(
               label,
               style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20
+                fontSize: 20,
               ),
             ),
           ),
@@ -82,8 +88,7 @@ class StatisticsList extends StatelessWidget {
                             maxLines: 1,
                             softWrap: false,
                             style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16
+                              fontSize: 15
                             ),
                           ),
                           const SizedBox(height: 10),
