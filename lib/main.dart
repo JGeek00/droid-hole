@@ -23,7 +23,7 @@ import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
 
 import 'package:droid_hole/widgets/disable_modal.dart';
-import 'package:droid_hole/widgets/add_server_modal.dart';
+import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/functions/server_management.dart';
@@ -334,14 +334,10 @@ class _BaseState extends State<Base> {
 
     void _addServerModal() async {
       await Future.delayed(const Duration(seconds: 0), (() => {
-        showModalBottomSheet(
-          context: context, 
-          isScrollControlled: true,
-          builder: (context) => const AddServerModal(),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
-        )
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => const AddServerFullscreen()
+        ))
       }));
     }
     
@@ -354,7 +350,7 @@ class _BaseState extends State<Base> {
         statusBarIconBrightness: Theme.of(context).brightness == Brightness.light
           ? Brightness.dark
           : Brightness.light,
-        systemNavigationBarColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
         systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light
           ? Brightness.dark
           : Brightness.light,

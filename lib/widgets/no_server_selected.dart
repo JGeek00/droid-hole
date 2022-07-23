@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/servers_list_modal.dart';
+import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 
 class NoServerSelected extends StatelessWidget {
   const NoServerSelected({Key? key,}) : super(key: key);
@@ -9,20 +9,13 @@ class NoServerSelected extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
     void _selectServer() {
       Future.delayed(const Duration(seconds: 0), () => {
-        showModalBottomSheet(
-          context: context, 
-          builder: (context) => ServersListModal(
-            statusBarHeight: statusBarHeight
-          ),
-          backgroundColor: Colors.transparent,
-          isDismissible: true,
-          enableDrag: true,
-          isScrollControlled: true
-        )
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => const AddServerFullscreen()
+        ))
       });
     }
 

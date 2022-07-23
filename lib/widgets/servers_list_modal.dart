@@ -1,3 +1,4 @@
+import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
@@ -42,14 +43,10 @@ class _ServersListModalState extends State<ServersListModal> {
 
     void _openAddServerBottomSheet({Server? server}) async {
       await Future.delayed(const Duration(seconds: 0), (() => {
-        showModalBottomSheet(
-          context: context, 
-          isScrollControlled: true,
-          builder: (context) => AddServerModal(server: server),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
-        )
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => AddServerFullscreen(server: server)
+        ))
       }));
     }
 

@@ -440,7 +440,8 @@ class Home extends StatelessWidget {
                         Text(
                           AppLocalizations.of(context)!.totalQueries24,
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -506,7 +507,8 @@ class Home extends StatelessWidget {
                           Text(
                             AppLocalizations.of(context)!.clientActivity24,
                             style: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500
                             ),
                           ),
                           const SizedBox(height: 10),

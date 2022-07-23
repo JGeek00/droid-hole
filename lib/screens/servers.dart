@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/servers_list.dart';
-import 'package:droid_hole/widgets/add_server_modal.dart';
+import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/models/server.dart';
@@ -36,32 +36,25 @@ class _ServersPageState extends State<ServersPage> {
 
     void _openAddServerBottomSheet({Server? server}) async {
       await Future.delayed(const Duration(seconds: 0), (() => {
-        showModalBottomSheet(
-          context: context, 
-          isScrollControlled: true,
-          builder: (context) => AddServerModal(server: server),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
-        )
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => AddServerFullscreen(server: server)
+        ))
       }));
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.servers),
-        actions: [
-          IconButton(
-            splashRadius: 20,
-            onPressed: _openAddServerBottomSheet, 
-            icon: const Icon(Icons.add)
-          )
-        ],
       ),
       body: ServersList(
         context: context,
         controllers: expandableControllerList, 
         onChange: _expandOrContract
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _openAddServerBottomSheet,
+        child: const Icon(Icons.add),
       ),
     );
   }
