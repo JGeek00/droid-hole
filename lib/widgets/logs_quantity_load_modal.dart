@@ -90,22 +90,30 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
-        margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30)
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const  Padding(
+              padding: EdgeInsets.only(top: 30),
+              child: Icon(
+                Icons.list_rounded,
+                size: 30,
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(vertical: 30),
               child: Text(
                 AppLocalizations.of(context)!.logsQuantityPerLoad,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 22,
                 ),
               ),
             ),
@@ -129,15 +137,15 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                 right: 20
               ),
               child: Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.yellow,
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(30)
                 ),
                 child: Row(
                   children: [
                     const Icon(Icons.warning_rounded),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 20),
                     Expanded(
                       child: Text(
                         AppLocalizations.of(context)!.logsPerQueryWarning,
@@ -155,6 +163,7 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                   child: Column(
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
                             width: (mediaQueryData.size.width-70)/2,
@@ -211,6 +220,7 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                         ],
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
                             width: (mediaQueryData.size.width-70)/2,
@@ -267,6 +277,7 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                         ],
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
                             width: (mediaQueryData.size.width-70)/2,
@@ -345,20 +356,15 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(20),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(context), 
-                        child: Row(
-                          children: [
-                            const Icon(Icons.cancel),
-                            const SizedBox(width: 10),
-                            Text(AppLocalizations.of(context)!.cancel)
-                          ],
-                        ),
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
+                      const SizedBox(width: 20),
                       TextButton(
                         onPressed: selectedOption != null
                           ? () {
@@ -368,21 +374,15 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                           : null,
                         style: ButtonStyle(
                           overlayColor: MaterialStateProperty.all(
-                            Colors.green.withOpacity(0.1)
+                            Theme.of(context).primaryColor.withOpacity(0.1)
                           ),
                           foregroundColor: MaterialStateProperty.all(
                             selectedOption != null
-                              ? Colors.green
+                              ? Theme.of(context).primaryColor
                               : Colors.grey,
                           ),
                         ), 
-                        child: Row(
-                          children: [
-                            const Icon(Icons.check),
-                            const SizedBox(width: 10),
-                            Text(AppLocalizations.of(context)!.confirm)
-                          ],
-                        ),
+                        child: Text(AppLocalizations.of(context)!.confirm),
                       ),
                     ],
                   ),

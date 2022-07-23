@@ -147,66 +147,37 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
     }
 
     return Container(
-      margin: EdgeInsets.only(
-        top: widget.statusBarHeight,
-        left: 10,
-        right: 10,
-        bottom: Platform.isIOS ? 30 : 10
-      ),
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,
-        borderRadius: BorderRadius.circular(10)
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30)
+        )
       ),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(width: (width-20)/3),
-                Container(
-                  width: (width-20)/3,
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Center(
-                    child: Text(
-                      AppLocalizations.of(context)!.filters,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: (width-20)/3,
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Material(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(50),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(50),
-                          onTap: _resetFilters,
-                          child: const Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Icon(Icons.restore),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+            const Padding(
+              padding: EdgeInsets.only(top: 30),
+              child: Icon(
+                Icons.filter_list,
+                size: 30,
+              ),
             ),
-            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: Text(
+                AppLocalizations.of(context)!.filters,
+                style: const TextStyle(
+                  fontSize: 22
+                ),
+              ),
+            ),
             Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 20
+                    horizontal: 30
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,7 +185,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                       Text(
                         AppLocalizations.of(context)!.time,
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                           fontSize: 16
                         ),
                       ),
@@ -248,7 +219,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                         Text(
                                           AppLocalizations.of(context)!.fromTime,
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w500,
                                             fontSize: 14,
                                             color: Theme.of(context).primaryColor,
                                           ),
@@ -299,7 +270,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                         Text(
                                           AppLocalizations.of(context)!.toTime,
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w500,
                                             fontSize: 14,
                                             color: Theme.of(context).primaryColor
                                           ),
@@ -344,7 +315,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                     onTap: _openStatusModal,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
+                        horizontal: 30,
                         vertical: 10
                       ),
                       child: Row(
@@ -357,7 +328,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                               Text(
                                 AppLocalizations.of(context)!.status,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 16
                                 ),
                               ),
@@ -386,7 +357,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                     onTap: _openClientsModal,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
+                        horizontal: 30,
                         vertical: 10
                       ),
                       child: Row(
@@ -399,7 +370,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                               Text(
                                 AppLocalizations.of(context)!.clients,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 16
                                 ),
                               ),
@@ -424,34 +395,41 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextButton.icon(
-                    onPressed: () => Navigator.pop(context), 
-                    icon: const Icon(Icons.close),
-                    label: Text(AppLocalizations.of(context)!.close),
+                  TextButton(
+                    onPressed: _resetFilters, 
+                    child: Text(AppLocalizations.of(context)!.reset),
                   ),
-                  const SizedBox(width: 10),
-                  TextButton.icon(
-                    onPressed: isFilteringValid() == true
-                      ? () {
-                          widget.filterLogs();
-                          Navigator.pop(context);
-                        }
-                      : null, 
-                    icon: const Icon(Icons.check), 
-                    label: Text(AppLocalizations.of(context)!.apply),
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(
-                        isFilteringValid() == true
-                          ? Colors.green
-                          : Colors.grey
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context), 
+                        child: Text(AppLocalizations.of(context)!.close),
                       ),
-                      overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
-                    ),
-                  )
+                      const SizedBox(width: 20),
+                      TextButton(
+                        onPressed: isFilteringValid() == true
+                          ? () {
+                              widget.filterLogs();
+                              Navigator.pop(context);
+                            }
+                          : null,
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all(
+                            isFilteringValid() == true
+                              ? Theme.of(context).primaryColor
+                              : Colors.grey
+                          ),
+                          overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColor.withOpacity(0.1))
+                        ), 
+                        child: Text(AppLocalizations.of(context)!.apply),
+                      )
+                    ],
+                  ),
                 ],
               ),
             )
