@@ -215,5 +215,6 @@
     "cantUpdateLogsPerQuery": "Logs quantity per request couldn't be updated",
     "logsPerQueryLabel": "Select the time interval to be used for each log request to the API.",
     "logsPerQueryWarning": "Selecting a long time could result on slow load times.\nIt will depend on the speed of the server.",
-    "logsWillBeRequested": "Logs will be requested in groups of"
+    "logsWillBeRequested": "Logs will be requested in groups of",
+    "accept": "Accept"
 }

@@ -61,58 +61,32 @@ class LogDetailsModal extends StatelessWidget {
         log.status == '13' ||
         log.status == '14'
       ) {
-        return Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(30),
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              whiteBlackList('black', log);
-            },
-            borderRadius: BorderRadius.circular(30),
-            splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Icon(
-                Icons.block,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-          ),
+        return TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            whiteBlackList('black', log);
+          }, 
+          child: Text(AppLocalizations.of(context)!.blacklist)
         );
       }
       else {
-        return Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(30),
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              whiteBlackList('white', log);
-            },
-            borderRadius: BorderRadius.circular(30),
-            splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Icon(
-                Icons.check,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-          ),
+        return TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            whiteBlackList('white', log);
+          }, 
+          child: Text(AppLocalizations.of(context)!.whitelist)
         );
       }
     }
 
     return Container(
       height: log.status == '2' && log.answeredBy != null
-        ? (mediaQuery.size.height-statusBarHeight) > 727
-          ? 727
+        ? (mediaQuery.size.height-statusBarHeight) > 820
+          ? 820
           : mediaQuery.size.height - (statusBarHeight)
-        : (mediaQuery.size.height-statusBarHeight) > 632
-          ? 632
+        : (mediaQuery.size.height-statusBarHeight) > 745
+          ? 745
           : mediaQuery.size.height - (statusBarHeight),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
@@ -123,38 +97,21 @@ class LogDetailsModal extends StatelessWidget {
       ),
       child: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Icon(
+              Icons.description_rounded,
+              size: 30,
+            ),
+          ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Material(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(40),
-                        child: InkWell(
-                          onTap: () => Navigator.pop(context),
-                          borderRadius: BorderRadius.circular(40),
-                          child: const Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Icon(Icons.close),
-                          )
-                        )
-                      ),
-                      const SizedBox(width: 20),
-                      Text(
-                        AppLocalizations.of(context)!.logDetails,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500
-                        ),
-                      ),
-                    ],
-                  ),
-                  _blackWhiteListButton()
-                ],
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: Text(
+                AppLocalizations.of(context)!.logDetails,
+                style: const TextStyle(
+                  fontSize: 22,
+                ),
               ),
             ),
           ),
@@ -194,6 +151,19 @@ class LogDetailsModal extends StatelessWidget {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _blackWhiteListButton(),
+                TextButton(
+                  onPressed: () => Navigator.pop(context), 
+                  child: Text(AppLocalizations.of(context)!.close)
+                )
+              ],
+            ),
+          )
         ],
       ),
     );

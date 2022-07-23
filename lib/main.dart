@@ -322,8 +322,8 @@ class _BaseState extends State<Base> {
               onDisable: (time) => disableServer(time, context)
             ),
             backgroundColor: Colors.transparent,
-            isDismissible: false,
-            enableDrag: false,
+            isDismissible: true,
+            enableDrag: true,
           );
         }
         else {

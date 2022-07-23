@@ -32,7 +32,6 @@ class ServersList extends StatelessWidget {
   // ignore: avoid_renaming_method_parameters
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
-    final filtersProvider = Provider.of<FiltersProvider>(context);
     List<Server> servers = serversProvider.getServersList;
 
     final width = MediaQuery.of(context).size.width;
@@ -277,7 +276,7 @@ class ServersList extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.w500
                   ),
                 ),
                 Column(
@@ -383,7 +382,7 @@ class ServersList extends StatelessWidget {
                             : AppLocalizations.of(context)!.selectedDisconnected,
                           style: const TextStyle(
                             color: Colors.white,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.w500
                           ),
                         )
                       ],

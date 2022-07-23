@@ -9,15 +9,18 @@ class NoServerSelected extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
     void _selectServer() {
       Future.delayed(const Duration(seconds: 0), () => {
         showModalBottomSheet(
           context: context, 
-          builder: (context) => const ServersListModal(),
+          builder: (context) => ServersListModal(
+            statusBarHeight: statusBarHeight
+          ),
           backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
+          isDismissible: true,
+          enableDrag: true,
           isScrollControlled: true
         )
       });

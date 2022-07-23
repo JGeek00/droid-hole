@@ -39,7 +39,7 @@ class _ThemeModalState extends State<ThemeModal> {
     return Container(
       height: mediaQuery.orientation == Orientation.landscape
         ? mediaQuery.size.height - (widget.statusBarHeight)
-        : 280,
+        : 410,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30),
@@ -49,36 +49,23 @@ class _ThemeModalState extends State<ThemeModal> {
       ),
       child: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Icon(
+              Icons.light_mode_rounded,
+              size: 30,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(
               top: 30,
-              left: 20,
-              right: 20,
-              bottom: 20
+              bottom: 30
             ),
-            child: Row(
-              children: [
-                Material(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(30),
-                  child: InkWell(
-                    onTap: () => Navigator.pop(context),
-                    borderRadius: BorderRadius.circular(30),
-                    child: const Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Icon(Icons.close),
-                    )
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Text(
-                  AppLocalizations.of(context)!.theme,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20
-                  ),
-                ),
-              ],
+            child: Text(
+              AppLocalizations.of(context)!.theme,
+              style: const TextStyle(
+                fontSize: 22
+              ),
             ),
           ),
           Expanded(
@@ -167,6 +154,18 @@ class _ThemeModalState extends State<ThemeModal> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context), 
+                  child: Text(AppLocalizations.of(context)!.close)
+                )
+              ],
+            ),
+          )
         ],
       )
     );

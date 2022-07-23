@@ -218,5 +218,6 @@
     "cantUpdateLogsPerQuery": "No se ha podido actualizar la cantidad de registros por petición.",
     "logsPerQueryLabel": "Selecciona el intervalo de tiempo que se va a utilizar para cada petición de registros a la API.",
     "logsPerQueryWarning": "Seleccionar un tiempo largo podría resultar en tiempos de carga lentos.\nDependerá de la velocidad del servidor.",
-    "logsWillBeRequested": "Los registros se pedirán en grupos de"
+    "logsWillBeRequested": "Los registros se pedirán en grupos de",
+    "accept": "Aceptar"
 }

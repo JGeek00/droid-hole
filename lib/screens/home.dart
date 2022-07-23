@@ -29,6 +29,7 @@ class Home extends StatelessWidget {
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
     final orientation = MediaQuery.of(context).orientation;
 
     Widget _tile({
@@ -618,10 +619,12 @@ class Home extends StatelessWidget {
       Future.delayed(const Duration(seconds: 0), () => {
         showModalBottomSheet(
           context: context, 
-          builder: (context) => const ServersListModal(),
+          builder: (context) => ServersListModal(
+            statusBarHeight: statusBarHeight,
+          ),
           backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
+          isDismissible: true,
+          enableDrag: true,
           isScrollControlled: true
         )
       });
