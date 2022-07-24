@@ -88,7 +88,7 @@ class _TokenModalState extends State<TokenModal> {
       }
       else if (result['result'] == 'hash_not_valid') {
         setState(() {
-          height = 300;
+          height = 455;
         });
         await Future.delayed(const Duration(milliseconds: 260), (() {
           setState(() {
@@ -204,13 +204,12 @@ class _TokenModalState extends State<TokenModal> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton.icon(
+                TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     widget.onCancel();
                   },
-                  label: Text(AppLocalizations.of(context)!.cancel),
-                  icon: const Icon(Icons.cancel),
+                  child: Text(AppLocalizations.of(context)!.cancel),
                 ),
                 const SizedBox(width: 20),
                 TextButton(
@@ -219,7 +218,7 @@ class _TokenModalState extends State<TokenModal> {
                     : null,
                   style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(
-                      Colors.green.withOpacity(0.1)
+                      Theme.of(context).primaryColor.withOpacity(0.1)
                     ),
                     foregroundColor: MaterialStateProperty.all(
                       textToken == true && checkingToken == false
