@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -9,9 +7,9 @@ import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 import 'package:droid_hole/widgets/statistics_list.dart';
 import 'package:droid_hole/widgets/statistics_queries_servers_tab.dart';
-import 'package:droid_hole/widgets/statistics_top_bar.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/config/system_overlay_style.dart';
 
 class Statistics extends StatelessWidget {
   const Statistics({Key? key}) : super(key: key);
@@ -21,7 +19,6 @@ class Statistics extends StatelessWidget {
     final serversProvider = Provider.of<ServersProvider>(context);
 
     final orientation = MediaQuery.of(context).orientation;
-    final textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
     Widget _generateBody() {
       switch (serversProvider.getStatusLoading) {
@@ -48,42 +45,107 @@ class Statistics extends StatelessWidget {
           );
 
         case 1:
-          return TabBarView(
-            children: [
-              const QueriesServersTab(),
-              StatisticsList(
-                data1: {
-                  "data": serversProvider.getRealtimeStatus!.topQueries.isNotEmpty == true 
-                    ? serversProvider.getRealtimeStatus!.topQueries
-                    : null,
-                  "label": AppLocalizations.of(context)!.topPermittedDomains
-                },
-                data2: {
-                  "data": serversProvider.getRealtimeStatus!.topAds.isNotEmpty == true 
-                    ? serversProvider.getRealtimeStatus!.topAds
-                    : null,
-                  "label": AppLocalizations.of(context)!.topBlockedDomains
-                },
-                countLabel: AppLocalizations.of(context)!.hits,
-                type: "domains",
-              ),
-              StatisticsList(
-                data1: {
-                  "data":  serversProvider.getRealtimeStatus!.topSources.isNotEmpty == true 
-                    ? serversProvider.getRealtimeStatus!.topSources
-                    : null,
-                  "label": AppLocalizations.of(context)!.topClients
-                },
-                data2: {
-                  "data": serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty == true 
-                    ? serversProvider.getRealtimeStatus!.topSourcesBlocked
-                    : null,
-                  "label": AppLocalizations.of(context)!.topClientsBlocked
-                },
-                countLabel: AppLocalizations.of(context)!.requests,
-                type: "clients",
-              ),
-            ]
+          return NestedScrollView(
+            headerSliverBuilder: ((context, innerBoxIsScrolled) {
+              return [
+                SliverAppBar(
+                  systemOverlayStyle: systemUiOverlayStyleConfig(context),
+                  title: Text(AppLocalizations.of(context)!.statistics),
+                  centerTitle: true,
+                  pinned: true,
+                  floating: true,
+                  forceElevated: innerBoxIsScrolled,
+                  bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
+                    ? TabBar(
+                      tabs: orientation == Orientation.portrait
+                        ? [
+                            Tab(
+                              icon: const Icon(Icons.dns_rounded),
+                              text: AppLocalizations.of(context)!.queriesServers,
+                            ),
+                            Tab(
+                              icon: const Icon(Icons.http_rounded),
+                              text: AppLocalizations.of(context)!.domains,
+                            ),
+                            Tab(
+                              icon: const Icon(Icons.devices_rounded),
+                              text: AppLocalizations.of(context)!.clients,
+                            ),
+                          ]
+                        : [
+                          Tab(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.dns_rounded),
+                                const SizedBox(width: 10),
+                                Text(AppLocalizations.of(context)!.queriesServers)
+                              ],
+                            ),
+                          ),
+                          Tab(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.http_rounded),
+                                const SizedBox(width: 10),
+                                Text(AppLocalizations.of(context)!.domains)
+                              ],
+                            ),
+                          ),
+                          Tab(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.devices_rounded),
+                                const SizedBox(width: 10),
+                                Text(AppLocalizations.of(context)!.clients)
+                              ],
+                            ),
+                          ),
+                        ]
+                    )
+                  : null
+                )
+              ];
+            }),
+            body: TabBarView(
+              children: [
+                const QueriesServersTab(),
+                StatisticsList(
+                  data1: {
+                    "data": serversProvider.getRealtimeStatus!.topQueries.isNotEmpty == true 
+                      ? serversProvider.getRealtimeStatus!.topQueries
+                      : null,
+                    "label": AppLocalizations.of(context)!.topPermittedDomains
+                  },
+                  data2: {
+                    "data": serversProvider.getRealtimeStatus!.topAds.isNotEmpty == true 
+                      ? serversProvider.getRealtimeStatus!.topAds
+                      : null,
+                    "label": AppLocalizations.of(context)!.topBlockedDomains
+                  },
+                  countLabel: AppLocalizations.of(context)!.hits,
+                  type: "domains",
+                ),
+                StatisticsList(
+                  data1: {
+                    "data":  serversProvider.getRealtimeStatus!.topSources.isNotEmpty == true 
+                      ? serversProvider.getRealtimeStatus!.topSources
+                      : null,
+                    "label": AppLocalizations.of(context)!.topClients
+                  },
+                  data2: {
+                    "data": serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty == true 
+                      ? serversProvider.getRealtimeStatus!.topSourcesBlocked
+                      : null,
+                    "label": AppLocalizations.of(context)!.topClientsBlocked
+                  },
+                  countLabel: AppLocalizations.of(context)!.requests,
+                  type: "clients",
+                ),
+              ]
+            ),
           );
 
         case 2:
@@ -120,17 +182,6 @@ class Statistics extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size(
-            double.maxFinite, 
-            serversProvider.selectedServer != null && serversProvider.isServerConnected == true 
-              ? orientation == Orientation.portrait
-                ? Platform.isIOS ? 139 : 138
-                : Platform.isIOS ? 103 : 102
-              : 64
-          ),
-          child: const StatisticsTopBar()
-        ),
         body: serversProvider.selectedServer != null 
         ? serversProvider.isServerConnected == true 
           ? RefreshIndicator(

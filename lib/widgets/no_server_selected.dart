@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/servers_list_modal.dart';
+import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 
 class NoServerSelected extends StatelessWidget {
   const NoServerSelected({Key? key,}) : super(key: key);
@@ -12,14 +12,10 @@ class NoServerSelected extends StatelessWidget {
 
     void _selectServer() {
       Future.delayed(const Duration(seconds: 0), () => {
-        showModalBottomSheet(
-          context: context, 
-          builder: (context) => const ServersListModal(),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
-          isScrollControlled: true
-        )
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => const AddServerFullscreen()
+        ))
       });
     }
 
@@ -50,12 +46,6 @@ class NoServerSelected extends StatelessWidget {
                   onPressed: _selectServer, 
                   label: Text(AppLocalizations.of(context)!.selectConnection),
                   icon: const Icon(Icons.storage_rounded),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      width: 1.0, 
-                      color: Theme.of(context).primaryColor
-                    ),
-                  ),
                 )
               ],
             ),

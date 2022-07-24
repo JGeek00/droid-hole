@@ -28,7 +28,7 @@ class TokenModal extends StatefulWidget {
 
 class _TokenModalState extends State<TokenModal> {
   final tokenTextController = TextEditingController();
-  double height = 350;
+  double height = 430;
   bool textToken = false;
   bool checkingToken = false;
   bool tokenNotValid = false;
@@ -88,7 +88,7 @@ class _TokenModalState extends State<TokenModal> {
       }
       else if (result['result'] == 'hash_not_valid') {
         setState(() {
-          height = 300;
+          height = 455;
         });
         await Future.delayed(const Duration(milliseconds: 260), (() {
           setState(() {
@@ -118,19 +118,28 @@ class _TokenModalState extends State<TokenModal> {
       return Column(
         mainAxisSize: MainAxisSize.max,
         children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Icon(
+              Icons.key_rounded,
+              size: 30,
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 30),
             child: Text(
               AppLocalizations.of(context)!.tokenNeeded,
               style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18
+                fontSize: 24
               ),
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.only(
+                left: 30,
+                right: 20
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -143,7 +152,7 @@ class _TokenModalState extends State<TokenModal> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: width-180,
+                        width: width-185,
                         child: TextFormField(
                           onChanged: (value) => setState(() {
                             if (value != '') {
@@ -172,7 +181,7 @@ class _TokenModalState extends State<TokenModal> {
                           onTap: () async {
                             await managePermission();
                             setState(() {
-                              height = 550;
+                              height = 670;
                             });
                             await Future.delayed(const Duration(milliseconds: 250), () {
                               setState(() => scanQr = true);
@@ -191,34 +200,33 @@ class _TokenModalState extends State<TokenModal> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton.icon(
+                TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     widget.onCancel();
                   },
-                  label: Text(AppLocalizations.of(context)!.cancel),
-                  icon: const Icon(Icons.cancel),
+                  child: Text(AppLocalizations.of(context)!.cancel),
                 ),
-                TextButton.icon(
+                const SizedBox(width: 20),
+                TextButton(
                   onPressed: textToken == true && checkingToken == false
                     ? _confirm
                     : null,
                   style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(
-                      Colors.green.withOpacity(0.1)
+                      Theme.of(context).primaryColor.withOpacity(0.1)
                     ),
                     foregroundColor: MaterialStateProperty.all(
                       textToken == true && checkingToken == false
-                        ? Colors.green
+                        ? Theme.of(context).primaryColor
                         : Colors.grey,
                     ),
                   ), 
-                  label: Text(AppLocalizations.of(context)!.confirm),
-                  icon: const Icon(Icons.check)
+                  child: Text(AppLocalizations.of(context)!.confirm),
                 ),
               ],
             ),
@@ -265,7 +273,7 @@ class _TokenModalState extends State<TokenModal> {
                 style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 16,
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.w500
                 ),
               )
             ],
@@ -324,13 +332,19 @@ class _TokenModalState extends State<TokenModal> {
     Widget _qr() {
       return Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Icon(
+              Icons.key_rounded,
+              size: 30,
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 30),
             child: Text(
               AppLocalizations.of(context)!.tokenNeeded,
               style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18
+                fontSize: 24
               ),
             ),
           ),
@@ -357,19 +371,19 @@ class _TokenModalState extends State<TokenModal> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton.icon(
+                TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     widget.onCancel();
                   },
-                  label: Text(AppLocalizations.of(context)!.cancel),
-                  icon: const Icon(Icons.cancel),
+                  child: Text(AppLocalizations.of(context)!.cancel),
                 ),
-                TextButton.icon(
+                const SizedBox(width: 20),
+                TextButton(
                   onPressed: textToken == true && checkingToken == false
                     ? _confirm
                     : null,
@@ -379,12 +393,11 @@ class _TokenModalState extends State<TokenModal> {
                     ),
                     foregroundColor: MaterialStateProperty.all(
                       textToken == true && checkingToken == false
-                        ? Colors.green
+                        ? Theme.of(context).primaryColor
                         : Colors.grey,
                     ),
                   ), 
-                  label: Text(AppLocalizations.of(context)!.confirm),
-                  icon: const Icon(Icons.check)
+                  child: Text(AppLocalizations.of(context)!.confirm),
                 ),
               ],
             ),
@@ -397,9 +410,6 @@ class _TokenModalState extends State<TokenModal> {
       onWillPop: () async => false,
       child: Dialog(
         backgroundColor: Theme.of(context).dialogBackgroundColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-        ),
         child: SizedBox(
           child: SingleChildScrollView(
             child: AnimatedContainer(

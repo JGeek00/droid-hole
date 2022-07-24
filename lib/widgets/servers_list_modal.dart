@@ -1,18 +1,21 @@
-import 'dart:io';
-
+import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/servers_list.dart';
-import 'package:droid_hole/widgets/add_server_modal.dart';
 
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 class ServersListModal extends StatefulWidget {
-  const ServersListModal({Key? key}) : super(key: key);
+  final double statusBarHeight;
+
+  const ServersListModal({
+    Key? key,
+    required this.statusBarHeight
+  }) : super(key: key);
 
   @override
   State<ServersListModal> createState() => _ServersListModalState();
@@ -39,47 +42,48 @@ class _ServersListModalState extends State<ServersListModal> {
 
     void _openAddServerBottomSheet({Server? server}) async {
       await Future.delayed(const Duration(seconds: 0), (() => {
-        showModalBottomSheet(
-          context: context, 
-          isScrollControlled: true,
-          builder: (context) => AddServerModal(server: server),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
-        )
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => AddServerFullscreen(server: server)
+        ))
       }));
     }
 
     return Container(
-      height: height-50 < 500 ? height-50 : 500,
-      margin: EdgeInsets.only(
-        left: 10,
-        right: 10,
-        bottom: Platform.isIOS ? 30 : 10
-      ),
+      height: serversProvider.getServersList.length > 4 
+        ? height-widget.statusBarHeight
+        : height < 600 
+          ? height-widget.statusBarHeight
+          : 600,
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30)
+        ),
       ),
       child: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.only(
+              top: 30,
+            ),
+            child: Icon(
+              Icons.storage_rounded,
+              size: 30,
+            ),
+          ),
           Container(
             width: double.maxFinite,
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(vertical: 30),
             child: Center(
               child: Text(
                 AppLocalizations.of(context)!.piHoleServers,
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
+                  fontSize: 22
                 ),
               ),
             ),
-          ),
-          Container(
-            height: 1,
-            width: double.maxFinite,
-            color: Theme.of(context).dividerColor
           ),
           Expanded(
             child: ClipRRect(
@@ -95,22 +99,20 @@ class _ServersListModalState extends State<ServersListModal> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextButton.icon(
+                    TextButton(
                       onPressed: () => _openAddServerBottomSheet(), 
-                      icon: const Icon(Icons.add), 
-                      label: Text(AppLocalizations.of(context)!.add),
+                      child: Text(AppLocalizations.of(context)!.add),
                     ),
-                    TextButton.icon(
+                    TextButton(
                       onPressed: () => Navigator.pop(context), 
-                      icon: const Icon(Icons.close), 
-                      label: Text(AppLocalizations.of(context)!.close),
+                      child: Text(AppLocalizations.of(context)!.close),
                     ),
                   ],
                 )

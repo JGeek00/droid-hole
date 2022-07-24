@@ -6,67 +6,56 @@ class LegalModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10)
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).dialogBackgroundColor,
-          borderRadius: BorderRadius.circular(10)
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text(
-                AppLocalizations.of(context)!.legalInfo,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
+      child: SizedBox(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(
+                  top: 20,
+                ),
+                child: Icon(
+                  Icons.info,
+                  size: 26,
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Icon(
-                    Icons.info,
-                    size: 30,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  AppLocalizations.of(context)!.legalInfo,
+                  style: const TextStyle(
+                    fontSize: 24
                   ),
                 ),
-                SizedBox(
-                  width: width-170,
-                  child: Text(
-                    AppLocalizations.of(context)!.legalText,
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  AppLocalizations.of(context)!.legalText,
                 ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () => Navigator.pop(context), 
-                        icon: const Icon(Icons.close), 
-                        label: Text(AppLocalizations.of(context)!.close)
-                      )
-                    ],
-                  ),
-                )
-              ],
-            )
-          ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 10, right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context), 
+                          child: Text(AppLocalizations.of(context)!.close)
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

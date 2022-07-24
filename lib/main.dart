@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:animations/animations.dart';
+import 'package:device_info/device_info.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +24,7 @@ import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
 
 import 'package:droid_hole/widgets/disable_modal.dart';
-import 'package:droid_hole/widgets/add_server_modal.dart';
+import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/functions/server_management.dart';
@@ -52,6 +54,16 @@ void main() async {
 
   PackageInfo appInfo = await loadAppInfo();
   configProvider.setAppInfo(appInfo);
+
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  if (Platform.isAndroid) {
+    final androidInfo = await deviceInfo.androidInfo;
+    configProvider.setAndroidInfo(androidInfo);
+  }
+  if (Platform.isIOS) {
+    final iosInfo = await deviceInfo.iosInfo;
+    configProvider.setIosInfo(iosInfo);
+  }
 
   runApp(
     MultiProvider(
@@ -251,29 +263,37 @@ class _DroidHoleState extends State<DroidHole> {
       });
     }
 
-    return MaterialApp(
-      title: 'Droid Hole',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: appConfigProvider.selectedTheme,
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        AppLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', ''),
-        Locale('es', '')
-      ],
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: child!,
-        );
-      },
-      home: const Base()
+    return DynamicColorBuilder(
+      builder: ((lightDynamic, darkDynamic) {
+        return MaterialApp(
+          title: 'Droid Hole',
+          theme: appConfigProvider.androidDeviceInfo != null && appConfigProvider.androidDeviceInfo!.version.sdkInt >= 31
+            ? lightTheme(lightDynamic)
+            : lightThemeOldVersions(),
+          darkTheme: appConfigProvider.androidDeviceInfo != null && appConfigProvider.androidDeviceInfo!.version.sdkInt >= 31
+            ? darkTheme(darkDynamic)
+            : darkThemeOldVersions(),
+          themeMode: appConfigProvider.selectedTheme,
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            AppLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', ''),
+            Locale('es', '')
+          ],
+          builder: (context, child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: child!,
+            );
+          },
+          home: const Base()
+          );
+      }),
     );
   }
 }
@@ -317,8 +337,8 @@ class _BaseState extends State<Base> {
               onDisable: (time) => disableServer(time, context)
             ),
             backgroundColor: Colors.transparent,
-            isDismissible: false,
-            enableDrag: false,
+            isDismissible: true,
+            enableDrag: true,
           );
         }
         else {
@@ -329,14 +349,10 @@ class _BaseState extends State<Base> {
 
     void _addServerModal() async {
       await Future.delayed(const Duration(seconds: 0), (() => {
-        showModalBottomSheet(
-          context: context, 
-          isScrollControlled: true,
-          builder: (context) => const AddServerModal(),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
-        )
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => const AddServerFullscreen()
+        ))
       }));
     }
     
@@ -349,7 +365,7 @@ class _BaseState extends State<Base> {
         statusBarIconBrightness: Theme.of(context).brightness == Brightness.light
           ? Brightness.dark
           : Brightness.light,
-        systemNavigationBarColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
         systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light
           ? Brightness.dark
           : Brightness.light,
@@ -383,14 +399,12 @@ class _BaseState extends State<Base> {
             && appConfigProvider.selectedTab == 0
               ? FloatingActionButton(
                   onPressed: _enableDisableServer,
-                  backgroundColor: Theme.of(context).primaryColor,
                   child: const Icon(Icons.shield_rounded),
                 )
               : null
           : appConfigProvider.selectedTab == 0 && serversProvider.getServersList.isNotEmpty
             ? FloatingActionButton(
                 onPressed: _addServerModal,
-                backgroundColor: Theme.of(context).primaryColor,
                 child: const Icon(Icons.add),
               )
             : null,

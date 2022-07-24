@@ -44,7 +44,8 @@ class QueriesServersTab extends StatelessWidget {
                         key,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500
                         ),
                       ),
                     )
@@ -79,7 +80,6 @@ class QueriesServersTab extends StatelessWidget {
                       AppLocalizations.of(context)!.queryTypes,
                       style: const TextStyle(
                         fontSize: 20,
-                        fontWeight: FontWeight.bold
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -116,7 +116,6 @@ class QueriesServersTab extends StatelessWidget {
                       AppLocalizations.of(context)!.upstreamServers,
                       style: const TextStyle(
                         fontSize: 20,
-                        fontWeight: FontWeight.bold
                       ),
                     ),
                     const SizedBox(height: 30),

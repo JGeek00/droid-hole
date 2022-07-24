@@ -92,14 +92,11 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
     }
 
     return Container(
-      margin: EdgeInsets.only(
-        top: widget.statusBarHeight,
-        left: 10,
-        bottom: Platform.isIOS ? 30 : 10,
-        right: 10
-      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30)
+        ),
         color: Theme.of(context).dialogBackgroundColor,
       ),
       height: mediaQuery.size.height >= (Platform.isIOS ? 993 : 973) 
@@ -110,55 +107,34 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
           ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  AppLocalizations.of(context)!.logDetails,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
-                  ),
-                ),
+          const Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Icon(
+              Icons.phone_android_rounded,
+              size: 30,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 30,
+              bottom: 20
+            ),
+            child: Text(
+              AppLocalizations.of(context)!.clients,
+              style: const TextStyle(
+                fontSize: 22
               ),
-            ],
+            ),
           ),
           Column(
             children: [
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: _checkUncheckAll,
-                  child: ListTile(
-                    title: SizedBox(
-                      width: 450,
-                      child: Text(
-                        AppLocalizations.of(context)!.allClientsSelected,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    trailing: Checkbox(
-                      value: _selectedClients.length == filtersProvider.totalClients.length ? true : false, 
-                      onChanged: (_) => _checkUncheckAll(),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: mediaQuery.size.height >= (Platform.isIOS ? 993 : 973) 
-                  ? (Platform.isIOS ? 807 : 787 )
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                height: mediaQuery.size.height >= (Platform.isIOS ? 1018 : 998) 
+                  ? (Platform.isIOS ? 828 : 808)
                   : (Platform.isIOS 
-                    ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+218)
-                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+198)
+                    ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+247)
+                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+228)
                   ),
                 child: ListView.builder(
                   itemCount: filtersProvider.totalClients.length,
@@ -171,31 +147,40 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton.icon(
-                  onPressed: () => Navigator.pop(context), 
-                  icon: const Icon(Icons.close),
-                  label: Text(AppLocalizations.of(context)!.close),
+                TextButton(
+                  onPressed: _checkUncheckAll, 
+                  child: _selectedClients.length == filtersProvider.totalClients.length 
+                    ? Text(AppLocalizations.of(context)!.uncheckAll) 
+                    : Text(AppLocalizations.of(context)!.checkAll) 
                 ),
-                const SizedBox(width: 10),
-                TextButton.icon(
-                  onPressed: _selectedClients.isNotEmpty
-                    ? () {
-                        updateList();
-                        Navigator.pop(context);
-                      }
-                    : null, 
-                  icon: const Icon(Icons.check), 
-                  label: Text(AppLocalizations.of(context)!.apply),
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(
-                      _selectedClients.isNotEmpty ? Colors.green : Colors.grey
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context), 
+                      child: Text(AppLocalizations.of(context)!.close),
                     ),
-                    overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
-                  ),
+                    const SizedBox(width: 20),
+                    TextButton(
+                      onPressed: _selectedClients.isNotEmpty
+                        ? () {
+                            updateList();
+                            Navigator.pop(context);
+                          }
+                        : null,
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateProperty.all(
+                          _selectedClients.isNotEmpty ? Theme.of(context).primaryColor : Colors.grey
+                        ),
+                        overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColor.withOpacity(0.1))
+                      ), 
+                      child: Text(AppLocalizations.of(context)!.apply),
+                    ),
+                  ],
                 ),
               ],
             ),

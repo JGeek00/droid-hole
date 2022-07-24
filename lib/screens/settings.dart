@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:droid_hole/widgets/logs_quantity_load_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
@@ -10,12 +9,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/advanced_options.dart';
 import 'package:droid_hole/screens/servers.dart';
 
+import 'package:droid_hole/widgets/logs_quantity_load_modal.dart';
 import 'package:droid_hole/widgets/theme_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
-import 'package:droid_hole/widgets/settings_top_bar.dart';
 import 'package:droid_hole/widgets/legal_modal.dart';
 import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
+import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/config/urls.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -144,9 +144,26 @@ class Settings extends StatelessWidget {
     }
 
     return  Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size(double.maxFinite, 120),
-        child: SettingsTopBar()
+      appBar: AppBar(
+        systemOverlayStyle: systemUiOverlayStyleConfig(context),
+        toolbarHeight: 100,
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/icon/icon-no-background.png',
+              width: 60,
+            ),
+            const SizedBox(width: 30),
+            const Text(
+              "DroidHole",
+              style: TextStyle(
+                fontSize: 28
+              ),
+            )
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -172,7 +189,7 @@ class Settings extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context)!.settings,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 16
                                 ),
                               ),
@@ -246,7 +263,7 @@ class Settings extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context)!.about,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 16
                                 ),
                               ),

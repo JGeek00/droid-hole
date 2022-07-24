@@ -37,7 +37,7 @@ class LogDetailsModal extends StatelessWidget {
                 Text(
                   label,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 15
                   ),
                 ),
@@ -61,118 +61,106 @@ class LogDetailsModal extends StatelessWidget {
         log.status == '13' ||
         log.status == '14'
       ) {
-        return TextButton.icon(
+        return TextButton(
           onPressed: () {
             Navigator.pop(context);
             whiteBlackList('black', log);
           }, 
-          icon: const Icon(Icons.block_rounded), 
-          label: Text(AppLocalizations.of(context)!.blacklist),
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all(Colors.red),
-            overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1))
-          ),
+          child: Text(AppLocalizations.of(context)!.blacklist)
         );
       }
       else {
-        return TextButton.icon(
+        return TextButton(
           onPressed: () {
             Navigator.pop(context);
             whiteBlackList('white', log);
-          },
-          icon: const Icon(Icons.check), 
-          label: Text(AppLocalizations.of(context)!.whitelist),
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all(Colors.green),
-            overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1))
-          ),
+          }, 
+          child: Text(AppLocalizations.of(context)!.whitelist)
         );
       }
     }
 
     return Container(
       height: log.status == '2' && log.answeredBy != null
-        ? (mediaQuery.size.height-statusBarHeight) > 666
-          ? 666
-          : mediaQuery.size.height - (statusBarHeight+15)
-        : (mediaQuery.size.height-statusBarHeight) > 610
-          ? 596
-          : mediaQuery.size.height - (statusBarHeight+15),
-      margin: EdgeInsets.only(
-        left: 10,
-        right: 10,
-        bottom: Platform.isIOS ? 30 : 10,
-      ),
+        ? (mediaQuery.size.height-statusBarHeight) > 820
+          ? 820
+          : mediaQuery.size.height - (statusBarHeight)
+        : (mediaQuery.size.height-statusBarHeight) > 745
+          ? 745
+          : mediaQuery.size.height - (statusBarHeight),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30)
+        ),
         color: Theme.of(context).dialogBackgroundColor,
       ),
       child: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Icon(
+              Icons.description_rounded,
+              size: 30,
+            ),
+          ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 30),
               child: Text(
                 AppLocalizations.of(context)!.logDetails,
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20
+                  fontSize: 22,
                 ),
               ),
             ),
           ),
-          Container(
-            width: double.maxFinite,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            height: log.status == '2' && log.answeredBy != null
-              ? (mediaQuery.size.height-statusBarHeight) > 666
-                ? 535
-                : mediaQuery.size.height - (statusBarHeight+146)
-              : (mediaQuery.size.height-statusBarHeight) > 610
-                ? 465
-                : mediaQuery.size.height - (statusBarHeight+146),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  _item(Icons.link, AppLocalizations.of(context)!.url, Text(
-                    log.url,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-                  const SizedBox(height: 20),
-                  _item(Icons.http_rounded, AppLocalizations.of(context)!.type, Text(log.type)),
-                  const SizedBox(height: 20),
-                  _item(Icons.phone_android_rounded, AppLocalizations.of(context)!.device, Text(
-                    log.device,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-                  const SizedBox(height: 20),
-                  _item(Icons.access_time_outlined, AppLocalizations.of(context)!.time, Text(formatTimestamp(log.dateTime, 'HH:mm:ss'))),
-                  const SizedBox(height: 20),
-                  _item(Icons.shield_outlined, AppLocalizations.of(context)!.status, LogStatus(status: log.status, showIcon: false)),
-                  const SizedBox(height: 20),
-                  if (log.status == '2' && log.answeredBy != null) ...[
-                    _item(Icons.domain, AppLocalizations.of(context)!.answeredBy, Text(
-                      log.answeredBy!,
+          Expanded(
+            child: Container(
+              width: double.maxFinite,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _item(Icons.link, AppLocalizations.of(context)!.url, Text(
+                      log.url,
                       overflow: TextOverflow.ellipsis,
                     )),
                     const SizedBox(height: 20),
+                    _item(Icons.http_rounded, AppLocalizations.of(context)!.type, Text(log.type)),
+                    const SizedBox(height: 20),
+                    _item(Icons.phone_android_rounded, AppLocalizations.of(context)!.device, Text(
+                      log.device,
+                      overflow: TextOverflow.ellipsis,
+                    )),
+                    const SizedBox(height: 20),
+                    _item(Icons.access_time_outlined, AppLocalizations.of(context)!.time, Text(formatTimestamp(log.dateTime, 'HH:mm:ss'))),
+                    const SizedBox(height: 20),
+                    _item(Icons.shield_outlined, AppLocalizations.of(context)!.status, LogStatus(status: log.status, showIcon: false)),
+                    const SizedBox(height: 20),
+                    if (log.status == '2' && log.answeredBy != null) ...[
+                      _item(Icons.domain, AppLocalizations.of(context)!.answeredBy, Text(
+                        log.answeredBy!,
+                        overflow: TextOverflow.ellipsis,
+                      )),
+                      const SizedBox(height: 20),
+                    ],
+                    _item(Icons.system_update_alt_outlined, AppLocalizations.of(context)!.reply, Text("${log.replyType} (${(log.replyTime/10)} ms)")),
                   ],
-                  _item(Icons.system_update_alt_outlined, AppLocalizations.of(context)!.reply, Text("${log.replyType} (${(log.replyTime/10)} ms)")),
-                ],
+                ),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _blackWhiteListButton(),
-                TextButton.icon(
+                TextButton(
                   onPressed: () => Navigator.pop(context), 
-                  icon: const Icon(Icons.close),
-                  label: Text(AppLocalizations.of(context)!.close),
-                ),
+                  child: Text(AppLocalizations.of(context)!.close)
+                )
               ],
             ),
           )

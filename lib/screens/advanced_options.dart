@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
 
+import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -19,8 +20,6 @@ class AdvancedOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
-
-    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
     void _updateSslCheck(bool newStatus) async {
       final result = await appConfigProvider.setOverrideSslCheck(newStatus);
@@ -102,44 +101,9 @@ class AdvancedOptions extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: PreferredSize( 
-        preferredSize: const Size(double.maxFinite, 60),
-        child: Container(
-          margin: EdgeInsets.only(top: statusBarHeight),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).dividerColor,
-                width: 1
-              )
-            )
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    splashRadius: 20,
-                    onPressed: () => {
-                      Navigator.of(context).pop()
-                    }, 
-                    icon: const Icon(Icons.arrow_back)
-                  ),
-                  const SizedBox(width: 20),
-                  Text(
-                    AppLocalizations.of(context)!.advancedSetup,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20
-                    ),
-                  )
-                ],
-              )
-            ],
-          )
-        ),
+      appBar: AppBar(
+        systemOverlayStyle: systemUiOverlayStyleConfig(context),
+        title: Text(AppLocalizations.of(context)!.advancedSetup),
       ),
       body: ListView(
         children: [
@@ -151,7 +115,7 @@ class AdvancedOptions extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context)!.security,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 16
                   ),
                 ),
@@ -164,7 +128,8 @@ class AdvancedOptions extends StatelessWidget {
             description: AppLocalizations.of(context)!.dontCheckCertificateDescription,
             trailing: Switch(
               value: appConfigProvider.overrideSslCheck, 
-              onChanged: _updateSslCheck
+              onChanged: _updateSslCheck,
+              activeColor: Theme.of(context).primaryColor,
             ),
             onTap: () => _updateSslCheck(!appConfigProvider.overrideSslCheck),
             padding: const EdgeInsets.only(
@@ -191,7 +156,7 @@ class AdvancedOptions extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context)!.charts,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 16
                   ),
                 ),
@@ -211,7 +176,8 @@ class AdvancedOptions extends StatelessWidget {
             ),
             trailing: Switch(
               value: appConfigProvider.oneColumnLegend, 
-              onChanged: _updateOneColumnLegend
+              onChanged: _updateOneColumnLegend,
+              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           CustomListTile(
@@ -227,7 +193,8 @@ class AdvancedOptions extends StatelessWidget {
             ),
             trailing: Switch(
               value: appConfigProvider.reducedDataCharts, 
-              onChanged: _updateUseReducedData
+              onChanged: _updateUseReducedData,
+              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           Container(
@@ -247,7 +214,7 @@ class AdvancedOptions extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context)!.others,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 16
                   ),
                 ),

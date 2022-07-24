@@ -4,8 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/widgets/servers_list.dart';
-import 'package:droid_hole/widgets/add_server_modal.dart';
+import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 
+import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 class Connect extends StatefulWidget {
@@ -37,44 +38,18 @@ class _ConnectState extends State<Connect> {
 
     void _addServerModal() async {
       await Future.delayed(const Duration(seconds: 0), (() => {
-        showModalBottomSheet(
-          context: context, 
-          isScrollControlled: true,
-          builder: (context) => const AddServerModal(),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
-        )
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => const AddServerFullscreen()
+        ))
       }));
     }
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size(double.maxFinite, 70),
-        child: Container(
-          margin: EdgeInsets.only(
-            top: mediaQuery.viewPadding.top
-          ),
-          decoration: serversProvider.getServersList.isNotEmpty
-            ?  BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).dividerColor,
-                    width: 1
-                  )
-                )
-              )
-            : null,
-          child: Center(
-            child: Text(
-              AppLocalizations.of(context)!.connectToServer,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20
-              ),
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        systemOverlayStyle: systemUiOverlayStyleConfig(context),
+        title: Text(AppLocalizations.of(context)!.connectToServer),
+        centerTitle: true,
       ),
       body: serversProvider.getServersList.isNotEmpty
         ? SizedBox(
@@ -96,8 +71,7 @@ class _ConnectState extends State<Connect> {
                     AppLocalizations.of(context)!.noConnections,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -106,7 +80,6 @@ class _ConnectState extends State<Connect> {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
                       color: Colors.grey
                     ),
                   ),
@@ -115,12 +88,6 @@ class _ConnectState extends State<Connect> {
                     onPressed: _addServerModal, 
                     label: Text(AppLocalizations.of(context)!.createConnection),
                     icon: const Icon(Icons.add),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                        width: 1.0, 
-                        color: Theme.of(context).primaryColor
-                      ),
-                    ),
                   )
                 ],
               ),

@@ -6,10 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/token_modal.dart';
-import 'package:droid_hole/widgets/add_server_modal.dart';
+import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:droid_hole/widgets/delete_modal.dart';
 
-import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/hash.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/models/server.dart';
@@ -32,7 +31,6 @@ class ServersList extends StatelessWidget {
   // ignore: avoid_renaming_method_parameters
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
-    final filtersProvider = Provider.of<FiltersProvider>(context);
     List<Server> servers = serversProvider.getServersList;
 
     final width = MediaQuery.of(context).size.width;
@@ -51,14 +49,10 @@ class ServersList extends StatelessWidget {
 
     void _openAddServerBottomSheet({Server? server}) async {
       await Future.delayed(const Duration(seconds: 0), (() => {
-        showModalBottomSheet(
-          context: context, 
-          isScrollControlled: true,
-          builder: (context) => AddServerModal(server: server),
-          backgroundColor: Colors.transparent,
-          isDismissible: false,
-          enableDrag: false,
-        )
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => AddServerFullscreen(server: server)
+        ))
       }));
     }
 
@@ -108,6 +102,9 @@ class ServersList extends StatelessWidget {
             ));
             if (updated == true) {
               await _connectSuccess(result);
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.pop(context);
+              });
             }
             else {
               final res = await serversProvider.removeServer(server.address);
@@ -277,7 +274,7 @@ class ServersList extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.w500
                   ),
                 ),
                 Column(
@@ -313,6 +310,7 @@ class ServersList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               PopupMenuButton(
+                color: Theme.of(context).dialogBackgroundColor,
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     enabled: server.defaultServer == false 
@@ -383,7 +381,7 @@ class ServersList extends StatelessWidget {
                             : AppLocalizations.of(context)!.selectedDisconnected,
                           style: const TextStyle(
                             color: Colors.white,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.w500
                           ),
                         )
                       ],
@@ -391,14 +389,9 @@ class ServersList extends StatelessWidget {
                   )
                   : Container(
                       margin: const EdgeInsets.only(right: 10),
-                      child: TextButton.icon(
-                        onPressed: () => _connectToServer(servers[index]), 
-                        icon: const Icon(Icons.login), 
-                        label: Text(AppLocalizations.of(context)!.connect),
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all(Colors.green),
-                          overlayColor: MaterialStateProperty.all(Colors.green.withOpacity(0.1)),
-                        ),
+                      child: TextButton(
+                        onPressed: () => _connectToServer(servers[index]),
+                        child: Text(AppLocalizations.of(context)!.connect),
                       ),
                     ),
               )
@@ -464,7 +457,7 @@ class ServersList extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 24,
                 color: Colors.grey,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.w500
               ),
             ),
           ),
