@@ -618,132 +618,191 @@ class _LogsListState extends State<LogsList> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle: systemUiOverlayStyleConfig(context),
-        title: Text(AppLocalizations.of(context)!.queryLogs),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _showSearchBar = true;
-              });
-            }, 
-            icon: const Icon(Icons.search_rounded),
-            splashRadius: 20,
-          ),
-          IconButton(
-            onPressed: _showFiltersModal, 
-            icon: const Icon(Icons.filter_list_rounded),
-            splashRadius: 20,
-          ),
-          PopupMenuButton(
-            splashRadius: 20,
-            icon: const Icon(Icons.sort_rounded),
-            onSelected: (value) => _updateSortStatus(value),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.arrow_downward_rounded),
-                        const SizedBox(width: 15),
-                        Text(AppLocalizations.of(context)!.fromLatestToOldest),
-                      ],
+      appBar: _showSearchBar == true
+        ? AppBar(
+            toolbarHeight: 60,
+            leading: IconButton(
+              onPressed: () {
+                setState(() {
+                  _showSearchBar = false;
+                  _searchController.text = "";
+                });
+                _scrollController.animateTo(
+                  0, 
+                  duration: const Duration(milliseconds: 250), 
+                  curve: Curves.easeInOut
+                );
+              },
+              icon: const Icon(Icons.arrow_back),
+              splashRadius: 20,
+            ),
+            actions: [
+              IconButton(     
+                onPressed: () {
+                  setState(() => _searchController.text = "");
+                  _scrollController.animateTo(
+                    0, 
+                    duration: const Duration(milliseconds: 250), 
+                    curve: Curves.easeInOut
+                  );
+                }, 
+                icon: const Icon(Icons.clear_rounded),
+                splashRadius: 20,
+                color: Colors.black,
+              )
+            ],
+            title: Container(
+              width: width-136,
+              height: 60,
+              margin: const EdgeInsets.only(bottom: 5),
+              child: Center(
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: _searchLogs,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: AppLocalizations.of(context)!.searchUrl,
+                    hintStyle: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal
                     ),
-                    CustomRadio(
-                      value: 0, 
-                      groupValue: sortStatus, 
-                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    )
-                  ],
-                )
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.arrow_upward_rounded),
-                        const SizedBox(width: 15),
-                        Text(AppLocalizations.of(context)!.fromOldestToLatest),
-                      ],
-                    ),
-                    CustomRadio(
-                      value: 1, 
-                      groupValue: sortStatus, 
-                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    )
-                  ],
-                )
-              ),
-            ]
-          )
-        ],
-        bottom: _areFiltersApplied() == true
-          ? PreferredSize(
-              preferredSize: const Size(double.maxFinite, 50),
-              child: Container(
-                width: double.maxFinite,
-                height: 50,
-                padding: const EdgeInsets.only(bottom: 10),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    const SizedBox(width: 5),
-                    if (filtersProvider.startTime != null || filtersProvider.endTime != null) _buildChip(
-                      AppLocalizations.of(context)!.time, 
-                      const Icon(Icons.access_time_rounded),
-                      () {
-                        filtersProvider.resetTime();
-                        setState(() {
-                          loadStatus = 0;
-                        });
-                        loadLogs(replaceOldLogs: true);
-                      }
-                    ),
-                    if (filtersProvider.statusSelected.length < 13) _buildChip(
-                      filtersProvider.statusSelected.length == 1
-                        ? logStatusString[filtersProvider.statusSelected[0]-1]
-                        : "${filtersProvider.statusSelected.length} ${AppLocalizations.of(context)!.statusSelected}",
-                      const Icon(Icons.shield),
-                      () {
-                        _scrollToTop();
-                        filtersProvider.resetStatus();
-                      },
-                    ),
-                    if (filtersProvider.selectedClients.isNotEmpty && filtersProvider.selectedClients.length < filtersProvider.totalClients.length) _buildChip(
-                      filtersProvider.selectedClients.length == 1
-                        ? filtersProvider.selectedClients[0]
-                        : "${filtersProvider.selectedClients.length} ${AppLocalizations.of(context)!.clientsSelected}",
-                      const Icon(Icons.devices),
-                      () {
-                        _scrollToTop();
-                        filtersProvider.resetClients();
-                      },
-                    ),
-                    if (filtersProvider.selectedDomain != null) _buildChip(
-                      filtersProvider.selectedDomain!,
-                      const Icon(Icons.http_rounded),
-                      () {
-                        _scrollToTop();
-                        filtersProvider.setSelectedDomain(null);
-                      },
-                    ),
-                    const SizedBox(width: 5),
-                  ],
-                )
+                  ),
+                ),
               ),
             )
-        : const PreferredSize(
-            preferredSize: Size(0, 0),
-            child: SizedBox(),
           )
-      ),
+        : AppBar(
+          systemOverlayStyle: systemUiOverlayStyleConfig(context),
+          title: Text(AppLocalizations.of(context)!.queryLogs),
+          toolbarHeight: 60,
+          actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _showSearchBar = true;
+                });
+              }, 
+              icon: const Icon(Icons.search_rounded),
+              splashRadius: 20,
+            ),
+            IconButton(
+              onPressed: _showFiltersModal, 
+              icon: const Icon(Icons.filter_list_rounded),
+              splashRadius: 20,
+            ),
+            PopupMenuButton(
+              color: Theme.of(context).dialogBackgroundColor,
+              splashRadius: 20,
+              icon: const Icon(Icons.sort_rounded),
+              onSelected: (value) => _updateSortStatus(value),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.arrow_downward_rounded),
+                          const SizedBox(width: 15),
+                          Text(AppLocalizations.of(context)!.fromLatestToOldest),
+                        ],
+                      ),
+                      CustomRadio(
+                        value: 0, 
+                        groupValue: sortStatus, 
+                        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      )
+                    ],
+                  )
+                ),
+                PopupMenuItem(
+                  value: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.arrow_upward_rounded),
+                          const SizedBox(width: 15),
+                          Text(AppLocalizations.of(context)!.fromOldestToLatest),
+                        ],
+                      ),
+                      CustomRadio(
+                        value: 1, 
+                        groupValue: sortStatus, 
+                        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      )
+                    ],
+                  )
+                ),
+              ]
+            )
+          ],
+          bottom: _areFiltersApplied() == true
+            ? PreferredSize(
+                preferredSize: const Size(double.maxFinite, 50),
+                child: Container(
+                  width: double.maxFinite,
+                  height: 50,
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      const SizedBox(width: 5),
+                      if (filtersProvider.startTime != null || filtersProvider.endTime != null) _buildChip(
+                        AppLocalizations.of(context)!.time, 
+                        const Icon(Icons.access_time_rounded),
+                        () {
+                          filtersProvider.resetTime();
+                          setState(() {
+                            loadStatus = 0;
+                          });
+                          loadLogs(replaceOldLogs: true);
+                        }
+                      ),
+                      if (filtersProvider.statusSelected.length < 13) _buildChip(
+                        filtersProvider.statusSelected.length == 1
+                          ? logStatusString[filtersProvider.statusSelected[0]-1]
+                          : "${filtersProvider.statusSelected.length} ${AppLocalizations.of(context)!.statusSelected}",
+                        const Icon(Icons.shield),
+                        () {
+                          _scrollToTop();
+                          filtersProvider.resetStatus();
+                        },
+                      ),
+                      if (filtersProvider.selectedClients.isNotEmpty && filtersProvider.selectedClients.length < filtersProvider.totalClients.length) _buildChip(
+                        filtersProvider.selectedClients.length == 1
+                          ? filtersProvider.selectedClients[0]
+                          : "${filtersProvider.selectedClients.length} ${AppLocalizations.of(context)!.clientsSelected}",
+                        const Icon(Icons.devices),
+                        () {
+                          _scrollToTop();
+                          filtersProvider.resetClients();
+                        },
+                      ),
+                      if (filtersProvider.selectedDomain != null) _buildChip(
+                        filtersProvider.selectedDomain!,
+                        const Icon(Icons.http_rounded),
+                        () {
+                          _scrollToTop();
+                          filtersProvider.setSelectedDomain(null);
+                        },
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                  )
+                ),
+              )
+          : const PreferredSize(
+              preferredSize: Size(0, 0),
+              child: SizedBox(),
+            )
+        ),
       body: _status()
     );
   }
