@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:animations/animations.dart';
+import 'package:device_info/device_info.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -53,6 +54,16 @@ void main() async {
 
   PackageInfo appInfo = await loadAppInfo();
   configProvider.setAppInfo(appInfo);
+
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  if (Platform.isAndroid) {
+    final androidInfo = await deviceInfo.androidInfo;
+    configProvider.setAndroidInfo(androidInfo);
+  }
+  if (Platform.isIOS) {
+    final iosInfo = await deviceInfo.iosInfo;
+    configProvider.setIosInfo(iosInfo);
+  }
 
   runApp(
     MultiProvider(
@@ -256,8 +267,12 @@ class _DroidHoleState extends State<DroidHole> {
       builder: ((lightDynamic, darkDynamic) {
         return MaterialApp(
           title: 'Droid Hole',
-          theme: lightTheme(lightDynamic),
-          darkTheme: darkTheme(darkDynamic),
+          theme: appConfigProvider.androidDeviceInfo != null && appConfigProvider.androidDeviceInfo!.version.sdkInt >= 31
+            ? lightTheme(lightDynamic)
+            : lightThemeOldVersions(),
+          darkTheme: appConfigProvider.androidDeviceInfo != null && appConfigProvider.androidDeviceInfo!.version.sdkInt >= 31
+            ? darkTheme(darkDynamic)
+            : darkThemeOldVersions(),
           themeMode: appConfigProvider.selectedTheme,
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [

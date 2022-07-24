@@ -49,6 +49,7 @@ dependencies:
   qr_code_scanner: ^1.0.0
   permission_handler: ^10.0.0
   dynamic_color: ^1.4.0
+  device_info: ^2.0.3
 
 dev_dependencies:
   flutter_test:

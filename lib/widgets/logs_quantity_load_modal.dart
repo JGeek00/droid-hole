@@ -86,8 +86,8 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);   
 
     return Container(
-      height: mediaQueryData.size.height > 686 
-        ? 686
+      height: mediaQueryData.size.height > 670 
+        ? 670
         : mediaQueryData.size.height-mediaQueryData.viewPadding.top-25,
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,
@@ -117,16 +117,19 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                 ),
               ),
             ),
-            Padding(
+            Container(
+              height: 70,
               padding: const EdgeInsets.only(
                 top: 10,
                 bottom: 20,
                 left: 20, 
                 right: 20
               ),
-              child: Text(
-                AppLocalizations.of(context)!.logsPerQueryLabel,
-                textAlign: TextAlign.center,
+              child: Center(
+                child: Text(
+                  AppLocalizations.of(context)!.logsPerQueryLabel,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             Padding(
@@ -142,13 +145,20 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                   color: Colors.yellow,
                   borderRadius: BorderRadius.circular(30)
                 ),
+                height: 100,
                 child: Row(
                   children: [
-                    const Icon(Icons.warning_rounded),
+                    const Icon(
+                      Icons.warning_rounded,
+                      color: Colors.black,
+                    ),
                     const SizedBox(width: 20),
                     Expanded(
                       child: Text(
                         AppLocalizations.of(context)!.logsPerQueryWarning,
+                        style: const TextStyle(
+                          color: Colors.black
+                        ),
                       ),
                     )
                   ],

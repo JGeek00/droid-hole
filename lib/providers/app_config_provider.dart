@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:device_info/device_info.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class AppConfigProvider with ChangeNotifier {
   int _selectedTab = 0;
+  AndroidDeviceInfo? _androidDeviceInfo;
+  IosDeviceInfo? _iosDeviceInfo;
   PackageInfo? _appInfo;
   int? _autoRefreshTime = 2;
   int _selectedTheme = 0;
@@ -65,6 +68,14 @@ class AppConfigProvider with ChangeNotifier {
     return _logsPerQuery;
   }
 
+  AndroidDeviceInfo? get androidDeviceInfo {
+    return _androidDeviceInfo;
+  }
+
+  IosDeviceInfo? get iosDeviceInfo {
+    return _iosDeviceInfo;
+  }
+
   void setSelectedTab(int selectedTab) {
     _selectedTab = selectedTab;
     notifyListeners();
@@ -72,6 +83,16 @@ class AppConfigProvider with ChangeNotifier {
 
   void setAppInfo(PackageInfo appInfo) {
     _appInfo = appInfo;
+    notifyListeners();
+  }
+
+  void setAndroidInfo(AndroidDeviceInfo deviceInfo) {
+    _androidDeviceInfo = deviceInfo;
+    notifyListeners();
+  }
+
+  void setIosInfo(IosDeviceInfo deviceInfo) {
+    _iosDeviceInfo = deviceInfo;
     notifyListeners();
   }
 

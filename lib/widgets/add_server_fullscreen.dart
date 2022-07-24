@@ -459,6 +459,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                   children: [
                     SizedBox(
                       width: double.maxFinite,
+                      height: mediaQuery.size.height-94,
                       child: SingleChildScrollView(
                         child: Padding(
                           padding: const EdgeInsets.all(20),
