@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,6 +9,7 @@ import 'package:droid_hole/widgets/statistics_list.dart';
 import 'package:droid_hole/widgets/statistics_queries_servers_tab.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/config/system_overlay_style.dart';
 
 class Statistics extends StatelessWidget {
   const Statistics({Key? key}) : super(key: key);
@@ -50,6 +49,7 @@ class Statistics extends StatelessWidget {
             headerSliverBuilder: ((context, innerBoxIsScrolled) {
               return [
                 SliverAppBar(
+                  systemOverlayStyle: systemUiOverlayStyleConfig(context),
                   title: Text(AppLocalizations.of(context)!.statistics),
                   centerTitle: true,
                   pinned: true,

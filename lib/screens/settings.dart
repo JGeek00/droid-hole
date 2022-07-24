@@ -15,6 +15,7 @@ import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/widgets/legal_modal.dart';
 import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
+import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/config/urls.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -144,19 +145,21 @@ class Settings extends StatelessWidget {
 
     return  Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: systemUiOverlayStyleConfig(context),
+        toolbarHeight: 100,
         centerTitle: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
               'assets/icon/icon-no-background.png',
-              width: 40,
+              width: 60,
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 30),
             const Text(
               "DroidHole",
               style: TextStyle(
-                fontSize: 24
+                fontSize: 28
               ),
             )
           ],

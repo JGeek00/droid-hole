@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/widgets/servers_list.dart';
 import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 
+import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/models/server.dart';
 
@@ -45,6 +46,7 @@ class _ServersPageState extends State<ServersPage> {
 
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: systemUiOverlayStyleConfig(context),
         title: Text(AppLocalizations.of(context)!.servers),
       ),
       body: ServersList(

@@ -11,6 +11,7 @@ import 'package:droid_hole/widgets/log_details_modal.dart';
 import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
+import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/classes/no_scroll_behavior.dart';
 import 'package:droid_hole/constants/log_status.dart';
@@ -618,6 +619,7 @@ class _LogsListState extends State<LogsList> {
 
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: systemUiOverlayStyleConfig(context),
         title: Text(AppLocalizations.of(context)!.queryLogs),
         actions: [
           IconButton(

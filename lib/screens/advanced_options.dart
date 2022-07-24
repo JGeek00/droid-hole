@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
 
+import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -101,6 +102,7 @@ class AdvancedOptions extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: systemUiOverlayStyleConfig(context),
         title: Text(AppLocalizations.of(context)!.advancedSetup),
       ),
       body: ListView(

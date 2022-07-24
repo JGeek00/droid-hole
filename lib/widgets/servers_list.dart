@@ -310,6 +310,7 @@ class ServersList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               PopupMenuButton(
+                color: Theme.of(context).dialogBackgroundColor,
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     enabled: server.defaultServer == false 

@@ -12,6 +12,7 @@ import 'package:droid_hole/widgets/clients_last_hours.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
+import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -634,6 +635,8 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: systemUiOverlayStyleConfig(context),
+        toolbarHeight: 70,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -698,6 +701,7 @@ class Home extends StatelessWidget {
         actions: [
           PopupMenuButton(
             splashRadius: 20,
+            color: Theme.of(context).dialogBackgroundColor,
             itemBuilder: (context) => 
               serversProvider.selectedServer != null 
                 ? serversProvider.isServerConnected == true 

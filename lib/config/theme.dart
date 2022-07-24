@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 const MaterialColor primaryColorLight = Colors.blue;
 const MaterialColor primaryColorDark = Colors.lightBlue;
 
-ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
-  return ThemeData(
+ThemeData lightTheme(ColorScheme? dynamicColorScheme) => ThemeData(
   useMaterial3: true,
   colorScheme: dynamicColorScheme ?? ColorScheme.fromSwatch(primarySwatch: primaryColorLight),
   primaryColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight,
@@ -65,7 +64,6 @@ ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
   ),
   androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
 );
-}
 
 ThemeData darkTheme(ColorScheme? dynamicColorScheme) => ThemeData(
   useMaterial3: true,
