@@ -85,18 +85,18 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);   
 
-    return Padding(
-      padding: mediaQueryData.viewInsets,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        decoration: BoxDecoration(
-          color: Theme.of(context).dialogBackgroundColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30)
-          ),
+    return Container(
+      height: mediaQueryData.size.height > 686 
+        ? 686
+        : mediaQueryData.size.height-mediaQueryData.viewPadding.top-25,
+      decoration: BoxDecoration(
+        color: Theme.of(context).dialogBackgroundColor,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30)
         ),
+      ),
+      child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -155,187 +155,182 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                 ),
               )
             ),
-            SizedBox(
-              width: double.maxFinite,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 10,
-                              right: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 0,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 0
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).textTheme.bodyText1!.color
-                                  ),
-                                  child: Text(AppLocalizations.of(context)!.minutes30),
-                                ),
+                      Container(
+                        width: (mediaQueryData.size.width-70)/2,
+                        margin: const EdgeInsets.only(
+                          top: 10,
+                          right: 5,
+                          bottom: 5
+                        ),
+                        child: OptionBox(
+                          optionsValue: selectedOption,
+                          itemValue: 0,
+                          onTap: _updateRadioValue,
+                          child: Center(
+                            child: AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 250),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: selectedOption == 0
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).textTheme.bodyText1!.color
                               ),
+                              child: Text(AppLocalizations.of(context)!.minutes30),
                             ),
                           ),
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 10,
-                              left: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 1,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 1
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).textTheme.bodyText1!.color
-                                  ),
-                                  child: Text(AppLocalizations.of(context)!.hour1),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 5,
-                              right: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 2,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 2
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).textTheme.bodyText1!.color
-                                  ),
-                                  child: Text(AppLocalizations.of(context)!.hours2),
-                                ),
+                      Container(
+                        width: (mediaQueryData.size.width-70)/2,
+                        margin: const EdgeInsets.only(
+                          top: 10,
+                          left: 5,
+                          bottom: 5
+                        ),
+                        child: OptionBox(
+                          optionsValue: selectedOption,
+                          itemValue: 1,
+                          onTap: _updateRadioValue,
+                          child: Center(
+                            child: AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 250),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: selectedOption == 1
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).textTheme.bodyText1!.color
                               ),
+                              child: Text(AppLocalizations.of(context)!.hour1),
                             ),
                           ),
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 5,
-                              left: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 3,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 3
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).textTheme.bodyText1!.color
-                                  ),
-                                  child: Text(AppLocalizations.of(context)!.hours4),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 5,
-                              right: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 4,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 4
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).textTheme.bodyText1!.color
-                                  ),
-                                  child: Text(AppLocalizations.of(context)!.hours6),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: (mediaQueryData.size.width-70)/2,
-                            margin: const EdgeInsets.only(
-                              top: 5,
-                              left: 5,
-                              bottom: 5
-                            ),
-                            child: OptionBox(
-                              optionsValue: selectedOption,
-                              itemValue: 5,
-                              onTap: _updateRadioValue,
-                              child: Center(
-                                child: AnimatedDefaultTextStyle(
-                                  duration: const Duration(milliseconds: 250),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: selectedOption == 5
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).textTheme.bodyText1!.color
-                                  ),
-                                  child: Text(AppLocalizations.of(context)!.hours8),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: (mediaQueryData.size.width-70)/2,
+                        margin: const EdgeInsets.only(
+                          top: 5,
+                          right: 5,
+                          bottom: 5
+                        ),
+                        child: OptionBox(
+                          optionsValue: selectedOption,
+                          itemValue: 2,
+                          onTap: _updateRadioValue,
+                          child: Center(
+                            child: AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 250),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: selectedOption == 2
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).textTheme.bodyText1!.color
+                              ),
+                              child: Text(AppLocalizations.of(context)!.hours2),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: (mediaQueryData.size.width-70)/2,
+                        margin: const EdgeInsets.only(
+                          top: 5,
+                          left: 5,
+                          bottom: 5
+                        ),
+                        child: OptionBox(
+                          optionsValue: selectedOption,
+                          itemValue: 3,
+                          onTap: _updateRadioValue,
+                          child: Center(
+                            child: AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 250),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: selectedOption == 3
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).textTheme.bodyText1!.color
+                              ),
+                              child: Text(AppLocalizations.of(context)!.hours4),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: (mediaQueryData.size.width-70)/2,
+                        margin: const EdgeInsets.only(
+                          top: 5,
+                          right: 5,
+                          bottom: 5
+                        ),
+                        child: OptionBox(
+                          optionsValue: selectedOption,
+                          itemValue: 4,
+                          onTap: _updateRadioValue,
+                          child: Center(
+                            child: AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 250),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: selectedOption == 4
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).textTheme.bodyText1!.color
+                              ),
+                              child: Text(AppLocalizations.of(context)!.hours6),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: (mediaQueryData.size.width-70)/2,
+                        margin: const EdgeInsets.only(
+                          top: 5,
+                          left: 5,
+                          bottom: 5
+                        ),
+                        child: OptionBox(
+                          optionsValue: selectedOption,
+                          itemValue: 5,
+                          onTap: _updateRadioValue,
+                          child: Center(
+                            child: AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 250),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: selectedOption == 5
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).textTheme.bodyText1!.color
+                              ),
+                              child: Text(AppLocalizations.of(context)!.hours8),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             Padding(

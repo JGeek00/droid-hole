@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:io';
-
 import 'package:droid_hole/widgets/clients_filters_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +33,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
   Widget build(BuildContext context) {
     final filtersProvider = Provider.of<FiltersProvider>(context);
 
-    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     void _openStatusModal() {
       showModalBottomSheet(
@@ -154,6 +152,9 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
           topRight: Radius.circular(30)
         )
       ),
+      height: height > 512
+        ? 512
+        : height-25,
       child: SingleChildScrollView(
         child: Column(
           children: [

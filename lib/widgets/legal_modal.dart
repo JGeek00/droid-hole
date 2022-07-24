@@ -6,8 +6,6 @@ class LegalModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-
     return Dialog(
       child: SizedBox(
         child: Padding(
@@ -19,7 +17,10 @@ class LegalModal extends StatelessWidget {
                 padding: EdgeInsets.only(
                   top: 20,
                 ),
-                child: Icon(Icons.info),
+                child: Icon(
+                  Icons.info,
+                  size: 26,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
@@ -40,18 +41,13 @@ class LegalModal extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(
-                      right: 20,
-                      bottom: 10,
-                      top: 10
-                    ),
+                    padding: const EdgeInsets.only(top: 20, bottom: 10, right: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TextButton.icon(
+                        TextButton(
                           onPressed: () => Navigator.pop(context), 
-                          icon: const Icon(Icons.close), 
-                          label: Text(AppLocalizations.of(context)!.close)
+                          child: Text(AppLocalizations.of(context)!.close)
                         )
                       ],
                     ),
