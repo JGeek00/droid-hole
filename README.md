@@ -35,6 +35,8 @@ DroidHole does not collect any personal user data. All data stored into the appl
 - [animations](https://pub.dev/packages/animations)
 - [qr code scanner](https://pub.dev/packages/qr_code_scanner)
 - [permission handler](https://pub.dev/packages/permission_handler)
+- [dynamic color](https://pub.dev/packages/dynamic_color)
+- [device info](https://pub.dev/packages/device_info)
 
 <br>
 
