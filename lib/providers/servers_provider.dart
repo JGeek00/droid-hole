@@ -6,7 +6,6 @@ import 'package:sqflite/sqlite_api.dart';
 import 'package:droid_hole/models/overtime_data.dart';
 import 'package:droid_hole/models/realtime_status.dart';
 import 'package:droid_hole/functions/conversions.dart';
-import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/server.dart';
 
 class ServersProvider with ChangeNotifier {
@@ -225,18 +224,20 @@ class ServersProvider with ChangeNotifier {
         );
         _serversList.add(serverObj);
         if (convertFromIntToBool(server['isDefaultServer']) == true) {
-          final result = await login(serverObj);
-          if (result['result'] == 'success') {
-            serverObj.enabled = result['status'] == 'enabled' ? true : false;
-            _selectedServerToken['phpSessId'] = result['phpSessId'];
-            _selectedServerToken['token'] = result['token'];
-            _isServerConnected = true;
-            _selectedServer = serverObj;
-          }
-          else {
-            _isServerConnected = false;
-            _selectedServer = serverObj;
-          }
+          _isServerConnected = null;
+          _selectedServer = serverObj;
+          // final result = await login(serverObj);
+          // if (result['result'] == 'success') {
+          //   serverObj.enabled = result['status'] == 'enabled' ? true : false;
+          //   _selectedServerToken['phpSessId'] = result['phpSessId'];
+          //   _selectedServerToken['token'] = result['token'];
+          //   _isServerConnected = true;
+          //   _selectedServer = serverObj;
+          // }
+          // else {
+          //   _isServerConnected = false;
+          //   _selectedServer = serverObj;
+          // }
         }
       }
     }

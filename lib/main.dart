@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/connecting_server.dart';
 import 'package:droid_hole/screens/connect.dart';
 import 'package:droid_hole/screens/home.dart';
 import 'package:droid_hole/screens/logs.dart';
@@ -395,19 +396,23 @@ class _BaseState extends State<Base> {
               child: child,
             )
           ),
-          child: serversProvider.selectedServer != null
-            ? pages[appConfigProvider.selectedTab]
-            : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab],
+          child: serversProvider.selectedServer != null && serversProvider.isServerConnected == null 
+            ? const ConnectingServer()
+            : serversProvider.selectedServer != null
+              ? pages[appConfigProvider.selectedTab]
+              : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
         ),
-        bottomNavigationBar: BottomNavBar(
-          screens: serversProvider.selectedServer != null
-            ? appScreens
-            : appScreensNotSelected,
-          selectedScreen: serversProvider.selectedServer != null
-            ? appConfigProvider.selectedTab
-            : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
-          onChange: (selected) => appConfigProvider.setSelectedTab(selected),
-        ),
+        bottomNavigationBar: serversProvider.selectedServer != null && serversProvider.isServerConnected == null 
+          ? null
+          : BottomNavBar(
+              screens: serversProvider.selectedServer != null
+                ? appScreens
+                : appScreensNotSelected,
+              selectedScreen: serversProvider.selectedServer != null
+                ? appConfigProvider.selectedTab
+                : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
+              onChange: (selected) => appConfigProvider.setSelectedTab(selected),
+            ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: serversProvider.selectedServer != null
           ? serversProvider.isServerConnected == true

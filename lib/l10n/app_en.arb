@@ -234,5 +234,6 @@
     "removePasscode": "Remove passcode",
     "appUnlockEnabled": "App unlock enabled",
     "appUnlockDisabled": "App unlock disabled",
-    "areSureRemovePasscode": "Are you sure you want to remove the passcode? This will disable the app unlock protection."
+    "areSureRemovePasscode": "Are you sure you want to remove the passcode? This will disable the app unlock protection.",
+    "connectingToServer": "Connecting to server"
 }
