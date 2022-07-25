@@ -123,17 +123,22 @@ Future upgradeDbToV9(Database db) async {
   await db.execute("UPDATE appConfig SET logsPerQuery = 2");
 }
 
+Future upgradeDbToV10(Database db) async {
+  await db.execute("ALTER TABLE appConfig ADD COLUMN passCode TEXT");
+  await db.execute("UPDATE appConfig SET passCode = null");
+}
+
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
   List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 9,
+    version: 10,
     onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, pwHash TEXT, isDefaultServer NUMERIC)");
-      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC, overrideSslCheck NUMERIC, oneColumnLegend NUMERIC, reducedDataCharts NUMERIC, logsPerQuery NUMERIC)");
-      await db.execute("INSERT INTO appConfig (autoRefreshTime, theme, overrideSslCheck, oneColumnLegend, reducedDataCharts, logsPerQuery) VALUES (5, 0, 0, 0, 0, 2)");
+      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC, overrideSslCheck NUMERIC, oneColumnLegend NUMERIC, reducedDataCharts NUMERIC, logsPerQuery NUMERIC, passCode TEXT)");
+      await db.execute("INSERT INTO appConfig (autoRefreshTime, theme, overrideSslCheck, oneColumnLegend, reducedDataCharts, logsPerQuery) VALUES (5, 0, 0, 0, 0, 2, null)");
     },
     onUpgrade: (Database db, int oldVersion, int newVersion) async {
       if (oldVersion == 2) {
@@ -144,6 +149,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV7(db);
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
+        await upgradeDbToV10(db);
       }
       if (oldVersion == 3) {
         await upgradeDbToV4(db);
@@ -152,6 +158,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV7(db);
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
+        await upgradeDbToV10(db);
       }
       if (oldVersion == 4) {
         await upgradeDbToV5(db);
@@ -159,24 +166,32 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV7(db);
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
+        await upgradeDbToV10(db);
       }
       if (oldVersion == 5) {
         await upgradeDbToV6(db);
         await upgradeDbToV7(db);
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
+        await upgradeDbToV10(db);
       }
       if (oldVersion == 6) {
         await upgradeDbToV7(db);
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
+        await upgradeDbToV10(db);
       }
       if (oldVersion == 7) {
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
+        await upgradeDbToV10(db);
       }
       if (oldVersion == 8) {
         await upgradeDbToV9(db);
+        await upgradeDbToV10(db);
+      }
+      if (oldVersion == 9) {
+        await upgradeDbToV10(db);
       }
     },
     onDowngrade: (Database db, int oldVersion, int newVersion) async {

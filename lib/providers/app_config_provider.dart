@@ -15,6 +15,7 @@ class AppConfigProvider with ChangeNotifier {
   int _oneColumnLegend = 0;
   int _reducedDataCharts = 0;
   double _logsPerQuery = 2;
+  String? _passCode;
 
   Database? _dbInstance;
 
@@ -48,6 +49,10 @@ class AppConfigProvider with ChangeNotifier {
     }
   }
 
+  Database? get dbInstance {
+    return _dbInstance;
+  }
+
   int get selectedThemeNumber {
     return _selectedTheme;
   }
@@ -76,6 +81,10 @@ class AppConfigProvider with ChangeNotifier {
     return _iosDeviceInfo;
   }
 
+  String? get passCode {
+    return _passCode;
+  }
+
   void setSelectedTab(int selectedTab) {
     _selectedTab = selectedTab;
     notifyListeners();
@@ -94,6 +103,18 @@ class AppConfigProvider with ChangeNotifier {
   void setIosInfo(IosDeviceInfo deviceInfo) {
     _iosDeviceInfo = deviceInfo;
     notifyListeners();
+  }
+
+  Future<bool> setPassCode(String? code) async {
+    final updated = await updatePassCodeDb(code);
+    if (updated == true) {
+      _passCode = code;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   Future<bool> setAutoRefreshTime(int seconds) async {
@@ -127,6 +148,7 @@ class AppConfigProvider with ChangeNotifier {
     _oneColumnLegend = dbData['oneColumnLegend'];
     _reducedDataCharts = dbData['reducedDataCharts'];
     _logsPerQuery = dbData['logsPerQuery'].toDouble();
+    _passCode = dbData['passCode'];
     _dbInstance = dbInstance;
     notifyListeners();
   }
@@ -184,6 +206,19 @@ class AppConfigProvider with ChangeNotifier {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
           'UPDATE appConfig SET autoRefreshTime = $value',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> updatePassCodeDb(String? value) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET passCode = $value',
         );
         return true;
       });

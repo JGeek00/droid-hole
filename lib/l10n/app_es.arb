@@ -223,5 +223,19 @@
     "reset": "Resetear",
     "checkAll": "Seleccionar todos",
     "uncheckAll": "Deseleccionar todos",
-    "logsStatus": "Estados de registros"
+    "logsStatus": "Estados de registros",
+    "appUnlock": "Desbloqueo de la app",
+    "appUnlockDescription": "Usar un código o la huella para desbloquear la app",
+    "setPassCode": "Configurar código",
+    "enterPasscode": "Introducir código",
+    "repeatPasscode": "Repetir código",
+    "next": "Siguiente",
+    "finish": "Finalizar",
+    "passcodesDontMatch": "El código inicial y el código repetido no coinciden.",
+    "passCodeNotSaved": "No se ha podido guardar el código.",
+    "updatePasscode": "Actualizar código",
+    "removePasscode": "Eliminar código",
+    "appUnlockEnabled": "Desbloqueo de app activado",
+    "appUnlockDisabled": "Desbloqueo de app desactivado",
+    "areSureRemovePasscode": "Estás seguro que deseas eliminar el código? Esto desactivará la protección de desbloqueo de la app."
 }

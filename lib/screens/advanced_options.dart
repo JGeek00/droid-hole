@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
+import 'package:droid_hole/widgets/app_unlock_setup_modal.dart';
 
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -100,6 +101,14 @@ class AdvancedOptions extends StatelessWidget {
       );
     }
 
+    void _openAppUnlockModal() {
+      showModalBottomSheet(
+        context: context, 
+        builder: (context) => const AppUnlockSetupModal(),
+        backgroundColor: Colors.transparent
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: systemUiOverlayStyleConfig(context),
@@ -132,6 +141,18 @@ class AdvancedOptions extends StatelessWidget {
               activeColor: Theme.of(context).primaryColor,
             ),
             onTap: () => _updateSslCheck(!appConfigProvider.overrideSslCheck),
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+              left: 20,
+              right: 10
+            )
+          ),
+          CustomListTile(
+            leadingIcon: Icons.fingerprint_rounded,
+            label: AppLocalizations.of(context)!.appUnlock,
+            description: AppLocalizations.of(context)!.appUnlockDescription,
+            onTap: _openAppUnlockModal,
             padding: const EdgeInsets.only(
               top: 10,
               bottom: 10,

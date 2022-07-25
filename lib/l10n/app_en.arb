@@ -220,5 +220,19 @@
     "reset": "Reset",
     "checkAll": "Check all",
     "uncheckAll": "Uncheck all",
-    "logsStatus": "Logs status"
+    "logsStatus": "Logs status",
+    "appUnlock": "App unlock",
+    "appUnlockDescription": "Use a code or the fingerprint to unlock the app",
+    "setPassCode": "Setup passcode",
+    "enterPasscode": "Enter passcode",
+    "repeatPasscode": "Repeat passcode",
+    "next": "Next",
+    "finish": "Finish",
+    "passcodesDontMatch": "Initial passcode and repeated passcode do not match.",
+    "passCodeNotSaved": "Passcode couldn't be saved.",
+    "updatePasscode": "Update passcode",
+    "removePasscode": "Remove passcode",
+    "appUnlockEnabled": "App unlock enabled",
+    "appUnlockDisabled": "App unlock disabled",
+    "areSureRemovePasscode": "Are you sure you want to remove the passcode? This will disable the app unlock protection."
 }
