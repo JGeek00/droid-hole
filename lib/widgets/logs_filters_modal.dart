@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:droid_hole/widgets/clients_filters_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -152,8 +154,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
           topRight: Radius.circular(30)
         )
       ),
-      height: height > 512
-        ? 512
+      height: height > (Platform.isIOS ? 532 : 512)
+        ? (Platform.isIOS ? 532 : 512)
         : height-25,
       child: SingleChildScrollView(
         child: Column(
@@ -397,41 +399,46 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
             ),
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: _resetFilters, 
-                    child: Text(AppLocalizations.of(context)!.reset),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context), 
-                        child: Text(AppLocalizations.of(context)!.close),
-                      ),
-                      const SizedBox(width: 20),
-                      TextButton(
-                        onPressed: isFilteringValid() == true
-                          ? () {
-                              widget.filterLogs();
-                              Navigator.pop(context);
-                            }
-                          : null,
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all(
-                            isFilteringValid() == true
-                              ? Theme.of(context).primaryColor
-                              : Colors.grey
-                          ),
-                          overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColor.withOpacity(0.1))
-                        ), 
-                        child: Text(AppLocalizations.of(context)!.apply),
-                      )
-                    ],
-                  ),
-                ],
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: Platform.isIOS ? 20 : 0
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: _resetFilters, 
+                      child: Text(AppLocalizations.of(context)!.reset),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context), 
+                          child: Text(AppLocalizations.of(context)!.close),
+                        ),
+                        const SizedBox(width: 20),
+                        TextButton(
+                          onPressed: isFilteringValid() == true
+                            ? () {
+                                widget.filterLogs();
+                                Navigator.pop(context);
+                              }
+                            : null,
+                          style: ButtonStyle(
+                            foregroundColor: MaterialStateProperty.all(
+                              isFilteringValid() == true
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey
+                            ),
+                            overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColor.withOpacity(0.1))
+                          ), 
+                          child: Text(AppLocalizations.of(context)!.apply),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             )
           ],

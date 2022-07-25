@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
@@ -52,9 +54,9 @@ class _ServersListModalState extends State<ServersListModal> {
     return Container(
       height: serversProvider.getServersList.length > 4 
         ? height-widget.statusBarHeight
-        : height < 600 
+        : height < (Platform.isIOS ? 620 : 600) 
           ? height-widget.statusBarHeight
-          : 600,
+          : (Platform.isIOS ? 620 : 600) ,
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,
         borderRadius: const BorderRadius.only(
@@ -100,23 +102,28 @@ class _ServersListModalState extends State<ServersListModal> {
           ),
           Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () => _openAddServerBottomSheet(), 
-                      child: Text(AppLocalizations.of(context)!.add),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context), 
-                      child: Text(AppLocalizations.of(context)!.close),
-                    ),
-                  ],
-                )
-              ],
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: Platform.isIOS ? 20 : 0
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => _openAddServerBottomSheet(), 
+                        child: Text(AppLocalizations.of(context)!.add),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context), 
+                        child: Text(AppLocalizations.of(context)!.close),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           )
         ],

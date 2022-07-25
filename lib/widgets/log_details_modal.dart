@@ -82,11 +82,11 @@ class LogDetailsModal extends StatelessWidget {
 
     return Container(
       height: log.status == '2' && log.answeredBy != null
-        ? (mediaQuery.size.height-statusBarHeight) > 820
-          ? 820
+        ? (mediaQuery.size.height-statusBarHeight) > (Platform.isIOS ? 840 : 820)
+          ? (Platform.isIOS ? 840 : 820)
           : mediaQuery.size.height - (statusBarHeight)
-        : (mediaQuery.size.height-statusBarHeight) > 745
-          ? 745
+        : (mediaQuery.size.height-statusBarHeight) > (Platform.isIOS ? 765 : 745)
+          ? (Platform.isIOS ? 765 : 745)
           : mediaQuery.size.height - (statusBarHeight),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
@@ -153,15 +153,20 @@ class LogDetailsModal extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _blackWhiteListButton(),
-                TextButton(
-                  onPressed: () => Navigator.pop(context), 
-                  child: Text(AppLocalizations.of(context)!.close)
-                )
-              ],
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: Platform.isIOS ? 20 : 0
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _blackWhiteListButton(),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context), 
+                    child: Text(AppLocalizations.of(context)!.close)
+                  )
+                ],
+              ),
             ),
           )
         ],

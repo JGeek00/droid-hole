@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -138,11 +139,11 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
         height: selectedOption == 5
-          ? mediaQueryData.size.height > 520
-            ? 520
+          ? mediaQueryData.size.height > (Platform.isIOS ? 540 : 520)
+            ? (Platform.isIOS ? 540 : 520)
             : mediaQueryData.size.height-25
-          : mediaQueryData.size.height > 425
-            ? 425
+          : mediaQueryData.size.height > (Platform.isIOS ? 445 : 425)
+            ? (Platform.isIOS ? 445 : 425)
             : mediaQueryData.size.height-25,
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,

@@ -112,10 +112,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
       ),
       height: mediaQuery.size.height >= (Platform.isIOS ? 993 : 973) 
         ? (Platform.isIOS ? 993 : 973) 
-        : (Platform.isIOS 
-            ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight)+20 
-            : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight)+1
-          ),
+        : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight)+1,
       child: Column(
         children: [
           const Padding(

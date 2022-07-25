@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -86,8 +88,8 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);   
 
     return Container(
-      height: mediaQueryData.size.height > 670 
-        ? 670
+      height: mediaQueryData.size.height > (Platform.isIOS ? 690 : 670) 
+        ? (Platform.isIOS ? 690 : 670) 
         : mediaQueryData.size.height-mediaQueryData.viewPadding.top-25,
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,

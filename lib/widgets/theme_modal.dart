@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -39,7 +41,7 @@ class _ThemeModalState extends State<ThemeModal> {
     return Container(
       height: mediaQuery.orientation == Orientation.landscape
         ? mediaQuery.size.height - (widget.statusBarHeight)
-        : 410,
+        : Platform.isIOS ? 430 : 410,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30),
@@ -156,14 +158,19 @@ class _ThemeModalState extends State<ThemeModal> {
           ),
           Padding(
             padding: const EdgeInsets.all(20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context), 
-                  child: Text(AppLocalizations.of(context)!.close)
-                )
-              ],
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: Platform.isIOS ? 20 : 0
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context), 
+                    child: Text(AppLocalizations.of(context)!.close)
+                  )
+                ],
+              ),
             ),
           )
         ],
