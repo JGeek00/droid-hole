@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/pass_code_dialog.dart';
+import 'package:droid_hole/widgets/create_pass_code_modal.dart';
 
 import 'package:droid_hole/providers/app_config_provider.dart';
 
@@ -17,7 +17,7 @@ class AppUnlockSetupModal extends StatelessWidget {
     void _openPassCodeDialog() {
       Navigator.push(context, MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (BuildContext context) => const PassCodeDialog()
+        builder: (BuildContext context) => const CreatePassCodeModal()
       ));
     }
 

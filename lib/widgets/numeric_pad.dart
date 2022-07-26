@@ -1,10 +1,15 @@
+import 'package:droid_hole/widgets/shake_animation.dart';
 import 'package:flutter/material.dart';
 
 class NumericPad extends StatefulWidget {
+  final GlobalKey? shakeKey;
+  final String code;
   final void Function(String) onInput;
 
   const NumericPad({
     Key? key,
+    this.shakeKey,
+    required this.code,
     required this.onInput,
   }) : super(key: key);
 
@@ -13,8 +18,6 @@ class NumericPad extends StatefulWidget {
 }
 
 class _NumericPadState extends State<NumericPad> {
-  String _code = "";
-
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -29,10 +32,9 @@ class _NumericPadState extends State<NumericPad> {
           ? null
           : (width-160)/3,
         child: ElevatedButton(
-          onPressed: _code.length < 4
+          onPressed: widget.code.length < 4
             ? () {
-                String newCode = "$_code$number";
-                setState(() => _code = newCode);
+                String newCode = "${widget.code}$number";
                 widget.onInput(newCode);
               }
             : () => {},
@@ -56,10 +58,9 @@ class _NumericPadState extends State<NumericPad> {
           ? null
           : (width-160)/3,
         child: ElevatedButton(
-          onPressed: () => _code.isNotEmpty
+          onPressed: () => widget.code.isNotEmpty
             ? () {
-                String newCode = _code.substring(0, _code.length - 1);
-                setState(() => _code = newCode);
+                String newCode = widget.code.substring(0, widget.code.length - 1);
                 widget.onInput(newCode);
               }
             : {},
@@ -106,21 +107,25 @@ class _NumericPadState extends State<NumericPad> {
       height: height-180 < 426
         ? height-100
         : null,
-      width: width-100,
+      width: width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _number(_code.isNotEmpty ? _code[0] : null),
-              const SizedBox(width: 20),
-              _number(_code.length >= 2 ? _code[1] : null),
-              const SizedBox(width: 20),
-              _number(_code.length >= 3 ? _code[2] : null),
-              const SizedBox(width: 20),
-              _number(_code.length >= 4 ? _code[3] : null),
-            ],
+          ShakeAnimation(
+            key: widget.shakeKey,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                _number(widget.code.isNotEmpty ? widget.code[0] : null),
+                const SizedBox(width: 20),
+                _number(widget.code.length >= 2 ? widget.code[1] : null),
+                const SizedBox(width: 20),
+                _number(widget.code.length >= 3 ? widget.code[2] : null),
+                const SizedBox(width: 20),
+                _number(widget.code.length >= 4 ? widget.code[3] : null),
+              ],
+            ),
           ),
           SizedBox(
             height: height-180 < 426 ? 20 : 50

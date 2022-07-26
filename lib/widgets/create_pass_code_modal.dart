@@ -8,14 +8,14 @@ import 'package:droid_hole/widgets/numeric_pad.dart';
 
 import 'package:droid_hole/providers/app_config_provider.dart';
 
-class PassCodeDialog extends StatefulWidget {
-  const PassCodeDialog({Key? key}) : super(key: key);
+class CreatePassCodeModal extends StatefulWidget {
+  const CreatePassCodeModal({Key? key}) : super(key: key);
 
   @override
-  State<PassCodeDialog> createState() => _PassCodeDialogState();
+  State<CreatePassCodeModal> createState() => _CreatePassCodeModalState();
 }
 
-class _PassCodeDialogState extends State<PassCodeDialog> {
+class _CreatePassCodeModalState extends State<CreatePassCodeModal> {
   int _step = 0;
   String _code = "";
   String _repeatedCode = "";
@@ -96,6 +96,7 @@ class _PassCodeDialogState extends State<PassCodeDialog> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             NumericPad(
+              code: _step == 0 ? _code : _repeatedCode,
               onInput: (newCode) => _step == 0
                 ? _code.length < 4
                   ? setState(() => _code = newCode)

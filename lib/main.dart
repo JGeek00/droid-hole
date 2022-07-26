@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/screens/connecting_server.dart';
+import 'package:droid_hole/screens/unlock.dart';
 import 'package:droid_hole/screens/connect.dart';
 import 'package:droid_hole/screens/home.dart';
 import 'package:droid_hole/screens/logs.dart';
@@ -51,7 +51,10 @@ void main() async {
 
   serversProvider.setDbInstance(dbData['dbInstance']);
   configProvider.saveFromDb(dbData['dbInstance'], dbData['appConfig']);
-  await serversProvider.saveFromDb(dbData['servers']);
+  await serversProvider.saveFromDb(
+    dbData['servers'], 
+    dbData['appConfig']['passCode'] != null ? false : true
+  );
 
   PackageInfo appInfo = await loadAppInfo();
   configProvider.setAppInfo(appInfo);
@@ -397,7 +400,7 @@ class _BaseState extends State<Base> {
             )
           ),
           child: serversProvider.selectedServer != null && serversProvider.isServerConnected == null 
-            ? const ConnectingServer()
+            ? const Unlock()
             : serversProvider.selectedServer != null
               ? pages[appConfigProvider.selectedTab]
               : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
