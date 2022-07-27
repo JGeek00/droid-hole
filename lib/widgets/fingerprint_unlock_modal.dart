@@ -9,10 +9,12 @@ import 'package:flutter_local_auth_invisible/flutter_local_auth_invisible.dart';
 import 'package:droid_hole/widgets/shake_animation.dart';
 
 class FingerprintUnlockModal extends StatefulWidget {
+  final double topBarHeight;
   final void Function() onSuccess;
 
   const FingerprintUnlockModal({
     Key? key,
+    required this.topBarHeight,
     required this.onSuccess
   }) : super(key: key);
 
@@ -75,8 +77,12 @@ class _FingerprintUnlockModalState extends State<FingerprintUnlockModal> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return Container(
-      height: 360,
+      height: (height-widget.topBarHeight) > 360
+        ? 360
+        : height-widget.topBarHeight,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30),
@@ -84,40 +90,42 @@ class _FingerprintUnlockModalState extends State<FingerprintUnlockModal> {
         ),
         color: Theme.of(context).dialogBackgroundColor
       ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30),
-            child: Text(
-              AppLocalizations.of(context)!.unlockFingerprint,
-              style: const TextStyle(
-                fontSize: 22
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: Text(
+                AppLocalizations.of(context)!.unlockFingerprint,
+                style: const TextStyle(
+                  fontSize: 22
+                ),
               ),
             ),
-          ),
-          ShakeAnimation(
-            key: _shakeKey,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 30),
-              child: Icon(
-                Icons.fingerprint,
-                size: 100,
+            ShakeAnimation(
+              key: _shakeKey,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 30),
+                child: Icon(
+                  Icons.fingerprint,
+                  size: 100,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(AppLocalizations.of(context)!.cancel)
-                )
-              ],
-            ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(AppLocalizations.of(context)!.cancel)
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

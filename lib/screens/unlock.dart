@@ -31,6 +31,7 @@ class _UnlockState extends State<Unlock> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final topBarHeight = MediaQuery.of(context).viewPadding.top;
 
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
@@ -73,6 +74,7 @@ class _UnlockState extends State<Unlock> {
           showModalBottomSheet(
             context: context, 
             builder: (ctx)  => FingerprintUnlockModal(
+              topBarHeight: topBarHeight,
               onSuccess: () async {
                 setState(() {
                   isLoading = true;
@@ -81,6 +83,7 @@ class _UnlockState extends State<Unlock> {
                 connectServer();
               },
             ),
+            isScrollControlled: true,
             backgroundColor: Colors.transparent
           );
         });

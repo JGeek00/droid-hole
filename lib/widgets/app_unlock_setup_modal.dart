@@ -12,10 +12,12 @@ import 'package:droid_hole/widgets/create_pass_code_modal.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class AppUnlockSetupModal extends StatefulWidget {
+  final double topBarHeight;
   final bool useBiometrics;
 
   const AppUnlockSetupModal({
     Key? key,
+    required this.topBarHeight,
     required this.useBiometrics,
   }) : super(key: key);
 
@@ -42,6 +44,8 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
   Widget build(BuildContext context) {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
+    final mediaQuery = MediaQuery.of(context);
+
     void _openPassCodeDialog() {
       Navigator.push(context, MaterialPageRoute(
         fullscreenDialog: true,
@@ -63,6 +67,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
           showModalBottomSheet(
             context: context, 
             builder: (ctx)  => FingerprintUnlockModal(
+              topBarHeight: widget.topBarHeight,
               onSuccess: () async {
                 final result = await appConfigProvider.setUseBiometrics(true);
                 if (result == true) {
@@ -78,6 +83,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                 }
               },
             ),
+            isScrollControlled: true,
             backgroundColor: Colors.transparent
           );
         }
@@ -104,7 +110,9 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
     }
 
     return Container(
-      height: 400,
+      height: (mediaQuery.size.height-widget.topBarHeight) > 400
+        ? 400
+        : mediaQuery.size.height-widget.topBarHeight,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30),

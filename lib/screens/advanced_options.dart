@@ -22,6 +22,8 @@ class AdvancedOptions extends StatelessWidget {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
+    final topBarHeight = MediaQuery.of(context).viewPadding.top;
+
     void _updateSslCheck(bool newStatus) async {
       final result = await appConfigProvider.setOverrideSslCheck(newStatus);
       if (result == true) {
@@ -105,8 +107,10 @@ class AdvancedOptions extends StatelessWidget {
       showModalBottomSheet(
         context: context, 
         builder: (context) => AppUnlockSetupModal(
+          topBarHeight: topBarHeight,
           useBiometrics: appConfigProvider.useBiometrics,
         ),
+        isScrollControlled: true,
         backgroundColor: Colors.transparent
       );
     }
