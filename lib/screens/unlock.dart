@@ -37,19 +37,22 @@ class _UnlockState extends State<Unlock> {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     void connectServer() async {
-      Server serverObj = serversProvider.selectedServer!;
-      final result = await login(serverObj);
-      if (result['result'] == 'success') {
-        serverObj.enabled = result['status'] == 'enabled' ? true : false;
-        serversProvider.setselectedServerToken('phpSessId', result['phpSessId']);
-        serversProvider.setselectedServerToken('token', result['token']);
-        serversProvider.setselectedServer(serverObj);
-        serversProvider.setRefreshServerStatus(true);
-        serversProvider.setIsServerConnected(true);
+      if (serversProvider.selectedServer != null) {
+        Server serverObj = serversProvider.selectedServer!;
+        final result = await login(serverObj);
+        if (result['result'] == 'success') {
+          serverObj.enabled = result['status'] == 'enabled' ? true : false;
+          serversProvider.setselectedServerToken('phpSessId', result['phpSessId']);
+          serversProvider.setselectedServerToken('token', result['token']);
+          serversProvider.setselectedServer(serverObj);
+          serversProvider.setRefreshServerStatus(true);
+          serversProvider.setIsServerConnected(true);
+        }
+        else {
+          serversProvider.setIsServerConnected(false);
+        }
       }
-      else {
-        serversProvider.setIsServerConnected(false);
-      }
+      appConfigProvider.setAppUnlocked(true);
     }
 
     void updateCode(String value) {

@@ -339,7 +339,10 @@ class _DroidHoleState extends State<DroidHole> {
               child: child!,
             );
           },
-          home: const Base()
+          home: Base(
+            passCode: appConfigProvider.passCode,
+            setAppUnlocked: appConfigProvider.setAppUnlocked,
+          )
           );
       }),
     );
@@ -348,13 +351,20 @@ class _DroidHoleState extends State<DroidHole> {
 
 
 class Base extends StatefulWidget {
-  const Base({Key? key}) : super(key: key); 
+  final String? passCode;
+  final void Function(bool) setAppUnlocked;
+
+  const Base({
+    Key? key,
+    required this.passCode,
+    required this.setAppUnlocked,
+  }) : super(key: key); 
 
   @override
   State<Base> createState() => _BaseState();
 }
 
-class _BaseState extends State<Base> {
+class _BaseState extends State<Base> with WidgetsBindingObserver {
   final List<Widget> pages = [
     const Home(),
     const Statistics(),
@@ -366,6 +376,26 @@ class _BaseState extends State<Base> {
     const Connect(),
     const Settings()
   ];
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused && widget.passCode != null) {
+      widget.setAppUnlocked(false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -428,13 +458,13 @@ class _BaseState extends State<Base> {
               child: child,
             )
           ),
-          child: serversProvider.selectedServer != null && serversProvider.isServerConnected == null 
+          child: appConfigProvider.appUnlocked == false
             ? const Unlock()
             : serversProvider.selectedServer != null
               ? pages[appConfigProvider.selectedTab]
               : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
         ),
-        bottomNavigationBar: serversProvider.selectedServer != null && serversProvider.isServerConnected == null 
+        bottomNavigationBar: appConfigProvider.appUnlocked == false
           ? null
           : BottomNavBar(
               screens: serversProvider.selectedServer != null
@@ -446,20 +476,22 @@ class _BaseState extends State<Base> {
               onChange: (selected) => appConfigProvider.setSelectedTab(selected),
             ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: serversProvider.selectedServer != null
-          ? serversProvider.isServerConnected == true
-            && appConfigProvider.selectedTab == 0
+        floatingActionButton: appConfigProvider.appUnlocked == true
+          ? serversProvider.selectedServer != null
+            ? serversProvider.isServerConnected == true
+              && appConfigProvider.selectedTab == 0
+                ? FloatingActionButton(
+                    onPressed: _enableDisableServer,
+                    child: const Icon(Icons.shield_rounded),
+                  )
+                : null
+            : appConfigProvider.selectedTab == 0 && serversProvider.getServersList.isNotEmpty
               ? FloatingActionButton(
-                  onPressed: _enableDisableServer,
-                  child: const Icon(Icons.shield_rounded),
+                  onPressed: _addServerModal,
+                  child: const Icon(Icons.add),
                 )
               : null
-          : appConfigProvider.selectedTab == 0 && serversProvider.getServersList.isNotEmpty
-            ? FloatingActionButton(
-                onPressed: _addServerModal,
-                child: const Icon(Icons.add),
-              )
-            : null,
+          : null,
       ),
     );
   }

@@ -18,6 +18,7 @@ class AppConfigProvider with ChangeNotifier {
   String? _passCode;
   bool _biometricsSupport = false;
   int _useBiometrics = 0;
+  bool _appUnlocked = true;
 
   Database? _dbInstance;
 
@@ -94,6 +95,10 @@ class AppConfigProvider with ChangeNotifier {
   bool get useBiometrics {
     return _useBiometrics == 0 ? false : true;
   }
+  
+  bool get appUnlocked {
+    return _appUnlocked;
+  }
 
   void setSelectedTab(int selectedTab) {
     _selectedTab = selectedTab;
@@ -117,6 +122,11 @@ class AppConfigProvider with ChangeNotifier {
 
   void setBiometricsSupport(bool isSupported) {
     _biometricsSupport = isSupported;
+    notifyListeners();
+  }
+
+  void setAppUnlocked(bool status) {
+    _appUnlocked = status;
     notifyListeners();
   }
 
@@ -198,6 +208,10 @@ class AppConfigProvider with ChangeNotifier {
     _passCode = dbData['passCode'];
     _useBiometrics = dbData['useBiometricAuth'];
     _dbInstance = dbInstance;
+
+    if (dbData['passCode'] != null) {
+      _appUnlocked = false;
+    }
 
     notifyListeners();
   }
