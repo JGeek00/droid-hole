@@ -40,7 +40,7 @@ class _FingerprintUnlockModalState extends State<FingerprintUnlockModal> {
       }
       else {
         if (_shakeKey.currentState != null) {
-          _shakeKey.currentState!.deactivate();
+          _shakeKey.currentState!.shake();
         }
         await Future.delayed(const Duration(milliseconds: 300), () {});
         if (isCancelled == false) {
