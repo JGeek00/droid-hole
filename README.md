@@ -27,7 +27,7 @@ DroidHole does not collect any personal user data. All data stored into the appl
 - [flutter launcher icons](https://pub.dev/packages/flutter_launcher_icons)
 - [flutter native splash](https://pub.dev/packages/flutter_native_splash)
 - [intl](https://pub.dev/packages/intl)
-- [charts_flutter](https://pub.dev/packages/charts_flutter)
+- [charts flutter](https://pub.dev/packages/charts_flutter)
 - [html](https://pub.dev/packages/html)
 - [pie chart](https://pub.dev/packages/pie_chart)
 - [flutter svg](https://pub.dev/packages/flutter_svg)
@@ -37,6 +37,8 @@ DroidHole does not collect any personal user data. All data stored into the appl
 - [permission handler](https://pub.dev/packages/permission_handler)
 - [dynamic color](https://pub.dev/packages/dynamic_color)
 - [device info](https://pub.dev/packages/device_info)
+- [flutter local auth invisible](https://pub.dev/packages/flutter_local_auth_invisible)
+- [vibration](https://pub.dev/packages/vibration)
 
 <br>
 
