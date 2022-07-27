@@ -58,12 +58,12 @@ class _NumericPadState extends State<NumericPad> {
           ? null
           : (width-160)/3,
         child: ElevatedButton(
-          onPressed: () => widget.code.isNotEmpty
+          onPressed: widget.code.isNotEmpty
             ? () {
                 String newCode = widget.code.substring(0, widget.code.length - 1);
                 widget.onInput(newCode);
               }
-            : {},
+            : () {},
           style: ButtonStyle(
             shadowColor: MaterialStateProperty.all(Colors.transparent)
           ),

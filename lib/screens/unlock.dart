@@ -1,3 +1,4 @@
+import 'package:droid_hole/widgets/fingerprint_unlock_modal.dart';
 import 'package:droid_hole/widgets/shake_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,9 @@ import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 class Unlock extends StatefulWidget {
-  const Unlock({Key? key,}) : super(key: key);
+  const Unlock({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Unlock> createState() => _UnlockState();
@@ -20,6 +23,8 @@ class Unlock extends StatefulWidget {
 class _UnlockState extends State<Unlock> {
   bool isLoading = false;
   String _code = "";
+  
+  bool firstLoad = true;
 
   final GlobalKey<ShakeAnimationState> _shakeKey = GlobalKey<ShakeAnimationState>();
 
@@ -62,6 +67,27 @@ class _UnlockState extends State<Unlock> {
       }
     }
 
+    if (firstLoad == true) {
+      if (appConfigProvider.useBiometrics == true) {
+        Future.delayed(const Duration(milliseconds: 0), () {
+          showModalBottomSheet(
+            context: context, 
+            builder: (ctx)  => FingerprintUnlockModal(
+              onSuccess: () async {
+                setState(() {
+                  isLoading = true;
+                });
+                Navigator.pop(ctx);
+                connectServer();
+              },
+            ),
+            backgroundColor: Colors.transparent
+          );
+        });
+      }
+      firstLoad = false;
+    }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -86,6 +112,7 @@ class _UnlockState extends State<Unlock> {
                           padding: const EdgeInsets.all(30),
                           child: Text(
                             AppLocalizations.of(context)!.enterCodeUnlock,
+                            textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 22
                             ),

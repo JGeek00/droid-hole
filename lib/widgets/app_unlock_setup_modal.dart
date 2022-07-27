@@ -1,14 +1,43 @@
-import 'package:droid_hole/widgets/remove_passcode_modal.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter_local_auth_invisible/flutter_local_auth_invisible.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/fingerprint_unlock_modal.dart';
+import 'package:droid_hole/widgets/remove_passcode_modal.dart';
 import 'package:droid_hole/widgets/create_pass_code_modal.dart';
 
 import 'package:droid_hole/providers/app_config_provider.dart';
 
-class AppUnlockSetupModal extends StatelessWidget {
-  const AppUnlockSetupModal({Key? key}) : super(key: key);
+class AppUnlockSetupModal extends StatefulWidget {
+  final bool useBiometrics;
+
+  const AppUnlockSetupModal({
+    Key? key,
+    required this.useBiometrics,
+  }) : super(key: key);
+
+  @override
+  State<AppUnlockSetupModal> createState() => _AppUnlockSetupModalState();
+}
+
+class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
+  List<BiometricType> availableBiometrics = [];
+  bool _useBiometrics = false;
+
+  void checkAvailableBiometrics() async {
+    final List<BiometricType> biometrics = await LocalAuthentication.getAvailableBiometrics();
+    setState(() => availableBiometrics = biometrics);
+  }
+
+  @override
+  void initState() {
+    checkAvailableBiometrics();
+    setState(() => _useBiometrics = widget.useBiometrics);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +56,56 @@ class AppUnlockSetupModal extends StatelessWidget {
         builder: (context) => const RemovePasscodeModal(),
         barrierDismissible: false
       );
+    }
+
+    void _enableDisableBiometricsUnlock(bool status) async {
+      if (status == true) {
+        if (availableBiometrics.contains(BiometricType.fingerprint)) {
+          showModalBottomSheet(
+            context: context, 
+            builder: (ctx)  => FingerprintUnlockModal(
+              onSuccess: () async {
+                final result = await appConfigProvider.setUseBiometrics(true);
+                if (result == true) {
+                  setState(() => _useBiometrics = true);
+                  Navigator.pop(ctx);
+                }
+                else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.biometicUnlockNotActivated),
+                      backgroundColor: Colors.red,
+                    )
+                  );
+                }
+              },
+            ),
+            backgroundColor: Colors.transparent
+          );
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.noAvailableBiometrics),
+              backgroundColor: Colors.grey,
+            )
+          );
+        }
+      }
+      else {
+        final result = await appConfigProvider.setUseBiometrics(false);
+        if (result == true) {
+          setState(() => _useBiometrics = false);
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.biometicUnlockNotDisabled),
+              backgroundColor: Colors.red,
+            )
+          );
+        }
+      }
     }
 
     return Container(
@@ -100,6 +179,42 @@ class AppUnlockSetupModal extends StatelessWidget {
                     label: Text(AppLocalizations.of(context)!.setPassCode),
                   ),
                 ),
+            if (appConfigProvider.biometricsSupport == true) Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => _enableDisableBiometricsUnlock(!appConfigProvider.useBiometrics),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10,
+                    bottom: 10,
+                    left: 30,
+                    right: 20
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.fingerprint),
+                          const SizedBox(width: 10),
+                          Text(
+                            AppLocalizations.of(context)!.useFingerprint,
+                            style: const TextStyle(
+                              fontSize: 16
+                            ),
+                          ),
+                        ],
+                      ),
+                      Switch(
+                        value: _useBiometrics, 
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (value) => _enableDisableBiometricsUnlock(value)
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Row(

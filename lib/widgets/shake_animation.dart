@@ -30,6 +30,10 @@ class ShakeAnimationState extends State<ShakeAnimation> with SingleTickerProvide
     controller!.forward(from: 0.0);
   }
 
+  stop() {
+    controller!.stop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Animation<double> offsetAnimation = Tween(

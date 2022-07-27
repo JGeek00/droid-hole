@@ -239,5 +239,10 @@
     "appUnlockDisabled": "Desbloqueo de app desactivado",
     "areSureRemovePasscode": "Estás seguro que deseas eliminar el código? Esto desactivará la protección de desbloqueo de la app.",
     "connectingToServer": "Conectando al servidor",
-    "enterCodeUnlock": "Introducir código para desbloquear"
+    "enterCodeUnlock": "Introducir código para desbloquear",
+    "useFingerprint": "Usar huella dactilar",
+    "noAvailableBiometrics": "No tienes huellas dactilares guardadas en el dispositivo.",
+    "unlockFingerprint": "Desbloquear con huella dactilar",
+    "biometicUnlockNotActivated": "No se ha podido activar el desbloqueo con huella dactilar.",
+    "biometicUnlockNotDisabled": "No se ha podido desactivar el desbloqueo con huella dactilar."
 }

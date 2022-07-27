@@ -50,6 +50,7 @@ dependencies:
   permission_handler: ^10.0.0
   dynamic_color: ^1.4.0
   device_info: ^2.0.3
+  flutter_local_auth_invisible: ^2.2.0
 
 dev_dependencies:
   flutter_test:

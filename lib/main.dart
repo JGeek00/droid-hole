@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:flutter_local_auth_invisible/flutter_local_auth_invisible.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -49,12 +50,24 @@ void main() async {
     HttpOverrides.global = MyHttpOverrides();
   }
 
+  final bool canAuthenticateWithBiometrics = await LocalAuthentication.canCheckBiometrics;
+  List<BiometricType> availableBiometrics = await LocalAuthentication.getAvailableBiometrics();
+  configProvider.setBiometricsSupport(canAuthenticateWithBiometrics);
+
   serversProvider.setDbInstance(dbData['dbInstance']);
   configProvider.saveFromDb(dbData['dbInstance'], dbData['appConfig']);
   await serversProvider.saveFromDb(
     dbData['servers'], 
     dbData['appConfig']['passCode'] != null ? false : true
   );
+
+  if (
+    canAuthenticateWithBiometrics && 
+    availableBiometrics.contains(BiometricType.fingerprint) == false && 
+    dbData['useBiometricAuth'] == 1
+  ) {
+    await configProvider.setUseBiometrics(false);
+  }
 
   PackageInfo appInfo = await loadAppInfo();
   configProvider.setAppInfo(appInfo);
@@ -132,17 +145,22 @@ Future upgradeDbToV10(Database db) async {
   await db.execute("UPDATE appConfig SET passCode = null");
 }
 
+Future upgradeDbToV11(Database db) async {
+  await db.execute("ALTER TABLE appConfig ADD COLUMN useBiometricAuth NUMERIC");
+  await db.execute("UPDATE appConfig SET useBiometricAuth = 0");
+}
+
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
   List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 10,
+    version: 11,
     onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, pwHash TEXT, isDefaultServer NUMERIC)");
-      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC, overrideSslCheck NUMERIC, oneColumnLegend NUMERIC, reducedDataCharts NUMERIC, logsPerQuery NUMERIC, passCode TEXT)");
-      await db.execute("INSERT INTO appConfig (autoRefreshTime, theme, overrideSslCheck, oneColumnLegend, reducedDataCharts, logsPerQuery, passCode) VALUES (5, 0, 0, 0, 0, 2, null)");
+      await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC, overrideSslCheck NUMERIC, oneColumnLegend NUMERIC, reducedDataCharts NUMERIC, logsPerQuery NUMERIC, passCode TEXT, useBiometricAuth NUMERIC)");
+      await db.execute("INSERT INTO appConfig (autoRefreshTime, theme, overrideSslCheck, oneColumnLegend, reducedDataCharts, logsPerQuery, passCode, useBiometricAuth) VALUES (5, 0, 0, 0, 0, 2, null, 0)");
     },
     onUpgrade: (Database db, int oldVersion, int newVersion) async {
       if (oldVersion == 2) {
@@ -154,6 +172,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
         await upgradeDbToV10(db);
+        await upgradeDbToV11(db);
       }
       if (oldVersion == 3) {
         await upgradeDbToV4(db);
@@ -163,6 +182,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
         await upgradeDbToV10(db);
+        await upgradeDbToV11(db);
       }
       if (oldVersion == 4) {
         await upgradeDbToV5(db);
@@ -171,6 +191,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
         await upgradeDbToV10(db);
+        await upgradeDbToV11(db);
       }
       if (oldVersion == 5) {
         await upgradeDbToV6(db);
@@ -178,24 +199,32 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
         await upgradeDbToV10(db);
+        await upgradeDbToV11(db);
       }
       if (oldVersion == 6) {
         await upgradeDbToV7(db);
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
         await upgradeDbToV10(db);
+        await upgradeDbToV11(db);
       }
       if (oldVersion == 7) {
         await upgradeDbToV8(db);
         await upgradeDbToV9(db);
         await upgradeDbToV10(db);
+        await upgradeDbToV11(db);
       }
       if (oldVersion == 8) {
         await upgradeDbToV9(db);
         await upgradeDbToV10(db);
+        await upgradeDbToV11(db);
       }
       if (oldVersion == 9) {
         await upgradeDbToV10(db);
+        await upgradeDbToV11(db);
+      }
+      if (oldVersion == 10) {
+        await upgradeDbToV11(db);
       }
     },
     onDowngrade: (Database db, int oldVersion, int newVersion) async {

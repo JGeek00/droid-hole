@@ -236,5 +236,10 @@
     "appUnlockDisabled": "App unlock disabled",
     "areSureRemovePasscode": "Are you sure you want to remove the passcode? This will disable the app unlock protection.",
     "connectingToServer": "Connecting to server",
-    "enterCodeUnlock": "Enter code to unlock"
+    "enterCodeUnlock": "Enter code to unlock",
+    "useFingerprint": "Use fingerprint",
+    "noAvailableBiometrics": "You don't have any fingerprints saved on the device.",
+    "unlockFingerprint": "Unlock with fingerprint",
+    "biometicUnlockNotActivated": "Couldn't activate unlock with fingerprint.",
+    "biometicUnlockNotDisabled": "Couldn't disable unlock with fingerprint."
 }

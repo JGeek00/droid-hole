@@ -16,6 +16,8 @@ class AppConfigProvider with ChangeNotifier {
   int _reducedDataCharts = 0;
   double _logsPerQuery = 2;
   String? _passCode;
+  bool _biometricsSupport = false;
+  int _useBiometrics = 0;
 
   Database? _dbInstance;
 
@@ -85,6 +87,14 @@ class AppConfigProvider with ChangeNotifier {
     return _passCode;
   }
 
+  bool get biometricsSupport {
+    return _biometricsSupport;
+  }
+
+  bool get useBiometrics {
+    return _useBiometrics == 0 ? false : true;
+  }
+
   void setSelectedTab(int selectedTab) {
     _selectedTab = selectedTab;
     notifyListeners();
@@ -103,6 +113,23 @@ class AppConfigProvider with ChangeNotifier {
   void setIosInfo(IosDeviceInfo deviceInfo) {
     _iosDeviceInfo = deviceInfo;
     notifyListeners();
+  }
+
+  void setBiometricsSupport(bool isSupported) {
+    _biometricsSupport = isSupported;
+    notifyListeners();
+  }
+
+  Future<bool> setUseBiometrics(bool biometrics) async {
+    final updated = await _updateUseBiometricAuthDb(biometrics == true ? 1 : 0);
+    if (updated == true) {
+      _useBiometrics = biometrics == true ? 1 : 0;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   Future<bool> setPassCode(String? code) async {
@@ -149,7 +176,9 @@ class AppConfigProvider with ChangeNotifier {
     _reducedDataCharts = dbData['reducedDataCharts'];
     _logsPerQuery = dbData['logsPerQuery'].toDouble();
     _passCode = dbData['passCode'];
+    _useBiometrics = dbData['useBiometricAuth'];
     _dbInstance = dbInstance;
+
     notifyListeners();
   }
 
@@ -284,6 +313,19 @@ class AppConfigProvider with ChangeNotifier {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
           'UPDATE appConfig SET reducedDataCharts = $value',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> _updateUseBiometricAuthDb(int value) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET useBiometricAuth = $value',
         );
         return true;
       });

@@ -104,7 +104,9 @@ class AdvancedOptions extends StatelessWidget {
     void _openAppUnlockModal() {
       showModalBottomSheet(
         context: context, 
-        builder: (context) => const AppUnlockSetupModal(),
+        builder: (context) => AppUnlockSetupModal(
+          useBiometrics: appConfigProvider.useBiometrics,
+        ),
         backgroundColor: Colors.transparent
       );
     }
