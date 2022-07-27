@@ -1,5 +1,7 @@
-import 'package:droid_hole/widgets/shake_animation.dart';
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
+
+import 'package:droid_hole/widgets/shake_animation.dart';
 
 class NumericPad extends StatefulWidget {
   final GlobalKey? shakeKey;
@@ -18,6 +20,23 @@ class NumericPad extends StatefulWidget {
 }
 
 class _NumericPadState extends State<NumericPad> {
+  bool validVibrator = false;
+
+  void checkVibrator() async {
+    if (await Vibration.hasCustomVibrationsSupport() != null) {
+      validVibrator = true;
+    }
+    else {
+      validVibrator = false;
+    }
+  }
+
+  @override
+  void initState() {
+    checkVibrator();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -34,6 +53,7 @@ class _NumericPadState extends State<NumericPad> {
         child: ElevatedButton(
           onPressed: widget.code.length < 4
             ? () {
+                Vibration.vibrate(duration: 15, amplitude: 128);
                 String newCode = "${widget.code}$number";
                 widget.onInput(newCode);
               }
@@ -60,6 +80,7 @@ class _NumericPadState extends State<NumericPad> {
         child: ElevatedButton(
           onPressed: widget.code.isNotEmpty
             ? () {
+                Vibration.vibrate(duration: 10);
                 String newCode = widget.code.substring(0, widget.code.length - 1);
                 widget.onInput(newCode);
               }

@@ -133,14 +133,34 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setPassCode(String? code) async {
-    final updated = await updatePassCodeDb(code);
-    if (updated == true) {
-      _passCode = code;
-      notifyListeners();
-      return true;
+    if (_useBiometrics == 1) {
+      final updated = await _updateUseBiometricAuthDb(0);
+      if (updated == true) {
+        _useBiometrics = 0;
+        final updated2 = await updatePassCodeDb(code);
+        if (updated2 == true) {
+          _passCode = code;
+          notifyListeners();
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+      else {
+        return false;
+      }
     }
     else {
-      return false;
+      final updated = await updatePassCodeDb(code);
+      if (updated == true) {
+        _passCode = code;
+        notifyListeners();
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 

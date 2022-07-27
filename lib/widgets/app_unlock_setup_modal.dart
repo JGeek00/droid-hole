@@ -25,7 +25,7 @@ class AppUnlockSetupModal extends StatefulWidget {
 
 class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
   List<BiometricType> availableBiometrics = [];
-  bool _useBiometrics = false;
+  bool validVibrator = false;
 
   void checkAvailableBiometrics() async {
     final List<BiometricType> biometrics = await LocalAuthentication.getAvailableBiometrics();
@@ -35,7 +35,6 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
   @override
   void initState() {
     checkAvailableBiometrics();
-    setState(() => _useBiometrics = widget.useBiometrics);
     super.initState();
   }
 
@@ -67,7 +66,6 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
               onSuccess: () async {
                 final result = await appConfigProvider.setUseBiometrics(true);
                 if (result == true) {
-                  setState(() => _useBiometrics = true);
                   Navigator.pop(ctx);
                 }
                 else {
@@ -94,10 +92,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
       }
       else {
         final result = await appConfigProvider.setUseBiometrics(false);
-        if (result == true) {
-          setState(() => _useBiometrics = false);
-        }
-        else {
+        if (result == false) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(AppLocalizations.of(context)!.biometicUnlockNotDisabled),
@@ -169,7 +164,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                   ),
                 )
               : Padding(
-                  padding: const EdgeInsets.all(30),
+                  padding: const EdgeInsets.all(20),
                   child: ElevatedButton.icon(
                     onPressed: _openPassCodeDialog,
                     style: ButtonStyle(
@@ -182,7 +177,9 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
             if (appConfigProvider.biometricsSupport == true) Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => _enableDisableBiometricsUnlock(!appConfigProvider.useBiometrics),
+                onTap: appConfigProvider.passCode != null
+                  ? () => _enableDisableBiometricsUnlock(!appConfigProvider.useBiometrics)
+                  : null,
                 child: Padding(
                   padding: const EdgeInsets.only(
                     top: 10,
@@ -195,20 +192,30 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.fingerprint),
+                          Icon(
+                            Icons.fingerprint,
+                            color: appConfigProvider.passCode != null 
+                              ? null
+                              : Colors.grey,
+                          ),
                           const SizedBox(width: 10),
                           Text(
                             AppLocalizations.of(context)!.useFingerprint,
-                            style: const TextStyle(
-                              fontSize: 16
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: appConfigProvider.passCode != null
+                                ? null
+                                : Colors.grey
                             ),
                           ),
                         ],
                       ),
                       Switch(
-                        value: _useBiometrics, 
+                        value: appConfigProvider.useBiometrics, 
                         activeColor: Theme.of(context).primaryColor,
-                        onChanged: (value) => _enableDisableBiometricsUnlock(value)
+                        onChanged: appConfigProvider.passCode != null
+                          ? (value) => _enableDisableBiometricsUnlock(value)
+                          : null
                       )
                     ],
                   ),

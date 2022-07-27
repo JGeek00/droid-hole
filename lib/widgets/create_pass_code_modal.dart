@@ -98,12 +98,8 @@ class _CreatePassCodeModalState extends State<CreatePassCodeModal> {
             NumericPad(
               code: _step == 0 ? _code : _repeatedCode,
               onInput: (newCode) => _step == 0
-                ? _code.length < 4
-                  ? setState(() => _code = newCode)
-                  : {}
-                : _repeatedCode.length < 4
-                  ? setState(() => _repeatedCode = newCode)
-                  : {}, 
+                ? setState(() => _code = newCode)
+                : setState(() => _repeatedCode = newCode), 
             )
           ],
         )
