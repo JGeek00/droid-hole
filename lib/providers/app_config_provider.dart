@@ -19,6 +19,7 @@ class AppConfigProvider with ChangeNotifier {
   bool _biometricsSupport = false;
   int _useBiometrics = 0;
   bool _appUnlocked = true;
+  bool _validVibrator = false;
 
   Database? _dbInstance;
 
@@ -100,6 +101,10 @@ class AppConfigProvider with ChangeNotifier {
     return _appUnlocked;
   }
 
+  bool get validVibrator {
+    return _validVibrator;
+  }
+
   void setSelectedTab(int selectedTab) {
     _selectedTab = selectedTab;
     notifyListeners();
@@ -127,6 +132,11 @@ class AppConfigProvider with ChangeNotifier {
 
   void setAppUnlocked(bool status) {
     _appUnlocked = status;
+    notifyListeners();
+  }
+
+  void setValidVibrator(bool valid) {
+    _validVibrator = valid;
     notifyListeners();
   }
 
@@ -372,10 +382,16 @@ class AppConfigProvider with ChangeNotifier {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
-          'UPDATE appConfig SET autoRefreshTime = 5, theme = 0',
+          'UPDATE appConfig SET autoRefreshTime = 5, theme = 0, overrideSslCheck = 0, oneColumnLegend = 0, reducedDataCharts = 0, logsPerQuery = 2, passCode = null, useBiometricAuth = 0',
         );
         _autoRefreshTime = 5;
         _selectedTheme = 0;
+        _overrideSslCheck = 0;
+        _oneColumnLegend = 0;
+        _reducedDataCharts = 0;
+        _logsPerQuery = 2;
+        _passCode = null;
+        _useBiometrics = 0;
         return true;
       });
     } catch (e) {

@@ -97,280 +97,278 @@ class _DisableModalState extends State<DisableModal> {
 
     return Padding(
       padding: mediaQueryData.viewInsets,
-      child: SingleChildScrollView(
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeInOut,
-          height: selectedOption == 5 
-            ? mediaQueryData.size.height > (Platform.isIOS ? 500 : 480) 
-              ? (Platform.isIOS ? 500 : 480) 
-              : mediaQueryData.size.height-25
-            : mediaQueryData.size.height > (Platform.isIOS ? 411 : 391)
-              ? (Platform.isIOS ? 411 : 391)
-              : mediaQueryData.size.height-25,
-          decoration: BoxDecoration(
-            color: Theme.of(context).dialogBackgroundColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30)
-            ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+        height: selectedOption == 5 
+          ? mediaQueryData.size.height > (Platform.isIOS ? 500 : 480) 
+            ? (Platform.isIOS ? 500 : 480) 
+            : mediaQueryData.size.height-25
+          : mediaQueryData.size.height > (Platform.isIOS ? 411 : 391)
+            ? (Platform.isIOS ? 411 : 391)
+            : mediaQueryData.size.height-25,
+        decoration: BoxDecoration(
+          color: Theme.of(context).dialogBackgroundColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30)
           ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      top: 20
-                    ),
-                    child: Icon(
-                      Icons.gpp_bad_rounded,
-                      size: 30,
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(
+                    top: 20
+                  ),
+                  child: Icon(
+                    Icons.gpp_bad_rounded,
+                    size: 30,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    AppLocalizations.of(context)!.disable,
+                    style: const TextStyle(
+                      fontSize: 22,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Text(
-                      AppLocalizations.of(context)!.disable,
-                      style: const TextStyle(
-                        fontSize: 22,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.maxFinite,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: (mediaQueryData.size.width-70)/2,
-                                margin: const EdgeInsets.only(
-                                  top: 10,
-                                  right: 5,
-                                  bottom: 5
-                                ),
-                                child: OptionBox(
-                                  optionsValue: selectedOption,
-                                  itemValue: 0,
-                                  onTap: _updateRadioValue,
-                                  child: Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      duration: const Duration(milliseconds: 250),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: selectedOption == 0
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).textTheme.bodyText1!.color
-                                      ),
-                                      child: Text(AppLocalizations.of(context)!.seconds30),
+                ),
+                Container(
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 10,
+                                right: 5,
+                                bottom: 5
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 0,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 0
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context).textTheme.bodyText1!.color
                                     ),
+                                    child: Text(AppLocalizations.of(context)!.seconds30),
                                   ),
                                 ),
                               ),
-                              Container(
-                                width: (mediaQueryData.size.width-70)/2,
-                                margin: const EdgeInsets.only(
-                                  top: 10,
-                                  left: 5,
-                                  bottom: 5
-                                ),
-                                child: OptionBox(
-                                  optionsValue: selectedOption,
-                                  itemValue: 1,
-                                  onTap: _updateRadioValue,
-                                  child: Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      duration: const Duration(milliseconds: 250),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: selectedOption == 1
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).textTheme.bodyText1!.color
-                                      ),
-                                      child: Text(AppLocalizations.of(context)!.minute1),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: (mediaQueryData.size.width-70)/2,
-                                margin: const EdgeInsets.only(
-                                  top: 5,
-                                  right: 5,
-                                  bottom: 5
-                                ),
-                                child: OptionBox(
-                                  optionsValue: selectedOption,
-                                  itemValue: 2,
-                                  onTap: _updateRadioValue,
-                                  child: Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      duration: const Duration(milliseconds: 250),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: selectedOption == 2
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).textTheme.bodyText1!.color
-                                      ),
-                                      child: Text(AppLocalizations.of(context)!.minutes2),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: (mediaQueryData.size.width-70)/2,
-                                margin: const EdgeInsets.only(
-                                  top: 5,
-                                  left: 5,
-                                  bottom: 5
-                                ),
-                                child: OptionBox(
-                                  optionsValue: selectedOption,
-                                  itemValue: 3,
-                                  onTap: _updateRadioValue,
-                                  child: Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      duration: const Duration(milliseconds: 250),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: selectedOption == 3
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).textTheme.bodyText1!.color
-                                      ),
-                                      child: Text(AppLocalizations.of(context)!.minutes5),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: (mediaQueryData.size.width-70)/2,
-                                margin: const EdgeInsets.only(
-                                  top: 5,
-                                  right: 5,
-                                  bottom: 10
-                                ),
-                                child: OptionBox(
-                                  optionsValue: selectedOption,
-                                  itemValue: 4,
-                                  onTap: _updateRadioValue,
-                                  child: Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      duration: const Duration(milliseconds: 250),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: selectedOption == 4
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).textTheme.bodyText1!.color
-                                      ),
-                                      child: Text(AppLocalizations.of(context)!.indefinitely),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: (mediaQueryData.size.width-70)/2,
-                                margin: const EdgeInsets.only(
-                                  top: 5,
-                                  left: 5,
-                                  bottom: 10
-                                ),
-                                child: OptionBox(
-                                  optionsValue: selectedOption,
-                                  itemValue: 5,
-                                  onTap: _updateRadioValue,
-                                  child: Center(
-                                    child: AnimatedDefaultTextStyle(
-                                      duration: const Duration(milliseconds: 250),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: selectedOption == 5
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).textTheme.bodyText1!.color
-                                      ),
-                                      child: Text(AppLocalizations.of(context)!.custom),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (showCustomDurationInput == true) 
-                            Column(
-                              children: [
-                                const SizedBox(height: 25),
-                                TextField(
-                                  onChanged: _validateCustomMinutes,
-                                  controller: customTimeController,
-                                  keyboardType: const TextInputType.numberWithOptions(
-                                    decimal: false
-                                  ),
-                                  decoration: InputDecoration(
-                                    errorText: !customTimeIsValid && customTimeController.text != ''
-                                      ? AppLocalizations.of(context)!.valueNotValid 
-                                      : null,
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10)
-                                      )
-                                    ),
-                                    labelText: AppLocalizations.of(context)!.customMinutes,
-                                  ),
-                                ),
-                              ],
                             ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 15
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context), 
-                                  child: Text(AppLocalizations.of(context)!.cancel),
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 10,
+                                left: 5,
+                                bottom: 5
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 1,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 1
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context).textTheme.bodyText1!.color
+                                    ),
+                                    child: Text(AppLocalizations.of(context)!.minute1),
+                                  ),
                                 ),
-                                const SizedBox(width: 20),
-                                TextButton(
-                                  onPressed: _selectionIsValid() == true 
-                                    ? () {
-                                        Navigator.pop(context);
-                                        widget.onDisable(_getTime());
-                                      }
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 5,
+                                right: 5,
+                                bottom: 5
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 2,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 2
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context).textTheme.bodyText1!.color
+                                    ),
+                                    child: Text(AppLocalizations.of(context)!.minutes2),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 5,
+                                left: 5,
+                                bottom: 5
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 3,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 3
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context).textTheme.bodyText1!.color
+                                    ),
+                                    child: Text(AppLocalizations.of(context)!.minutes5),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 5,
+                                right: 5,
+                                bottom: 10
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 4,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 4
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context).textTheme.bodyText1!.color
+                                    ),
+                                    child: Text(AppLocalizations.of(context)!.indefinitely),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: (mediaQueryData.size.width-70)/2,
+                              margin: const EdgeInsets.only(
+                                top: 5,
+                                left: 5,
+                                bottom: 10
+                              ),
+                              child: OptionBox(
+                                optionsValue: selectedOption,
+                                itemValue: 5,
+                                onTap: _updateRadioValue,
+                                child: Center(
+                                  child: AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 250),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: selectedOption == 5
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context).textTheme.bodyText1!.color
+                                    ),
+                                    child: Text(AppLocalizations.of(context)!.custom),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (showCustomDurationInput == true) 
+                          Column(
+                            children: [
+                              const SizedBox(height: 25),
+                              TextField(
+                                onChanged: _validateCustomMinutes,
+                                controller: customTimeController,
+                                keyboardType: const TextInputType.numberWithOptions(
+                                  decimal: false
+                                ),
+                                decoration: InputDecoration(
+                                  errorText: !customTimeIsValid && customTimeController.text != ''
+                                    ? AppLocalizations.of(context)!.valueNotValid 
                                     : null,
-                                  style: ButtonStyle(
-                                    foregroundColor: _selectionIsValid() == true 
-                                      ? MaterialStateProperty.all(Theme.of(context).primaryColor)
-                                      : MaterialStateProperty.all(Colors.grey)
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10)
+                                    )
                                   ),
-                                  child: Text(AppLocalizations.of(context)!.accept),
-                                )
-                              ]
-                            ),
-                          )
-                        ],
-                      ),
+                                  labelText: AppLocalizations.of(context)!.customMinutes,
+                                ),
+                              ),
+                            ],
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 15
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context), 
+                                child: Text(AppLocalizations.of(context)!.cancel),
+                              ),
+                              const SizedBox(width: 20),
+                              TextButton(
+                                onPressed: _selectionIsValid() == true 
+                                  ? () {
+                                      Navigator.pop(context);
+                                      widget.onDisable(_getTime());
+                                    }
+                                  : null,
+                                style: ButtonStyle(
+                                  foregroundColor: _selectionIsValid() == true 
+                                    ? MaterialStateProperty.all(Theme.of(context).primaryColor)
+                                    : MaterialStateProperty.all(Colors.grey)
+                                ),
+                                child: Text(AppLocalizations.of(context)!.accept),
+                              )
+                            ]
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

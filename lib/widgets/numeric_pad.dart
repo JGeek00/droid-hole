@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
 import 'package:droid_hole/widgets/shake_animation.dart';
 
-class NumericPad extends StatefulWidget {
+import 'package:droid_hole/providers/app_config_provider.dart';
+
+class NumericPad extends StatelessWidget {
   final GlobalKey? shakeKey;
   final String code;
   final void Function(String) onInput;
@@ -16,29 +19,9 @@ class NumericPad extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<NumericPad> createState() => _NumericPadState();
-}
-
-class _NumericPadState extends State<NumericPad> {
-  bool validVibrator = false;
-
-  void checkVibrator() async {
-    if (await Vibration.hasCustomVibrationsSupport() != null) {
-      validVibrator = true;
-    }
-    else {
-      validVibrator = false;
-    }
-  }
-
-  @override
-  void initState() {
-    checkVibrator();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
+
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -51,11 +34,13 @@ class _NumericPadState extends State<NumericPad> {
           ? null
           : (width-160)/3,
         child: ElevatedButton(
-          onPressed: widget.code.length < 4
+          onPressed: code.length < 4
             ? () {
-                Vibration.vibrate(duration: 15, amplitude: 128);
-                String newCode = "${widget.code}$number";
-                widget.onInput(newCode);
+                if (appConfigProvider.validVibrator) {
+                  Vibration.vibrate(duration: 15, amplitude: 128);
+                }
+                String newCode = "$code$number";
+                onInput(newCode);
               }
             : () => {},
           style: ButtonStyle(
@@ -78,11 +63,11 @@ class _NumericPadState extends State<NumericPad> {
           ? null
           : (width-160)/3,
         child: ElevatedButton(
-          onPressed: widget.code.isNotEmpty
+          onPressed: code.isNotEmpty
             ? () {
                 Vibration.vibrate(duration: 10);
-                String newCode = widget.code.substring(0, widget.code.length - 1);
-                widget.onInput(newCode);
+                String newCode = code.substring(0, code.length - 1);
+                onInput(newCode);
               }
             : () {},
           style: ButtonStyle(
@@ -133,18 +118,18 @@ class _NumericPadState extends State<NumericPad> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ShakeAnimation(
-            key: widget.shakeKey,
+            key: shakeKey,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
-                _number(widget.code.isNotEmpty ? widget.code[0] : null),
+                _number(code.isNotEmpty ? code[0] : null),
                 const SizedBox(width: 20),
-                _number(widget.code.length >= 2 ? widget.code[1] : null),
+                _number(code.length >= 2 ? code[1] : null),
                 const SizedBox(width: 20),
-                _number(widget.code.length >= 3 ? widget.code[2] : null),
+                _number(code.length >= 3 ? code[2] : null),
                 const SizedBox(width: 20),
-                _number(widget.code.length >= 4 ? widget.code[3] : null),
+                _number(code.length >= 4 ? code[3] : null),
               ],
             ),
           ),

@@ -110,8 +110,8 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
     }
 
     return Container(
-      height: (mediaQuery.size.height-widget.topBarHeight) > 400
-        ? 400
+      height: (mediaQuery.size.height-widget.topBarHeight) > 480
+        ? 480
         : mediaQuery.size.height-widget.topBarHeight,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
@@ -135,13 +135,67 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
             Padding(
               padding: const EdgeInsets.all(30),
               child: Text(
-                appConfigProvider.passCode != null
-                  ? AppLocalizations.of(context)!.appUnlockEnabled
-                  : AppLocalizations.of(context)!.appUnlockDisabled,
+                AppLocalizations.of(context)!.appUnlock,
                 style: const TextStyle(
                   fontSize: 22
                 ),
               ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                bottom: 30,
+                top: 10
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: appConfigProvider.passCode != null
+                    ? Colors.green
+                    : Colors.red
+                ),
+                borderRadius: BorderRadius.circular(30)
+              ),
+              child: appConfigProvider.passCode != null
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 20),
+                      Text(
+                        AppLocalizations.of(context)!.statusEnabled,
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500
+                        ),
+                      )
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 20),
+                      Text(
+                        AppLocalizations.of(context)!.statusDisabled,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500
+                        ),
+                      )
+                  ],
+                )
             ),
             appConfigProvider.passCode != null 
               ? Padding(
@@ -152,21 +206,31 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton.icon(
+                      ElevatedButton(
                         onPressed: _openPassCodeDialog,
                         style: ButtonStyle(
                           shadowColor: MaterialStateProperty.all(Colors.transparent)
                         ), 
-                        icon: const Icon(Icons.update),
-                        label: Text(AppLocalizations.of(context)!.updatePasscode),
+                        child: Row(
+                          children: [
+                            if (mediaQuery.size.width > 380) const Icon(Icons.update),
+                            if (mediaQuery.size.width > 380) const SizedBox(width: 10),
+                            Text(AppLocalizations.of(context)!.updatePasscode)
+                          ],
+                        ),
                       ),
-                      ElevatedButton.icon(
+                      ElevatedButton(
                         onPressed: _openRemovePasscode,
                         style: ButtonStyle(
                           shadowColor: MaterialStateProperty.all(Colors.transparent)
                         ), 
-                        icon: const Icon(Icons.delete),
-                        label: Text(AppLocalizations.of(context)!.removePasscode),
+                        child: Row(
+                          children: [
+                            if (mediaQuery.size.width > 380) const Icon(Icons.delete),
+                            if (mediaQuery.size.width > 380) const SizedBox(width: 10),
+                            Text(AppLocalizations.of(context)!.removePasscode)
+                          ],
+                        ),
                       ),
                     ],
                   ),

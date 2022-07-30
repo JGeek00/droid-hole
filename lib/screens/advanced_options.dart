@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:droid_hole/widgets/enter_passcode_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
@@ -85,12 +86,26 @@ class AdvancedOptions extends StatelessWidget {
     }
 
     void _deleteApplicationData() async {
-      final ProcessModal process = ProcessModal(context: context);
-      process.open(AppLocalizations.of(context)!.deleting);
-      await serversProvider.deleteDbData();
-      await appConfigProvider.restoreAppConfig();
-      process.close();
-      Phoenix.rebirth(context);
+      void reset() async {
+        final ProcessModal process = ProcessModal(context: context);
+        process.open(AppLocalizations.of(context)!.deleting);
+        await serversProvider.deleteDbData();
+        await appConfigProvider.restoreAppConfig();
+        process.close();
+        Phoenix.rebirth(context);
+      }
+
+      if (appConfigProvider.passCode != null) {
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => EnterPasscodeModal(
+            onConfirm: () => reset()
+          ),
+        ));
+      }
+      else {
+        reset();
+      }
     }
 
     void _openResetModal() {
@@ -104,15 +119,29 @@ class AdvancedOptions extends StatelessWidget {
     }
 
     void _openAppUnlockModal() {
-      showModalBottomSheet(
-        context: context, 
-        builder: (context) => AppUnlockSetupModal(
-          topBarHeight: topBarHeight,
-          useBiometrics: appConfigProvider.useBiometrics,
-        ),
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent
-      );
+      void _openModal() {
+        showModalBottomSheet(
+          context: context, 
+          builder: (context) => AppUnlockSetupModal(
+            topBarHeight: topBarHeight,
+            useBiometrics: appConfigProvider.useBiometrics,
+          ),
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent
+        );
+      }
+      
+      if (appConfigProvider.passCode != null) {
+        Navigator.push(context, MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => EnterPasscodeModal(
+            onConfirm: () => _openModal()
+          ),
+        ));
+      }
+      else {
+        _openModal();
+      }
     }
 
     return Scaffold(

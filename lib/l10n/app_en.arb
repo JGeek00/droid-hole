@@ -241,5 +241,7 @@
     "noAvailableBiometrics": "You don't have any fingerprints saved on the device.",
     "unlockFingerprint": "Unlock with fingerprint",
     "biometicUnlockNotActivated": "Couldn't activate unlock with fingerprint.",
-    "biometicUnlockNotDisabled": "Couldn't disable unlock with fingerprint."
+    "biometicUnlockNotDisabled": "Couldn't disable unlock with fingerprint.",
+    "statusEnabled": "Status: enabled",
+    "statusDisabled": "Status: disabled"
 }

@@ -37,6 +37,7 @@ import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/status_updater.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:vibration/vibration.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +68,13 @@ void main() async {
     dbData['useBiometricAuth'] == 1
   ) {
     await configProvider.setUseBiometrics(false);
+  }
+
+  if (await Vibration.hasCustomVibrationsSupport() != null) {
+    configProvider.setValidVibrator(true);
+  }
+  else {
+    configProvider.setValidVibrator(false);
   }
 
   PackageInfo appInfo = await loadAppInfo();
