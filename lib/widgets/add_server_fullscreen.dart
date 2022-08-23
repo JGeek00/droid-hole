@@ -165,59 +165,72 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         );
         final result = await login(serverObj);
         if (result['result'] == 'success') {
-          final hash = hashPassword(serverObj.password);
-          final isHashValid = await testHash(serverObj, hash);
-          if (isHashValid['result'] == 'success') {
+          if (result['withPassword'] == true) {
+            final hash = hashPassword(serverObj.password);
+            final isHashValid = await testHash(serverObj, hash);
+            if (isHashValid['result'] == 'success') {
+              Navigator.pop(context);
+              serversProvider.addServer(Server(
+                address: serverObj.address,
+                alias: serverObj.alias,
+                password: serverObj.password,
+                pwHash: hash,
+                defaultServer: defaultCheckbox,
+                enabled: result['status'] == 'enabled' ? true : false
+              ));
+            }
+            else if (isHashValid['result'] == 'hash_not_valid') {
+              setState(() => isTokenModalOpen = true);
+              showDialog(
+                context: context, 
+                builder: (ctx) => TokenModal(
+                  server: serverObj,
+                  onCancel: () {
+                    setState(() {
+                      isTokenModalOpen = false;
+                      isConnecting = false;
+                    });
+                    Navigator.pop(context);
+                  },
+                  onConfirm: (value) async {
+                    setState(() => isTokenModalOpen = false);
+                    Navigator.pop(context);
+                    serversProvider.addServer(Server(
+                      address: serverObj.address,
+                      alias: serverObj.alias,
+                      password: serverObj.password,
+                      pwHash: value,
+                      defaultServer: defaultCheckbox,
+                      enabled: result['status'] == 'enabled' ? true : false
+                    ));
+                  },
+                ),
+                useSafeArea: true,
+                barrierDismissible: false
+              );
+            }
+            else {
+              setState(() {
+                isConnecting = false;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.noConnection),
+                  backgroundColor: Colors.red,
+                )
+              );
+            }
+          }
+          else {
             Navigator.pop(context);
             serversProvider.addServer(Server(
               address: serverObj.address,
               alias: serverObj.alias,
               password: serverObj.password,
-              pwHash: hash,
+              pwHash: '',
               defaultServer: defaultCheckbox,
               enabled: result['status'] == 'enabled' ? true : false
             ));
-          }
-          else if (isHashValid['result'] == 'hash_not_valid') {
-            setState(() => isTokenModalOpen = true);
-            showDialog(
-              context: context, 
-              builder: (ctx) => TokenModal(
-                server: serverObj,
-                onCancel: () {
-                  setState(() {
-                    isTokenModalOpen = false;
-                    isConnecting = false;
-                  });
-                  Navigator.pop(context);
-                },
-                onConfirm: (value) async {
-                  setState(() => isTokenModalOpen = false);
-                  Navigator.pop(context);
-                  serversProvider.addServer(Server(
-                    address: serverObj.address,
-                    alias: serverObj.alias,
-                    password: serverObj.password,
-                    pwHash: value,
-                    defaultServer: defaultCheckbox,
-                    enabled: result['status'] == 'enabled' ? true : false
-                  ));
-                },
-              ),
-              useSafeArea: true,
-              barrierDismissible: false
-            );
-          }
-          else {
-            setState(() {
-              isConnecting = false;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.noConnection),
-                backgroundColor: Colors.red,
-              )
-            );
           }
         }
         else {
@@ -290,14 +303,94 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       );
       final result = await login(serverObj);
       if (result['result'] == 'success') {
-        final hash = hashPassword(serverObj.password);
-        final isHashValid = await testHash(serverObj, hash);
-        if (isHashValid['result'] == 'success') {
+        if (result['withPassword'] == true) {
+          final hash = hashPassword(serverObj.password);
+          final isHashValid = await testHash(serverObj, hash);
+          if (isHashValid['result'] == 'success') {
+            Server server = Server(
+              address: widget.server!.address, 
+              alias: aliasFieldController.text,
+              password: passwordFieldController.text, 
+              pwHash: hash,
+              defaultServer: defaultCheckbox,
+            );
+            final result = await serversProvider.editServer(server);
+            if (result == true) {
+              Navigator.pop(context);
+            }
+            else {
+              setState(() {
+                isConnecting = false;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.cantSaveConnectionData),
+                  backgroundColor: Colors.red,
+                )
+              );
+            }
+          }
+          else if (isHashValid['result'] == 'hash_not_valid') {
+            setState(() => isTokenModalOpen = true);
+            showDialog(
+              useSafeArea: true,
+              barrierDismissible: false,
+              context: context, 
+              builder: (ctx) => TokenModal(
+                server: serverObj,
+                onCancel: () {
+                  setState(() {
+                    isTokenModalOpen = false;
+                    isConnecting = false;
+                  });
+                  Navigator.pop(context);
+                },
+                onConfirm: (value) async {
+                  setState(() => isTokenModalOpen = false);
+                  Server server = Server(
+                    address: widget.server!.address, 
+                    alias: aliasFieldController.text,
+                    password: passwordFieldController.text, 
+                    pwHash: hash,
+                    defaultServer: defaultCheckbox,
+                  );
+                  final result = await serversProvider.editServer(server);
+                  if (result == true) {
+                    Navigator.pop(context);
+                  }
+                  else {
+                    setState(() {
+                      isConnecting = false;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)!.cantSaveConnectionData),
+                        backgroundColor: Colors.red,
+                      )
+                    );
+                  }
+                },
+              ),
+            );
+          }
+          else {
+            setState(() {
+              isConnecting = false;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.noConnection),
+                backgroundColor: Colors.red,
+              )
+            );
+          }
+        }
+        else {
           Server server = Server(
             address: widget.server!.address, 
             alias: aliasFieldController.text,
             password: passwordFieldController.text, 
-            pwHash: hash,
+            pwHash: '',
             defaultServer: defaultCheckbox,
           );
           final result = await serversProvider.editServer(server);
@@ -315,60 +408,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               )
             );
           }
-        }
-        else if (isHashValid['result'] == 'hash_not_valid') {
-          setState(() => isTokenModalOpen = true);
-          showDialog(
-            useSafeArea: true,
-            barrierDismissible: false,
-            context: context, 
-            builder: (ctx) => TokenModal(
-              server: serverObj,
-              onCancel: () {
-                setState(() {
-                  isTokenModalOpen = false;
-                  isConnecting = false;
-                });
-                Navigator.pop(context);
-              },
-              onConfirm: (value) async {
-                setState(() => isTokenModalOpen = false);
-                Server server = Server(
-                  address: widget.server!.address, 
-                  alias: aliasFieldController.text,
-                  password: passwordFieldController.text, 
-                  pwHash: hash,
-                  defaultServer: defaultCheckbox,
-                );
-                final result = await serversProvider.editServer(server);
-                if (result == true) {
-                  Navigator.pop(context);
-                }
-                else {
-                  setState(() {
-                    isConnecting = false;
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context)!.cantSaveConnectionData),
-                      backgroundColor: Colors.red,
-                    )
-                  );
-                }
-              },
-            ),
-          );
-        }
-        else {
-          setState(() {
-            isConnecting = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.noConnection),
-              backgroundColor: Colors.red,
-            )
-          );
         }
       }
       else {

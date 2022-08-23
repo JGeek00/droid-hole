@@ -70,29 +70,67 @@ Future realtimeStatus(Server server, String token) async {;
 
 dynamic login(Server server) async {
   try {
-    final request = http.MultipartRequest(
-      'POST',
-      Uri.parse('${server.address}/admin/index.php?login'),
-    )..fields.addAll({
-      'pw': server.password,
-      'persistentLogin': 'false'
-    });
-    final res = await request.send().timeout(
-      const Duration(seconds: 10)
+    final hasPassword = await httpClient(
+      method: 'get', 
+      url: '${server.address}/admin/index.php?login',
     );
-    String phpSessId = res.headers['set-cookie']!.split(';')[0].split('=')[1];
-    if (res.statusCode == 302) {
-      final tokenRes = await httpClient(
-        method: 'get', 
-        url: '${server.address}/admin/index.php',
-        headers: {
-          'Cookie': 'PHPSESSID=$phpSessId'
+    String phpSessId = hasPassword.headers['set-cookie']!.split(';')[0].split('=')[1];
+    if (hasPassword.statusCode == 200) {
+      final document = parse(hasPassword.body);
+      final pwField = document.getElementById('loginpw');
+      if (pwField != null) {
+        // Server has password
+        final loginReq = http.MultipartRequest(
+          'POST',
+          Uri.parse('${server.address}/admin/index.php?login'),
+        )..fields.addAll({
+          'pw': server.password,
+          'persistentLogin': 'false'
+        });
+        final loginRes = await loginReq.send().timeout(
+          const Duration(seconds: 10)
+        );
+        if (loginRes.statusCode == 302) {
+          phpSessId = loginRes.headers['set-cookie']!.split(';')[0].split('=')[1];
+          final tokenRes = await httpClient(
+            method: 'get', 
+            url: '${server.address}/admin/index.php',
+            headers: {
+              'Cookie': 'PHPSESSID=$phpSessId'
+            }
+          );
+          if (tokenRes.statusCode == 200) {
+            final withPasswordDoc = parse(tokenRes.body);
+            final token = withPasswordDoc.getElementById('token')!.text;
+            final statusReq = await httpClient(
+              method: 'get',
+              url: '${server.address}/admin/api.php'
+            );
+            final status = jsonDecode(statusReq.body);
+            if (statusReq.statusCode == 200 && status.runtimeType != List && status['status'] != null) {
+              return {
+                'result': 'success',
+                'status': status['status'],
+                'phpSessId': phpSessId,
+                'token': token,
+                'withPassword': true
+              };
+            }
+            else {
+              return {'result': 'no_connection'};
+            }
+          }
+          else {
+            return {'result': 'no_connection'};
+          }
         }
-      );
-      if (tokenRes.statusCode == 200) {
-        final document = parse(tokenRes.body);
+        else {
+          return {'result': 'token_invalid'};
+        }
+      }
+      else {
+        // Server doesn't have password
         final token = document.getElementById('token')!.text;
-
         final statusReq = await httpClient(
           method: 'get',
           url: '${server.address}/admin/api.php'
@@ -103,19 +141,17 @@ dynamic login(Server server) async {
             'result': 'success',
             'status': status['status'],
             'phpSessId': phpSessId,
-            'token': token
+            'token': token,
+            'withPassword': false
           };
         }
         else {
           return {'result': 'no_connection'};
         }
       }
-      else {
-        return {'result': 'no_connection'};
-      }
     }
     else {
-      return {'result': 'token_invalid'};
+      return {'result': 'no_connection'};
     }
   } on SocketException {
     return {'result': 'no_connection'};
