@@ -3,9 +3,12 @@ import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/unlock.dart';
+
 import 'package:droid_hole/widgets/servers_list.dart';
 import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/models/server.dart';
@@ -31,6 +34,8 @@ class _ServersPageState extends State<ServersPage> {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
+
     for (var i = 0; i < serversProvider.getServersList.length; i++) {
       expandableControllerList.add(ExpandableController());
     }
@@ -44,20 +49,25 @@ class _ServersPageState extends State<ServersPage> {
       }));
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle: systemUiOverlayStyleConfig(context),
-        title: Text(AppLocalizations.of(context)!.servers),
-      ),
-      body: ServersList(
-        context: context,
-        controllers: expandableControllerList, 
-        onChange: _expandOrContract
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openAddServerBottomSheet,
-        child: const Icon(Icons.add),
-      ),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            systemOverlayStyle: systemUiOverlayStyleConfig(context),
+            title: Text(AppLocalizations.of(context)!.servers),
+          ),
+          body: ServersList(
+            context: context,
+            controllers: expandableControllerList, 
+            onChange: _expandOrContract
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _openAddServerBottomSheet,
+            child: const Icon(Icons.add),
+          ),
+        ),
+        if (appConfigProvider.passCode != null && appConfigProvider.appUnlocked == false) const Unlock()
+      ],
     );
   }
 }
