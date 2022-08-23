@@ -465,6 +465,19 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       }
     }
 
+    bool _validData() {
+      if (
+        addressFieldController.text != '' && 
+        addressFieldError == null &&
+        aliasFieldController.text != ''
+      ) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
     return Stack(
       children: [
         Scaffold(
@@ -480,8 +493,17 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: TextButton(
-                  onPressed: widget.server != null ? _save : _connect,
-                  child: Text(AppLocalizations.of(context)!.save )
+                  onPressed: _validData()
+                    ? widget.server != null ? _save : _connect
+                    : null,
+                  style: ButtonStyle(
+                    foregroundColor: _validData()
+                      ? null
+                      : MaterialStateProperty.all(
+                        Colors.grey
+                      )
+                  ),
+                  child: Text(AppLocalizations.of(context)!.save),
                 ),
               )
             ],
