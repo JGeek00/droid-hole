@@ -171,27 +171,29 @@ class _LogsListState extends State<LogsList> {
         from:  minusHoursTimestamp,
         until: timestamp
       );
-      setState(() => _isLoadingMore = false);
-      if (result['result'] == 'success') {
-        List<Log> items = [];
-        result['data'].forEach((item) => items.add(Log.fromJson(item)));
-        if (replaceOldLogs == true) {
-          setState(() {
-            loadStatus = 1;
-            logsList = items.reversed.toList();
-            _lastTimestamp = minusHoursTimestamp;
-          });
+      if (mounted) {
+        setState(() => _isLoadingMore = false);
+        if (result['result'] == 'success') {
+          List<Log> items = [];
+          result['data'].forEach((item) => items.add(Log.fromJson(item)));
+          if (replaceOldLogs == true) {
+            setState(() {
+              loadStatus = 1;
+              logsList = items.reversed.toList();
+              _lastTimestamp = minusHoursTimestamp;
+            });
+          }
+          else {
+            setState(() {
+              loadStatus = 1;
+              logsList = logsList+items.reversed.toList();
+              _lastTimestamp = minusHoursTimestamp;
+            });
+          }
         }
         else {
-          setState(() {
-            loadStatus = 1;
-            logsList = logsList+items.reversed.toList();
-            _lastTimestamp = minusHoursTimestamp;
-          });
+          setState(() => loadStatus = 2);
         }
-      }
-      else {
-        setState(() => loadStatus = 2);
       }
     }
   }
