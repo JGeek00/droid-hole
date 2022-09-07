@@ -20,6 +20,7 @@ class AppConfigProvider with ChangeNotifier {
   int _useBiometrics = 0;
   bool _appUnlocked = true;
   bool _validVibrator = false;
+  int _importantInfoReaden = 0;
 
   Database? _dbInstance;
 
@@ -105,6 +106,10 @@ class AppConfigProvider with ChangeNotifier {
     return _validVibrator;
   }
 
+  bool get importantInfoReaden {
+    return _importantInfoReaden == 0 ? false : true;
+  }
+
   void setSelectedTab(int selectedTab) {
     _selectedTab = selectedTab;
     notifyListeners();
@@ -144,6 +149,18 @@ class AppConfigProvider with ChangeNotifier {
     final updated = await _updateUseBiometricAuthDb(biometrics == true ? 1 : 0);
     if (updated == true) {
       _useBiometrics = biometrics == true ? 1 : 0;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  Future<bool> setImportantInfoReaden(bool status) async {
+    final updated = await _updateImportantInfoReadenDb(status == true ? 1 : 0);
+    if (updated == true) {
+      _importantInfoReaden = status == true ? 1 : 0;
       notifyListeners();
       return true;
     }
@@ -217,6 +234,7 @@ class AppConfigProvider with ChangeNotifier {
     _logsPerQuery = dbData['logsPerQuery'].toDouble();
     _passCode = dbData['passCode'];
     _useBiometrics = dbData['useBiometricAuth'];
+    _importantInfoReaden = dbData['importantInfoReaden'];
     _dbInstance = dbInstance;
 
     if (dbData['passCode'] != null) {
@@ -370,6 +388,19 @@ class AppConfigProvider with ChangeNotifier {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
           'UPDATE appConfig SET useBiometricAuth = $value',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> _updateImportantInfoReadenDb(int value) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET importantInfoReaden = $value',
         );
         return true;
       });

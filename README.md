@@ -39,6 +39,7 @@ DroidHole does not collect any personal user data. All data stored into the appl
 - [device info](https://pub.dev/packages/device_info)
 - [flutter local auth invisible](https://pub.dev/packages/flutter_local_auth_invisible)
 - [vibration](https://pub.dev/packages/vibration)
+- [url launcher](https://pub.dev/packages/url_launcher)
 
 <br>
 

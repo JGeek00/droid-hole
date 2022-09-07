@@ -9,6 +9,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/advanced_options.dart';
 import 'package:droid_hole/screens/servers.dart';
 
+import 'package:droid_hole/widgets/contact_me_modal.dart';
+import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:droid_hole/widgets/logs_quantity_load_modal.dart';
 import 'package:droid_hole/widgets/theme_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
@@ -125,6 +127,20 @@ class Settings extends StatelessWidget {
           )
         );
       }
+    }
+
+    void _openImportantInformationModal() {
+      showDialog(
+        context: context, 
+        builder: (context) => const ImportantInfoModal()
+      );
+    }
+
+    void _openContactModal() {
+      showDialog(
+        context: context, 
+        builder: (context) => const ContactMeModal()
+      );
     }
 
     String _getThemeString() {
@@ -272,6 +288,11 @@ class Settings extends StatelessWidget {
                         ),
                         if (appConfigProvider.getAppInfo != null) 
                           CustomListTile(
+                            label: AppLocalizations.of(context)!.importantInformation, 
+                            description: AppLocalizations.of(context)!.readIssues, 
+                            onTap: _openImportantInformationModal
+                          ),
+                          CustomListTile(
                             label: AppLocalizations.of(context)!.legal, 
                             description: AppLocalizations.of(context)!.legalInfo, 
                             onTap: _openLegalModal
@@ -279,6 +300,11 @@ class Settings extends StatelessWidget {
                           CustomListTile(
                             label: AppLocalizations.of(context)!.appVersion, 
                             description: appConfigProvider.getAppInfo!.version
+                          ),
+                          CustomListTile(
+                            label: AppLocalizations.of(context)!.contactDeveloper, 
+                            description: AppLocalizations.of(context)!.issuesSuggestions, 
+                            onTap: _openContactModal,
                           ),
                           CustomListTile(
                             label: AppLocalizations.of(context)!.createdBy, 

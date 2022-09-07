@@ -243,5 +243,17 @@
     "biometicUnlockNotActivated": "Couldn't activate unlock with fingerprint.",
     "biometicUnlockNotDisabled": "Couldn't disable unlock with fingerprint.",
     "statusEnabled": "Status: enabled",
-    "statusDisabled": "Status: disabled"
+    "statusDisabled": "Status: disabled",
+    "importantAnnouncment": "Important announcment",
+    "requiredVersions": "Required versions:",
+    "olderVersion": "If you have an older version, please update your Pi-hole to continue using this app.",
+    "letMeKnow": "Sometimes the Pi-hole team makes some changes to the API used by this app to get all the data. If you are experiencing connection issues or data not loading, and you are sure that your server is working fine, please let me know it to investigate it and release an update as soon as possible.",
+    "howToContact": "You can contact me by opening an issue on the GitHub repository or by email. All the details about how to contact are in Settings > Contact.",
+    "importantInformation": "Important information",
+    "readIssues": "Read this if you are experimenting issues",
+    "contactDeveloper": "Contact the developer",
+    "issuesSuggestions": "If you are experimenting issues or you have suggestions",
+    "contact": "Contact",
+    "openIssueGitHub": "Open an issue on GitHub",
+    "writeEmail": "Write me by email.\nInclude on the body all the possible details: Pi-hole and web interface version, how to reproduce the issue, screenshots...\nAll provided information will be very welcome."
 }

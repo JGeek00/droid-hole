@@ -246,5 +246,17 @@
     "biometicUnlockNotActivated": "No se ha podido activar el desbloqueo con huella dactilar.",
     "biometicUnlockNotDisabled": "No se ha podido desactivar el desbloqueo con huella dactilar.",
     "statusEnabled": "Estado: activado",
-    "statusDisabled": "Estado: desactivado"
+    "statusDisabled": "Estado: desactivado",
+    "importantAnnouncment": "Aviso importante",
+    "requiredVersions": "Versiones requeridas",
+    "olderVersion": "Si tienes una versión más antigua, por favor, actualiza tu Pi-hole para seguir usando esta app.",
+    "letMeKnow": "A veces, el equipo de Pi-hole realiza algunos cambios en la API utilizada por esta aplicación para obtener todos los datos. Si tiene problemas de conexión o los datos no se cargan, y está seguro de que su servidor funciona bien, hágamelo saber para investigarlo y publicar una actualización lo antes posible.",
+    "howToContact": "Puede contactarme abriendo un issue en el repositorio de GitHub o por correo electrónico. Todos los detalles sobre cómo contactar están en Ajustes > Contacto.",
+    "importantInformation": "Información importante",
+    "readIssues": "Lee esto si estás experimentando problemas",
+    "contactDeveloper": "Contacta con el desarrollador",
+    "issuesSuggestions": "Si estás experimentando problemas o tienes sugerencias",
+    "contact": "Contacto",
+    "openIssueGitHub": "Abre un issue en GitHub",
+    "writeEmail": "Escríbeme por correo electrónico.\nIncluye en el cuerpo todos los detalles posibles: Pi-hole y versión de la interfaz web, cómo reproducir el problema, capturas de pantalla...\nToda la información proporcionada será muy bienvenida."
 }
