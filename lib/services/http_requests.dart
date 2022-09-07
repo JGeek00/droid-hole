@@ -90,35 +90,23 @@ dynamic login(Server server) async {
         final loginRes = await loginReq.send().timeout(
           const Duration(seconds: 10)
         );
-        if (loginRes.statusCode == 302) {
+        final parsedResult = parse(await loginRes.stream.bytesToString());
+        final token = parsedResult.getElementById('token');
+        if (loginRes.statusCode == 200 && token != null) {
           phpSessId = loginRes.headers['set-cookie']!.split(';')[0].split('=')[1];
-          final tokenRes = await httpClient(
-            method: 'get', 
-            url: '${server.address}/admin/index.php',
-            headers: {
-              'Cookie': 'PHPSESSID=$phpSessId'
-            }
+          final statusReq = await httpClient(
+            method: 'get',
+            url: '${server.address}/admin/api.php'
           );
-          if (tokenRes.statusCode == 200) {
-            final withPasswordDoc = parse(tokenRes.body);
-            final token = withPasswordDoc.getElementById('token')!.text;
-            final statusReq = await httpClient(
-              method: 'get',
-              url: '${server.address}/admin/api.php'
-            );
-            final status = jsonDecode(statusReq.body);
-            if (statusReq.statusCode == 200 && status.runtimeType != List && status['status'] != null) {
-              return {
-                'result': 'success',
-                'status': status['status'],
-                'phpSessId': phpSessId,
-                'token': token,
-                'withPassword': true
-              };
-            }
-            else {
-              return {'result': 'no_connection'};
-            }
+          final status = jsonDecode(statusReq.body);
+          if (statusReq.statusCode == 200 && status.runtimeType != List && status['status'] != null) {
+            return {
+              'result': 'success',
+              'status': status['status'],
+              'phpSessId': phpSessId,
+              'token': token.text,
+              'withPassword': true
+            };
           }
           else {
             return {'result': 'no_connection'};
