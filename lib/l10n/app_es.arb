@@ -262,5 +262,11 @@
     "writeEmailDetails": "Incluye en el cuerpo del correo todos los detalles posibles: Pi-hole y versión de la interfaz web, cómo reproducir el problema, capturas de pantalla...\n\nToda la información proporcionada será muy bienvenida.",
     "contactEmail": "Contactar por email",
     "hideZeroValues": "Ocultar valores a cero",
-    "hideZeroValuesDescription": "Oculta los valores a cero del gráfico de clientes"
+    "hideZeroValuesDescription": "Oculta los valores a cero del gráfico de clientes",
+    "domainsClientsDataMode": "Visualización de estadísticas",
+    "domainsClientsDataModeDescription": "Cambia la manera en la que se muestran los datos de clientes y dominios",
+    "list": "Lista",
+    "listDescription": "Muestra los datos en una lista con la etiqueta y el valor numérico en el lado izquierdo y una barra en el lado derecho.",
+    "pieChart": "Gráfico circular",
+    "pieChartDescription": "Muestra los datos en un gráfico circular con la leyenda debajo."
 }

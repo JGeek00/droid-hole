@@ -1,12 +1,12 @@
-import 'package:droid_hole/widgets/no_data_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/no_data_chart.dart';
 import 'package:droid_hole/widgets/custom_pie_chart.dart';
+import 'package:droid_hole/widgets/pie_chart_legend.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
-import 'package:droid_hole/constants/colors.dart';
 
 class QueriesServersTab extends StatelessWidget {
   const QueriesServersTab({Key? key}) : super(key: key);
@@ -17,56 +17,6 @@ class QueriesServersTab extends StatelessWidget {
 
     final width = MediaQuery.of(context).size.width;
 
-    List<Widget> _generateLegendList(Map<String, double> data) {
-      List<Widget> items = [];
-      int index = 0;
-      data.forEach((key, value) {
-        items.add(
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 15,
-                      height: 15,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: colors[index]
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    SizedBox(
-                      width: width-160,
-                      child: Text(
-                        key,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  width: 65,
-                  child: Text(
-                    "${value.toString()} %",
-                    textAlign: TextAlign.end,
-                  )
-                ),
-              ],
-            ),
-          ),
-        );
-        index++;
-      });
-      return items;
-    }
-
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,10 +26,19 @@ class QueriesServersTab extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Text(
-                      AppLocalizations.of(context)!.queryTypes,
-                      style: const TextStyle(
-                        fontSize: 20,
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: Colors.black12,
+                        )
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.queryTypes,
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -90,9 +49,10 @@ class QueriesServersTab extends StatelessWidget {
                       )
                     ),
                     const SizedBox(height: 20),
-                    Column(
-                      children: _generateLegendList(serversProvider.getRealtimeStatus!.queryTypes),
-                    ),
+                    PieChartLegend(
+                      data: serversProvider.getRealtimeStatus!.queryTypes,
+                      dataUnit: '%',
+                    )
                   ]
                 ),
               )
@@ -112,10 +72,19 @@ class QueriesServersTab extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Text(
-                      AppLocalizations.of(context)!.upstreamServers,
-                      style: const TextStyle(
-                        fontSize: 20,
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: Colors.black12,
+                        )
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.upstreamServers,
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -126,8 +95,9 @@ class QueriesServersTab extends StatelessWidget {
                       )
                     ),
                     const SizedBox(height: 20),
-                    Column(
-                      children: _generateLegendList(serversProvider.getRealtimeStatus!.forwardDestinations),
+                    PieChartLegend(
+                      data: serversProvider.getRealtimeStatus!.forwardDestinations,
+                      dataUnit: '%',
                     )
                   ] 
                 ),

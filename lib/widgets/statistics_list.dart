@@ -1,3 +1,5 @@
+import 'package:droid_hole/widgets/custom_pie_chart.dart';
+import 'package:droid_hole/widgets/pie_chart_legend.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,32 +30,15 @@ class StatisticsList extends StatelessWidget {
 
     final width = MediaQuery.of(context).size.width;
 
-    Widget _generateList(Map<String, int> values, String label) {
-      final topQueriesList = convertFromMapToList(values);
+    Widget _listViewMode(List<Map<String, dynamic>> values) {
       int totalHits = 0;
-      for (var item in topQueriesList) {
+      for (var item in values) {
         totalHits = totalHits + item['value'].toInt() as int;
       }
 
       return Column(
         children: [
-          Container(
-            margin: const EdgeInsets.all(20),
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(
-                color: Colors.black12,
-              )
-            ),
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 20,
-              ),
-            ),
-          ),
-          ...topQueriesList.map((item) => Material(
+          ...values.map((item) => Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
@@ -146,6 +131,61 @@ class StatisticsList extends StatelessWidget {
               ),
             ),
           )).toList()
+        ],
+      );
+    }
+
+    Widget _pieChertViewMode(List<Map<String, dynamic>> values) {
+      Map<String, double> items = {};
+      Map<String, int> legend = {};
+      for (var item in values) {
+        items = {
+          ...items,
+          item['label']: item['value'].toDouble()
+        };
+        legend = {
+          ...legend,
+          item['label']: item['value'].toInt()
+        };
+      }
+      return Column(
+        children: [
+          const SizedBox(height: 10),
+          CustomPieChart(data: items),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: PieChartLegend(
+              data: legend,
+            ),
+          ),
+        ],
+      );
+    }
+
+    Widget _generateList(Map<String, int> values, String label) {
+      final topQueriesList = convertFromMapToList(values);
+      
+      return Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(
+                color: Colors.black12,
+              )
+            ),
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+          appConfigProvider.statisticsVisualizationMode == 0
+            ? _listViewMode(topQueriesList)
+            : _pieChertViewMode(topQueriesList)
         ],
       );
     }

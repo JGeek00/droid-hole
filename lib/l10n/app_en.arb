@@ -259,5 +259,11 @@
     "writeEmailDetails": "Include on the body of the email all the possible details: Pi-hole and web interface version, how to reproduce the issue, screenshots...\n\nAll provided information will be very welcome.",
     "contactEmail": "Contact by email",
     "hideZeroValues": "Hide zero values",
-    "hideZeroValuesDescription": "Hides zero values from clients chart"
+    "hideZeroValuesDescription": "Hides zero values from clients chart",
+    "domainsClientsDataMode": "Statistics display mode",
+    "domainsClientsDataModeDescription": "Changes the way that domains and clients data is displayed",
+    "list": "List",
+    "listDescription": "Displays the data on a list with the label and the numeric value at the left side, and a bar at the right side.",
+    "pieChart": "Pie chart",
+    "pieChartDescription": "Displays the data on a pie chart with the legend under it."
 }

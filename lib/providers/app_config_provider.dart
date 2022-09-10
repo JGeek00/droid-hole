@@ -22,6 +22,7 @@ class AppConfigProvider with ChangeNotifier {
   bool _validVibrator = false;
   int _importantInfoReaden = 0;
   int _hideZeroValues = 0;
+  int _statisticsVisualizationMode = 0;
 
   Database? _dbInstance;
 
@@ -113,6 +114,10 @@ class AppConfigProvider with ChangeNotifier {
 
   bool get hideZeroValues {
     return _hideZeroValues == 0 ? false : true;
+  }
+
+  int get statisticsVisualizationMode {
+    return _statisticsVisualizationMode;
   }
 
   void setSelectedTab(int selectedTab) {
@@ -241,6 +246,7 @@ class AppConfigProvider with ChangeNotifier {
     _useBiometrics = dbData['useBiometricAuth'];
     _importantInfoReaden = dbData['importantInfoReaden'];
     _hideZeroValues = dbData['hideZeroValues'];
+    _statisticsVisualizationMode = dbData['statisticsVisualizationMode'];
     _dbInstance = dbInstance;
 
     if (dbData['passCode'] != null) {
@@ -310,6 +316,18 @@ class AppConfigProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> setStatisticsVisualizationMode(int value) async {
+    final updated = await _updateStatisticsVisualizationModeDb(value);
+    if (updated == true) {
+      _statisticsVisualizationMode = value;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   Future<bool> updateAutoRefreshTimeDb(int value) async {
     try {
       return await _dbInstance!.transaction((txn) async {
@@ -354,6 +372,19 @@ class AppConfigProvider with ChangeNotifier {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
           'UPDATE appConfig SET theme = $value',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> _updateStatisticsVisualizationModeDb(int value) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET statisticsVisualizationMode = $value',
         );
         return true;
       });
@@ -456,6 +487,7 @@ class AppConfigProvider with ChangeNotifier {
         _useBiometrics = 0;
         _importantInfoReaden = 0;
         _hideZeroValues = 0;
+        _statisticsVisualizationMode = 0;
         return true;
       });
     } catch (e) {

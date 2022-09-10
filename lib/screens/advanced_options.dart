@@ -10,6 +10,7 @@ import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/widgets/app_unlock_setup_modal.dart';
 import 'package:droid_hole/widgets/enter_passcode_modal.dart';
+import 'package:droid_hole/widgets/statistics_visualization_modal.dart';
 
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -165,6 +166,17 @@ class AdvancedOptions extends StatelessWidget {
       }
     }
 
+    void _showStatisticsVisualizationModeSheet() {
+      showModalBottomSheet(
+        context: context, 
+        builder: (context) => StatisticsVisualizationModal(
+          statusBarHeight: topBarHeight
+        ),
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent
+      );
+    }
+
     return Stack(
       children: [
         Scaffold(
@@ -291,6 +303,18 @@ class AdvancedOptions extends StatelessWidget {
                   value: appConfigProvider.hideZeroValues, 
                   onChanged: _updateHideZeroValues,
                   activeColor: Theme.of(context).primaryColor,
+                ),
+              ),
+              CustomListTile(
+                leadingIcon: Icons.pie_chart_rounded,
+                label: AppLocalizations.of(context)!.domainsClientsDataMode,
+                description: AppLocalizations.of(context)!.domainsClientsDataModeDescription,
+                onTap: _showStatisticsVisualizationModeSheet,
+                padding: const EdgeInsets.only(
+                  top: 10,
+                  bottom: 10,
+                  left: 20,
+                  right: 10
                 ),
               ),
               Container(
