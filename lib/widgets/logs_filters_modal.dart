@@ -150,8 +150,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30)
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24)
         )
       ),
       height: height > (Platform.isIOS ? 532 : 512)
@@ -161,18 +161,18 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
         child: Column(
           children: [
             const Padding(
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.only(top: 24),
               child: Icon(
                 Icons.filter_list,
-                size: 30,
+                size: 26,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30),
+              padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
                 AppLocalizations.of(context)!.filters,
                 style: const TextStyle(
-                  fontSize: 22
+                  fontSize: 24
                 ),
               ),
             ),
@@ -180,7 +180,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 30
+                    horizontal: 24
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,7 +318,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                     onTap: _openStatusModal,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
+                        horizontal: 24,
                         vertical: 10
                       ),
                       child: Row(
@@ -360,7 +360,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                     onTap: _openClientsModal,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
+                        horizontal: 24,
                         vertical: 10
                       ),
                       child: Row(

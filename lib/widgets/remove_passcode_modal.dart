@@ -30,71 +30,40 @@ class RemovePasscodeModal extends StatelessWidget {
       }
     }
 
-    return Dialog(
+    return AlertDialog(
       backgroundColor: Theme.of(context).dialogBackgroundColor,
-      child: SizedBox(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Icon(Icons.delete),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Text(
-                  AppLocalizations.of(context)!.removePasscode,
-                  style: const TextStyle(
-                    fontSize: 24
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.areSureRemovePasscode
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                  right: 20,
-                  bottom: 10
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () => {
-                            Navigator.pop(context)
-                          }, 
-                          child: Text(AppLocalizations.of(context)!.cancel)
-                        ),
-                        const SizedBox(width: 20),
-                        TextButton(
-                          onPressed: _removePasscode,
-                          child: Text(AppLocalizations.of(context)!.remove),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ],
+      title: Column(
+        children: [
+          const Icon(
+            Icons.delete,
+            size: 26,
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Text(
+              AppLocalizations.of(context)!.removePasscode,
+              style: const TextStyle(
+                fontSize: 24
+              ),
+            ),
+          ),
+        ],
       ),
+      content:Text(
+        AppLocalizations.of(context)!.areSureRemovePasscode
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => {
+            Navigator.pop(context)
+          }, 
+          child: Text(AppLocalizations.of(context)!.cancel)
+        ),
+        TextButton(
+          onPressed: _removePasscode,
+          child: Text(AppLocalizations.of(context)!.remove),
+        ),
+      ],
     );
   }
 }

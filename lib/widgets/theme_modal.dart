@@ -52,21 +52,21 @@ class _ThemeModalState extends State<ThemeModal> {
       child: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 24),
             child: Icon(
               Icons.light_mode_rounded,
-              size: 30,
+              size: 26,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
-              top: 30,
-              bottom: 30
+              top: 24,
+              bottom: 24
             ),
             child: Text(
               AppLocalizations.of(context)!.theme,
               style: const TextStyle(
-                fontSize: 22
+                fontSize: 24
               ),
             ),
           ),

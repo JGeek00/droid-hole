@@ -17,17 +17,12 @@ class ImportantInfoModal extends StatelessWidget {
       scrollable: true,
       title: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(
-              top: 20,
-            ),
-            child: Icon(
-              Icons.info_rounded,
-              size: 26,
-            ),
+          const Icon(
+            Icons.info_rounded,
+            size: 26,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.only(top: 20),
             child: Text(
               AppLocalizations.of(context)!.importantAnnouncment,
               style: const TextStyle(
@@ -39,55 +34,45 @@ class ImportantInfoModal extends StatelessWidget {
       ),
       content:  Column(
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            width: double.maxFinite,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.requiredVersions,
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15
-                  ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.requiredVersions,
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15
                 ),
-                Container(
-                  width: double.maxFinite,
-                  margin: const EdgeInsets.only(top: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text("Pi-hole: v5.12+"),
-                      SizedBox(height: 5),
-                      Text("Web interface: v5.14.2+")
-                    ],
-                  ),
+              ),
+              Container(
+                width: double.maxFinite,
+                margin: const EdgeInsets.only(top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Text("Pi-hole: v5.12+"),
+                    SizedBox(height: 5),
+                    Text("Web interface: v5.14.2+")
+                  ],
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  AppLocalizations.of(context)!.olderVersion,
-                  textAlign: TextAlign.justify,
-                )
-              ],
-            )
+              ),
+              const SizedBox(height: 10),
+              Text(
+                AppLocalizations.of(context)!.olderVersion,
+                textAlign: TextAlign.justify,
+              )
+            ],
           ),
           const SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              AppLocalizations.of(context)!.letMeKnow,
-              textAlign: TextAlign.justify,
-            ),
+          Text(
+            AppLocalizations.of(context)!.letMeKnow,
+            textAlign: TextAlign.justify,
           ),
           const SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              AppLocalizations.of(context)!.howToContact,
-              textAlign: TextAlign.justify,
-            ),
+          Text(
+            AppLocalizations.of(context)!.howToContact,
+            textAlign: TextAlign.justify,
           ),
         ],
       ),

@@ -68,21 +68,21 @@ class _ServersListModalState extends State<ServersListModal> {
         children: [
           const Padding(
             padding: EdgeInsets.only(
-              top: 30,
+              top: 20,
             ),
             child: Icon(
               Icons.storage_rounded,
-              size: 30,
+              size: 26,
             ),
           ),
           Container(
             width: double.maxFinite,
-            padding: const EdgeInsets.symmetric(vertical: 30),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: Center(
               child: Text(
                 AppLocalizations.of(context)!.piHoleServers,
                 style: const TextStyle(
-                  fontSize: 22
+                  fontSize: 24
                 ),
               ),
             ),

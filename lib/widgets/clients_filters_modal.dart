@@ -94,32 +94,32 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30)
+          topLeft: Radius.circular(28),
+          topRight: Radius.circular(28)
         ),
         color: Theme.of(context).dialogBackgroundColor,
       ),
-      height: mediaQuery.size.height >= (Platform.isIOS ? 993 : 973) 
-        ? (Platform.isIOS ? 993 : 973) 
+      height: mediaQuery.size.height >= (Platform.isIOS ? 999 : 979) 
+        ? (Platform.isIOS ? 999 : 979) 
         : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight)+1,
       child: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 24),
             child: Icon(
               Icons.phone_android_rounded,
-              size: 30,
+              size: 26,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
-              top: 30,
-              bottom: 20
+              top: 24,
+              bottom: 24
             ),
             child: Text(
               AppLocalizations.of(context)!.clients,
               style: const TextStyle(
-                fontSize: 22
+                fontSize: 24
               ),
             ),
           ),
@@ -127,11 +127,11 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: mediaQuery.size.height >= (Platform.isIOS ? 1018 : 998) 
-                  ? (Platform.isIOS ? 828 : 808)
+                height: mediaQuery.size.height >= (Platform.isIOS ? 1017 : 989) 
+                  ? (Platform.isIOS ? 819 : 799)
                   : (Platform.isIOS 
-                    ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+247)
-                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+228)
+                    ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+238)
+                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+219)
                   ),
                 child: ListView.builder(
                   itemCount: filtersProvider.totalClients.length,

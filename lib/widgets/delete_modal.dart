@@ -40,80 +40,59 @@ class DeleteModal extends StatelessWidget {
       }
     }
 
-    return Dialog(
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
-      child: SizedBox(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Icon(Icons.delete),
+    return AlertDialog(
+      title: Column(
+        children: [
+          const Icon(
+            Icons.delete,
+            size: 26,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Text(
+              AppLocalizations.of(context)!.remove,
+              style: const TextStyle(
+                fontSize: 24
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+            ),
+          ),
+        ],
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            children: [
+              Text(
+                AppLocalizations.of(context)!.removeWarning,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              Center(
                 child: Text(
-                  AppLocalizations.of(context)!.remove,
+                  serverToDelete.address,
                   style: const TextStyle(
-                    fontSize: 24
+                    fontStyle: FontStyle.italic
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.removeWarning
-                    ),
-                    const SizedBox(height: 10),
-                    Center(
-                      child: Text(
-                        serverToDelete.address,
-                        style: const TextStyle(
-                          fontStyle: FontStyle.italic
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                  right: 20,
-                  bottom: 10
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () => {
-                            Navigator.pop(context)
-                          }, 
-                          child: Text(AppLocalizations.of(context)!.cancel)
-                        ),
-                        const SizedBox(width: 20),
-                        TextButton(
-                          onPressed: _removeServer,
-                          child: Text(AppLocalizations.of(context)!.remove),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
-        ),
+        ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () => {
+            Navigator.pop(context)
+          }, 
+          child: Text(AppLocalizations.of(context)!.cancel)
+        ),
+        TextButton(
+          onPressed: _removeServer,
+          child: Text(AppLocalizations.of(context)!.remove),
+        ),
+      ],
     );
   }
 }

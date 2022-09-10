@@ -110,8 +110,8 @@ class _DisableModalState extends State<DisableModal> {
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30)
+            topLeft: Radius.circular(28),
+            topRight: Radius.circular(28)
           ),
         ),
         child: SingleChildScrollView(
@@ -121,11 +121,11 @@ class _DisableModalState extends State<DisableModal> {
               children: [
                 const Padding(
                   padding: EdgeInsets.only(
-                    top: 20
+                    top: 14
                   ),
                   child: Icon(
                     Icons.gpp_bad_rounded,
-                    size: 30,
+                    size: 26,
                   ),
                 ),
                 Padding(
@@ -133,20 +133,20 @@ class _DisableModalState extends State<DisableModal> {
                   child: Text(
                     AppLocalizations.of(context)!.disable,
                     style: const TextStyle(
-                      fontSize: 22,
+                      fontSize: 24
                     ),
                   ),
                 ),
                 Container(
                   width: double.maxFinite,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Row(
                           children: [
                             Container(
-                              width: (mediaQueryData.size.width-70)/2,
+                              width: (mediaQueryData.size.width-78)/2,
                               margin: const EdgeInsets.only(
                                 top: 10,
                                 right: 5,
@@ -172,7 +172,7 @@ class _DisableModalState extends State<DisableModal> {
                               ),
                             ),
                             Container(
-                              width: (mediaQueryData.size.width-70)/2,
+                              width: (mediaQueryData.size.width-78)/2,
                               margin: const EdgeInsets.only(
                                 top: 10,
                                 left: 5,
@@ -202,7 +202,7 @@ class _DisableModalState extends State<DisableModal> {
                         Row(
                           children: [
                             Container(
-                              width: (mediaQueryData.size.width-70)/2,
+                              width: (mediaQueryData.size.width-78)/2,
                               margin: const EdgeInsets.only(
                                 top: 5,
                                 right: 5,
@@ -228,7 +228,7 @@ class _DisableModalState extends State<DisableModal> {
                               ),
                             ),
                             Container(
-                              width: (mediaQueryData.size.width-70)/2,
+                              width: (mediaQueryData.size.width-78)/2,
                               margin: const EdgeInsets.only(
                                 top: 5,
                                 left: 5,
@@ -258,7 +258,7 @@ class _DisableModalState extends State<DisableModal> {
                         Row(
                           children: [
                             Container(
-                              width: (mediaQueryData.size.width-70)/2,
+                              width: (mediaQueryData.size.width-78)/2,
                               margin: const EdgeInsets.only(
                                 top: 5,
                                 right: 5,
@@ -284,7 +284,7 @@ class _DisableModalState extends State<DisableModal> {
                               ),
                             ),
                             Container(
-                              width: (mediaQueryData.size.width-70)/2,
+                              width: (mediaQueryData.size.width-78)/2,
                               margin: const EdgeInsets.only(
                                 top: 5,
                                 left: 5,

@@ -110,13 +110,13 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
     }
 
     return Container(
-      height: (mediaQuery.size.height-widget.topBarHeight) > 480
-        ? 480
+      height: (mediaQuery.size.height-widget.topBarHeight) > 460
+        ? 460
         : mediaQuery.size.height-widget.topBarHeight,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30)
+          topLeft: Radius.circular(28),
+          topRight: Radius.circular(28)
         ),
         color: Theme.of(context).dialogBackgroundColor,
       ),
@@ -125,25 +125,25 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
           children: [
             const Padding(
               padding: EdgeInsets.only(
-                top: 30
+                top: 24
               ),
               child: Icon(
                 Icons.password_rounded,
-                size: 30,
+                size: 26,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.all(24),
               child: Text(
                 AppLocalizations.of(context)!.appUnlock,
                 style: const TextStyle(
-                  fontSize: 22
+                  fontSize: 24
                 ),
               ),
             ),
             Container(
               margin: const EdgeInsets.only(
-                bottom: 30,
+                bottom: 24,
                 top: 10
               ),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

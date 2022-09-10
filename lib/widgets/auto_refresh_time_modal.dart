@@ -139,17 +139,17 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
         height: selectedOption == 5 
-          ? mediaQueryData.size.height > (Platform.isIOS ? 500 : 520) 
-            ? (Platform.isIOS ? 500 : 520) 
+          ? mediaQueryData.size.height > (Platform.isIOS ? 480 : 500) 
+            ? (Platform.isIOS ? 480 : 500) 
             : mediaQueryData.size.height-25
-          : mediaQueryData.size.height > (Platform.isIOS ? 411 : 425)
-            ? (Platform.isIOS ? 411 : 425)
+          : mediaQueryData.size.height > (Platform.isIOS ? 296 : 410)
+            ? (Platform.isIOS ? 396 : 410)
             : mediaQueryData.size.height-25,
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30)
+            topLeft: Radius.circular(28),
+            topRight: Radius.circular(28)
           ),
         ),
         child: SingleChildScrollView(
@@ -157,21 +157,21 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Padding(
-                padding: EdgeInsets.only(top: 30),
+                padding: EdgeInsets.only(top: 24),
                 child: Icon(
                   Icons.update_rounded,
-                  size: 30,
+                  size: 26,
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(30),
+                padding: const EdgeInsets.all(24),
                 width: double.maxFinite,
                 child: Text(
                   AppLocalizations.of(context)!.autoRefreshTime,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    fontSize: 22,
+                    fontSize: 24,
                   ),
                 ),
               ),

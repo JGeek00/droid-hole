@@ -258,5 +258,7 @@
     "issuesSuggestions": "Si estás experimentando problemas o tienes sugerencias",
     "contact": "Contacto",
     "openIssueGitHub": "Abre un issue en GitHub",
-    "writeEmail": "Escríbeme por correo electrónico.\nIncluye en el cuerpo todos los detalles posibles: Pi-hole y versión de la interfaz web, cómo reproducir el problema, capturas de pantalla...\nToda la información proporcionada será muy bienvenida."
+    "writeEmail": "Escríbeme por correo electrónico.",
+    "writeEmailDetails": "Incluye en el cuerpo del correo todos los detalles posibles: Pi-hole y versión de la interfaz web, cómo reproducir el problema, capturas de pantalla...\n\nToda la información proporcionada será muy bienvenida.",
+    "contactEmail": "Contactar por email"
 }

@@ -85,8 +85,8 @@ class _FingerprintUnlockModalState extends State<FingerprintUnlockModal> {
         : height-widget.topBarHeight,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30)
+          topLeft: Radius.circular(28),
+          topRight: Radius.circular(28)
         ),
         color: Theme.of(context).dialogBackgroundColor
       ),

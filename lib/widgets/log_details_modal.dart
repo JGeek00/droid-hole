@@ -82,35 +82,35 @@ class LogDetailsModal extends StatelessWidget {
 
     return Container(
       height: log.status == '2' && log.answeredBy != null
-        ? (mediaQuery.size.height-statusBarHeight) > (Platform.isIOS ? 840 : 820)
-          ? (Platform.isIOS ? 840 : 820)
+        ? (mediaQuery.size.height-statusBarHeight) > (Platform.isIOS ? 824 : 804)
+          ? (Platform.isIOS ? 824 : 804)
           : mediaQuery.size.height - (statusBarHeight)
-        : (mediaQuery.size.height-statusBarHeight) > (Platform.isIOS ? 765 : 745)
-          ? (Platform.isIOS ? 765 : 745)
+        : (mediaQuery.size.height-statusBarHeight) > (Platform.isIOS ? 749 : 729)
+          ? (Platform.isIOS ? 749 : 729)
           : mediaQuery.size.height - (statusBarHeight),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30)
+          topLeft: Radius.circular(28),
+          topRight: Radius.circular(28)
         ),
         color: Theme.of(context).dialogBackgroundColor,
       ),
       child: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 24),
             child: Icon(
               Icons.description_rounded,
-              size: 30,
+              size: 26,
             ),
           ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30),
+              padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
                 AppLocalizations.of(context)!.logDetails,
                 style: const TextStyle(
-                  fontSize: 22,
+                  fontSize: 24,
                 ),
               ),
             ),
@@ -118,7 +118,7 @@ class LogDetailsModal extends StatelessWidget {
           Expanded(
             child: Container(
               width: double.maxFinite,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: SingleChildScrollView(
                 child: Column(
                   children: [

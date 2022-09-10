@@ -1,11 +1,19 @@
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ContactMeModal extends StatelessWidget {
+class ContactMeModal extends StatefulWidget {
   const ContactMeModal({Key? key}) : super(key: key);
+
+  @override
+  State<ContactMeModal> createState() => _ContactMeModalState();
+}
+
+class _ContactMeModalState extends State<ContactMeModal> {
+  final expandableController = ExpandableController();
 
   void _openGitHubIsues() {
     FlutterWebBrowser.openWebPage(
@@ -49,14 +57,9 @@ class ContactMeModal extends StatelessWidget {
       contentPadding: const EdgeInsets.all(0),
       title: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(
-              top: 20,
-            ),
-            child: Icon(
-              Icons.contact_page_rounded,
-              size: 26,
-            ),
+          const Icon(
+            Icons.contact_page_rounded,
+            size: 26,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
@@ -113,44 +116,140 @@ class ContactMeModal extends StatelessWidget {
               ),
             ),
           ),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: _sendEmail,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10, 
-                  horizontal: 20
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.email_rounded,
-                      size: 24,
+          ExpandableNotifier(
+            controller: expandableController,
+            child: Expandable(
+              collapsed: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => expandableController.toggle(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10, 
+                      horizontal: 20
                     ),
-                    const SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        const Text(
-                          "Email",
-                          style: TextStyle(
-                            fontSize: 16
-                          ),
+                        const Icon(
+                          Icons.email_rounded,
+                          size: 24,
                         ),
-                        const SizedBox(height: 5),
-                        SizedBox(
-                          width: width-164,
-                          child: Text(
-                            AppLocalizations.of(context)!.writeEmail,
-                            style: const TextStyle(
-                              color: Colors.grey
+                        const SizedBox(width: 20),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Email",
+                              style: TextStyle(
+                                fontSize: 16
+                              ),
                             ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: width-164,
+                              child: Text(
+                                AppLocalizations.of(context)!.writeEmail,
+                                style: const TextStyle(
+                                  color: Colors.grey
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              expanded: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => expandableController.toggle(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10, 
+                      horizontal: 20
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.email_rounded,
+                              size: 24,
+                            ),
+                            const SizedBox(width: 20),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Email",
+                                  style: TextStyle(
+                                    fontSize: 16
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                SizedBox(
+                                  width: width-164,
+                                  child: Text(
+                                    AppLocalizations.of(context)!.writeEmail,
+                                    style: const TextStyle(
+                                      color: Colors.grey
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: Theme.of(context).primaryColor
+                            )
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.writeEmailDetails,
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: _sendEmail, 
+                                    style: ButtonStyle(
+                                      elevation: MaterialStateProperty.all(0),
+                                      backgroundColor: MaterialStateProperty.all(
+                                        Theme.of(context).primaryColor
+                                      ),
+                                      foregroundColor: MaterialStateProperty.all(
+                                        Theme.of(context).dialogBackgroundColor
+                                      ),
+                                      overlayColor: MaterialStateProperty.all(
+                                        Theme.of(context).dialogBackgroundColor.withOpacity(0.1)
+                                      ),
+                                      
+                                    ),
+                                    child: Text(AppLocalizations.of(context)!.contactEmail)
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
                         )
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
             ),

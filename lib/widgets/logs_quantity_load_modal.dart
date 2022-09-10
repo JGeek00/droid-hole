@@ -88,8 +88,8 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);   
 
     return Container(
-      height: mediaQueryData.size.height > (Platform.isIOS ? 690 : 670) 
-        ? (Platform.isIOS ? 690 : 670) 
+      height: mediaQueryData.size.height > (Platform.isIOS ? 675 : 655) 
+        ? (Platform.isIOS ? 675 : 655) 
         : mediaQueryData.size.height-mediaQueryData.viewPadding.top-25,
       decoration: BoxDecoration(
         color: Theme.of(context).dialogBackgroundColor,
@@ -103,19 +103,19 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const  Padding(
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.only(top: 24),
               child: Icon(
                 Icons.list_rounded,
-                size: 30,
+                size: 26,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30),
+              padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
                 AppLocalizations.of(context)!.logsQuantityPerLoad,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 22,
+                  fontSize: 24,
                 ),
               ),
             ),
