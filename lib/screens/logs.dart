@@ -584,11 +584,6 @@ class _LogsListState extends State<LogsList> {
         child: Chip(
           label: Text(label),
           avatar: icon,
-          deleteIcon: const Icon(
-            Icons.cancel,
-            size: 18,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 5),
           onDeleted: onDeleted,
         ),
       );
