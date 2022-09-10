@@ -519,6 +519,7 @@ class Home extends StatelessWidget {
                             child: ClientsLastHours(
                               data: serversProvider.getOvertimeDataJson!,
                               reducedData: appConfigProvider.reducedDataCharts,
+                              hideZeroValues: appConfigProvider.hideZeroValues,
                             ),
                           ),
                         ],

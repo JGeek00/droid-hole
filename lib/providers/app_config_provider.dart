@@ -21,6 +21,7 @@ class AppConfigProvider with ChangeNotifier {
   bool _appUnlocked = true;
   bool _validVibrator = false;
   int _importantInfoReaden = 0;
+  int _hideZeroValues = 0;
 
   Database? _dbInstance;
 
@@ -108,6 +109,10 @@ class AppConfigProvider with ChangeNotifier {
 
   bool get importantInfoReaden {
     return _importantInfoReaden == 0 ? false : true;
+  }
+
+  bool get hideZeroValues {
+    return _hideZeroValues == 0 ? false : true;
   }
 
   void setSelectedTab(int selectedTab) {
@@ -235,6 +240,7 @@ class AppConfigProvider with ChangeNotifier {
     _passCode = dbData['passCode'];
     _useBiometrics = dbData['useBiometricAuth'];
     _importantInfoReaden = dbData['importantInfoReaden'];
+    _hideZeroValues = dbData['hideZeroValues'];
     _dbInstance = dbInstance;
 
     if (dbData['passCode'] != null) {
@@ -272,6 +278,18 @@ class AppConfigProvider with ChangeNotifier {
     final updated = await _updateReducedDataCharts(status == true ? 1 : 0);
     if (updated == true) {
       _reducedDataCharts = status == true ? 1 : 0;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  Future<bool> setHideZeroValues(bool status) async {
+    final updated = await _updateHideZeroValuesDb(status == true ? 1 : 0);
+    if (updated == true) {
+      _hideZeroValues = status == true ? 1 : 0;
       notifyListeners();
       return true;
     }
@@ -383,6 +401,19 @@ class AppConfigProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> _updateHideZeroValuesDb(int value) async {
+    try {
+      return await _dbInstance!.transaction((txn) async {
+        await txn.rawUpdate(
+          'UPDATE appConfig SET hideZeroValues = $value',
+        );
+        return true;
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> _updateUseBiometricAuthDb(int value) async {
     try {
       return await _dbInstance!.transaction((txn) async {
@@ -423,6 +454,8 @@ class AppConfigProvider with ChangeNotifier {
         _logsPerQuery = 2;
         _passCode = null;
         _useBiometrics = 0;
+        _importantInfoReaden = 0;
+        _hideZeroValues = 0;
         return true;
       });
     } catch (e) {

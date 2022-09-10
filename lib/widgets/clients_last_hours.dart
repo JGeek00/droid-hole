@@ -7,11 +7,13 @@ import 'package:droid_hole/providers/app_config_provider.dart';
 class ClientsLastHours extends StatelessWidget {
   final Map<String, dynamic> data;
   final bool reducedData;
+  final bool hideZeroValues;
 
   const ClientsLastHours({
     Key? key,
     required this.data,
     required this.reducedData,
+    required this.hideZeroValues
   }) : super(key: key);
 
   LineChartData mainData(Map<String, dynamic> data, ThemeMode selectedTheme) {
@@ -80,14 +82,33 @@ class ClientsLastHours extends StatelessWidget {
             : const Color.fromRGBO(35, 35, 35, 1),
           maxContentWidth: 150,
           getTooltipItems: (items) => items.map(
-            (item) =>  LineTooltipItem(
-              "${data['clientsColors'][item.barIndex]['ip']}: ${item.y.toInt().toString()}", 
-              TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: data['clientsColors'][item.barIndex]['color']
-              )
-            )
+            (item) {
+              if (hideZeroValues == true) {
+                if(item.y > 0) {
+                  return LineTooltipItem(
+                    "${data['clientsColors'][item.barIndex]['ip']}: ${item.y.toInt().toString()}", 
+                    TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: data['clientsColors'][item.barIndex]['color']
+                    )
+                  );
+                }
+                else {
+                  return null;
+                }
+              }
+              else {
+                return LineTooltipItem(
+                  "${data['clientsColors'][item.barIndex]['ip']}: ${item.y.toInt().toString()}", 
+                  TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: data['clientsColors'][item.barIndex]['color']
+                  )
+                );
+              }
+            }
           ).toList(),
         ),
       )

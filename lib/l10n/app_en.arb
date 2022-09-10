@@ -191,7 +191,7 @@
     "sslErrorLong": "SSL error. Check if the server's certificate is valid.",
     "dontCheckCertificate": "Don't check SSL certificate",
     "dontCheckCertificateDescription": "Overrides the server's SSL certificate validation",
-    "advancedSetup": "Advanced setup",
+    "advancedSetup": "Advanced settings",
     "advancedSetupDescription": "Advanced options",
     "security": "Security",
     "others": "Others",
@@ -257,5 +257,7 @@
     "openIssueGitHub": "Open an issue on GitHub",
     "writeEmail": "Write me by email.",
     "writeEmailDetails": "Include on the body of the email all the possible details: Pi-hole and web interface version, how to reproduce the issue, screenshots...\n\nAll provided information will be very welcome.",
-    "contactEmail": "Contact by email"
+    "contactEmail": "Contact by email",
+    "hideZeroValues": "Hide zero values",
+    "hideZeroValuesDescription": "Hides zero values from clients chart"
 }
