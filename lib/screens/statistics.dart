@@ -7,6 +7,7 @@ import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 import 'package:droid_hole/widgets/statistics_list.dart';
 import 'package:droid_hole/widgets/statistics_queries_servers_tab.dart';
+import 'package:droid_hole/widgets/custom_tab_indicator.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
@@ -57,6 +58,10 @@ class Statistics extends StatelessWidget {
                   forceElevated: innerBoxIsScrolled,
                   bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
                     ? TabBar(
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicator: CustomTabIndicator(
+                        indicatorColor: Theme.of(context).primaryColor
+                      ),
                       tabs: orientation == Orientation.portrait
                         ? [
                             Tab(
