@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -129,6 +130,22 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       });
     }
     _checkDataValid();
+  }
+
+  void _openHowCreateConnection() {
+    FlutterWebBrowser.openWebPage(
+      url: "https://github.com/JGeek00/droid-hole/wiki/Create-a-connection",
+      customTabsOptions: const CustomTabsOptions(
+        instantAppsEnabled: true,
+        showTitle: true,
+        urlBarHidingEnabled: false,
+      ),
+      safariVCOptions: const SafariViewControllerOptions(
+        barCollapsingEnabled: true,
+        dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
+        modalPresentationCapturesStatusBarAppearance: true,
+      )
+    );
   }
 
   @override
@@ -516,22 +533,25 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
             ),
             elevation: 5,
             actions: [
+              IconButton(
+                onPressed: _openHowCreateConnection, 
+                icon: const Icon(Icons.help_outline_rounded),
+                tooltip: AppLocalizations.of(context)!.howCreateConnection,
+              ),
               Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: TextButton(
+                child: IconButton(
+                  tooltip: widget.server != null 
+                    ? AppLocalizations.of(context)!.save 
+                    : AppLocalizations.of(context)!.connect,
                   onPressed: _validData()
                     ? widget.server != null ? _save : _connect
                     : null,
-                  style: ButtonStyle(
-                    foregroundColor: _validData()
-                      ? null
-                      : MaterialStateProperty.all(
-                        Colors.grey
-                      )
-                  ),
-                  child: Text(AppLocalizations.of(context)!.save),
+                  icon: widget.server != null 
+                    ? const Icon(Icons.save_rounded)
+                    : const Icon(Icons.login_rounded)
                 ),
-              )
+              ),
             ],
             toolbarHeight: 70,
           ),

@@ -272,5 +272,6 @@
     "subrouteField": "Subruta",
     "subrouteExample": "Ejemplo: /pihole",
     "subrouteHelper": "Para ser usado con un reverse proxy",
-    "invalidSubroute": "Subruta inválida. Recuerda no terminar con '/', '.' o ':'."
+    "invalidSubroute": "Subruta inválida. Recuerda no terminar con '/', '.' o ':'.",
+    "howCreateConnection": "Cómo crear una conexión"
 }
