@@ -265,5 +265,9 @@
     "list": "List",
     "listDescription": "Displays the data on a list with the label and the numeric value at the left side, and a bar at the right side.",
     "pieChart": "Pie chart",
-    "pieChartDescription": "Displays the data on a pie chart with the legend under it."
+    "pieChartDescription": "Displays the data on a pie chart with the legend under it.",
+    "subrouteField": "Subroute",
+    "subrouteExample": "Example: /pihole",
+    "subrouteHelper": "To be used with a reverse proxy",
+    "invalidSubroute": "Invalid subroute. Remember not to fiinish with a '/', '.' or ':'."
 }

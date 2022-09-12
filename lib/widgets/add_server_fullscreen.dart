@@ -29,6 +29,8 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
   String? addressFieldError;
   TextEditingController portFieldController = TextEditingController();
   String? portFieldError;
+  TextEditingController subrouteFieldController = TextEditingController();
+  String? subrouteFieldError;
   TextEditingController aliasFieldController = TextEditingController();
   TextEditingController passwordFieldController = TextEditingController();
   String selectedHttp = 'http';
@@ -47,6 +49,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
     if (
       addressFieldController.text != '' &&
       addressFieldError == null &&
+      subrouteFieldError == null &&
       portFieldError == null &&
       aliasFieldController.text != '' &&
       passwordFieldController.text != ''
@@ -80,6 +83,28 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
     else {
       setState(() {
         addressFieldError = AppLocalizations.of(context)!.ipCannotEmpty;
+      });
+    }
+    _checkDataValid();
+  }
+
+  void _validateSubroute(String? value) {
+    if (value != null && value != '') {
+      RegExp subrouteRegexp = RegExp(r'^\/\b([A-Za-z0-9_\-~/]*)[^\/|\.|\:]$');
+      if (subrouteRegexp.hasMatch(value) == true) {
+        setState(() {
+          subrouteFieldError = null;
+        });
+      }
+      else {
+        setState(() {
+          subrouteFieldError = AppLocalizations.of(context)!.invalidSubroute;
+        });
+      }
+    }
+    else {
+      setState(() {
+        subrouteFieldError = null;
       });
     }
     _checkDataValid();
@@ -133,7 +158,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       setState(() {
         isConnecting = true;
       });
-      final String url = "$selectedHttp://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}";
+      final String url = "$selectedHttp://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}${subrouteFieldController.text}";
       final exists = await serversProvider.checkUrlExists(url);
       if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
@@ -468,6 +493,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
     bool _validData() {
       if (
         addressFieldController.text != '' && 
+        subrouteFieldError == null &&
         addressFieldError == null &&
         aliasFieldController.text != ''
       ) {
@@ -526,8 +552,33 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                           padding: const EdgeInsets.all(20),
                           child: Column(
                             children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 10
+                                ),
+                                margin: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  border: Border.all(
+                                    color: Theme.of(context).primaryColor
+                                  ),
+                                  color: Theme.of(context).primaryColor.withOpacity(0.05)
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "$selectedHttp://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}${subrouteFieldController.text}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).primaryColor
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 10),
+                                padding: const EdgeInsets.only(top: 20),
                                 child: TextFormField(
                                   onChanged: (value) => _validateAddress(value),
                                   controller: addressFieldController,
@@ -541,6 +592,26 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                                       )
                                     ),
                                     labelText: AppLocalizations.of(context)!.address,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: TextFormField(
+                                  onChanged: (value) => _validateSubroute(value),
+                                  controller: subrouteFieldController,
+                                  enabled: widget.server != null ? false : true,
+                                  decoration: InputDecoration(
+                                    errorText: subrouteFieldError,
+                                    prefixIcon: const Icon(Icons.route_rounded),
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10)
+                                      )
+                                    ),
+                                    labelText: AppLocalizations.of(context)!.subrouteField,
+                                    hintText: AppLocalizations.of(context)!.subrouteExample,
+                                    helperText: AppLocalizations.of(context)!.subrouteHelper,
                                   ),
                                 ),
                               ),
