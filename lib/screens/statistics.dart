@@ -50,7 +50,6 @@ class Statistics extends StatelessWidget {
             headerSliverBuilder: ((context, innerBoxIsScrolled) {
               return [
                 SliverAppBar(
-                  systemOverlayStyle: systemUiOverlayStyleConfig(context),
                   title: Text(AppLocalizations.of(context)!.statistics),
                   centerTitle: true,
                   pinned: true,
@@ -59,9 +58,13 @@ class Statistics extends StatelessWidget {
                   bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
                     ? TabBar(
                       indicatorSize: TabBarIndicatorSize.label,
-                      indicator: CustomTabIndicator(
-                        indicatorColor: Theme.of(context).primaryColor
-                      ),
+                      indicator: orientation == Orientation.portrait
+                        ? CustomTabIndicatorPortrait(
+                            indicatorColor: Theme.of(context).primaryColor
+                          )
+                        :  CustomTabIndicatorLandscape(
+                            indicatorColor: Theme.of(context).primaryColor
+                          ),
                       tabs: orientation == Orientation.portrait
                         ? [
                             Tab(

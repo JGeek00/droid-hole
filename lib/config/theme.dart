@@ -51,9 +51,6 @@ ThemeData lightTheme(ColorScheme? dynamicColorScheme) => ThemeData(
   ),
   tabBarTheme: TabBarTheme(
     unselectedLabelColor: Colors.black,
-    unselectedLabelStyle: const TextStyle(
-      color: Colors.black
-    ),
     labelColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorLight,
     indicator: UnderlineTabIndicator(
       borderSide: BorderSide(
@@ -121,9 +118,6 @@ ThemeData darkTheme(ColorScheme? dynamicColorScheme) => ThemeData(
   ),
   tabBarTheme: TabBarTheme(
     unselectedLabelColor: Colors.white,
-    unselectedLabelStyle: const TextStyle(
-      color: Colors.white
-    ),
     labelColor: dynamicColorScheme != null ? dynamicColorScheme.primary : primaryColorDark,
     indicator: UnderlineTabIndicator(
       borderSide: BorderSide(
@@ -180,9 +174,6 @@ ThemeData lightThemeOldVersions() => ThemeData(
   ),
   tabBarTheme: const TabBarTheme(
     unselectedLabelColor: Colors.black,
-    unselectedLabelStyle: TextStyle(
-      color: Colors.black
-    ),
     labelColor: primaryColorLight,
     indicator: UnderlineTabIndicator(
       borderSide: BorderSide(
@@ -251,9 +242,6 @@ ThemeData darkThemeOldVersions() => ThemeData(
   ),
   tabBarTheme: const TabBarTheme(
     unselectedLabelColor: Colors.white,
-    unselectedLabelStyle: TextStyle(
-      color: Colors.white
-    ),
     labelColor: primaryColorDark,
     indicator: UnderlineTabIndicator(
       borderSide: BorderSide(
