@@ -14,6 +14,9 @@ DroidHole is a Pi-hole® client for Android. It allows the user to manage multip
 ## Privacy policy
 DroidHole does not collect any personal user data. All data stored into the application is kept on the user's device.
 
+## Disclaimer
+This is an unofficial application. The Pi-hole team and the development of the Pi-hole software is not related in any way with this application.
+
 ## Third party libraries
 - [provider](https://pub.dev/packages/provider)
 - [sqflite](https://pub.dev/packages/sqflite)
