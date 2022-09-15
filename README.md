@@ -1,5 +1,5 @@
 # DroidHole
-DroidHole is a Pi-hole® client for Android. It allows the user to manage multiple Pi-hole® servers from one application and device.
+DroidHole is an unofficial Pi-hole® client for Android. It allows the user to manage multiple Pi-hole® servers from one application and device.
 
 [<img src="/assets/other/get_google_play.png" width="300px">](https://play.google.com/store/apps/details?id=com.jgeek00.droid_hole)
 
