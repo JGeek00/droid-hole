@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:droid_hole/models/domain.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
@@ -364,6 +365,52 @@ dynamic testHash(Server server, String hash) async {
     return {'result': 'no_connection'};
   } on HandshakeException {
     return {'result': 'ssl_error'};
+  }
+  catch (e) {
+    return {'result': 'error'};
+  }
+}
+
+Future getDomainLists({
+  required Server server
+}) async {
+  try {
+    final results = await Future.wait([
+      http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.pwHash}&list=white')),
+      http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.pwHash}&list=regex_white')),
+      http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.pwHash}&list=black')),
+      http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.pwHash}&list=regex_black')),
+    ]);
+
+    if (
+      results[0].statusCode == 200 &&
+      results[1].statusCode == 200 &&
+      results[2].statusCode == 200 &&
+      results[3].statusCode == 200 
+    ) {
+      return {
+        'result': 'success',
+        'data': {
+          'whitelist': jsonDecode(results[0].body)['data'].map((item) => Domain.fromJson(item)) ,
+          'whitelistRegex': jsonDecode(results[1].body)['data'].map((item) => Domain.fromJson(item)),
+          'blacklist': jsonDecode(results[2].body)['data'].map((item) => Domain.fromJson(item)),
+          'blacklistRegex': jsonDecode(results[3].body)['data'].map((item) => Domain.fromJson(item)),
+        }
+      };
+    }
+    else {
+      return {
+        'result': 'error'
+      };
+    }
+  } on SocketException {
+    return {'result': 'no_connection'};
+  } on TimeoutException {
+    return {'result': 'no_connection'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
+  } on FormatException {
+    return {'result': 'auth_error'};
   }
   catch (e) {
     return {'result': 'error'};

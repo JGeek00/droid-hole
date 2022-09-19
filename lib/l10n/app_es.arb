@@ -273,5 +273,7 @@
     "subrouteExample": "Ejemplo: /pihole",
     "subrouteHelper": "Para ser usado con un reverse proxy",
     "invalidSubroute": "Subruta inválida. Recuerda no terminar con '/', '.' o ':'.",
-    "howCreateConnection": "Cómo crear una conexión"
+    "howCreateConnection": "Cómo crear una conexión",
+    "loadingList": "Cargando lista...",
+    "domainsNotLoaded": "No se ha podido cargar la lista de dominios"
 }

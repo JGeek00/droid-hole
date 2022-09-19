@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:device_info/device_info.dart';
+import 'package:droid_hole/screens/domains.dart';
 import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -432,6 +433,7 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     const Home(),
     const Statistics(),
     const Logs(),
+    const DomainLists(),
     const Settings()
   ];
 
@@ -508,13 +510,6 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
       }));
     }
 
-    // showDialog(
-    //   context: context, 
-    //   builder: (context) => const StartWarningModal(),
-    //   useSafeArea: false,
-    //   barrierDismissible: false
-    // );
-    
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
