@@ -9,6 +9,8 @@ class DomainsListProvider with ChangeNotifier {
   List<Domain> _whitelistDomains = [];
   List<Domain> _blacklistDomains = [];
 
+  int? _selectedTab;
+
   int get loadingStatus {
     return _loadingStatus;
   }
@@ -19,6 +21,10 @@ class DomainsListProvider with ChangeNotifier {
 
   List<Domain> get blacklistDomains {
     return _blacklistDomains;
+  }
+
+  int? get selectedTab {
+    return _selectedTab;
   }
 
   void setLoadingStatus(int status) {
@@ -33,6 +39,10 @@ class DomainsListProvider with ChangeNotifier {
   void setBlacklistDomains(List<Domain> domains) {
     _blacklistDomains = domains;
     notifyListeners();
+  }
+
+  void setSelectedTab(int? tab) {
+    _selectedTab = tab;
   }
 
   Future fetchDomainsList(Server server) async {

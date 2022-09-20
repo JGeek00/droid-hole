@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:device_info/device_info.dart';
 import 'package:droid_hole/screens/domains.dart';
+import 'package:droid_hole/widgets/add_domain_modal.dart';
 import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -482,6 +483,7 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
+    final domainsListProvider = Provider.of<DomainsListProvider>(context, listen: false);
 
     void _enableDisableServer() async {
       if (
@@ -513,6 +515,41 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
           builder: (BuildContext context) => const AddServerFullscreen()
         ))
       }));
+    }
+
+    void openModalAddDomainToList() {
+      showModalBottomSheet(
+        context: context, 
+        builder: (context) => AddDomainModal(
+          selectedlist: domainsListProvider.selectedTab == null || domainsListProvider.selectedTab == 0
+            ? 'whitelist'
+            : 'blacklist',
+          addDomain: (value) {
+            
+          },
+        ),
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true
+      );
+    }
+
+    Widget generateFab(int screen) {
+      switch (screen) {
+        case 0:
+          return FloatingActionButton(
+            onPressed: _enableDisableServer,
+            child: const Icon(Icons.shield_rounded),
+          );
+
+        case 3:
+          return FloatingActionButton(
+            onPressed: openModalAddDomainToList,
+            child: const Icon(Icons.add),
+          );
+
+        default:
+          return const SizedBox();
+      }
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -554,18 +591,19 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
               selectedScreen: serversProvider.selectedServer != null
                 ? appConfigProvider.selectedTab
                 : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
-              onChange: (selected) => appConfigProvider.setSelectedTab(selected),
+              onChange: (selected) {
+                if (selected != 3) {
+                  domainsListProvider.setSelectedTab(null);
+                }
+                appConfigProvider.setSelectedTab(selected);
+              },
             ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: appConfigProvider.appUnlocked == true
           ? serversProvider.selectedServer != null
             ? serversProvider.isServerConnected == true
-              && appConfigProvider.selectedTab == 0
-                ? FloatingActionButton(
-                    onPressed: _enableDisableServer,
-                    child: const Icon(Icons.shield_rounded),
-                  )
-                : null
+              ? generateFab(appConfigProvider.selectedTab)
+              : null
             : appConfigProvider.selectedTab == 0 && serversProvider.getServersList.isNotEmpty
               ? FloatingActionButton(
                   onPressed: _addServerModal,

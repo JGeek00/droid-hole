@@ -45,6 +45,7 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
   @override
   void initState() {
     widget.domainsListProvider.fetchDomainsList(widget.server);
+    widget.domainsListProvider.setSelectedTab(0);
     super.initState();
   }
 
@@ -99,6 +100,7 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
                     forceElevated: innerBoxIsScrolled,
                     bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
                       ? TabBar(
+                        onTap: (value) => domainsListProvider.setSelectedTab(value),
                         indicatorSize: TabBarIndicatorSize.label,
                         indicator: orientation == Orientation.portrait
                           ? CustomTabIndicatorPortrait(

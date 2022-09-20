@@ -285,5 +285,7 @@
     "domainRemoved": "Domain removed successfully",
     "domainNotExists": "Domain does not exist",
     "errorRemovingDomain": "Error when removing domain",
-    "noDomains": "There are no domains to show here."
+    "noDomains": "There are no domains to show here.",
+    "addDomain": "Add domain",
+    "addAsWildcard": "Add as wildcard"
 }

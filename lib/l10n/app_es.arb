@@ -288,5 +288,7 @@
     "domainRemoved": "Dominio eliminado correctamente",
     "domainNotExists": "El dominio no existe",
     "errorRemovingDomain": "No se ha podido eliminar el dominio",
-    "noDomains": "No hay dominios para mostrar aquí."
+    "noDomains": "No hay dominios para mostrar aquí.",
+    "addDomain": "Añadir dominio",
+    "addAsWildcard": "Añadir como wildcard"
 }
