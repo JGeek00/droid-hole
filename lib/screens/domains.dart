@@ -174,8 +174,12 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
               }),
               body: TabBarView(
                 children: [
-                  DomainsList(),
-                  DomainsList()
+                  DomainsList(
+                    data: data['whitelist']!,
+                  ),
+                  DomainsList(
+                    data: data['blacklist']!,
+                  )
                 ],
               ),
             ),

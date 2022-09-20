@@ -20,8 +20,8 @@ class Domain {
   int type;
   String domain;
   int enabled;
-  int dateAdded;
-  int dateModified;
+  DateTime dateAdded;
+  DateTime dateModified;
   String comment;
   List<int> groups;
 
@@ -30,8 +30,8 @@ class Domain {
     type: json["type"],
     domain: json["domain"],
     enabled: json["enabled"],
-    dateAdded: json["date_added"],
-    dateModified: json["date_modified"],
+    dateAdded: DateTime.fromMillisecondsSinceEpoch(json["date_added"]*1000),
+    dateModified: DateTime.fromMillisecondsSinceEpoch(json["date_modified"]*1000),
     comment: json["comment"],
     groups: List<int>.from(json["groups"].map((x) => x)),
   );

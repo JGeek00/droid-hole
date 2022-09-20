@@ -275,5 +275,17 @@
     "invalidSubroute": "Subruta inválida. Recuerda no terminar con '/', '.' o ':'.",
     "howCreateConnection": "Cómo crear una conexión",
     "loadingList": "Cargando lista...",
-    "domainsNotLoaded": "No se ha podido cargar la lista de dominios"
+    "domainsNotLoaded": "No se ha podido cargar la lista de dominios",
+    "domainDetails": "Detalles del dominio",
+    "domain": "Dominio",
+    "dateAdded": "Fecha añadido",
+    "dateModified": "Fecha modificado",
+    "enabled": "Activado",
+    "disabled": "Desactivado",
+    "comment": "Comentario",
+    "noComment": "Sin comentario",
+    "enable": "Activar",
+    "domainRemoved": "Dominio eliminado correctamente",
+    "domainNotExists": "El dominio no existe",
+    "errorRemovingDomain": "No se ha podido eliminar el dominio"
 }

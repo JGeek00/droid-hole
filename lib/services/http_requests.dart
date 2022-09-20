@@ -416,3 +416,59 @@ Future getDomainLists({
     return {'result': 'error'};
   }
 }
+
+Future removeDomainFromList({
+  required Server server,
+  required Domain domain
+}) async {
+  String getType(int type) {
+    switch (type) {
+      case 0:
+        return "white";
+
+      case 1:
+        return "black";
+
+      case 2:
+        return "white_regex";
+
+      case 3:
+        return "black_regex";
+
+      default:
+        return "";
+    }
+  }
+
+  try {
+    final result = await http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.pwHash}&list=${getType(domain.type)}&sub=${domain.domain}'));
+    if (result.statusCode == 200) {
+      final json = jsonDecode(result.body);
+      if (json.runtimeType == List<dynamic>) {
+        return {'result': 'error', 'message': 'not_exists'};
+      }
+      else {
+        if (json['success'] == true) {
+          return {'result': 'success'};
+        }
+        else {
+          return {'result': 'error'};
+        }
+      }
+    }
+    else {
+      return {'result': 'error'};
+    }
+  } on SocketException {
+    return {'result': 'no_connection'};
+  } on TimeoutException {
+    return {'result': 'no_connection'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
+  } on FormatException {
+    return {'result': 'auth_error'};
+  }
+  catch (e) {
+    return {'result': 'error'};
+  }
+}

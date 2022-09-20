@@ -272,5 +272,17 @@
     "invalidSubroute": "Invalid subroute. Remember not to fiinish with a '/', '.' or ':'.",
     "howCreateConnection": "How to create a connection",
     "loadingList": "Loading list...",
-    "domainsNotLoaded": "Domains list couldn't be loaded"
+    "domainsNotLoaded": "Domains list couldn't be loaded",
+    "domainDetails": "Domain details",
+    "domain": "Domain",
+    "dateAdded": "Date added",
+    "dateModified": "Date modified",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "comment": "Comment",
+    "noComment": "No comment",
+    "enable": "Enable",
+    "domainRemoved": "Domain removed successfully",
+    "domainNotExists": "Domain does not exist",
+    "errorRemovingDomain": "Error when removing domain"
 }
