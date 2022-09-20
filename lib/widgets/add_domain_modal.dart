@@ -17,8 +17,10 @@ class AddDomainModal extends StatefulWidget {
 
 class _AddDomainModalState extends State<AddDomainModal> {
   final TextEditingController domainController = TextEditingController();
+  String? domainError; 
   String selectedType = '';
   bool wildcard = false;
+  bool allDataValid = false;
 
   @override
   void initState() {
@@ -26,12 +28,73 @@ class _AddDomainModalState extends State<AddDomainModal> {
     super.initState();
   }
 
+  String getSelectedList() {
+    if (selectedType == 'whitelist' && wildcard == false) {
+      return "white";
+    }
+    else if (selectedType == 'whitelist' && wildcard == true) {
+      return "regex_white";
+    }
+    if (selectedType == 'blacklist' && wildcard == false) {
+      return "black";
+    }
+    else if (selectedType == 'blacklist' && wildcard == true) {
+      return "regex_black";
+    }
+    else {
+      return "";
+    }
+  }
+
+  String applyWildcard() {
+    return "(\\.|^)${domainController.text.replaceAll('.', '\\.')}\$";
+  }
+
+  void validateDomain(String? value) {
+    if (value != null && value != '') {
+      RegExp subrouteRegexp = RegExp(r'^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\.[a-zA-Z]{2,3})$');
+      if (subrouteRegexp.hasMatch(value) == true) {
+        setState(() {
+          domainError = null;
+        });
+      }
+      else {
+        setState(() {
+          domainError = AppLocalizations.of(context)!.invalidDomain;
+        });
+      }
+    }
+    else {
+      setState(() {
+        domainError = null;
+      });
+    }
+    validateAllData();
+  }
+
+  void validateAllData() {
+    if (
+      domainController.text != '' &&
+      domainError == null &&
+      (selectedType == 'blacklist' || selectedType == 'whitelist')
+    ) {
+      setState(() {
+        allDataValid = true;
+      });
+    }
+    else {
+      setState(() {
+        allDataValid = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: Container(
-        height: 424,
+        height: 448,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
@@ -100,6 +163,7 @@ class _AddDomainModalState extends State<AddDomainModal> {
                     padding: const EdgeInsets.only(top: 20),
                     child: TextField(
                       controller: domainController,
+                      onChanged: (value) => validateDomain(value),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.domain_rounded),
                         border: const OutlineInputBorder(
@@ -108,6 +172,7 @@ class _AddDomainModalState extends State<AddDomainModal> {
                           )
                         ),
                         labelText: AppLocalizations.of(context)!.domain,
+                        errorText: domainError
                       ),
                     ),
                   ),
@@ -128,35 +193,43 @@ class _AddDomainModalState extends State<AddDomainModal> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
+            Expanded(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(AppLocalizations.of(context)!.cancel)
-                  ),
-                  const SizedBox(width: 14),
-                  TextButton(
-                    onPressed: domainController.text != '' && selectedType != ''
-                      ? () {
-                          widget.addDomain({
-                            'list': selectedType,
-                            'domain': domainController.text,
-                            'wildcard': wildcard
-                          });
-                          Navigator.pop(context);
-                        } 
-                      : null,
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(
-                        domainController.text != '' && selectedType != ''
-                          ? null
-                          : Colors.grey
-                      )
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(AppLocalizations.of(context)!.cancel)
+                        ),
+                        const SizedBox(width: 14),
+                        TextButton(
+                          onPressed: allDataValid == true
+                            ? () {
+                                widget.addDomain({
+                                  'list': getSelectedList(),
+                                  'domain': wildcard == true
+                                    ? applyWildcard()
+                                    : domainController.text,
+                                });
+                                Navigator.pop(context);
+                              } 
+                            : null,
+                          style: ButtonStyle(
+                            foregroundColor: MaterialStateProperty.all(
+                              allDataValid == true
+                                ? null
+                                : Colors.grey
+                            )
+                          ),
+                          child: Text(AppLocalizations.of(context)!.add),
+                        ),
+                      ],
                     ),
-                    child: Text(AppLocalizations.of(context)!.add),
                   ),
                 ],
               ),

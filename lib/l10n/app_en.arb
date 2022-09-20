@@ -287,5 +287,10 @@
     "errorRemovingDomain": "Error when removing domain",
     "noDomains": "There are no domains to show here.",
     "addDomain": "Add domain",
-    "addAsWildcard": "Add as wildcard"
+    "addAsWildcard": "Add as wildcard",
+    "addingDomain": "Adding domain...",
+    "domainAdded": "Domain added successfully",
+    "domainAlreadyAdded": "Domain already added",
+    "cannotAddDomain": "Domain couldn't be added",
+    "invalidDomain": "Invalid domain"
 }

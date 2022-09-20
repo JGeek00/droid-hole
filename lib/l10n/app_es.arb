@@ -290,5 +290,10 @@
     "errorRemovingDomain": "No se ha podido eliminar el dominio",
     "noDomains": "No hay dominios para mostrar aquí.",
     "addDomain": "Añadir dominio",
-    "addAsWildcard": "Añadir como wildcard"
+    "addAsWildcard": "Añadir como wildcard",
+    "addingDomain": "Añadiendo dominio...",
+    "domainAdded": "Dominio añadido satisfactoriamente",
+    "domainAlreadyAdded": "El dominio ya está añadido",
+    "cannotAddDomain": "El dominio no ha podido ser añadido",
+    "invalidDomain": "Dominio no válido"
 }

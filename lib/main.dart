@@ -5,7 +5,9 @@ import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:device_info/device_info.dart';
+import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/screens/domains.dart';
+import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/widgets/add_domain_modal.dart';
 import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -520,12 +522,46 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     void openModalAddDomainToList() {
       showModalBottomSheet(
         context: context, 
-        builder: (context) => AddDomainModal(
+        builder: (ctx) => AddDomainModal(
           selectedlist: domainsListProvider.selectedTab == null || domainsListProvider.selectedTab == 0
             ? 'whitelist'
             : 'blacklist',
-          addDomain: (value) {
-            
+          addDomain: (value) async {
+            final ProcessModal process = ProcessModal(context: context);
+            process.open(AppLocalizations.of(context)!.addingDomain);
+
+            final result = await addDomainToList(
+              server: serversProvider.selectedServer!, 
+              domainData: value
+            );
+
+            process.close();
+
+            if (result['result'] == 'success') {
+              domainsListProvider.fetchDomainsList(serversProvider.selectedServer!);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.domainAdded),
+                  backgroundColor: Colors.green,
+                )
+              );
+            }
+            else if (result['result'] == 'already_added') {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.domainAlreadyAdded),
+                  backgroundColor: Colors.orange,
+                )
+              );
+            }
+            else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.cannotAddDomain),
+                  backgroundColor: Colors.red,
+                )
+              );
+            } 
           },
         ),
         backgroundColor: Colors.transparent,

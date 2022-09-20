@@ -430,10 +430,10 @@ Future removeDomainFromList({
         return "black";
 
       case 2:
-        return "white_regex";
+        return "regex_black";
 
       case 3:
-        return "black_regex";
+        return "regex_white";
 
       default:
         return "";
@@ -450,6 +450,46 @@ Future removeDomainFromList({
       else {
         if (json['success'] == true) {
           return {'result': 'success'};
+        }
+        else {
+          return {'result': 'error'};
+        }
+      }
+    }
+    else {
+      return {'result': 'error'};
+    }
+  } on SocketException {
+    return {'result': 'no_connection'};
+  } on TimeoutException {
+    return {'result': 'no_connection'};
+  } on HandshakeException {
+    return {'result': 'ssl_error'};
+  } on FormatException {
+    return {'result': 'auth_error'};
+  }
+  catch (e) {
+    return {'result': 'error'};
+  }
+}
+
+Future addDomainToList({
+  required Server server,
+  required Map<String, dynamic> domainData,
+}) async {
+  try {
+    final result = await http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.pwHash}&list=${domainData['list']}&add=${domainData['domain']}'));
+    if (result.statusCode == 200) {
+      final json = jsonDecode(result.body);
+      if (json.runtimeType == List<dynamic>) {
+        return {'result': 'error'};
+      }
+      else {
+        if (json['success'] == true && json['message'] == 'Added ${domainData['domain']}') {
+          return {'result': 'success'};
+        }
+        else if (json['success'] == true && json['message'] == 'Not adding ${domainData['domain']} as it is already on the list') {
+          return {'result': 'already_added'};
         }
         else {
           return {'result': 'error'};
