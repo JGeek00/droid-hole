@@ -91,10 +91,14 @@ class _AddDomainModalState extends State<AddDomainModal> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: Container(
-        height: 448,
+        height: height > 448
+          ? 488
+          : height - 30,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
@@ -105,92 +109,97 @@ class _AddDomainModalState extends State<AddDomainModal> {
         ),
         child: Column(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Icon(
-                    Icons.domain_add_rounded,
-                    size: 26,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Text(
-                      AppLocalizations.of(context)!.addDomain,
-                      style: const TextStyle(
-                        fontSize: 24
-                      ),
+            SizedBox(
+              height: MediaQuery.of(context).viewInsets.bottom > 0
+                ? height - MediaQuery.of(context).viewInsets.bottom - 48
+                : height - 146,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.domain_add_rounded,
+                      size: 26,
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () => setState(() => selectedType = 'whitelist'),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Radio(
-                              value: 'whitelist', 
-                              groupValue: selectedType,
-                              activeColor: Theme.of(context).primaryColor,
-                              onChanged: (value) => setState(() => selectedType = value.toString())
-                            ),
-                            const SizedBox(width: 5),
-                            const Text("Whitelist")
-                          ],
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text(
+                        AppLocalizations.of(context)!.addDomain,
+                        style: const TextStyle(
+                          fontSize: 24
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () => setState(() => selectedType = 'blacklist'),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Radio(
-                              value: 'blacklist', 
-                              groupValue: selectedType,
-                              activeColor: Theme.of(context).primaryColor,
-                              onChanged: (value) => setState(() => selectedType = value.toString())
-                            ),
-                            const SizedBox(width: 5),
-                            const Text("Blacklist")
-                          ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () => setState(() => selectedType = 'whitelist'),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Radio(
+                                value: 'whitelist', 
+                                groupValue: selectedType,
+                                activeColor: Theme.of(context).primaryColor,
+                                onChanged: (value) => setState(() => selectedType = value.toString())
+                              ),
+                              const SizedBox(width: 5),
+                              const Text("Whitelist")
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => setState(() => selectedType = 'blacklist'),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Radio(
+                                value: 'blacklist', 
+                                groupValue: selectedType,
+                                activeColor: Theme.of(context).primaryColor,
+                                onChanged: (value) => setState(() => selectedType = value.toString())
+                              ),
+                              const SizedBox(width: 5),
+                              const Text("Blacklist")
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: double.maxFinite,
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextField(
+                        controller: domainController,
+                        onChanged: (value) => validateDomain(value),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.domain_rounded),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10)
+                            )
+                          ),
+                          labelText: AppLocalizations.of(context)!.domain,
+                          errorText: domainError
                         ),
                       ),
-                    ],
-                  ),
-                  Container(
-                    width: double.maxFinite,
-                    padding: const EdgeInsets.only(top: 20),
-                    child: TextField(
-                      controller: domainController,
-                      onChanged: (value) => validateDomain(value),
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.domain_rounded),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10)
-                          )
+                    ),
+                    const SizedBox(height: 20),
+                    SwitchListTile(
+                      title: Text(
+                        AppLocalizations.of(context)!.addAsWildcard,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.normal
                         ),
-                        labelText: AppLocalizations.of(context)!.domain,
-                        errorText: domainError
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SwitchListTile(
-                    title: Text(
-                      AppLocalizations.of(context)!.addAsWildcard,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.normal
-                      ),
-                    ),
-                    value: wildcard, 
-                    onChanged: (value) => {
-                      setState((() => wildcard = value))
-                    },
-                    activeColor: Theme.of(context).primaryColor,
-                  )
-                ],
+                      value: wildcard, 
+                      onChanged: (value) => {
+                        setState((() => wildcard = value))
+                      },
+                      activeColor: Theme.of(context).primaryColor,
+                    )
+                  ],
+                ),
               ),
             ),
             Expanded(
