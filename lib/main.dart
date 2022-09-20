@@ -37,6 +37,7 @@ import 'package:droid_hole/constants/app_screens.dart';
 import 'package:droid_hole/config/theme.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/status_updater.dart';
+import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:vibration/vibration.dart';
@@ -45,6 +46,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ServersProvider serversProvider = ServersProvider();
   FiltersProvider filtersProvider = FiltersProvider();
+  DomainsListProvider domainsListProvider = DomainsListProvider();
   AppConfigProvider configProvider = AppConfigProvider();
 
   Map<String, dynamic> dbData = await loadDb();
@@ -100,6 +102,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: ((context) => filtersProvider)
+        ),
+        ChangeNotifierProvider(
+          create: ((context) => domainsListProvider)
         ),
         ChangeNotifierProvider(
           create: ((context) => configProvider)

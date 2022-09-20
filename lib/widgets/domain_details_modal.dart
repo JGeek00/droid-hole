@@ -214,28 +214,12 @@ class DomainDetailsModal extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          enableDisable(domain);
-                        }, 
-                        child: Text(
-                          domain.enabled == 1 
-                            ? AppLocalizations.of(context)!.disable
-                            : AppLocalizations.of(context)!.enable
-                        )
-                      ),
-                      const SizedBox(width: 12),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          remove(domain);
-                        }, 
-                        child: Text(AppLocalizations.of(context)!.remove)
-                      )
-                    ],
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      remove(domain);
+                    }, 
+                    child: Text(AppLocalizations.of(context)!.remove)
                   ),
                   TextButton(
                     onPressed: () => Navigator.pop(context), 

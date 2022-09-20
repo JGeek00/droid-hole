@@ -8,9 +8,8 @@ import 'package:droid_hole/widgets/custom_tab_indicator.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 
 import 'package:droid_hole/models/server.dart';
-import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/models/domain.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/domains_list_provider.dart';
 
 class DomainLists extends StatelessWidget {
   const DomainLists({Key? key}) : super(key: key);
@@ -18,19 +17,23 @@ class DomainLists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final domainsListProvider = Provider.of<DomainsListProvider>(context, listen: false);
 
     return DomainListsWidget(
-      server: serversProvider.selectedServer!
+      server: serversProvider.selectedServer!,
+      domainsListProvider: domainsListProvider
     );
   }
 }
 
 class DomainListsWidget extends StatefulWidget {
   final Server server;
+  final DomainsListProvider domainsListProvider;
 
   const DomainListsWidget({
     Key? key,
-    required this.server
+    required this.server,
+    required this.domainsListProvider,
   }) : super(key: key);
 
   @override
@@ -38,53 +41,22 @@ class DomainListsWidget extends StatefulWidget {
 }
 
 class _DomainListsWidgetState extends State<DomainListsWidget> {
-  int loadingStatus = 0;
-  Map<String, List<Domain>> data = {
-    'blacklist': [],
-    'whitelist': []
-  };
-
-  void fetchDomainsList() async {
-    final result = await getDomainLists(
-      server: widget.server
-    );
-    
-    if (mounted) {
-      if (result['result'] == 'success') {
-        setState(() {
-          loadingStatus = 1;
-          data['whitelist'] = [
-            ...result['data']['whitelist'],
-            ...result['data']['whitelistRegex']
-          ];
-          data['blacklist'] = [
-            ...result['data']['blacklist'],
-            ...result['data']['blacklistRegex']
-          ];
-        });
-      }
-      else {
-        setState(() {
-          loadingStatus = 2;
-        });
-      }
-    }
-  }
 
   @override
   void initState() {
-    fetchDomainsList();
+    widget.domainsListProvider.fetchDomainsList(widget.server);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final domainsListProvider = Provider.of<DomainsListProvider>(context);
 
     final orientation = MediaQuery.of(context).orientation;
 
-    Widget _generateBody() {
-      switch (loadingStatus) {
+    Widget generateBody() {
+      switch (domainsListProvider.loadingStatus) {
         case 0:
           return Scaffold(
             appBar: AppBar(
@@ -116,6 +88,7 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
         case 1:
           return Scaffold(
             body: NestedScrollView(
+              physics: const NeverScrollableScrollPhysics(),
               headerSliverBuilder: ((context, innerBoxIsScrolled) {
                 return [
                   SliverAppBar(
@@ -172,14 +145,10 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
                   )
                 ];
               }),
-              body: TabBarView(
+              body: const TabBarView(
                 children: [
-                  DomainsList(
-                    data: data['whitelist']!,
-                  ),
-                  DomainsList(
-                    data: data['blacklist']!,
-                  )
+                  DomainsList(type: 'whitelist'),
+                  DomainsList(type: 'blacklist')
                 ],
               ),
             ),
@@ -227,12 +196,7 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
       length: 2,
       child: serversProvider.selectedServer != null 
         ? serversProvider.isServerConnected == true 
-          ? RefreshIndicator(
-              onRefresh: () async {
-                // TODO: refresh list
-              },
-              child: _generateBody()
-            )
+          ? generateBody()
           : const Center(
               child: SelectedServerDisconnected()
             )

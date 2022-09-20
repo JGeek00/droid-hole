@@ -284,5 +284,6 @@
     "enable": "Enable",
     "domainRemoved": "Domain removed successfully",
     "domainNotExists": "Domain does not exist",
-    "errorRemovingDomain": "Error when removing domain"
+    "errorRemovingDomain": "Error when removing domain",
+    "noDomains": "There are no domains to show here."
 }
