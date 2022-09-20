@@ -102,10 +102,12 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
                         indicatorSize: TabBarIndicatorSize.label,
                         indicator: orientation == Orientation.portrait
                           ? CustomTabIndicatorPortrait(
-                              indicatorColor: Theme.of(context).primaryColor
+                              indicatorColor: Theme.of(context).primaryColor,
+                              itemsTabBar: 2
                             )
                           :  CustomTabIndicatorLandscape(
-                              indicatorColor: Theme.of(context).primaryColor
+                              indicatorColor: Theme.of(context).primaryColor,
+                              itemsTabBar: 2
                             ),
                         tabs: orientation == Orientation.portrait
                           ? [
