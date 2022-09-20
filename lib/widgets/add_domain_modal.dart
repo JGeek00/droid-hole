@@ -97,7 +97,7 @@ class _AddDomainModalState extends State<AddDomainModal> {
       padding: MediaQuery.of(context).viewInsets,
       child: Container(
         height: height > 448
-          ? 488
+          ? 448
           : height - 30,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
@@ -110,9 +110,11 @@ class _AddDomainModalState extends State<AddDomainModal> {
         child: Column(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).viewInsets.bottom > 0
-                ? height - MediaQuery.of(context).viewInsets.bottom - 48
-                : height - 146,
+              height: height < 448 
+                ? MediaQuery.of(context).viewInsets.bottom > 0
+                  ? height - MediaQuery.of(context).viewInsets.bottom - 48
+                  : 241
+                : null,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
