@@ -60,10 +60,12 @@ class Statistics extends StatelessWidget {
                       indicatorSize: TabBarIndicatorSize.label,
                       indicator: orientation == Orientation.portrait
                         ? CustomTabIndicatorPortrait(
-                            indicatorColor: Theme.of(context).primaryColor
+                            indicatorColor: Theme.of(context).primaryColor,
+                            itemsTabBar: 3
                           )
                         :  CustomTabIndicatorLandscape(
-                            indicatorColor: Theme.of(context).primaryColor
+                            indicatorColor: Theme.of(context).primaryColor,
+                            itemsTabBar: 3
                           ),
                       tabs: orientation == Orientation.portrait
                         ? [

@@ -28,6 +28,9 @@ class BottomNavBar extends StatelessWidget {
         case 'logs':
           return AppLocalizations.of(context)!.logs;
 
+        case 'domains':
+          return AppLocalizations.of(context)!.domains;
+
         case 'settings':
           return AppLocalizations.of(context)!.settings;
 

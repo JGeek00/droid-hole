@@ -42,8 +42,7 @@ class _UnlockState extends State<Unlock> {
         final result = await login(serverObj);
         if (result['result'] == 'success') {
           serverObj.enabled = result['status'] == 'enabled' ? true : false;
-          serversProvider.setselectedServerToken('phpSessId', result['phpSessId']);
-          serversProvider.setselectedServerToken('token', result['token']);
+          serversProvider.setPhpSessId(result['phpSessId']);
           serversProvider.setselectedServer(serverObj);
           serversProvider.setRefreshServerStatus(true);
           serversProvider.setIsServerConnected(true);

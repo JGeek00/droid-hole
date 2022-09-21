@@ -1,16 +1,14 @@
 class Server {
   final String address;
   String alias;
-  String password;
-  String? pwHash;
+  String? token;
   bool defaultServer;
   bool? enabled;
 
   Server({
     required this.address,
     required this.alias,
-    required this.password,
-    this.pwHash,
+    this.token,
     required this.defaultServer,
     this.enabled,
   });

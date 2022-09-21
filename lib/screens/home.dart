@@ -595,7 +595,7 @@ class Home extends StatelessWidget {
       process.open(AppLocalizations.of(context)!.refreshingData);
       final result = await realtimeStatus(
         serversProvider.selectedServer!,
-        serversProvider.selectedServerToken!['phpSessId']
+        serversProvider.phpSessId!
       );
       process.close();
       if (result['result'] == "success") {

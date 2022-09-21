@@ -37,7 +37,7 @@ class Logs extends StatelessWidget {
     if (serversProvider.selectedServer != null && serversProvider.isServerConnected == true) {
       return LogsList(
         server: serversProvider.selectedServer!, 
-        token: serversProvider.selectedServerToken!['phpSessId'],
+        phpSessId: serversProvider.phpSessId!,
         selectedStatus: filtersProvider.statusSelected,
         startTime: filtersProvider.startTime,
         endTime: filtersProvider.endTime,
@@ -81,7 +81,7 @@ class Logs extends StatelessWidget {
 
 class LogsList extends StatefulWidget {
   final Server server;
-  final String token;
+  final String phpSessId;
   final List<int> selectedStatus;
   final DateTime? startTime;
   final DateTime? endTime;
@@ -90,7 +90,7 @@ class LogsList extends StatefulWidget {
   const LogsList({
     Key? key,
     required this.server,
-    required this.token,
+    required this.phpSessId,
     required this.selectedStatus,
     required this.startTime,
     required this.endTime,
@@ -167,7 +167,7 @@ class _LogsListState extends State<LogsList> {
     else {
       final result = await fetchLogs(
         server: widget.server,
-        phpSessId: widget.token,
+        phpSessId: widget.phpSessId,
         from:  minusHoursTimestamp,
         until: timestamp
       );
@@ -308,8 +308,7 @@ class _LogsListState extends State<LogsList> {
         server: serversProvider.selectedServer!, 
         domain: log.url, 
         list: list, 
-        token: serversProvider.selectedServerToken!['token'], 
-        phpSessId: serversProvider.selectedServerToken!['phpSessId']
+        phpSessId: serversProvider.phpSessId!
       );
       loading.close();
       if (result['result'] == 'success') {
@@ -425,6 +424,7 @@ class _LogsListState extends State<LogsList> {
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.loadingLogs,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 24,
                     color: Colors.grey,
@@ -563,6 +563,7 @@ class _LogsListState extends State<LogsList> {
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.couldntLoadLogs,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 24,
                     color: Colors.grey,
