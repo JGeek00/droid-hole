@@ -204,12 +204,17 @@ Future upgradeDbToV15(Database db) async {
     servers.add(serverObj);
   }
 
-  await db.execute("DROP TABLE IF EXISTS servers");
+  await db.execute("DROP TABLE servers");
   await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, token TEXT, isDefaultServer NUMERIC)");
 
-  // ignore: avoid_function_literals_in_foreach_calls
-  servers.forEach((server) async { 
-    await db.execute("INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ('${server.address}', '${server.alias}', '${server.token}', ${server.defaultServer == true ? 1 : 0})");
+  List<Future> futures = [];
+  for (var server in servers) { 
+    futures.add(db.execute("INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ('${server.address}', '${server.alias}', '${server.token}', ${server.defaultServer == true ? 1 : 0})"));
+  }
+  await Future.wait(futures);
+
+  await db.transaction((txn) async{
+    await txn.rawQuery('SELECT * FROM servers');
   });
 }
 
@@ -350,6 +355,7 @@ Future<Map<String, dynamic>> loadDb() async {
       }
     },
     onOpen: (Database db) async {
+      print('open');
       await db.transaction((txn) async{
         servers = await txn.rawQuery(
           'SELECT * FROM servers',
