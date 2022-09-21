@@ -390,6 +390,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
     return Stack(
       children: [
         Scaffold(
+          backgroundColor: Theme.of(context).dialogBackgroundColor,
           appBar: AppBar(
             systemOverlayStyle: systemUiOverlayStyleConfig(context),
             title: Text(
@@ -421,266 +422,250 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
             ],
             toolbarHeight: 70,
           ),
-          body: SafeArea(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).dialogBackgroundColor,
-              ),
-              child: SingleChildScrollView(
+          body: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(24),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: double.maxFinite,
-                      height: mediaQuery.size.height-110,
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 15,
-                                  vertical: 10
-                                ),
-                                margin: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  border: Border.all(
-                                    color: Theme.of(context).primaryColor
-                                  ),
-                                  color: Theme.of(context).primaryColor.withOpacity(0.05)
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "$selectedHttp://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}${subrouteFieldController.text}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).primaryColor
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: TextFormField(
-                                  onChanged: (value) => _validateAddress(value),
-                                  controller: addressFieldController,
-                                  enabled: widget.server != null ? false : true,
-                                  decoration: InputDecoration(
-                                    errorText: addressFieldError,
-                                    prefixIcon: const Icon(Icons.link),
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10)
-                                      )
-                                    ),
-                                    labelText: AppLocalizations.of(context)!.address,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: TextFormField(
-                                  onChanged: (value) => _validateSubroute(value),
-                                  controller: subrouteFieldController,
-                                  enabled: widget.server != null ? false : true,
-                                  decoration: InputDecoration(
-                                    errorText: subrouteFieldError,
-                                    prefixIcon: const Icon(Icons.route_rounded),
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10)
-                                      )
-                                    ),
-                                    labelText: AppLocalizations.of(context)!.subrouteField,
-                                    hintText: AppLocalizations.of(context)!.subrouteExample,
-                                    helperText: AppLocalizations.of(context)!.subrouteHelper,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: TextFormField(
-                                  onChanged: (value) => _validatePort(value),
-                                  controller: portFieldController,
-                                  enabled: widget.server != null ? false : true,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    errorText: portFieldError,
-                                    prefixIcon: const Icon(Icons.numbers),
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10)
-                                      )
-                                    ),
-                                    labelText: AppLocalizations.of(context)!.port,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () => setState(() => selectedHttp = 'http'),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Radio(
-                                            value: 'http', 
-                                            groupValue: selectedHttp,
-                                            activeColor: Theme.of(context).primaryColor,
-                                            onChanged: (value) => setState(() => selectedHttp = value.toString())
-                                          ),
-                                          const SizedBox(width: 5),
-                                          const Text("HTTP")
-                                        ],
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => setState(() => selectedHttp = 'https'),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Radio(
-                                            value: 'https', 
-                                            groupValue: selectedHttp,
-                                            activeColor: Theme.of(context).primaryColor,
-                                            onChanged: (value) => setState(() => selectedHttp = value.toString())
-                                          ),
-                                          const SizedBox(width: 5),
-                                          const Text("HTTPS")
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 20),
-                                child: TextField(
-                                  controller: aliasFieldController,
-                                  onChanged: (value) => _checkDataValid(),
-                                  decoration: InputDecoration(
-                                    prefixIcon: const Icon(Icons.badge_outlined),
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10)
-                                      )
-                                    ),
-                                    labelText: AppLocalizations.of(context)!.alias,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      width: mediaQuery.size.width - 100,
-                                      child: TextField(
-                                        obscureText: true,
-                                        keyboardType: TextInputType.visiblePassword,
-                                        controller: tokenFieldController,
-                                        onChanged: (value) => _checkDataValid(),
-                                        decoration: InputDecoration(
-                                          prefixIcon: const Icon(Icons.key_rounded),
-                                          border: const OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(10)
-                                            )
-                                          ),
-                                          labelText: AppLocalizations.of(context)!.token,
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: openScanTokenModal, 
-                                      icon: const Icon(Icons.qr_code_rounded),
-                                      tooltip: AppLocalizations.of(context)!.scanQrCode,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.info_rounded,
-                                    color: Theme.of(context).textTheme.bodyText1?.color
-                                  ),
-                                  const SizedBox(width: 16),
-                                  SizedBox(
-                                    width: mediaQuery.size.width - 84,
-                                    child: Text(
-                                      AppLocalizations.of(context)!.tokenInstructions,
-                                      style: TextStyle(
-                                        color: Theme.of(context).textTheme.bodyText1?.color
-                                      ),
-                                    )
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Checkbox(
-                                    value: defaultCheckbox,
-                                    onChanged: widget.server == null ? (value) => {
-                                      setState(() => {
-                                        defaultCheckbox = !defaultCheckbox
-                                      })
-                                    } : null,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: widget.server == null ? (() => {
-                                      setState(() => {
-                                        defaultCheckbox = !defaultCheckbox
-                                      })
-                                    }) : null,
-                                    child: Text(
-                                      AppLocalizations.of(context)!.defaultConnection,
-                                      style: TextStyle(
-                                        color: widget.server != null 
-                                          ? Colors.grey
-                                          : null
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10
+                      ),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(
+                          color: Theme.of(context).primaryColor
+                        ),
+                        color: Theme.of(context).primaryColor.withOpacity(0.05)
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            "$selectedHttp://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}${subrouteFieldController.text}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor
+                            ),
                           ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        onChanged: (value) => _validateAddress(value),
+                        controller: addressFieldController,
+                        enabled: widget.server != null ? false : true,
+                        decoration: InputDecoration(
+                          errorText: addressFieldError,
+                          prefixIcon: const Icon(Icons.link),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10)
+                            )
+                          ),
+                          labelText: AppLocalizations.of(context)!.address,
                         ),
                       ),
                     ),
-                    if (errorUrl != null) Padding(
-                      padding: const EdgeInsets.only(top: 7),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: TextFormField(
+                        onChanged: (value) => _validateSubroute(value),
+                        controller: subrouteFieldController,
+                        enabled: widget.server != null ? false : true,
+                        decoration: InputDecoration(
+                          errorText: subrouteFieldError,
+                          prefixIcon: const Icon(Icons.route_rounded),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10)
+                            )
+                          ),
+                          labelText: AppLocalizations.of(context)!.subrouteField,
+                          hintText: AppLocalizations.of(context)!.subrouteExample,
+                          helperText: AppLocalizations.of(context)!.subrouteHelper,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: TextFormField(
+                        onChanged: (value) => _validatePort(value),
+                        controller: portFieldController,
+                        enabled: widget.server != null ? false : true,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          errorText: portFieldError,
+                          prefixIcon: const Icon(Icons.numbers),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10)
+                            )
+                          ),
+                          labelText: AppLocalizations.of(context)!.port,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            errorUrl!,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red
+                          GestureDetector(
+                            onTap: () => setState(() => selectedHttp = 'http'),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Radio(
+                                  value: 'http', 
+                                  groupValue: selectedHttp,
+                                  activeColor: Theme.of(context).primaryColor,
+                                  onChanged: (value) => setState(() => selectedHttp = value.toString())
+                                ),
+                                const SizedBox(width: 5),
+                                const Text("HTTP")
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => setState(() => selectedHttp = 'https'),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Radio(
+                                  value: 'https', 
+                                  groupValue: selectedHttp,
+                                  activeColor: Theme.of(context).primaryColor,
+                                  onChanged: (value) => setState(() => selectedHttp = value.toString())
+                                ),
+                                const SizedBox(width: 5),
+                                const Text("HTTPS")
+                              ],
                             ),
                           )
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: TextField(
+                        controller: aliasFieldController,
+                        onChanged: (value) => _checkDataValid(),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.badge_outlined),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10)
+                            )
+                          ),
+                          labelText: AppLocalizations.of(context)!.alias,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: mediaQuery.size.width - 100,
+                            child: TextField(
+                              obscureText: true,
+                              keyboardType: TextInputType.visiblePassword,
+                              controller: tokenFieldController,
+                              onChanged: (value) => _checkDataValid(),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.key_rounded),
+                                border: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10)
+                                  )
+                                ),
+                                labelText: AppLocalizations.of(context)!.token,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: openScanTokenModal, 
+                            icon: const Icon(Icons.qr_code_rounded),
+                            tooltip: AppLocalizations.of(context)!.scanQrCode,
+                          )
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.info_rounded,
+                          color: Theme.of(context).textTheme.bodyText1?.color
+                        ),
+                        const SizedBox(width: 16),
+                        SizedBox(
+                          width: mediaQuery.size.width - 88,
+                          child: Text(
+                            AppLocalizations.of(context)!.tokenInstructions,
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.bodyText1?.color
+                            ),
+                          )
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                          value: defaultCheckbox,
+                          onChanged: widget.server == null ? (value) => {
+                            setState(() => {
+                              defaultCheckbox = !defaultCheckbox
+                            })
+                          } : null,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: widget.server == null ? (() => {
+                            setState(() => {
+                              defaultCheckbox = !defaultCheckbox
+                            })
+                          }) : null,
+                          child: Text(
+                            AppLocalizations.of(context)!.defaultConnection,
+                            style: TextStyle(
+                              color: widget.server != null 
+                                ? Colors.grey
+                                : null
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ],
                 ),
               ),
-            ),
+              if (errorUrl != null) Padding(
+                padding: const EdgeInsets.only(top: 7),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      errorUrl!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         AnimatedOpacity(
