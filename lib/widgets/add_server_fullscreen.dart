@@ -1,16 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/token_modal.dart';
+import 'package:droid_hole/widgets/scan_token_modal.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/functions/hash.dart';
 import 'package:droid_hole/models/server.dart';
 
 class AddServerFullscreen extends StatefulWidget {
@@ -378,6 +378,15 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       }
     }
 
+    void openScanTokenModal() {
+      showModal(
+        context: context, 
+        builder: (context) => ScanTokenModal(
+          qrScanned: (value) => setState(() => tokenFieldController.text = value),
+        )
+      );
+    }
+
     return Stack(
       children: [
         Scaffold(
@@ -569,22 +578,54 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 20),
-                                child: TextField(
-                                  obscureText: true,
-                                  keyboardType: TextInputType.visiblePassword,
-                                  controller: tokenFieldController,
-                                  onChanged: (value) => _checkDataValid(),
-                                  decoration: InputDecoration(
-                                    prefixIcon: const Icon(Icons.key_rounded),
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10)
-                                      )
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: mediaQuery.size.width - 100,
+                                      child: TextField(
+                                        obscureText: true,
+                                        keyboardType: TextInputType.visiblePassword,
+                                        controller: tokenFieldController,
+                                        onChanged: (value) => _checkDataValid(),
+                                        decoration: InputDecoration(
+                                          prefixIcon: const Icon(Icons.key_rounded),
+                                          border: const OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10)
+                                            )
+                                          ),
+                                          labelText: AppLocalizations.of(context)!.token,
+                                        ),
+                                      ),
                                     ),
-                                    labelText: AppLocalizations.of(context)!.token,
-                                  ),
+                                    IconButton(
+                                      onPressed: openScanTokenModal, 
+                                      icon: const Icon(Icons.qr_code_rounded),
+                                      tooltip: AppLocalizations.of(context)!.scanQrCode,
+                                    )
+                                  ],
                                 ),
                               ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_rounded,
+                                    color: Theme.of(context).textTheme.bodyText1?.color
+                                  ),
+                                  const SizedBox(width: 16),
+                                  SizedBox(
+                                    width: mediaQuery.size.width - 84,
+                                    child: Text(
+                                      AppLocalizations.of(context)!.tokenInstructions,
+                                      style: TextStyle(
+                                        color: Theme.of(context).textTheme.bodyText1?.color
+                                      ),
+                                    )
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 20),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

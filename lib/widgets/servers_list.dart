@@ -5,11 +5,8 @@ import 'package:expandable/expandable.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/token_modal.dart';
 import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:droid_hole/widgets/delete_modal.dart';
-
-import 'package:droid_hole/functions/hash.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
