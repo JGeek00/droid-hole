@@ -1,9 +1,9 @@
-import 'package:droid_hole/widgets/custom_pie_chart.dart';
-import 'package:droid_hole/widgets/pie_chart_legend.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/widgets/custom_pie_chart.dart';
 import 'package:droid_hole/widgets/no_data_chart.dart';
+import 'package:droid_hole/widgets/pie_chart_legend.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -30,7 +30,21 @@ class StatisticsList extends StatelessWidget {
 
     final width = MediaQuery.of(context).size.width;
 
-    Widget _listViewMode(List<Map<String, dynamic>> values) {
+    void navigateFilter(String value) {
+      if (type == 'clients') {
+        final isContained = filtersProvider.totalClients.where((client) => value.contains(client)).toList();
+        if (isContained.isNotEmpty) {
+          filtersProvider.setSelectedClients([isContained[0]]);
+          appConfigProvider.setSelectedTab(2);
+        }
+      }
+      if (type == 'domains') {
+        filtersProvider.setSelectedDomain(value);
+        appConfigProvider.setSelectedTab(2);
+      }
+    }
+
+    Widget listViewMode(List<Map<String, dynamic>> values) {
       int totalHits = 0;
       for (var item in values) {
         totalHits = totalHits + item['value'].toInt() as int;
@@ -41,19 +55,7 @@ class StatisticsList extends StatelessWidget {
           ...values.map((item) => Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {
-                if (type == 'clients') {
-                  final isContained = filtersProvider.totalClients.where((client) => item['label'].contains(client)).toList();
-                  if (isContained.isNotEmpty) {
-                    filtersProvider.setSelectedClients([isContained[0]]);
-                    appConfigProvider.setSelectedTab(2);
-                  }
-                }
-                if (type == 'domains') {
-                  filtersProvider.setSelectedDomain(item['label']);
-                  appConfigProvider.setSelectedTab(2);
-                }
-              },
+              onTap: () => navigateFilter(item['label']),
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -135,7 +137,7 @@ class StatisticsList extends StatelessWidget {
       );
     }
 
-    Widget _pieChertViewMode(List<Map<String, dynamic>> values) {
+    Widget pieChertViewMode(List<Map<String, dynamic>> values) {
       Map<String, double> items = {};
       Map<String, int> legend = {};
       for (var item in values) {
@@ -151,18 +153,20 @@ class StatisticsList extends StatelessWidget {
       return Column(
         children: [
           const SizedBox(height: 10),
-          CustomPieChart(data: items),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: PieChartLegend(
-              data: legend,
-            ),
+          CustomPieChart(
+            data: items
           ),
+          const SizedBox(height: 20),
+          PieChartLegend(
+            data: legend,
+            onValueTap: (value) => navigateFilter(value),
+          ),
+          const SizedBox(height: 10),
         ],
       );
     }
 
-    Widget _generateList(Map<String, int> values, String label) {
+    Widget generateList(Map<String, int> values, String label) {
       final topQueriesList = convertFromMapToList(values);
       
       return Column(
@@ -184,8 +188,8 @@ class StatisticsList extends StatelessWidget {
             ),
           ),
           appConfigProvider.statisticsVisualizationMode == 0
-            ? _listViewMode(topQueriesList)
-            : _pieChertViewMode(topQueriesList)
+            ? listViewMode(topQueriesList)
+            : pieChertViewMode(topQueriesList)
         ],
       );
     }
@@ -194,7 +198,7 @@ class StatisticsList extends StatelessWidget {
       child: Column(
         children: [
           data1['data'] != null 
-            ? _generateList(
+            ? generateList(
                 data1['data'], 
                 data1['label']
               )
@@ -209,7 +213,7 @@ class StatisticsList extends StatelessWidget {
             ),
           ],
           data2['data'] != null
-            ? _generateList(
+            ? generateList(
                 data2['data'], 
                 data2['label']
               )

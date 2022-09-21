@@ -23,7 +23,7 @@ class QueriesServersTab extends StatelessWidget {
         children: [
           serversProvider.getRealtimeStatus!.queryTypes.isEmpty == false
             ? Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.only(top: 20, bottom: 10),
                 child: Column(
                   children: [
                     Container(
@@ -69,7 +69,7 @@ class QueriesServersTab extends StatelessWidget {
           ),
           serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
             ? Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.only(top: 20, bottom: 10),
                 child: Column(
                   children: [
                     Container(
