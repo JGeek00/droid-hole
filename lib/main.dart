@@ -49,6 +49,10 @@ import 'package:droid_hole/providers/servers_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]
+  );
+
   ServersProvider serversProvider = ServersProvider();
   FiltersProvider filtersProvider = FiltersProvider();
   DomainsListProvider domainsListProvider = DomainsListProvider();
@@ -355,7 +359,6 @@ Future<Map<String, dynamic>> loadDb() async {
       }
     },
     onOpen: (Database db) async {
-      print('open');
       await db.transaction((txn) async{
         servers = await txn.rawQuery(
           'SELECT * FROM servers',

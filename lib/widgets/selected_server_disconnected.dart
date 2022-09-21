@@ -27,8 +27,7 @@ class SelectedServerDisconnected extends StatelessWidget {
                   AppLocalizations.of(context)!.selectedDisconnected,
                   style: const TextStyle(
                     color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
+                    fontSize: 26
                   ),
                 ),
                 const SizedBox(height: 30),

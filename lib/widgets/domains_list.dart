@@ -153,6 +153,7 @@ class DomainsList extends StatelessWidget {
           await domainsListProvider.fetchDomainsList(serversProvider.selectedServer!);
         },
         child: ListView.builder(
+          padding: const EdgeInsets.only(top: 0),
           itemCount: data.length,
           itemBuilder: (context, index) => ListTile(
             onTap: () => {

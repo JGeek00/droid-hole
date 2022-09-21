@@ -32,8 +32,6 @@ class Logs extends StatelessWidget {
     final filtersProvider = Provider.of<FiltersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-
     if (serversProvider.selectedServer != null && serversProvider.isServerConnected == true) {
       return LogsList(
         server: serversProvider.selectedServer!, 
@@ -46,26 +44,9 @@ class Logs extends StatelessWidget {
     }
     else {
       return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size(double.maxFinite, 70),
-          child: Container(
-            margin: EdgeInsets.only(top: statusBarHeight),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Theme.of(context).dividerColor
-                )
-              )
-            ),
-            child: Text(
-              AppLocalizations.of(context)!.queryLogs,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20
-              ),
-            ),
-          )
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.queryLogs),
+          centerTitle: true,
         ),
         body: serversProvider.selectedServer != null 
         ? serversProvider.isServerConnected == true 

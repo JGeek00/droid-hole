@@ -149,11 +149,22 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
                   )
                 ];
               }),
-              body: const TabBarView(
-                children: [
-                  DomainsList(type: 'whitelist'),
-                  DomainsList(type: 'blacklist')
-                ],
+              body: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Theme.of(context).brightness == Brightness.light
+                        ? const Color.fromRGBO(220, 220, 220, 1)
+                        : const Color.fromRGBO(50, 50, 50, 1)
+                    )
+                  )
+                ),
+                child: const TabBarView(
+                  children: [
+                    DomainsList(type: 'whitelist'),
+                    DomainsList(type: 'blacklist')
+                  ],
+                ),
               ),
             ),
           );
@@ -201,10 +212,22 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
       child: serversProvider.selectedServer != null 
         ? serversProvider.isServerConnected == true 
           ? generateBody()
-          : const Center(
-              child: SelectedServerDisconnected()
+          : Scaffold(
+              appBar: AppBar(
+                title: Text(AppLocalizations.of(context)!.domains),
+                centerTitle: true,
+              ),
+              body: const Center(
+                child: SelectedServerDisconnected()
+              ),
             )
-        : const NoServerSelected()
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(AppLocalizations.of(context)!.domains),
+              centerTitle: true,
+            ),
+            body: const NoServerSelected()
+          )
     );
   }
 }

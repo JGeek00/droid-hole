@@ -119,42 +119,53 @@ class Statistics extends StatelessWidget {
                 )
               ];
             }),
-            body: TabBarView(
-              children: [
-                const QueriesServersTab(),
-                StatisticsList(
-                  data1: {
-                    "data": serversProvider.getRealtimeStatus!.topQueries.isNotEmpty == true 
-                      ? serversProvider.getRealtimeStatus!.topQueries
-                      : null,
-                    "label": AppLocalizations.of(context)!.topPermittedDomains
-                  },
-                  data2: {
-                    "data": serversProvider.getRealtimeStatus!.topAds.isNotEmpty == true 
-                      ? serversProvider.getRealtimeStatus!.topAds
-                      : null,
-                    "label": AppLocalizations.of(context)!.topBlockedDomains
-                  },
-                  countLabel: AppLocalizations.of(context)!.hits,
-                  type: "domains",
-                ),
-                StatisticsList(
-                  data1: {
-                    "data":  serversProvider.getRealtimeStatus!.topSources.isNotEmpty == true 
-                      ? serversProvider.getRealtimeStatus!.topSources
-                      : null,
-                    "label": AppLocalizations.of(context)!.topClients
-                  },
-                  data2: {
-                    "data": serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty == true 
-                      ? serversProvider.getRealtimeStatus!.topSourcesBlocked
-                      : null,
-                    "label": AppLocalizations.of(context)!.topClientsBlocked
-                  },
-                  countLabel: AppLocalizations.of(context)!.requests,
-                  type: "clients",
-                ),
-              ]
+            body: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: Theme.of(context).brightness == Brightness.light
+                      ? const Color.fromRGBO(220, 220, 220, 1)
+                      : const Color.fromRGBO(50, 50, 50, 1)
+                  )
+                )
+              ),
+              child: TabBarView(
+                children: [
+                  const QueriesServersTab(),
+                  StatisticsList(
+                    data1: {
+                      "data": serversProvider.getRealtimeStatus!.topQueries.isNotEmpty == true 
+                        ? serversProvider.getRealtimeStatus!.topQueries
+                        : null,
+                      "label": AppLocalizations.of(context)!.topPermittedDomains
+                    },
+                    data2: {
+                      "data": serversProvider.getRealtimeStatus!.topAds.isNotEmpty == true 
+                        ? serversProvider.getRealtimeStatus!.topAds
+                        : null,
+                      "label": AppLocalizations.of(context)!.topBlockedDomains
+                    },
+                    countLabel: AppLocalizations.of(context)!.hits,
+                    type: "domains",
+                  ),
+                  StatisticsList(
+                    data1: {
+                      "data":  serversProvider.getRealtimeStatus!.topSources.isNotEmpty == true 
+                        ? serversProvider.getRealtimeStatus!.topSources
+                        : null,
+                      "label": AppLocalizations.of(context)!.topClients
+                    },
+                    data2: {
+                      "data": serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty == true 
+                        ? serversProvider.getRealtimeStatus!.topSourcesBlocked
+                        : null,
+                      "label": AppLocalizations.of(context)!.topClientsBlocked
+                    },
+                    countLabel: AppLocalizations.of(context)!.requests,
+                    type: "clients",
+                  ),
+                ]
+              ),
             ),
           );
 
@@ -191,20 +202,32 @@ class Statistics extends StatelessWidget {
 
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-        body: serversProvider.selectedServer != null 
+      child: serversProvider.selectedServer != null 
         ? serversProvider.isServerConnected == true 
           ? RefreshIndicator(
               onRefresh: () async {
                 await refreshServerStatus(context, serversProvider);
               },
-              child: _generateBody()
+              child: Scaffold(
+                body: _generateBody()
+              )
             )
-          : const Center(
-              child: SelectedServerDisconnected()
+          : Scaffold(
+              appBar: AppBar(
+                title: Text(AppLocalizations.of(context)!.statistics),
+                centerTitle: true,
+              ),
+              body: const Center(
+                child: SelectedServerDisconnected()
+              ),
             )
-        : const NoServerSelected()
-      ),
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(AppLocalizations.of(context)!.statistics),
+              centerTitle: true,
+            ),
+            body: const NoServerSelected()
+          )
     );
   }
 }
