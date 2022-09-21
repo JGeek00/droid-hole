@@ -15,10 +15,7 @@ class ServersProvider with ChangeNotifier {
 
   Server? _selectedServer;
   bool? _isServerConnected;
-  Map<String, dynamic> _selectedServerToken = {
-    'formToken': '',
-    'phpSessId': ''
-  };
+  String? _phpSessId;
   bool _refreshServerStatus = false;
 
   int _statusLoading = 0;
@@ -35,8 +32,8 @@ class ServersProvider with ChangeNotifier {
     return _selectedServer;
   }
 
-  Map<String, dynamic>? get selectedServerToken {
-    return _selectedServerToken;
+  String? get phpSessId {
+    return _phpSessId;
   }
 
   bool? get isServerConnected {
@@ -171,8 +168,8 @@ class ServersProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setselectedServerToken(String token, String value) {
-    _selectedServerToken[token] = value;
+  void setPhpSessId(String value) {
+    _phpSessId = value;
     notifyListeners();
   }
 
@@ -191,11 +188,11 @@ class ServersProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> setPwHash(Server server) async {
+  Future<bool> settoken(Server server) async {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawInsert(
-          'UPDATE servers SET pwHash = "${server.pwHash}" WHERE address = "${server.address}"',
+          'UPDATE servers SET token = "${server.token}" WHERE address = "${server.address}"',
         );
         _serversList = _serversList.map((s) {
           if (s.address == server.address) {
@@ -219,8 +216,7 @@ class ServersProvider with ChangeNotifier {
         final Server serverObj = Server(
           address: server['address'], 
           alias: server['alias'],
-          password: server['password'], 
-          pwHash: server['pwHash'],
+          token: server['token'],
           defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
         );
         _serversList.add(serverObj);
@@ -229,8 +225,7 @@ class ServersProvider with ChangeNotifier {
             final result = await login(serverObj);
             if (result['result'] == 'success') {
               serverObj.enabled = result['status'] == 'enabled' ? true : false;
-              _selectedServerToken['phpSessId'] = result['phpSessId'];
-              _selectedServerToken['token'] = result['token'];
+              _phpSessId = result['phpSessId'];
               _isServerConnected = true;
               _selectedServer = serverObj;
             }
@@ -253,7 +248,7 @@ class ServersProvider with ChangeNotifier {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawInsert(
-          'INSERT INTO servers (address, alias, password, pwHash, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.password}", "${server.pwHash}", 0)',
+          'INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.token}", 0)',
         );
         return true;
       });
@@ -266,7 +261,7 @@ class ServersProvider with ChangeNotifier {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
-          'UPDATE servers SET alias = "${server.alias}", password = "${server.password}", pwHash = "${server.pwHash}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)} WHERE address = "${server.address}"',
+          'UPDATE servers SET alias = "${server.alias}", token = "${server.token}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)} WHERE address = "${server.address}"',
         );
         return true;
       });
@@ -351,10 +346,7 @@ class ServersProvider with ChangeNotifier {
     _serversList = [];
     _isServerConnected = false;
     _selectedServer = null;
-    _selectedServerToken = {
-      'formToken': '',
-      'phpSessId': ''
-    };
+    _phpSessId = null;
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawDelete(

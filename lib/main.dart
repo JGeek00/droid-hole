@@ -183,15 +183,20 @@ Future upgradeDbToV14(Database db) async {
   await db.execute("UPDATE appConfig SET statisticsVisualizationMode = 0");
 }
 
+Future upgradeDbToV15(Database db) async {
+  await db.execute("ALTER TABLE servers RENAME COLUMN pwHash TO token");
+  await db.execute("ALTER TABLE servers REMOVE COLUMN password");
+}
+
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
   List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 14,
+    version: 15,
     onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, pwHash TEXT, isDefaultServer NUMERIC)");
+      await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, token TEXT, isDefaultServer NUMERIC)");
       await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC, overrideSslCheck NUMERIC, oneColumnLegend NUMERIC, reducedDataCharts NUMERIC, logsPerQuery NUMERIC, passCode TEXT, useBiometricAuth NUMERIC, importantInfoReaden NUMERIC, hideZeroValues NUMERIC, statisticsVisualizationMode NUMERIC)");
       await db.execute("INSERT INTO appConfig (autoRefreshTime, theme, overrideSslCheck, oneColumnLegend, reducedDataCharts, logsPerQuery, passCode, useBiometricAuth, importantInfoReaden, hideZeroValues, statisticsVisualizationMode) VALUES (5, 0, 0, 0, 0, 2, null, 0, 0, 0, 0)");
     },
@@ -209,6 +214,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 3) {
         await upgradeDbToV4(db);
@@ -222,6 +228,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 4) {
         await upgradeDbToV5(db);
@@ -234,6 +241,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 5) {
         await upgradeDbToV6(db);
@@ -245,6 +253,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 6) {
         await upgradeDbToV7(db);
@@ -255,6 +264,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 7) {
         await upgradeDbToV8(db);
@@ -264,6 +274,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 8) {
         await upgradeDbToV9(db);
@@ -272,6 +283,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 9) {
         await upgradeDbToV10(db);
@@ -279,24 +291,32 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 10) {
         await upgradeDbToV11(db);
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 11) {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 12) {
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 13) {
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
+      }
+      if (oldVersion == 14) {
+        await upgradeDbToV15(db);
       }
     },
     onDowngrade: (Database db, int oldVersion, int newVersion) async {

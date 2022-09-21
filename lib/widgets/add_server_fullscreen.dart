@@ -33,7 +33,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
   TextEditingController subrouteFieldController = TextEditingController();
   String? subrouteFieldError;
   TextEditingController aliasFieldController = TextEditingController();
-  TextEditingController passwordFieldController = TextEditingController();
+  TextEditingController tokenFieldController = TextEditingController();
   String selectedHttp = 'http';
   bool defaultCheckbox = false;
 
@@ -53,7 +53,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       subrouteFieldError == null &&
       portFieldError == null &&
       aliasFieldController.text != '' &&
-      passwordFieldController.text != ''
+      tokenFieldController.text != ''
     ) {
       setState(() {
         allDataValid = true;
@@ -156,7 +156,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       addressFieldController.text = splitted[1].split('/')[2];
       portFieldController.text = splitted.length == 3 ? splitted[2] : '';
       aliasFieldController.text = widget.server!.alias;
-      passwordFieldController.text = widget.server!.password;
+      tokenFieldController.text = widget.server!.token ?? '';
       setState(() {
         selectedHttp = widget.server!.address.split(':')[0];
         defaultCheckbox = widget.server!.defaultServer;
@@ -202,78 +202,19 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         final serverObj = Server(
           address: url, 
           alias: aliasFieldController.text,
-          password: passwordFieldController.text, 
+          token: tokenFieldController.text, 
           defaultServer: false,
         );
         final result = await login(serverObj);
         if (result['result'] == 'success') {
-          if (result['withPassword'] == true) {
-            final hash = hashPassword(serverObj.password);
-            final isHashValid = await testHash(serverObj, hash);
-            if (isHashValid['result'] == 'success') {
-              Navigator.pop(context);
-              serversProvider.addServer(Server(
-                address: serverObj.address,
-                alias: serverObj.alias,
-                password: serverObj.password,
-                pwHash: hash,
-                defaultServer: defaultCheckbox,
-                enabled: result['status'] == 'enabled' ? true : false
-              ));
-            }
-            else if (isHashValid['result'] == 'hash_not_valid') {
-              setState(() => isTokenModalOpen = true);
-              showDialog(
-                context: context, 
-                builder: (ctx) => TokenModal(
-                  server: serverObj,
-                  onCancel: () {
-                    setState(() {
-                      isTokenModalOpen = false;
-                      isConnecting = false;
-                    });
-                    Navigator.pop(context);
-                  },
-                  onConfirm: (value) async {
-                    setState(() => isTokenModalOpen = false);
-                    Navigator.pop(context);
-                    serversProvider.addServer(Server(
-                      address: serverObj.address,
-                      alias: serverObj.alias,
-                      password: serverObj.password,
-                      pwHash: value,
-                      defaultServer: defaultCheckbox,
-                      enabled: result['status'] == 'enabled' ? true : false
-                    ));
-                  },
-                ),
-                useSafeArea: true,
-                barrierDismissible: false
-              );
-            }
-            else {
-              setState(() {
-                isConnecting = false;
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.noConnection),
-                  backgroundColor: Colors.red,
-                )
-              );
-            }
-          }
-          else {
-            Navigator.pop(context);
-            serversProvider.addServer(Server(
-              address: serverObj.address,
-              alias: serverObj.alias,
-              password: serverObj.password,
-              pwHash: '',
-              defaultServer: defaultCheckbox,
-              enabled: result['status'] == 'enabled' ? true : false
-            ));
-          }
+          Navigator.pop(context);
+          serversProvider.addServer(Server(
+            address: serverObj.address,
+            alias: serverObj.alias,
+            token: serverObj.token,
+            defaultServer: defaultCheckbox,
+            enabled: result['status'] == 'enabled' ? true : false
+          ));
         }
         else {
           setState(() {
@@ -337,119 +278,35 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         errorUrl = null;
         isConnecting = true;
       });
+
       final serverObj = Server(
         address: widget.server!.address, 
         alias: aliasFieldController.text,
-        password: passwordFieldController.text, 
+        token: tokenFieldController.text,
         defaultServer: false,
       );
       final result = await login(serverObj);
       if (result['result'] == 'success') {
-        if (result['withPassword'] == true) {
-          final hash = hashPassword(serverObj.password);
-          final isHashValid = await testHash(serverObj, hash);
-          if (isHashValid['result'] == 'success') {
-            Server server = Server(
-              address: widget.server!.address, 
-              alias: aliasFieldController.text,
-              password: passwordFieldController.text, 
-              pwHash: hash,
-              defaultServer: defaultCheckbox,
-            );
-            final result = await serversProvider.editServer(server);
-            if (result == true) {
-              Navigator.pop(context);
-            }
-            else {
-              setState(() {
-                isConnecting = false;
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.cantSaveConnectionData),
-                  backgroundColor: Colors.red,
-                )
-              );
-            }
-          }
-          else if (isHashValid['result'] == 'hash_not_valid') {
-            setState(() => isTokenModalOpen = true);
-            showDialog(
-              useSafeArea: true,
-              barrierDismissible: false,
-              context: context, 
-              builder: (ctx) => TokenModal(
-                server: serverObj,
-                onCancel: () {
-                  setState(() {
-                    isTokenModalOpen = false;
-                    isConnecting = false;
-                  });
-                  Navigator.pop(context);
-                },
-                onConfirm: (value) async {
-                  setState(() => isTokenModalOpen = false);
-                  Server server = Server(
-                    address: widget.server!.address, 
-                    alias: aliasFieldController.text,
-                    password: passwordFieldController.text, 
-                    pwHash: hash,
-                    defaultServer: defaultCheckbox,
-                  );
-                  final result = await serversProvider.editServer(server);
-                  if (result == true) {
-                    Navigator.pop(context);
-                  }
-                  else {
-                    setState(() {
-                      isConnecting = false;
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(AppLocalizations.of(context)!.cantSaveConnectionData),
-                        backgroundColor: Colors.red,
-                      )
-                    );
-                  }
-                },
-              ),
-            );
-          }
-          else {
-            setState(() {
-              isConnecting = false;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.noConnection),
-                backgroundColor: Colors.red,
-              )
-            );
-          }
+        Server server = Server(
+          address: widget.server!.address, 
+          alias: aliasFieldController.text,
+          token: tokenFieldController.text,
+          defaultServer: defaultCheckbox,
+        );
+        final result = await serversProvider.editServer(server);
+        if (result == true) {
+          Navigator.pop(context);
         }
         else {
-          Server server = Server(
-            address: widget.server!.address, 
-            alias: aliasFieldController.text,
-            password: passwordFieldController.text, 
-            pwHash: '',
-            defaultServer: defaultCheckbox,
+          setState(() {
+            isConnecting = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.cantSaveConnectionData),
+              backgroundColor: Colors.red,
+            )
           );
-          final result = await serversProvider.editServer(server);
-          if (result == true) {
-            Navigator.pop(context);
-          }
-          else {
-            setState(() {
-              isConnecting = false;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.cantSaveConnectionData),
-                backgroundColor: Colors.red,
-              )
-            );
-          }
         }
       }
       else {
@@ -715,16 +572,16 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                                 child: TextField(
                                   obscureText: true,
                                   keyboardType: TextInputType.visiblePassword,
-                                  controller: passwordFieldController,
+                                  controller: tokenFieldController,
                                   onChanged: (value) => _checkDataValid(),
                                   decoration: InputDecoration(
-                                    prefixIcon: const Icon(Icons.lock_outline),
+                                    prefixIcon: const Icon(Icons.key_rounded),
                                     border: const OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(10)
                                       )
                                     ),
-                                    labelText: AppLocalizations.of(context)!.password,
+                                    labelText: AppLocalizations.of(context)!.token,
                                   ),
                                 ),
                               ),

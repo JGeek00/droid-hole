@@ -15,8 +15,7 @@ void enableServer(BuildContext context) async {
   process.open(AppLocalizations.of(context)!.enablingServer);
   final result = await enableServerRequest(
     serversProvider.selectedServer!,
-    serversProvider.selectedServerToken!['token'],
-    serversProvider.selectedServerToken!['phpSessId']
+    serversProvider.phpSessId!,
   );
   process.close();
   if (result['result'] == 'success') {
@@ -44,8 +43,7 @@ void disableServer(int time, BuildContext context) async {
   process.open(AppLocalizations.of(context)!.disablingServer);
   final result = await disableServerRequest(
     serversProvider.selectedServer!, 
-    serversProvider.selectedServerToken!['token'],
-    serversProvider.selectedServerToken!['phpSessId'],
+    serversProvider.phpSessId!,
     time
   );
   process.close();

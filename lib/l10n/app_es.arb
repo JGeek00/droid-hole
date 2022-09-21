@@ -295,5 +295,6 @@
     "domainAdded": "Dominio añadido satisfactoriamente",
     "domainAlreadyAdded": "El dominio ya está añadido",
     "cannotAddDomain": "El dominio no ha podido ser añadido",
-    "invalidDomain": "Dominio no válido"
+    "invalidDomain": "Dominio no válido",
+    "token": "Token"
 }

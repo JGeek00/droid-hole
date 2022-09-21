@@ -61,13 +61,11 @@ class ServersList extends StatelessWidget {
         serversProvider.setselectedServer(Server(
           address: server.address,
           alias: server.alias,
-          password: server.password,
-          pwHash: server.pwHash,
+          token: server.token!,
           defaultServer: server.defaultServer,
           enabled: result['status'] == 'enabled' ? true : false
         ));
-        serversProvider.setselectedServerToken('phpSessId', result['phpSessId']);
-        serversProvider.setselectedServerToken('token', result['token']);
+        serversProvider.setPhpSessId(result['phpSessId']);
         final statusResult = await realtimeStatus(server, result['phpSessId']);
         if (statusResult['result'] == 'success') {
           serversProvider.setRealtimeStatus(statusResult['data']);
@@ -86,104 +84,19 @@ class ServersList extends StatelessWidget {
 
       final ProcessModal process = ProcessModal(context: context);
       process.open(AppLocalizations.of(context)!.connecting);
-      if (server.pwHash == null) {
-        final hash = hashPassword(server.password);
-        final isHashValid = await testHash(server, hash);
-        if (isHashValid['result'] == 'success') {
-          final result = await login(server);
-          process.close();
-          if (result['result'] == 'success') {
-            final updated = await serversProvider.setPwHash(Server(
-              address: server.address,
-              alias: server.alias, 
-              password: server.password, 
-              pwHash: hash,
-              defaultServer: server.defaultServer
-            ));
-            if (updated == true) {
-              await _connectSuccess(result);
-              Future.delayed(const Duration(seconds: 0), () {
-                Navigator.pop(context);
-              });
-            }
-            else {
-              final res = await serversProvider.removeServer(server.address);
-              if (res == true) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(AppLocalizations.of(context)!.serverInvalidData),
-                    backgroundColor: Colors.red,
-                  )
-                );
-              }
-              else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(AppLocalizations.of(context)!.dbNotWorking),
-                    backgroundColor: Colors.red,
-                  )
-                );
-              }
-            }
-          }
-          else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.cannotConnect),
-                backgroundColor: Colors.red,
-              )
-            );
-          }
-        }
-        else if (isHashValid['result'] == 'hash_not_valid') {
-          showDialog(
-            context: context, 
-            builder: (ctx) => TokenModal(
-              server: server,
-              onCancel: () {},
-              onConfirm: (value) async {
-                final result = await login(server);
-                process.close();
-                if (result['result'] == 'success') {
-                  _connectSuccess(result);
-                }
-                else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context)!.cannotConnect),
-                      backgroundColor: Colors.red,
-                    )
-                  );
-                }
-              },
-            ),
-            useSafeArea: true,
-            barrierDismissible: false
-          );
-        }
-        else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.cannotConnect),
-              backgroundColor: Colors.red,
-            )
-          );
-        }
+
+      final result = await login(server);
+      process.close();
+      if (result['result'] == 'success') {
+        await _connectSuccess(result);
       }
       else {
-        final result = await login(server);
-        process.close();
-        if (result['result'] == 'success') {
-          await _connectSuccess(result);
-        }
-        else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.cannotConnect),
-              backgroundColor: Colors.red,
-            )
-          );
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.cannotConnect),
+            backgroundColor: Colors.red,
+          )
+        );
       }
     }
 
