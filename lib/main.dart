@@ -5,11 +5,7 @@ import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:device_info/device_info.dart';
-import 'package:droid_hole/classes/process_modal.dart';
-import 'package:droid_hole/screens/domains.dart';
-import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/widgets/add_domain_modal.dart';
-import 'package:droid_hole/widgets/start_warning_modal.dart';
+import 'package:vibration/vibration.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -23,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/domains.dart';
 import 'package:droid_hole/screens/unlock.dart';
 import 'package:droid_hole/screens/connect.dart';
 import 'package:droid_hole/screens/home.dart';
@@ -30,10 +27,16 @@ import 'package:droid_hole/screens/logs.dart';
 import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
 
+import 'package:droid_hole/widgets/add_domain_modal.dart';
+import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
+import 'package:droid_hole/classes/process_modal.dart';
+import 'package:droid_hole/services/http_requests.dart';
+import 'package:droid_hole/functions/conversions.dart';
+import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/functions/server_management.dart';
 import 'package:droid_hole/classes/http_override.dart';
 import 'package:droid_hole/constants/app_screens.dart';
@@ -43,7 +46,6 @@ import 'package:droid_hole/functions/status_updater.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
-import 'package:vibration/vibration.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -184,8 +186,31 @@ Future upgradeDbToV14(Database db) async {
 }
 
 Future upgradeDbToV15(Database db) async {
-  await db.execute("ALTER TABLE servers RENAME COLUMN pwHash TO token");
-  await db.execute("ALTER TABLE servers REMOVE COLUMN password");
+  List<Map<String, Object?>> backupServers = [];
+  await db.transaction((txn) async{
+    backupServers = await txn.rawQuery(
+      'SELECT * FROM servers',
+    );
+  });
+
+  List<Server> servers = [];
+  for (Map<String, dynamic> server in backupServers) {
+    final Server serverObj = Server(
+      address: server['address'], 
+      alias: server['alias'],
+      token: server['pwHash'],
+      defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
+    );
+    servers.add(serverObj);
+  }
+
+  await db.execute("DROP TABLE IF EXISTS servers");
+  await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, token TEXT, isDefaultServer NUMERIC)");
+
+  // ignore: avoid_function_literals_in_foreach_calls
+  servers.forEach((server) async { 
+    await db.execute("INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ('${server.address}', '${server.alias}', '${server.token}', ${server.defaultServer == true ? 1 : 0})");
+  });
 }
 
 Future<Map<String, dynamic>> loadDb() async {
