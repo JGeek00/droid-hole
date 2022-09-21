@@ -5,11 +5,7 @@ import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:device_info/device_info.dart';
-import 'package:droid_hole/classes/process_modal.dart';
-import 'package:droid_hole/screens/domains.dart';
-import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/widgets/add_domain_modal.dart';
-import 'package:droid_hole/widgets/start_warning_modal.dart';
+import 'package:vibration/vibration.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -23,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/domains.dart';
 import 'package:droid_hole/screens/unlock.dart';
 import 'package:droid_hole/screens/connect.dart';
 import 'package:droid_hole/screens/home.dart';
@@ -30,10 +27,16 @@ import 'package:droid_hole/screens/logs.dart';
 import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
 
+import 'package:droid_hole/widgets/add_domain_modal.dart';
+import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
+import 'package:droid_hole/classes/process_modal.dart';
+import 'package:droid_hole/services/http_requests.dart';
+import 'package:droid_hole/functions/conversions.dart';
+import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/functions/server_management.dart';
 import 'package:droid_hole/classes/http_override.dart';
 import 'package:droid_hole/constants/app_screens.dart';
@@ -43,7 +46,6 @@ import 'package:droid_hole/functions/status_updater.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
-import 'package:vibration/vibration.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -183,15 +185,48 @@ Future upgradeDbToV14(Database db) async {
   await db.execute("UPDATE appConfig SET statisticsVisualizationMode = 0");
 }
 
+Future upgradeDbToV15(Database db) async {
+  List<Map<String, Object?>> backupServers = [];
+  await db.transaction((txn) async{
+    backupServers = await txn.rawQuery(
+      'SELECT * FROM servers',
+    );
+  });
+
+  List<Server> servers = [];
+  for (Map<String, dynamic> server in backupServers) {
+    final Server serverObj = Server(
+      address: server['address'], 
+      alias: server['alias'],
+      token: server['pwHash'],
+      defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
+    );
+    servers.add(serverObj);
+  }
+
+  await db.execute("DROP TABLE servers");
+  await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, token TEXT, isDefaultServer NUMERIC)");
+
+  List<Future> futures = [];
+  for (var server in servers) { 
+    futures.add(db.execute("INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ('${server.address}', '${server.alias}', '${server.token}', ${server.defaultServer == true ? 1 : 0})"));
+  }
+  await Future.wait(futures);
+
+  await db.transaction((txn) async{
+    await txn.rawQuery('SELECT * FROM servers');
+  });
+}
+
 Future<Map<String, dynamic>> loadDb() async {
   List<Map<String, Object?>>? servers;
   List<Map<String, Object?>>? appConfig;
 
   Database db = await openDatabase(
     'droid_hole.db',
-    version: 14,
+    version: 15,
     onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, password TEXT, pwHash TEXT, isDefaultServer NUMERIC)");
+      await db.execute("CREATE TABLE servers (address TEXT PRIMARY KEY, alias TEXT, token TEXT, isDefaultServer NUMERIC)");
       await db.execute("CREATE TABLE appConfig (autoRefreshTime NUMERIC, theme NUMERIC, overrideSslCheck NUMERIC, oneColumnLegend NUMERIC, reducedDataCharts NUMERIC, logsPerQuery NUMERIC, passCode TEXT, useBiometricAuth NUMERIC, importantInfoReaden NUMERIC, hideZeroValues NUMERIC, statisticsVisualizationMode NUMERIC)");
       await db.execute("INSERT INTO appConfig (autoRefreshTime, theme, overrideSslCheck, oneColumnLegend, reducedDataCharts, logsPerQuery, passCode, useBiometricAuth, importantInfoReaden, hideZeroValues, statisticsVisualizationMode) VALUES (5, 0, 0, 0, 0, 2, null, 0, 0, 0, 0)");
     },
@@ -209,6 +244,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 3) {
         await upgradeDbToV4(db);
@@ -222,6 +258,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 4) {
         await upgradeDbToV5(db);
@@ -234,6 +271,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 5) {
         await upgradeDbToV6(db);
@@ -245,6 +283,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 6) {
         await upgradeDbToV7(db);
@@ -255,6 +294,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 7) {
         await upgradeDbToV8(db);
@@ -264,6 +304,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 8) {
         await upgradeDbToV9(db);
@@ -272,6 +313,7 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 9) {
         await upgradeDbToV10(db);
@@ -279,24 +321,32 @@ Future<Map<String, dynamic>> loadDb() async {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 10) {
         await upgradeDbToV11(db);
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 11) {
         await upgradeDbToV12(db);
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 12) {
         await upgradeDbToV13(db);
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
       }
       if (oldVersion == 13) {
         await upgradeDbToV14(db);
+        await upgradeDbToV15(db);
+      }
+      if (oldVersion == 14) {
+        await upgradeDbToV15(db);
       }
     },
     onDowngrade: (Database db, int oldVersion, int newVersion) async {
@@ -305,6 +355,7 @@ Future<Map<String, dynamic>> loadDb() async {
       }
     },
     onOpen: (Database db) async {
+      print('open');
       await db.transaction((txn) async{
         servers = await txn.rawQuery(
           'SELECT * FROM servers',

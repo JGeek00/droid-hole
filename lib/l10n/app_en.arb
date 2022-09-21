@@ -162,10 +162,10 @@
     "visitGooglePlay": "Visit Google Play page",
     "gitHub": "App code available on GitHub",
     "tokenNeeded": "Token needed",
-    "tokenInstructions": "Enter here the API token.\n\nYou can get it on the web interface on Settings > API/Web interface > Show API token.",
+    "tokenInstructions": "You can get it on the web interface on Settings > API/Web interface > Show API token.",
     "apiToken": "API token",
     "tokenNotValid": "Token not valid",
-    "scanQrCode": "Scan the QR code.\n\nYou can get it on the web interface on Settings > API/Web interface > Show API token.",
+    "scanQrCode": "Scan the QR code",
     "noConnection": "No connection",
     "cameraPermission": "DroidHole does not have permission to access the camera.\n\nGo to settings and grant the permission.",
     "serverInvalidData": "Server connection saved with invalid data. Add the connection again.",
@@ -292,5 +292,7 @@
     "domainAdded": "Domain added successfully",
     "domainAlreadyAdded": "Domain already added",
     "cannotAddDomain": "Domain couldn't be added",
-    "invalidDomain": "Invalid domain"
+    "invalidDomain": "Invalid domain",
+    "token": "Token",
+    "qrScanner": "QR scanner"
 }

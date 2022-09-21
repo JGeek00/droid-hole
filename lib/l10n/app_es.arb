@@ -162,10 +162,10 @@
     "visitGooglePlay": "Visita la página de Google Play",
     "gitHub": "Código de la app disponible en GitHub",
     "tokenNeeded": "Se necesita token",
-    "tokenInstructions": "Introduce aquí el token de la API.\n\nPuedes obtenerlo en la interfaz web en Settings > API/Web interface > Show API token.",
+    "tokenInstructions": "Puedes obtenerlo en la interfaz web en Settings > API/Web interface > Show API token.",
     "apiToken": "Token de la API",
     "tokenNotValid": "Token no válido",
-    "scanQrCode": "Escanea el código QR.\n\nPuedes obtenerlo en la interfaz web en Settings > API/Web interface > Show API token.",
+    "scanQrCode": "Escanea el código QR",
     "noConnection": "No hay conexión",
     "cameraPermission": "DroidHole no tiene permiso para acceder a la cámara.\n\nVe a los ajustes del teléfono y acepta el permiso.",
     "serverInvalidData": "Conexión guardada con valores no válidos. Añade la conexión otra vez.",
@@ -177,7 +177,6 @@
     "port": "Puerto",
     "invalidPort": "Puerto no válido",
     "invalidAddress": "IP o dominio no válido",
-    "invalidPort": "Puerto no válido",
     "ipCannotEmpty": "IP no puede estar vacío",
     "portCannotEmpty": "Puerto no puede estar vacío",
     "cantReaachServer": "No se puede alcanzar el servidor. Comprueba la dirección IP y el puerto.",
@@ -295,5 +294,7 @@
     "domainAdded": "Dominio añadido satisfactoriamente",
     "domainAlreadyAdded": "El dominio ya está añadido",
     "cannotAddDomain": "El dominio no ha podido ser añadido",
-    "invalidDomain": "Dominio no válido"
+    "invalidDomain": "Dominio no válido",
+    "token": "Token",
+    "qrScanner": "Escáner QR"
 }
