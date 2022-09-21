@@ -9,6 +9,8 @@ DroidHole is an unofficial Pi-hole® client for Android. It allows the user to m
 <p>▶ Beautiful charts with all the statistics you need to see.</p>
 <p>▶ Add multiple servers to the app, and manage all of them from here.</p>
 <p>▶ Explore the query logs list and see the log details.</p>
+<p>▶ Manage your domain lists. Add and remove domains to the whitelist or blacklist.</p>
+<p>▶ Material You interface with dynamic theming (only Android 12+)</p>
 <p>Requires Android 8.0+</p>
 
 ## Privacy policy
