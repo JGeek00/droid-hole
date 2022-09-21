@@ -81,17 +81,22 @@ Future login(Server server) async {
           : '${server.address}/admin/api.php?auth=${server.token}&disable=0'
       ));
       if (enableOrDisable.statusCode == 200) {
-        final enableOrDisableParsed = jsonDecode(enableOrDisable.body);
-        final phpSessId = enableOrDisable.headers['set-cookie']!.split(';')[0].split('=')[1];
-        if (enableOrDisableParsed.runtimeType != List) {
-          return {
-            'result': 'success',
-            'status': statusParsed['status'],
-            'phpSessId': phpSessId,
-          };
+        if (enableOrDisable.body == 'Not authorized!' || enableOrDisable.body == 'Session expired! Please re-login on the Pi-hole dashboard.') {
+          return {'result': 'auth_error'};
         }
         else {
-          return {'result': 'no_connection'};
+          final enableOrDisableParsed = jsonDecode(enableOrDisable.body);
+          if (enableOrDisableParsed.runtimeType != List) {
+            final phpSessId = enableOrDisable.headers['set-cookie']!.split(';')[0].split('=')[1];
+            return {
+              'result': 'success',
+              'status': statusParsed['status'],
+              'phpSessId': phpSessId,
+            };
+          }
+          else {
+            return {'result': 'auth_error'};
+          }
         }
       }
       else {

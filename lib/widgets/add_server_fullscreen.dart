@@ -244,10 +244,10 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               )
             );
           }
-          else if (result['result'] == 'token_invalid') {
+          else if (result['result'] == 'auth_error') {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(AppLocalizations.of(context)!.passwordNotValid),
+                content: Text(AppLocalizations.of(context)!.tokenNotValid),
                 backgroundColor: Colors.red,
               )
             );
@@ -337,10 +337,10 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
             )
           );
         }
-        else if (result['result'] == 'token_invalid') {
+        else if (result['result'] == 'auth_error') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(AppLocalizations.of(context)!.passwordNotValid),
+              content: Text(AppLocalizations.of(context)!.tokenNotValid),
               backgroundColor: Colors.red,
             )
           );
