@@ -202,7 +202,7 @@
     "cannotUpdateSettings": "No se han podido actualizar los ajustes.",
     "restartAppTakeEffect": "Reinicia la aplicación para que se apliquen los cambios.",
     "reducedDataCharts": "Usar datos reducidos",
-    "reducedDataChartsDescription": "Puede mejorar el rendimiento de la aplicación",
+    "reducedDataChartsDescription": "Afecta al gráfico de clientes en Inicio. Puede mejorar el rendimiento de la aplicación",
     "statusSelected": "estados seleccionados",
     "allClientsSelected": "Todos los clientes seleccionados",
     "clientsSelected": "clientes seleccionados",

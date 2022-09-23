@@ -200,7 +200,7 @@
     "cannotUpdateSettings": "Settings cannot be updated.",
     "restartAppTakeEffect": "Restart the application",
     "reducedDataCharts": "Use reduced data",
-    "reducedDataChartsDescription": "Can improve application performance",
+    "reducedDataChartsDescription": "Affects the clients chart at Home. Can improve application performance",
     "statusSelected": "status selected",
     "allClientsSelected": "All clients selected",
     "clientsSelected": "clients selected",
