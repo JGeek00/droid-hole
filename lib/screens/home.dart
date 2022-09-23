@@ -12,7 +12,9 @@ import 'package:droid_hole/widgets/clients_last_hours.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
+import 'package:droid_hole/constants/colors.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
+import 'package:droid_hole/models/overtime_data.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -32,6 +34,20 @@ class Home extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
     final orientation = MediaQuery.of(context).orientation;
+
+    final List<String> clientsList = serversProvider.getRealtimeStatus != null
+      ? convertFromMapToList(serversProvider.getRealtimeStatus!.topSources).map(
+          (client) {
+            final split = client['label'].toString().split('|');
+            if (split.length > 1) {
+              return split[1];
+            }
+            else {
+              return client['label'].toString();
+            }
+          }
+        ).toList()
+      : [];
 
     Widget _tile({
       required double mainWidth,
@@ -297,6 +313,15 @@ class Home extends StatelessWidget {
     List<Widget> _generateLegend(List values) {
       List<Widget> _generateRow(int length) {
         Widget _generateItem(int i, int itemsPerRow) {
+          Color getColor(Client client, int index) {
+            final exists = clientsList.indexOf(client.ip);
+            if (exists >= 0) {
+              return colors[exists];
+            }
+            else {
+              return client.color;
+            }
+          }
           return Container(
             width: appConfigProvider.oneColumnLegend == true
               ? ((width-60)/itemsPerRow)
@@ -315,7 +340,7 @@ class Home extends StatelessWidget {
                   height: 10,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: serversProvider.getOvertimeData!.clients[i].color
+                    color: getColor(serversProvider.getOvertimeData!.clients[i], i)
                   ),
                 ),
                 const SizedBox(width: 10),
