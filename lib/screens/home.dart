@@ -35,7 +35,7 @@ class Home extends StatelessWidget {
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
     final orientation = MediaQuery.of(context).orientation;
 
-    final List<String> clientsList = serversProvider.getRealtimeStatus != null
+    final List<String> clientsListIps = serversProvider.getRealtimeStatus != null
       ? convertFromMapToList(serversProvider.getRealtimeStatus!.topSources).map(
           (client) {
             final split = client['label'].toString().split('|');
@@ -314,7 +314,7 @@ class Home extends StatelessWidget {
       List<Widget> _generateRow(int length) {
         Widget _generateItem(int i, int itemsPerRow) {
           Color getColor(Client client, int index) {
-            final exists = clientsList.indexOf(client.ip);
+            final exists = clientsListIps.indexOf(client.ip);
             if (exists >= 0) {
               return colors[exists];
             }
@@ -542,6 +542,7 @@ class Home extends StatelessWidget {
                             width: double.maxFinite,
                             height: 300,
                             child: ClientsLastHours(
+                              realtimeListIps: clientsListIps,
                               data: serversProvider.getOvertimeDataJson!,
                               reducedData: appConfigProvider.reducedDataCharts,
                               hideZeroValues: appConfigProvider.hideZeroValues,

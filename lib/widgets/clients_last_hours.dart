@@ -2,15 +2,18 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/constants/colors.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class ClientsLastHours extends StatelessWidget {
+  final List<String> realtimeListIps;
   final Map<String, dynamic> data;
   final bool reducedData;
   final bool hideZeroValues;
 
   const ClientsLastHours({
     Key? key,
+    required this.realtimeListIps,
     required this.data,
     required this.reducedData,
     required this.hideZeroValues
@@ -119,6 +122,16 @@ class ClientsLastHours extends StatelessWidget {
   Widget build(BuildContext context) {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
+    Color getColor(Map<String, dynamic> client, int index) {
+      final exists = realtimeListIps.indexOf(data['clients'][index]['ip']);
+      if (exists >= 0) {
+        return colors[exists];
+      } 
+      else {
+        return client['color'];
+      }
+    }
+
     Map<String, dynamic> formatData(Map<String, dynamic> data) {
       final List<LineChartBarData> items = [];
       final List<Map<String, dynamic>> clientsColors = [];
@@ -142,7 +155,7 @@ class ClientsLastHours extends StatelessWidget {
         items.add(
           LineChartBarData(
             spots: client,
-            color: data['clients'][i]['color'],
+            color:  getColor(data['clients'][i], i),
             isCurved: true,
             barWidth: 2,
             preventCurveOverShooting: true,
@@ -158,7 +171,7 @@ class ClientsLastHours extends StatelessWidget {
         );
         clientsColors.add({
           'ip': data['clients'][i]['ip'],
-          'color': data['clients'][i]['color']
+          'color': getColor(data['clients'][i], i),
         });
       }
 
