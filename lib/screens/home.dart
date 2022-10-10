@@ -326,14 +326,14 @@ class Home extends StatelessWidget {
             width: appConfigProvider.oneColumnLegend == true
               ? ((width-60)/itemsPerRow)
               : itemsPerRow == 2 
-                ? ((width-120)/itemsPerRow)
-                : ((width-200)/itemsPerRow),
+                ? ((width-60)/itemsPerRow)
+                : ((width-100)/itemsPerRow),
             margin: const EdgeInsets.symmetric(
-              horizontal: 20,
+              horizontal: 10,
               vertical: 10
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   width: 10,
@@ -344,12 +344,7 @@ class Home extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                SizedBox(
-                  width: appConfigProvider.oneColumnLegend == true
-                    ? ((width-60)/itemsPerRow)-20
-                    : itemsPerRow == 2 
-                      ? ((width-120)/itemsPerRow)-20
-                      : ((width-200)/itemsPerRow)-40,
+                Flexible(
                   child: Text(
                     serversProvider.getOvertimeData!.clients[i].ip,
                     overflow: TextOverflow.ellipsis,

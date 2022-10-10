@@ -37,7 +37,6 @@ class Statistics extends StatelessWidget {
                   AppLocalizations.of(context)!.loadingStats,
                   style: const TextStyle(
                     color: Colors.grey,
-                    fontWeight: FontWeight.bold,
                     fontSize: 22
                   ),
                 )
@@ -187,7 +186,6 @@ class Statistics extends StatelessWidget {
                   AppLocalizations.of(context)!.statsNotLoaded,
                   style: const TextStyle(
                     color: Colors.grey,
-                    fontWeight: FontWeight.bold,
                     fontSize: 22
                   ),
                 )

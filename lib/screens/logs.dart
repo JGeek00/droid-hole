@@ -409,7 +409,6 @@ class _LogsListState extends State<LogsList> {
                   style: const TextStyle(
                     fontSize: 24,
                     color: Colors.grey,
-                    fontWeight: FontWeight.w500
                   ),
                 )
               ],
@@ -547,7 +546,6 @@ class _LogsListState extends State<LogsList> {
                   style: const TextStyle(
                     fontSize: 24,
                     color: Colors.grey,
-                    fontWeight: FontWeight.bold
                   ),
                 )
               ],

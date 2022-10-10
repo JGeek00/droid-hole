@@ -77,7 +77,6 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
                     AppLocalizations.of(context)!.loadingList,
                     style: const TextStyle(
                       color: Colors.grey,
-                      fontWeight: FontWeight.bold,
                       fontSize: 22
                     ),
                   )
@@ -193,7 +192,6 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.grey,
-                      fontWeight: FontWeight.bold,
                       fontSize: 22
                     ),
                   )
