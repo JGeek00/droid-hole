@@ -91,60 +91,66 @@ class _DomainListsWidgetState extends State<DomainListsWidget> {
               physics: const NeverScrollableScrollPhysics(),
               headerSliverBuilder: ((context, innerBoxIsScrolled) {
                 return [
-                  SliverAppBar(
-                    title: Text(AppLocalizations.of(context)!.domains),
-                    centerTitle: true,
-                    pinned: true,
-                    floating: true,
-                    forceElevated: innerBoxIsScrolled,
-                    bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
-                      ? TabBar(
-                        onTap: (value) => domainsListProvider.setSelectedTab(value),
-                        indicatorSize: TabBarIndicatorSize.label,
-                        indicator: orientation == Orientation.portrait
-                          ? CustomTabIndicatorPortrait(
-                              indicatorColor: Theme.of(context).primaryColor,
-                              itemsTabBar: 2
-                            )
-                          :  CustomTabIndicatorLandscape(
-                              indicatorColor: Theme.of(context).primaryColor,
-                              itemsTabBar: 2
-                            ),
-                        tabs: orientation == Orientation.portrait
-                          ? [
-                              const Tab(
-                                icon: Icon(Icons.check_circle_rounded),
-                                text: "Whitelist",
-                              ),
-                              const Tab(
-                                icon: Icon(Icons.block),
-                                text: "Blacklist",
-                              ),
-                            ]
-                          : [
-                            Tab(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.check_circle_rounded),
-                                  SizedBox(width: 10),
-                                  Text("Whitelist")
-                                ],
-                              ),
-                            ),
-                            Tab(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.block),
-                                  SizedBox(width: 10),
-                                  Text("Blacklist")
-                                ],
-                              ),
-                            ),
-                          ]
-                      )
-                    : null
+                  SliverOverlapAbsorber(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    sliver: SliverSafeArea(
+                      top: false,
+                      sliver: SliverAppBar(
+                        title: Text(AppLocalizations.of(context)!.domains),
+                        centerTitle: true,
+                        pinned: true,
+                        floating: true,
+                        forceElevated: innerBoxIsScrolled,
+                        bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
+                          ? TabBar(
+                            onTap: (value) => domainsListProvider.setSelectedTab(value),
+                            indicatorSize: TabBarIndicatorSize.label,
+                            indicator: orientation == Orientation.portrait
+                              ? CustomTabIndicatorPortrait(
+                                  indicatorColor: Theme.of(context).primaryColor,
+                                  itemsTabBar: 2
+                                )
+                              :  CustomTabIndicatorLandscape(
+                                  indicatorColor: Theme.of(context).primaryColor,
+                                  itemsTabBar: 2
+                                ),
+                            tabs: orientation == Orientation.portrait
+                              ? [
+                                  const Tab(
+                                    icon: Icon(Icons.check_circle_rounded),
+                                    text: "Whitelist",
+                                  ),
+                                  const Tab(
+                                    icon: Icon(Icons.block),
+                                    text: "Blacklist",
+                                  ),
+                                ]
+                              : [
+                                Tab(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Icon(Icons.check_circle_rounded),
+                                      SizedBox(width: 10),
+                                      Text("Whitelist")
+                                    ],
+                                  ),
+                                ),
+                                Tab(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Icon(Icons.block),
+                                      SizedBox(width: 10),
+                                      Text("Blacklist")
+                                    ],
+                                  ),
+                                ),
+                              ]
+                          )
+                        : null
+                      ),
+                    ),
                   )
                 ];
               }),

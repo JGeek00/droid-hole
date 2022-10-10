@@ -48,73 +48,79 @@ class Statistics extends StatelessWidget {
           return NestedScrollView(
             headerSliverBuilder: ((context, innerBoxIsScrolled) {
               return [
-                SliverAppBar(
-                  title: Text(AppLocalizations.of(context)!.statistics),
-                  centerTitle: true,
-                  pinned: true,
-                  floating: true,
-                  forceElevated: innerBoxIsScrolled,
-                  bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
-                    ? TabBar(
-                      indicatorSize: TabBarIndicatorSize.label,
-                      indicator: orientation == Orientation.portrait
-                        ? CustomTabIndicatorPortrait(
-                            indicatorColor: Theme.of(context).primaryColor,
-                            itemsTabBar: 3
-                          )
-                        :  CustomTabIndicatorLandscape(
-                            indicatorColor: Theme.of(context).primaryColor,
-                            itemsTabBar: 3
-                          ),
-                      tabs: orientation == Orientation.portrait
-                        ? [
-                            Tab(
-                              icon: const Icon(Icons.dns_rounded),
-                              text: AppLocalizations.of(context)!.queriesServers,
-                            ),
-                            Tab(
-                              icon: const Icon(Icons.http_rounded),
-                              text: AppLocalizations.of(context)!.domains,
-                            ),
-                            Tab(
-                              icon: const Icon(Icons.devices_rounded),
-                              text: AppLocalizations.of(context)!.clients,
-                            ),
-                          ]
-                        : [
-                          Tab(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.dns_rounded),
-                                const SizedBox(width: 10),
-                                Text(AppLocalizations.of(context)!.queriesServers)
-                              ],
-                            ),
-                          ),
-                          Tab(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.http_rounded),
-                                const SizedBox(width: 10),
-                                Text(AppLocalizations.of(context)!.domains)
-                              ],
-                            ),
-                          ),
-                          Tab(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.devices_rounded),
-                                const SizedBox(width: 10),
-                                Text(AppLocalizations.of(context)!.clients)
-                              ],
-                            ),
-                          ),
-                        ]
-                    )
-                  : null
+                SliverOverlapAbsorber(
+                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  sliver: SliverSafeArea(
+                    top: false,
+                    sliver: SliverAppBar(
+                      title: Text(AppLocalizations.of(context)!.statistics),
+                      centerTitle: true,
+                      pinned: true,
+                      floating: true,
+                      forceElevated: innerBoxIsScrolled,
+                      bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
+                        ? TabBar(
+                          indicatorSize: TabBarIndicatorSize.label,
+                          indicator: orientation == Orientation.portrait
+                            ? CustomTabIndicatorPortrait(
+                                indicatorColor: Theme.of(context).primaryColor,
+                                itemsTabBar: 3
+                              )
+                            :  CustomTabIndicatorLandscape(
+                                indicatorColor: Theme.of(context).primaryColor,
+                                itemsTabBar: 3
+                              ),
+                          tabs: orientation == Orientation.portrait
+                            ? [
+                                Tab(
+                                  icon: const Icon(Icons.dns_rounded),
+                                  text: AppLocalizations.of(context)!.queriesServers,
+                                ),
+                                Tab(
+                                  icon: const Icon(Icons.http_rounded),
+                                  text: AppLocalizations.of(context)!.domains,
+                                ),
+                                Tab(
+                                  icon: const Icon(Icons.devices_rounded),
+                                  text: AppLocalizations.of(context)!.clients,
+                                ),
+                              ]
+                            : [
+                              Tab(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.dns_rounded),
+                                    const SizedBox(width: 10),
+                                    Text(AppLocalizations.of(context)!.queriesServers)
+                                  ],
+                                ),
+                              ),
+                              Tab(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.http_rounded),
+                                    const SizedBox(width: 10),
+                                    Text(AppLocalizations.of(context)!.domains)
+                                  ],
+                                ),
+                              ),
+                              Tab(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.devices_rounded),
+                                    const SizedBox(width: 10),
+                                    Text(AppLocalizations.of(context)!.clients)
+                                  ],
+                                ),
+                              ),
+                            ]
+                        )
+                      : null
+                    ),
+                  ),
                 )
               ];
             }),
