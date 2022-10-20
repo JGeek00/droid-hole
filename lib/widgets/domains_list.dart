@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -16,15 +17,24 @@ import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/functions/format.dart';
 import 'package:droid_hole/models/domain.dart';
 
-class DomainsList extends StatelessWidget {
+class DomainsList extends StatefulWidget {
   final String type;
   final int loadStatus;
+  final ScrollController scrollController;
 
   const DomainsList({
     Key? key,
     required this.type,
     required this.loadStatus,
+    required this.scrollController,
   }) : super(key: key);
+
+  @override
+  State<DomainsList> createState() => _DomainsListState();
+}
+
+class _DomainsListState extends State<DomainsList> {
+  late bool isVisible;
 
   Widget domainType(int type) {
     String getString(int type) {
@@ -85,12 +95,32 @@ class DomainsList extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    isVisible = true;
+    widget.scrollController.addListener(() {
+      if (widget.scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+        if (mounted && isVisible == true) {
+          setState(() => isVisible = false);
+        }
+      } 
+      else {
+        if (widget.scrollController.position.userScrollDirection == ScrollDirection.forward) {
+          if (mounted && isVisible == false) {
+            setState(() => isVisible = true);
+          }
+        }
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final domainsListProvider = Provider.of<DomainsListProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    final List<Domain> data = type == 'whitelist'
+    final List<Domain> data = widget.type == 'whitelist'
       ? domainsListProvider.whitelistDomains
       : domainsListProvider.blacklistDomains;
 
@@ -136,7 +166,7 @@ class DomainsList extends StatelessWidget {
       showModalBottomSheet(
         context: context, 
         builder: (ctx) => AddDomainModal(
-          selectedlist: type,
+          selectedlist: widget.type,
           addDomain: (value) async {
             final ProcessModal process = ProcessModal(context: context);
             process.open(AppLocalizations.of(context)!.addingDomain);
@@ -243,7 +273,10 @@ class DomainsList extends StatelessWidget {
           AnimatedPositioned(
             duration: const Duration(milliseconds: 100),
             curve: Curves.easeInOut,
-            bottom: 20,
+            bottom: isVisible ?
+              appConfigProvider.showingSnackbar
+                ? 70 : 20
+              : -70,
             right: 20,
             child: FloatingActionButton(
               onPressed: openModalAddDomainToList,
@@ -254,7 +287,7 @@ class DomainsList extends StatelessWidget {
       );
     }
 
-    switch (loadStatus) {
+    switch (widget.loadStatus) {
       case 0:
         return SizedBox(
           width: double.maxFinite,

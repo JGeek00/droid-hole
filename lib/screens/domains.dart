@@ -144,11 +144,13 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
              children: [
               DomainsList(
                 type: 'whitelist',
-                loadStatus: domainsListProvider.loadingStatus
+                loadStatus: domainsListProvider.loadingStatus,
+                scrollController: scrollController
               ),
               DomainsList(
                 type: 'blacklist',
-                loadStatus: domainsListProvider.loadingStatus
+                loadStatus: domainsListProvider.loadingStatus,
+                scrollController: scrollController
               )
             ],
           )
