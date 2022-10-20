@@ -14,6 +14,7 @@ import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/classes/no_scroll_behavior.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/constants/log_status.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
@@ -252,6 +253,7 @@ class _LogsListState extends State<LogsList> {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final filtersProvider = Provider.of<FiltersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
@@ -294,40 +296,34 @@ class _LogsListState extends State<LogsList> {
       loading.close();
       if (result['result'] == 'success') {
         if (result['data']['message'].toString().contains('Added')) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                list == 'white'
-                  ? AppLocalizations.of(context)!.addedWhitelist
-                  : AppLocalizations.of(context)!.addedBlacklist,
-              ),
-              backgroundColor: Colors.green,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: list == 'white'
+              ? AppLocalizations.of(context)!.addedWhitelist
+              : AppLocalizations.of(context)!.addedBlacklist,
+            color: Colors.green
           );
         }
         else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                list == 'white'
-                  ? AppLocalizations.of(context)!.alreadyWhitelist
-                  : AppLocalizations.of(context)!.alreadyBlacklist,
-              ),
-              backgroundColor: Colors.grey,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: list == 'white'
+              ? AppLocalizations.of(context)!.alreadyWhitelist
+              : AppLocalizations.of(context)!.alreadyBlacklist,
+            color: Colors.green
           );
         }
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              list == 'white'
-                ? AppLocalizations.of(context)!.couldntAddWhitelist
-                : AppLocalizations.of(context)!.couldntAddBlacklist,
-            ),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: list == 'white'
+            ? AppLocalizations.of(context)!.couldntAddWhitelist
+            : AppLocalizations.of(context)!.couldntAddBlacklist,
+          color: Colors.red
         );
       }
     }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class RemovePasscodeModal extends StatelessWidget {
@@ -21,11 +22,11 @@ class RemovePasscodeModal extends StatelessWidget {
         Navigator.pop(context);
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.connectionCannotBeRemoved),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.connectionCannotBeRemoved,
+          color: Colors.red
         );
       }
     }

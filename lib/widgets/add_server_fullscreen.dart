@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +8,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/widgets/scan_token_modal.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/server.dart';
@@ -167,6 +168,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final mediaQuery = MediaQuery.of(context);
 
@@ -188,11 +190,11 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           errorUrl = null;
           isConnecting = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.cannotCheckUrlSaved),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.cannotCheckUrlSaved,
+          color: Colors.red
         );
       }
       else {
@@ -221,51 +223,51 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
             isConnecting = false;
           });
           if (result['result'] == 'socket') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.checkAddress),
-                backgroundColor: Colors.red,
-              )
+            showSnackBar(
+              context: context, 
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.checkAddress,
+              color: Colors.red
             );
           }
           else if (result['result'] == 'timeout') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.connectionTimeout),
-                backgroundColor: Colors.red,
-              )
+            showSnackBar(
+              context: context, 
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.connectionTimeout,
+              color: Colors.red
             );
           }
           else if (result['result'] == 'no_connection') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.cantReaachServer),
-                backgroundColor: Colors.red,
-              )
+            showSnackBar(
+              context: context, 
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.cantReaachServer,
+              color: Colors.red
             );
           }
           else if (result['result'] == 'auth_error') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.tokenNotValid),
-                backgroundColor: Colors.red,
-              )
+            showSnackBar(
+              context: context, 
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.tokenNotValid,
+              color: Colors.red
             );
           }
           else if (result['result'] == 'ssl_error') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.sslErrorLong),
-                backgroundColor: Colors.red,
-              )
+            showSnackBar(
+              context: context, 
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.sslErrorLong,
+              color: Colors.red
             );
           }
           else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.unknownError),
-                backgroundColor: Colors.red,
-              )
+            showSnackBar(
+              context: context, 
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.unknownError,
+              color: Colors.red
             );
           }
         }
@@ -301,11 +303,11 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           setState(() {
             isConnecting = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.cantSaveConnectionData),
-              backgroundColor: Colors.red,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.cantSaveConnectionData,
+            color: Colors.red
           );
         }
       }
@@ -314,51 +316,51 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           isConnecting = false;
         });
         if (result['result'] == 'socket') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.checkAddress),
-              backgroundColor: Colors.red,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.checkAddress,
+            color: Colors.red
           );
         }
         else if (result['result'] == 'timeout') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.connectionTimeout),
-              backgroundColor: Colors.red,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.connectionTimeout,
+            color: Colors.red
           );
         }
         else if (result['result'] == 'no_connection') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.cantReaachServer),
-              backgroundColor: Colors.red,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.cantReaachServer,
+            color: Colors.red
           );
         }
         else if (result['result'] == 'auth_error') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.tokenNotValid),
-              backgroundColor: Colors.red,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.tokenNotValid,
+            color: Colors.red
           );
         }
         else if (result['result'] == 'ssl_error') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.sslErrorLong),
-              backgroundColor: Colors.red,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.sslErrorLong,
+            color: Colors.red
           );
         }
         else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.unknownError),
-              backgroundColor: Colors.red,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.unknownError,
+            color: Colors.red
           );
         }
       }

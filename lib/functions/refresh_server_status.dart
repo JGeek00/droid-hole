@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
 
-Future refreshServerStatus(BuildContext context, ServersProvider serversProvider) async {
+Future refreshServerStatus(BuildContext context, ServersProvider serversProvider, AppConfigProvider appConfigProvider) async {
   final result = await realtimeStatus(
     serversProvider.selectedServer!,
     serversProvider.phpSessId!
@@ -23,11 +25,11 @@ Future refreshServerStatus(BuildContext context, ServersProvider serversProvider
     if (serversProvider.getStatusLoading == 0) {
       serversProvider.setStatusLoading(2);
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.sslErrorShort),
-        backgroundColor: Colors.red,
-      )
+    showSnackBar(
+      context: context, 
+      appConfigProvider: appConfigProvider,
+      label: AppLocalizations.of(context)!.sslErrorShort, 
+      color: Colors.red
     );
   }
   else {
@@ -35,11 +37,11 @@ Future refreshServerStatus(BuildContext context, ServersProvider serversProvider
     if (serversProvider.getStatusLoading == 0) {
       serversProvider.setStatusLoading(2);
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.couldNotConnectServer),
-        backgroundColor: Colors.red,
-      )
+    showSnackBar(
+      context: context, 
+      appConfigProvider: appConfigProvider,
+      label: AppLocalizations.of(context)!.couldNotConnectServer, 
+      color: Colors.red
     );
   }
 }

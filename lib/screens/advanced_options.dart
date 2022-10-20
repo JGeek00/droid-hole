@@ -1,11 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:droid_hole/screens/unlock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/unlock.dart';
 import 'package:droid_hole/widgets/reset_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/widgets/app_unlock_setup_modal.dart';
@@ -13,6 +13,7 @@ import 'package:droid_hole/widgets/enter_passcode_modal.dart';
 import 'package:droid_hole/widgets/statistics_visualization_modal.dart';
 
 import 'package:droid_hole/config/system_overlay_style.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -30,19 +31,19 @@ class AdvancedOptions extends StatelessWidget {
     void _updateSslCheck(bool newStatus) async {
       final result = await appConfigProvider.setOverrideSslCheck(newStatus);
       if (result == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.restartAppTakeEffect),
-            backgroundColor: Colors.green,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.restartAppTakeEffect, 
+          color: Colors.green
         );
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.cannotUpdateSettings),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.cannotUpdateSettings, 
+          color: Colors.red
         );
       }
     }
@@ -50,19 +51,19 @@ class AdvancedOptions extends StatelessWidget {
     void _updateOneColumnLegend(bool newStatus) async {
       final result = await appConfigProvider.setOneColumnLegend(newStatus);
       if (result == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.settingsUpdatedSuccessfully),
-            backgroundColor: Colors.green,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.settingsUpdatedSuccessfully, 
+          color: Colors.green
         );
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.cannotUpdateSettings),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.cannotUpdateSettings, 
+          color: Colors.red
         );
       }
     }
@@ -70,19 +71,19 @@ class AdvancedOptions extends StatelessWidget {
     void _updateUseReducedData(bool newStatus) async {
       final result = await appConfigProvider.setReducedDataCharts(newStatus);
       if (result == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.settingsUpdatedSuccessfully),
-            backgroundColor: Colors.green,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.settingsUpdatedSuccessfully, 
+          color: Colors.green
         );
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.cannotUpdateSettings),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.cannotUpdateSettings, 
+          color: Colors.red
         );
       }
     }
@@ -90,19 +91,19 @@ class AdvancedOptions extends StatelessWidget {
     void _updateHideZeroValues(bool newStatus) async {
       final result = await appConfigProvider.setHideZeroValues(newStatus);
       if (result == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.settingsUpdatedSuccessfully),
-            backgroundColor: Colors.green,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.settingsUpdatedSuccessfully, 
+          color: Colors.green
         );
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.cannotUpdateSettings),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.cannotUpdateSettings, 
+          color: Colors.green
         );
       }
     }

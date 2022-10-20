@@ -19,6 +19,7 @@ import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
 
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/config/urls.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
@@ -41,19 +42,19 @@ class Settings extends StatelessWidget {
           onChange: (time) async {
             final result = await appConfigProvider.setAutoRefreshTime(time);
             if (result == true) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.updateTimeChanged),
-                  backgroundColor: Colors.green,
-                )
+              showSnackBar(
+                context: context, 
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.updateTimeChanged,
+                color: Colors.green
               );
             }
             else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.cannotChangeUpdateTime),
-                  backgroundColor: Colors.red,
-                )
+              showSnackBar(
+                context: context, 
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.cannotChangeUpdateTime,
+                color: Colors.red
               );
             }
           },
@@ -71,19 +72,19 @@ class Settings extends StatelessWidget {
           onChange: (time) async {
             final result = await appConfigProvider.setLogsPerQuery(time);
             if (result == true) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.logsPerQueryUpdated),
-                  backgroundColor: Colors.green,
-                )
+                showSnackBar(
+                context: context, 
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.logsPerQueryUpdated,
+                color: Colors.green
               );
             }
             else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.cantUpdateLogsPerQuery),
-                  backgroundColor: Colors.red,
-                )
+              showSnackBar(
+                context: context, 
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.cantUpdateLogsPerQuery,
+                color: Colors.green
               );
             }
           },

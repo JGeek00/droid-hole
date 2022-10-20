@@ -7,9 +7,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:droid_hole/widgets/delete_modal.dart';
+
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/functions/snackbar.dart';
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
 
 class ServersList extends StatelessWidget {
@@ -28,6 +31,8 @@ class ServersList extends StatelessWidget {
   // ignore: avoid_renaming_method_parameters
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
+
     List<Server> servers = serversProvider.getServersList;
 
     final width = MediaQuery.of(context).size.width;
@@ -88,11 +93,11 @@ class ServersList extends StatelessWidget {
         await _connectSuccess(result);
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.cannotConnect),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.cannotConnect,
+          color: Colors.red
         );
       }
     }
@@ -100,19 +105,19 @@ class ServersList extends StatelessWidget {
     void _setDefaultServer(Server server) async {
       final result = await serversProvider.setDefaultServer(server);
       if (result == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.connectionDefaultSuccessfully),
-            backgroundColor: Colors.green,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.connectionDefaultSuccessfully,
+          color: Colors.green
         );
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.connectionDefaultFailed),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.connectionDefaultFailed,
+          color: Colors.red
         );
       }
     }

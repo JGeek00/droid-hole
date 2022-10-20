@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/models/server.dart';
 
 class DeleteModal extends StatelessWidget {
@@ -18,24 +20,25 @@ class DeleteModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     void _removeServer() async {
       final deleted = await serversProvider.removeServer(serverToDelete.address);
       Navigator.pop(context);
       if (deleted == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.connectionRemoved),
-            backgroundColor: Colors.green,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.connectionRemoved,
+          color: Colors.green
         );
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.connectionCannotBeRemoved),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.connectionCannotBeRemoved,
+          color: Colors.red
         );
       }
     }

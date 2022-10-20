@@ -10,6 +10,8 @@ import 'package:droid_hole/widgets/domain_details_modal.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
+import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/functions/format.dart';
 import 'package:droid_hole/models/domain.dart';
@@ -86,6 +88,7 @@ class DomainsList extends StatelessWidget {
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final domainsListProvider = Provider.of<DomainsListProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final List<Domain> data = type == 'whitelist'
       ? domainsListProvider.whitelistDomains
@@ -104,27 +107,27 @@ class DomainsList extends StatelessWidget {
 
       if (result['result'] == 'success') {
         domainsListProvider.removeDomainFromList(domain);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.domainRemoved),
-            backgroundColor: Colors.green,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.domainRemoved,
+          color: Colors.green
         );
       }
       else if (result['result'] == 'error' && result['message'] != null && result['message'] == 'not_exists') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.domainNotExists),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.domainNotExists,
+          color: Colors.red
         );
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorRemovingDomain),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.errorRemovingDomain,
+          color: Colors.red
         );
       }
     }
@@ -147,27 +150,27 @@ class DomainsList extends StatelessWidget {
 
             if (result['result'] == 'success') {
               domainsListProvider.fetchDomainsList(serversProvider.selectedServer!);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.domainAdded),
-                  backgroundColor: Colors.green,
-                )
+              showSnackBar(
+                context: context, 
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.domainAdded,
+                color: Colors.green
               );
             }
             else if (result['result'] == 'already_added') {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.domainAlreadyAdded),
-                  backgroundColor: Colors.orange,
-                )
+              showSnackBar(
+                context: context, 
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.domainAlreadyAdded,
+                color: Colors.orange
               );
             }
             else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.cannotAddDomain),
-                  backgroundColor: Colors.red,
-                )
+              showSnackBar(
+                context: context, 
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.cannotAddDomain,
+                color: Colors.red
               );
             } 
           },

@@ -5,6 +5,7 @@ import 'package:device_info/device_info.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class AppConfigProvider with ChangeNotifier {
+  bool _showingSnackbar = false;
   int _selectedTab = 0;
   AndroidDeviceInfo? _androidDeviceInfo;
   IosDeviceInfo? _iosDeviceInfo;
@@ -25,6 +26,10 @@ class AppConfigProvider with ChangeNotifier {
   int _statisticsVisualizationMode = 0;
 
   Database? _dbInstance;
+
+  bool get showingSnackbar {
+    return _showingSnackbar;
+  }
 
   int get selectedTab {
     return _selectedTab;
@@ -118,6 +123,11 @@ class AppConfigProvider with ChangeNotifier {
 
   int get statisticsVisualizationMode {
     return _statisticsVisualizationMode;
+  }
+
+  void setShowingSnackbar(bool status) {
+    _showingSnackbar = status;
+    notifyListeners();
   }
 
   void setSelectedTab(int selectedTab) {

@@ -5,11 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/services/http_requests.dart';
+import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 void enableServer(BuildContext context) async {
   final serversProvider = Provider.of<ServersProvider>(context, listen: false);
+  final appConfigProvider = Provider.of<AppConfigProvider>(context, listen: false);
 
   final ProcessModal process = ProcessModal(context: context);
   process.open(AppLocalizations.of(context)!.enablingServer);
@@ -20,25 +23,27 @@ void enableServer(BuildContext context) async {
   process.close();
   if (result['result'] == 'success') {
     serversProvider.updateselectedServerStatus(true);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.serverEnabled),
-        backgroundColor: Colors.green,
-      )
+    showSnackBar(
+      context: context, 
+      appConfigProvider: appConfigProvider,
+      label: AppLocalizations.of(context)!.serverEnabled, 
+      color: Colors.green
     );
   }
   else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.couldntEnableServer),
-        backgroundColor: Colors.red,
-      )
+    showSnackBar(
+      context: context, 
+      appConfigProvider: appConfigProvider,
+      label: AppLocalizations.of(context)!.couldntEnableServer, 
+      color: Colors.red
     );
   }
 }
 
 void disableServer(int time, BuildContext context) async {
   final serversProvider = Provider.of<ServersProvider>(context, listen: false);
+  final appConfigProvider = Provider.of<AppConfigProvider>(context, listen: false);
+
   final ProcessModal process = ProcessModal(context: context);
   process.open(AppLocalizations.of(context)!.disablingServer);
   final result = await disableServerRequest(
@@ -49,19 +54,19 @@ void disableServer(int time, BuildContext context) async {
   process.close();
   if (result['result'] == 'success') {
     serversProvider.updateselectedServerStatus(false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.serverDisabled),
-        backgroundColor: Colors.green,
-      )
+    showSnackBar(
+      context: context, 
+      appConfigProvider: appConfigProvider,
+      label: AppLocalizations.of(context)!.serverDisabled, 
+      color: Colors.green
     );
   }
   else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.couldntDisableServer),
-        backgroundColor: Colors.red,
-      )
+    showSnackBar(
+      context: context, 
+      appConfigProvider: appConfigProvider,
+      label: AppLocalizations.of(context)!.couldntDisableServer, 
+      color: Colors.red
     );
   }
 }

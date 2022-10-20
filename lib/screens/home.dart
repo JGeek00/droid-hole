@@ -17,6 +17,7 @@ import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/models/overtime_data.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/classes/process_modal.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/functions/conversions.dart';
@@ -631,11 +632,11 @@ class Home extends StatelessWidget {
         if (serversProvider.getStatusLoading == 0) {
           serversProvider.setStatusLoading(2);
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.notConnectServer),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.notConnectServer, 
+          color: Colors.red
         );
       }
     }
@@ -800,7 +801,7 @@ class Home extends StatelessWidget {
         ? serversProvider.isServerConnected == true 
           ? RefreshIndicator(
               onRefresh: () async {
-                await refreshServerStatus(context, serversProvider);
+                await refreshServerStatus(context, serversProvider, appConfigProvider);
               },
               child: SingleChildScrollView(
                 child: Column(

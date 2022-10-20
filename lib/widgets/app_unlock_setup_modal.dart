@@ -10,6 +10,7 @@ import 'package:droid_hole/widgets/remove_passcode_modal.dart';
 import 'package:droid_hole/widgets/create_pass_code_modal.dart';
 
 import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 
 class AppUnlockSetupModal extends StatefulWidget {
   final double topBarHeight;
@@ -74,11 +75,11 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                   Navigator.pop(ctx);
                 }
                 else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context)!.biometicUnlockNotActivated),
-                      backgroundColor: Colors.red,
-                    )
+                  showSnackBar(
+                    context: context, 
+                    appConfigProvider: appConfigProvider,
+                    label: AppLocalizations.of(context)!.biometicUnlockNotActivated,
+                    color: Colors.red
                   );
                 }
               },
@@ -88,22 +89,22 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
           );
         }
         else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.noAvailableBiometrics),
-              backgroundColor: Colors.grey,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.noAvailableBiometrics,
+            color: Colors.grey
           );
         }
       }
       else {
         final result = await appConfigProvider.setUseBiometrics(false);
         if (result == false) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.biometicUnlockNotDisabled),
-              backgroundColor: Colors.red,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.biometicUnlockNotDisabled,
+            color: Colors.red
           );
         }
       }

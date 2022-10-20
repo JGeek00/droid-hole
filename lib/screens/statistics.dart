@@ -10,7 +10,7 @@ import 'package:droid_hole/widgets/statistics_queries_servers_tab.dart';
 import 'package:droid_hole/widgets/custom_tab_indicator.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
-import 'package:droid_hole/config/system_overlay_style.dart';
+import 'package:droid_hole/providers/app_config_provider.dart';
 
 class Statistics extends StatelessWidget {
   const Statistics({Key? key}) : super(key: key);
@@ -18,6 +18,7 @@ class Statistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final orientation = MediaQuery.of(context).orientation;
 
@@ -210,7 +211,7 @@ class Statistics extends StatelessWidget {
         ? serversProvider.isServerConnected == true 
           ? RefreshIndicator(
               onRefresh: () async {
-                await refreshServerStatus(context, serversProvider);
+                await refreshServerStatus(context, serversProvider, appConfigProvider);
               },
               child: Scaffold(
                 body: _generateBody()

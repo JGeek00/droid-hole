@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/widgets/numeric_pad.dart';
 
 import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/functions/snackbar.dart';
 
 class CreatePassCodeModal extends StatefulWidget {
   const CreatePassCodeModal({Key? key}) : super(key: key);
@@ -33,20 +34,20 @@ class _CreatePassCodeModalState extends State<CreatePassCodeModal> {
           Navigator.pop(context);
         }
         else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.passCodeNotSaved),
-              backgroundColor: Colors.red,
-            )
+          showSnackBar(
+            context: context, 
+            appConfigProvider: appConfigProvider,
+            label: AppLocalizations.of(context)!.passCodeNotSaved,
+            color: Colors.red
           );
         }
       }
       else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.passcodesDontMatch),
-            backgroundColor: Colors.red,
-          )
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.passcodesDontMatch,
+          color: Colors.red
         );
       }
     }
