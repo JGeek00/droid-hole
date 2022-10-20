@@ -5,7 +5,7 @@ import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/servers_list_modal.dart';
+import 'package:droid_hole/screens/servers.dart';
 
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -25,7 +25,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
     final width = MediaQuery.of(context).size.width;
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
-    void _refresh() async {
+    void refresh() async {
       final ProcessModal process = ProcessModal(context: context);
       process.open(AppLocalizations.of(context)!.refreshingData);
       final result = await realtimeStatus(
@@ -54,22 +54,15 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       }
     }
 
-    void _changeServer() {
+    void changeServer() {
       Future.delayed(const Duration(seconds: 0), () => {
-        showModalBottomSheet(
-          context: context, 
-          builder: (context) => ServersListModal(
-            statusBarHeight: statusBarHeight,
-          ),
-          backgroundColor: Colors.transparent,
-          isDismissible: true,
-          enableDrag: true,
-          isScrollControlled: true
-        )
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) => const ServersPage()
+        ))
       });
     }
 
-    void _openWebPanel() {
+    void openWebPanel() {
       if (serversProvider.isServerConnected == true) {
         FlutterWebBrowser.openWebPage(
           url: '${serversProvider.selectedServer!.address}/admin/',
@@ -160,7 +153,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
               ? serversProvider.isServerConnected == true 
                 ? [
                     PopupMenuItem(
-                      onTap: _refresh,
+                      onTap: refresh,
                       child: Row(
                         children: [
                           const Icon(Icons.refresh),
@@ -170,7 +163,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
                       )
                     ),
                     PopupMenuItem(
-                      onTap: _openWebPanel,
+                      onTap: openWebPanel,
                       child: Row(
                         children: [
                           const Icon(Icons.web),
@@ -180,7 +173,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
                       )
                     ),
                     PopupMenuItem(
-                      onTap: _changeServer,
+                      onTap: changeServer,
                       child: Row(
                         children: [
                           const Icon(Icons.storage_rounded),
@@ -192,7 +185,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
                   ]
                 : [
                   PopupMenuItem(
-                    onTap: _refresh,
+                    onTap: refresh,
                     child: Row(
                       children: [
                         const Icon(Icons.refresh_rounded),
@@ -202,7 +195,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
                     )
                   ),
                   PopupMenuItem(
-                    onTap: _changeServer,
+                    onTap: changeServer,
                     child: Row(
                       children: [
                         const Icon(Icons.storage_rounded),
@@ -214,7 +207,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
                 ]
               : [
                 PopupMenuItem(
-                  onTap: _changeServer,
+                  onTap: changeServer,
                   child: Row(
                     children: [
                       const Icon(Icons.storage_rounded),

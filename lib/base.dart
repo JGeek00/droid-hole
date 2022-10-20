@@ -6,15 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/screens/domains.dart';
+import 'package:droid_hole/screens/servers.dart';
 import 'package:droid_hole/screens/unlock.dart';
-import 'package:droid_hole/screens/connect.dart';
 import 'package:droid_hole/screens/home.dart';
 import 'package:droid_hole/screens/logs.dart';
 import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
 
 import 'package:droid_hole/widgets/start_warning_modal.dart';
-import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/constants/app_screens.dart';
@@ -47,7 +46,7 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
   ];
 
   final List<Widget> pagesNotSelected = [
-    const Connect(),
+    const ServersPage(isFromBase: true),
     const Settings()
   ];
 
@@ -87,15 +86,6 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
     final domainsListProvider = Provider.of<DomainsListProvider>(context, listen: false);
-
-    void _addServerModal() async {
-      await Future.delayed(const Duration(seconds: 0), (() => {
-        Navigator.push(context, MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (BuildContext context) => const AddServerFullscreen()
-        ))
-      }));
-    }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(

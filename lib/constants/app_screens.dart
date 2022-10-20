@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:droid_hole/screens/domains.dart';
 import 'package:droid_hole/screens/settings.dart';
-import 'package:droid_hole/screens/connect.dart';
+import 'package:droid_hole/screens/servers.dart';
 import 'package:droid_hole/screens/home.dart';
 import 'package:droid_hole/screens/logs.dart';
 import 'package:droid_hole/screens/statistics.dart';
@@ -41,7 +41,7 @@ final List<AppScreen> appScreensNotSelected = [
   const AppScreen(
     icon: Icon(Icons.link_rounded), 
     name: "connect", 
-    widget: Connect(),
+    widget: ServersPage(),
   ),
   const AppScreen(
     icon: Icon(Icons.settings), 
