@@ -37,7 +37,7 @@ class ServersList extends StatelessWidget {
 
     final width = MediaQuery.of(context).size.width;
 
-    void _showDeleteModal(Server server) async {
+    void showDeleteModal(Server server) async {
       await Future.delayed(const Duration(seconds: 0), () => {
         showDialog(
           context: context, 
@@ -49,7 +49,7 @@ class ServersList extends StatelessWidget {
       });
     }
 
-    void _openAddServerBottomSheet({Server? server}) async {
+    void openAddServer({Server? server}) async {
       await Future.delayed(const Duration(seconds: 0), (() => {
         Navigator.push(context, MaterialPageRoute(
           fullscreenDialog: true,
@@ -58,8 +58,8 @@ class ServersList extends StatelessWidget {
       }));
     }
 
-    void _connectToServer(Server server) async {
-      Future _connectSuccess(result) async {
+    void connectToServer(Server server) async {
+      Future connectSuccess(result) async {
         serversProvider.setselectedServer(Server(
           address: server.address,
           alias: server.alias,
@@ -90,7 +90,7 @@ class ServersList extends StatelessWidget {
       final result = await login(server);
       process.close();
       if (result['result'] == 'success') {
-        await _connectSuccess(result);
+        await connectSuccess(result);
       }
       else {
         showSnackBar(
@@ -102,7 +102,7 @@ class ServersList extends StatelessWidget {
       }
     }
 
-    void _setDefaultServer(Server server) async {
+    void setDefaultServer(Server server) async {
       final result = await serversProvider.setDefaultServer(server);
       if (result == true) {
         showSnackBar(
@@ -122,7 +122,7 @@ class ServersList extends StatelessWidget {
       }
     }
 
-    Widget _leadingIcon(Server server) {
+    Widget leadingIcon(Server server) {
       if (server.defaultServer == true) {
         return Stack(
           alignment: Alignment.center,
@@ -171,14 +171,14 @@ class ServersList extends StatelessWidget {
       }
     }
 
-    Widget _topRow(Server server, int index) {
+    Widget topRow(Server server, int index) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             width: 48,
             margin: const EdgeInsets.only(right: 12),
-            child: _leadingIcon(servers[index]),
+            child: leadingIcon(servers[index]),
           ),
           SizedBox(
             width: width-168,
@@ -217,7 +217,7 @@ class ServersList extends StatelessWidget {
       );
     }
 
-    Widget _bottomRow(Server server, int index) {
+    Widget bottomRow(Server server, int index) {
       return Column(
         children: [
           const SizedBox(height: 20),
@@ -232,7 +232,7 @@ class ServersList extends StatelessWidget {
                       ? true
                       : false,
                     onTap: server.defaultServer == false 
-                      ? (() => _setDefaultServer(server))
+                      ? (() => setDefaultServer(server))
                       : null, 
                     child: SizedBox(
                       child: Row(
@@ -249,7 +249,7 @@ class ServersList extends StatelessWidget {
                     )
                   ),
                   PopupMenuItem(
-                    onTap: (() => _openAddServerBottomSheet(server: server)), 
+                    onTap: (() => openAddServer(server: server)), 
                     child: Row(
                       children: [
                         const Icon(Icons.edit),
@@ -259,7 +259,7 @@ class ServersList extends StatelessWidget {
                     )
                   ),
                   PopupMenuItem(
-                    onTap: (() => _showDeleteModal(server)), 
+                    onTap: (() => showDeleteModal(server)), 
                     child: Row(
                       children: [
                         const Icon(Icons.delete),
@@ -305,7 +305,7 @@ class ServersList extends StatelessWidget {
                   : Container(
                       margin: const EdgeInsets.only(right: 10),
                       child: TextButton(
-                        onPressed: () => _connectToServer(servers[index]),
+                        onPressed: () => connectToServer(servers[index]),
                         child: Text(AppLocalizations.of(context)!.connect),
                       ),
                     ),
@@ -339,7 +339,7 @@ class ServersList extends StatelessWidget {
                       onTap: () => onChange(index),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
-                        child: _topRow(servers[index], index),
+                        child: topRow(servers[index], index),
                       ),
                     ),
                   ),
@@ -351,8 +351,8 @@ class ServersList extends StatelessWidget {
                         padding: const EdgeInsets.all(10),
                         child: Column(
                           children: [
-                            _topRow(servers[index], index),
-                            _bottomRow(servers[index], index)
+                            topRow(servers[index], index),
+                            bottomRow(servers[index], index)
                           ],
                         ),
                       ),
@@ -372,7 +372,6 @@ class ServersList extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 24,
                 color: Colors.grey,
-                fontWeight: FontWeight.w500
               ),
             ),
           ),

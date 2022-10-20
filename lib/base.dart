@@ -143,19 +143,6 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
                 appConfigProvider.setSelectedTab(selected);
               },
             ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: appConfigProvider.appUnlocked == true
-          ? serversProvider.selectedServer != null
-            ? serversProvider.isServerConnected == true
-              ? null
-              : null
-            : appConfigProvider.selectedTab == 0 && serversProvider.getServersList.isNotEmpty
-              ? FloatingActionButton(
-                  onPressed: _addServerModal,
-                  child: const Icon(Icons.add),
-                )
-              : null
-          : null,
       ),
     );
   }

@@ -1,11 +1,13 @@
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:expandable/expandable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/servers_list.dart';
 import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
@@ -17,6 +19,9 @@ class Connect extends StatefulWidget {
 }
 
 class _ConnectState extends State<Connect> {
+  late bool isVisible;
+  final ScrollController scrollController = ScrollController();
+
   List<int> expandedCards = [];
   List<int> showButtons = [];
 
@@ -27,8 +32,30 @@ class _ConnectState extends State<Connect> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    isVisible = true;
+    scrollController.addListener(() {
+      if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+        if (mounted && isVisible == true) {
+          setState(() => isVisible = false);
+        }
+      } 
+      else {
+        if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
+          if (mounted && isVisible == false) {
+            setState(() => isVisible = true);
+          }
+        }
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final mediaQuery = MediaQuery.of(context);
 
@@ -36,7 +63,7 @@ class _ConnectState extends State<Connect> {
       expandableControllerList.add(ExpandableController());
     }
 
-    void _addServerModal() async {
+    void addServerModal() async {
       await Future.delayed(const Duration(seconds: 0), (() => {
         Navigator.push(context, MaterialPageRoute(
           fullscreenDialog: true,
@@ -83,16 +110,18 @@ class _ConnectState extends State<Connect> {
                       color: Colors.grey
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  OutlinedButton.icon(
-                    onPressed: _addServerModal, 
-                    label: Text(AppLocalizations.of(context)!.createConnection),
-                    icon: const Icon(Icons.add),
-                  )
                 ],
               ),
             ),
-          )
+          ),
+      floatingActionButton: appConfigProvider.showingSnackbar
+        ? null
+        : isVisible 
+          ? FloatingActionButton(
+              onPressed: addServerModal,
+              child: const Icon(Icons.add),
+            )
+          : null
     );
   }
 }
