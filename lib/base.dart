@@ -4,7 +4,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/domains.dart';
 import 'package:droid_hole/screens/unlock.dart';
@@ -14,16 +13,11 @@ import 'package:droid_hole/screens/logs.dart';
 import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
 
-import 'package:droid_hole/widgets/add_domain_modal.dart';
 import 'package:droid_hole/widgets/start_warning_modal.dart';
-import 'package:droid_hole/widgets/disable_modal.dart';
 import 'package:droid_hole/widgets/add_server_fullscreen.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/constants/app_screens.dart';
-import 'package:droid_hole/classes/process_modal.dart';
-import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/functions/server_management.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -94,29 +88,6 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
     final domainsListProvider = Provider.of<DomainsListProvider>(context, listen: false);
 
-    void _enableDisableServer() async {
-      if (
-        serversProvider.isServerConnected == true &&
-        serversProvider.selectedServer != null
-      ) {
-        if (serversProvider.selectedServer?.enabled == true) {
-          showModalBottomSheet(
-            context: context, 
-            isScrollControlled: true,
-            builder: (_) => DisableModal(
-              onDisable: (time) => disableServer(time, context)
-            ),
-            backgroundColor: Colors.transparent,
-            isDismissible: true,
-            enableDrag: true,
-          );
-        }
-        else {
-          enableServer(context);
-        }
-      }
-    }
-
     void _addServerModal() async {
       await Future.delayed(const Duration(seconds: 0), (() => {
         Navigator.push(context, MaterialPageRoute(
@@ -124,19 +95,6 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
           builder: (BuildContext context) => const AddServerFullscreen()
         ))
       }));
-    }
-
-    Widget generateFab(int screen) {
-      switch (screen) {
-        case 0:
-          return FloatingActionButton(
-            onPressed: _enableDisableServer,
-            child: const Icon(Icons.shield_rounded),
-          );
-
-        default:
-          return const SizedBox();
-      }
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -189,7 +147,7 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
         floatingActionButton: appConfigProvider.appUnlocked == true
           ? serversProvider.selectedServer != null
             ? serversProvider.isServerConnected == true
-              ? generateFab(appConfigProvider.selectedTab)
+              ? null
               : null
             : appConfigProvider.selectedTab == 0 && serversProvider.getServersList.isNotEmpty
               ? FloatingActionButton(
