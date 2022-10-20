@@ -237,7 +237,6 @@ class _ServersPageState extends State<ServersPage> {
                     const SizedBox(height: 10),
                     Text(
                       serversProvider.getServersList[index].alias,
-                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 14,
                         fontStyle: FontStyle.italic
