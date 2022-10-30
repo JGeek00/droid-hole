@@ -15,6 +15,17 @@ import 'package:droid_hole/providers/servers_provider.dart';
 class HomeCharts extends StatelessWidget {
   const HomeCharts({Key? key}) : super(key: key);
 
+  bool checkExistsData(Map<String, dynamic> data) {
+    bool exists = false;
+    for (var element in data.keys) {
+      if (data[element] > 0) {
+        exists = true;
+        break;
+      }
+    } 
+    return exists;
+  }
+
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
@@ -178,7 +189,7 @@ class HomeCharts extends StatelessWidget {
       case 1:
         return Column(
           children: [
-            serversProvider.getOvertimeDataJson!['domains_over_time'].keys.length > 0
+            checkExistsData(serversProvider.getOvertimeDataJson!['domains_over_time']) && checkExistsData(serversProvider.getOvertimeDataJson!['ads_over_time'])
               ? Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
