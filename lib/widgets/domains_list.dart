@@ -300,6 +300,7 @@ class _DomainsListState extends State<DomainsList> {
               const SizedBox(height: 50),
               Text(
                 AppLocalizations.of(context)!.loadingList,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 22

@@ -73,6 +73,7 @@ class _HomeState extends State<Home> {
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.loadingStats,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
@@ -231,16 +232,17 @@ class _HomeState extends State<Home> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Icon(
+              children: [
+                const Icon(
                   Icons.error,
                   size: 50,
                   color: Colors.red,
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Text(
-                  "Stats could not be loaded",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.statsNotLoaded,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 22

@@ -36,6 +36,7 @@ class Statistics extends StatelessWidget {
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.loadingStats,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 22
@@ -191,6 +192,7 @@ class Statistics extends StatelessWidget {
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.statsNotLoaded,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 22

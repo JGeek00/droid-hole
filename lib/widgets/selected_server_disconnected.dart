@@ -27,6 +27,7 @@ class SelectedServerDisconnected extends StatelessWidget {
               children: [
                 Text(
                   AppLocalizations.of(context)!.selectedDisconnected,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 26
