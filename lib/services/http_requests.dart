@@ -39,7 +39,7 @@ Future<Response> httpClient({
   }
 }
 
-Future realtimeStatus(Server server, String token) async {;
+Future realtimeStatus(Server server, String token) async {
   try {
     final response = await httpClient(
       method: 'get',
@@ -70,7 +70,7 @@ Future realtimeStatus(Server server, String token) async {;
   }
 }
 
-Future login(Server server) async {
+Future loginQuery(Server server) async {
   try {
     final status = await http.get(Uri.parse('${server.address}/admin/api.php'));
     if (status.statusCode == 200) {

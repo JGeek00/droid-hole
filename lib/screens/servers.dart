@@ -127,7 +127,7 @@ class _ServersPageState extends State<ServersPage> {
       final ProcessModal process = ProcessModal(context: context);
       process.open(AppLocalizations.of(context)!.connecting);
 
-      final result = await login(server);
+      final result = await loginQuery(server);
       process.close();
       if (result['result'] == 'success') {
         await connectSuccess(result);

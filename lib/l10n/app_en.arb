@@ -294,5 +294,6 @@
     "cannotAddDomain": "Domain couldn't be added",
     "invalidDomain": "Invalid domain",
     "token": "Token",
-    "qrScanner": "QR scanner"
+    "qrScanner": "QR scanner",
+    "connectingTo": "Connecting to"
 }

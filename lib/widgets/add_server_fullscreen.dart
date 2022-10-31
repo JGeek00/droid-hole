@@ -207,7 +207,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           token: tokenFieldController.text, 
           defaultServer: false,
         );
-        final result = await login(serverObj);
+        final result = await loginQuery(serverObj);
         if (result['result'] == 'success') {
           Navigator.pop(context);
           serversProvider.addServer(Server(
@@ -287,7 +287,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         token: tokenFieldController.text,
         defaultServer: false,
       );
-      final result = await login(serverObj);
+      final result = await loginQuery(serverObj);
       if (result['result'] == 'success') {
         Server server = Server(
           address: widget.server!.address, 

@@ -24,6 +24,8 @@ class ServersProvider with ChangeNotifier {
   int _overtimeDataLoading = 0;
   OverTimeData? _overtimeData;
 
+  bool _needsLogin = false;
+
   List<Server> get getServersList {
     return _serversList;
   }
@@ -69,11 +71,20 @@ class ServersProvider with ChangeNotifier {
     return _refreshServerStatus;
   }
 
+  bool get needsLogin {
+    return _needsLogin;
+  }
+
   void setRefreshServerStatus(bool status) {
     _refreshServerStatus = status;
     if (status == true) {
       notifyListeners();
     }
+  }
+
+  void setNeedsLogin(bool status) {
+    _needsLogin = status;
+    notifyListeners();
   }
 
   Future<bool> addServer(Server server) async {
@@ -220,28 +231,31 @@ class ServersProvider with ChangeNotifier {
           defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
         );
         _serversList.add(serverObj);
-        if (convertFromIntToBool(server['isDefaultServer']) == true) {
-          if (connect == true) {
-            final result = await login(serverObj);
-            if (result['result'] == 'success') {
-              serverObj.enabled = result['status'] == 'enabled' ? true : false;
-              _phpSessId = result['phpSessId'];
-              _isServerConnected = true;
-              _selectedServer = serverObj;
-            }
-            else {
-              _isServerConnected = false;
-              _selectedServer = serverObj;
-            }
-          }
-          else {
-            _isServerConnected = null;
-            _selectedServer = serverObj;
-          }
+        _selectedServer = serverObj;
+        if (convertFromIntToBool(server['isDefaultServer'])! == true) {
+          _needsLogin = true;
         }
       }
     }
     notifyListeners();
+  }
+
+  Future<bool> login(Server serverObj) async {
+    final result = await loginQuery(serverObj);
+    if (result['result'] == 'success') {
+      serverObj.enabled = result['status'] == 'enabled' ? true : false;
+      _phpSessId = result['phpSessId'];
+      _isServerConnected = true;
+      _selectedServer = serverObj;
+      notifyListeners();
+      return true;
+    }
+    else {
+      _isServerConnected = false;
+      _selectedServer = serverObj;
+      notifyListeners();
+      return false;
+    }
   }
 
   Future<bool> saveToDb(Server server) async {
@@ -325,9 +339,14 @@ class ServersProvider with ChangeNotifier {
     }
   }
 
-  void setselectedServer(Server server) {
+  void setselectedServer(Server? server) {
     _selectedServer = server;
-    _isServerConnected = true;
+    if (server != null) {
+      _isServerConnected = true;
+    }
+    else {
+      _isServerConnected = false;
+    }
     notifyListeners();
   }
 

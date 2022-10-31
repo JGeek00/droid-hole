@@ -194,7 +194,7 @@ class _DroidHoleState extends State<DroidHole> {
             passCode: appConfigProvider.passCode,
             setAppUnlocked: appConfigProvider.setAppUnlocked,
           )
-          );
+        );
       }),
     );
   }

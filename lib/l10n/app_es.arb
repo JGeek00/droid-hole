@@ -296,5 +296,6 @@
     "cannotAddDomain": "El dominio no ha podido ser añadido",
     "invalidDomain": "Dominio no válido",
     "token": "Token",
-    "qrScanner": "Escáner QR"
+    "qrScanner": "Escáner QR",
+    "connectingTo": "Conectando a"
 }

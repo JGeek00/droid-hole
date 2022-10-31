@@ -9,6 +9,7 @@ import 'package:droid_hole/screens/domains.dart';
 import 'package:droid_hole/screens/servers.dart';
 import 'package:droid_hole/screens/unlock.dart';
 import 'package:droid_hole/screens/home.dart';
+import 'package:droid_hole/screens/login.dart';
 import 'package:droid_hole/screens/logs.dart';
 import 'package:droid_hole/screens/settings.dart';
 import 'package:droid_hole/screens/statistics.dart';
@@ -113,26 +114,31 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
           ),
           child: appConfigProvider.appUnlocked == false
             ? const Unlock()
-            : serversProvider.selectedServer != null
-              ? pages[appConfigProvider.selectedTab]
-              : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
+            :  serversProvider.selectedServer != null && serversProvider.needsLogin == true
+              ? LoginScreen(serversProvider: serversProvider)
+              : serversProvider.selectedServer != null
+                ? pages[appConfigProvider.selectedTab]
+                : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
         ),
-        bottomNavigationBar: appConfigProvider.appUnlocked == false
-          ? null
-          : BottomNavBar(
-              screens: serversProvider.selectedServer != null
-                ? appScreens
-                : appScreensNotSelected,
-              selectedScreen: serversProvider.selectedServer != null
-                ? appConfigProvider.selectedTab
-                : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
-              onChange: (selected) {
-                if (selected != 3) {
-                  domainsListProvider.setSelectedTab(null);
-                }
-                appConfigProvider.setSelectedTab(selected);
-              },
-            ),
+        bottomNavigationBar:
+          serversProvider.selectedServer != null && serversProvider.needsLogin == true
+            ? null
+            : appConfigProvider.appUnlocked == false
+              ? null
+              : BottomNavBar(
+                  screens: serversProvider.selectedServer != null
+                    ? appScreens
+                    : appScreensNotSelected,
+                  selectedScreen: serversProvider.selectedServer != null
+                    ? appConfigProvider.selectedTab
+                    : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
+                  onChange: (selected) {
+                    if (selected != 3) {
+                      domainsListProvider.setSelectedTab(null);
+                    }
+                    appConfigProvider.setSelectedTab(selected);
+                  },
+                ),
       ),
     );
   }
