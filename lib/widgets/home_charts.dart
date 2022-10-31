@@ -84,9 +84,21 @@ class HomeCharts extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Flexible(
-                  child: Text(
-                    serversProvider.getOvertimeData!.clients[i].ip,
-                    overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if ( serversProvider.getOvertimeData!.clients[i].name != '') ...[
+                        Text(
+                          serversProvider.getOvertimeData!.clients[i].name,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                      ],
+                      Text(
+                        serversProvider.getOvertimeData!.clients[i].ip,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 )
               ],
