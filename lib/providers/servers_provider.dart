@@ -231,8 +231,8 @@ class ServersProvider with ChangeNotifier {
           defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
         );
         _serversList.add(serverObj);
-        _selectedServer = serverObj;
         if (convertFromIntToBool(server['isDefaultServer'])! == true) {
+          _selectedServer = serverObj;
           _needsLogin = true;
         }
       }
