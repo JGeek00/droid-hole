@@ -220,9 +220,9 @@ class _ServersPageState extends State<ServersPage> {
             margin: const EdgeInsets.only(right: 12),
             child: leadingIcon(serversProvider.getServersList[index]),
           ),
-          SizedBox(
-            width: width-168,
+          Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   serversProvider.getServersList[index].address,
@@ -234,12 +234,11 @@ class _ServersPageState extends State<ServersPage> {
                 ),
                 Column(
                   children: [
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     Text(
                       serversProvider.getServersList[index].alias,
                       style: const TextStyle(
                         fontSize: 14,
-                        fontStyle: FontStyle.italic
                       ),
                     )
                   ],
