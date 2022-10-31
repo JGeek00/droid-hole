@@ -111,7 +111,7 @@ class QueriesLastHours extends StatelessWidget {
             : const Color.fromRGBO(35, 35, 35, 0.9),
           getTooltipItems: (items) => [
             LineTooltipItem(
-              "Blocked: ${items[0].y.toInt().toString()}", 
+              "Not blocked: ${items[0].y.toInt().toString()}", 
               const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
@@ -119,7 +119,7 @@ class QueriesLastHours extends StatelessWidget {
               )
             ),
             LineTooltipItem(
-              "Not blocked: ${items[1].y.toInt().toString()}", 
+              "Blocked: ${items[1].y.toInt().toString()}", 
               const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
