@@ -19,6 +19,7 @@ import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/constants/app_screens.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
@@ -87,6 +88,7 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
     final domainsListProvider = Provider.of<DomainsListProvider>(context, listen: false);
+    final filtersProvider = Provider.of<FiltersProvider>(context, listen: false);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -115,7 +117,10 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
           child: appConfigProvider.appUnlocked == false
             ? const Unlock()
             :  serversProvider.selectedServer != null && serversProvider.needsLogin == true
-              ? LoginScreen(serversProvider: serversProvider)
+              ? LoginScreen(
+                  serversProvider: serversProvider,
+                  filtersProvider: filtersProvider,
+                )
               : serversProvider.selectedServer != null
                 ? pages[appConfigProvider.selectedTab]
                 : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]

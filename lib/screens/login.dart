@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
 
 class LoginScreen extends StatefulWidget {
   final ServersProvider serversProvider;
+  final FiltersProvider filtersProvider;
 
   const LoginScreen({
     Key? key,
     required this.serversProvider,
+    required this.filtersProvider,
   }) : super(key: key);
 
   @override
@@ -29,6 +32,15 @@ class _LoginScreenState extends State<LoginScreen> {
         widget.serversProvider.setRealtimeStatus(data[0]['data']);
         widget.serversProvider.setOvertimeData(data[1]['data']);
         widget.serversProvider.setOvertimeDataLoadingStatus(1);
+        List<dynamic> clients = data[1]['data'].clients.map((client) {
+          if (client.name != '') {
+            return client.name.toString();
+          }
+          else {
+            return client.ip.toString();
+          }
+        }).toList();
+        widget.filtersProvider.setClients(List<String>.from(clients));
         widget.serversProvider.setNeedsLogin(false);
       }
       else {
