@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:droid_hole/screens/app_logs/app_logs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
@@ -341,6 +342,20 @@ class AdvancedOptions extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              CustomListTile(
+                leadingIcon: Icons.list,
+                label: AppLocalizations.of(context)!.appLogs, 
+                description: AppLocalizations.of(context)!.errorsApp,
+                onTap: () => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AppLogs()))
+                },
+                padding: const EdgeInsets.only(
+                  top: 10,
+                  bottom: 10,
+                  left: 20,
+                  right: 10
+                )
               ),
               CustomListTile(
                 leadingIcon: Icons.delete,

@@ -295,5 +295,10 @@
     "invalidDomain": "Invalid domain",
     "token": "Token",
     "qrScanner": "QR scanner",
-    "connectingTo": "Connecting to"
+    "connectingTo": "Connecting to",
+    "logsCopiedClipboard": "Logs copied to clipboard",
+    "copyLogsClipboard": "Copy logs to clipboard",
+    "noSavedLogs": "No saved logs",
+    "appLogs": "App logs",
+    "errorsApp": "Errors registered by the app"
 }

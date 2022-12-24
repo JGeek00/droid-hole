@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:droid_hole/models/app_log.dart';
 import 'package:droid_hole/models/domain.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -82,7 +83,16 @@ Future loginQuery(Server server) async {
       ));
       if (enableOrDisable.statusCode == 200) {
         if (enableOrDisable.body == 'Not authorized!' || enableOrDisable.body == 'Session expired! Please re-login on the Pi-hole dashboard.') {
-          return {'result': 'auth_error'};
+          return {
+            'result': 'auth_error',
+            'log': AppLog(
+              type: 'login',
+              dateTime: DateTime.now(),
+              statusCode: status.statusCode.toString(), 
+              message: 'auth_error_1',
+              resBody: status.body
+            )
+          };
         }
         else {
           final enableOrDisableParsed = jsonDecode(enableOrDisable.body);
@@ -95,28 +105,90 @@ Future loginQuery(Server server) async {
             };
           }
           else {
-            return {'result': 'auth_error'};
+            return {
+              'result': 'auth_error',
+              'log': AppLog(
+                type: 'login',
+                dateTime: DateTime.now(),
+                statusCode: status.statusCode.toString(), 
+                message: 'auth_error_2',
+                resBody: status.body
+              )
+            };
           }
         }
       }
       else {
-        return {'result': 'no_connection'};
+        return {
+          'result': 'no_connection',
+          'log': AppLog(
+            type: 'login',
+            dateTime: DateTime.now(),
+            statusCode: status.statusCode.toString(), 
+            message: 'no_connection_1',
+            resBody: status.body
+          )
+        };
       }
     }
     else {
-      return {'result': 'no_connection'};
+      return {
+        'result': 'no_connection',
+        'log': AppLog(
+          type: 'login',
+          dateTime: DateTime.now(),
+          statusCode: status.statusCode.toString(), 
+          message: 'no_connection_2',
+          resBody: status.body
+        )
+      };
     }
   } on SocketException {
-    return {'result': 'no_connection'};
+    return {
+      'result': 'socket', 
+      'log': AppLog(
+        type: 'login',
+        dateTime: DateTime.now(), 
+        message: 'SocketException'
+      )
+    };
   } on TimeoutException {
-    return {'result': 'timeout'};
+    return {
+      'result': 'timeout', 
+      'log': AppLog(
+        type: 'login',
+        dateTime: DateTime.now(), 
+        message: 'TimeoutException'
+      )
+    };
   } on HandshakeException {
-    return {'result': 'ssl_error'};
+    return {
+      'result': 'ssl_error', 
+      'log': AppLog(
+        type: 'login',
+        dateTime: DateTime.now(), 
+        message: 'HandshakeException'
+      )
+    };
   } on FormatException {
-    return {'result': 'auth_error'};
+    return {
+      'result': 'auth_error', 
+      'log': AppLog(
+        type: 'login',
+        dateTime: DateTime.now(), 
+        message: 'FormatException'
+      )
+    };
   }
   catch (e) {
-    return {'result': 'error'};
+    return {
+      'result': 'error', 
+      'log': AppLog(
+        type: 'login',
+        dateTime: DateTime.now(), 
+        message: e.toString()
+      )
+    };
   }
 }
 

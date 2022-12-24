@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:droid_hole/models/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
@@ -229,6 +230,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               label: AppLocalizations.of(context)!.checkAddress,
               color: Colors.red
             );
+            appConfigProvider.addLog(result['log']);
           }
           else if (result['result'] == 'timeout') {
             showSnackBar(
@@ -237,6 +239,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               label: AppLocalizations.of(context)!.connectionTimeout,
               color: Colors.red
             );
+            appConfigProvider.addLog(result['log']);
           }
           else if (result['result'] == 'no_connection') {
             showSnackBar(
@@ -245,6 +248,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               label: AppLocalizations.of(context)!.cantReaachServer,
               color: Colors.red
             );
+            appConfigProvider.addLog(result['log']);
           }
           else if (result['result'] == 'auth_error') {
             showSnackBar(
@@ -253,6 +257,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               label: AppLocalizations.of(context)!.tokenNotValid,
               color: Colors.red
             );
+            appConfigProvider.addLog(result['log']);
           }
           else if (result['result'] == 'ssl_error') {
             showSnackBar(
@@ -261,6 +266,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               label: AppLocalizations.of(context)!.sslErrorLong,
               color: Colors.red
             );
+            appConfigProvider.addLog(result['log']);
           }
           else {
             showSnackBar(
@@ -269,6 +275,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               label: AppLocalizations.of(context)!.unknownError,
               color: Colors.red
             );
+            appConfigProvider.addLog(result['log']);
           }
         }
       }

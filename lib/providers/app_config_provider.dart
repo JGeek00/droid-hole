@@ -1,3 +1,4 @@
+import 'package:droid_hole/models/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -24,6 +25,8 @@ class AppConfigProvider with ChangeNotifier {
   int _importantInfoReaden = 0;
   int _hideZeroValues = 0;
   int _statisticsVisualizationMode = 0;
+
+  final List<AppLog> _logs = [];
 
   Database? _dbInstance;
 
@@ -125,6 +128,10 @@ class AppConfigProvider with ChangeNotifier {
     return _statisticsVisualizationMode;
   }
 
+  List<AppLog> get logs {
+    return _logs;
+  }
+
   void setShowingSnackbar(bool status) {
     _showingSnackbar = status;
     notifyListeners();
@@ -162,6 +169,11 @@ class AppConfigProvider with ChangeNotifier {
 
   void setValidVibrator(bool valid) {
     _validVibrator = valid;
+    notifyListeners();
+  }
+
+  void addLog(AppLog log) {
+    _logs.add(log);
     notifyListeners();
   }
 

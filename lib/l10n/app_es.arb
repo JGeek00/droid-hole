@@ -297,5 +297,10 @@
     "invalidDomain": "Dominio no válido",
     "token": "Token",
     "qrScanner": "Escáner QR",
-    "connectingTo": "Conectando a"
+    "connectingTo": "Conectando a",
+    "logsCopiedClipboard": "Logs copiados al portapapeles",
+    "copyLogsClipboard": "Copiar logs al portapapeles",
+    "noSavedLogs": "No hay logs guardados",
+    "appLogs": "Logs de la aplicación",
+    "errorsApp": "Errores registrados por la app"
 }
