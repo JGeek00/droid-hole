@@ -45,9 +45,6 @@ Future realtimeStatus(Server server, String token) async {
     final response = await httpClient(
       method: 'get',
       url: '${server.address}/admin/api.php?auth=${server.token}&summaryRaw&topItems&getForwardDestinations&getQuerySources&topClientsBlocked&getQueryTypes',
-      headers: {
-        'Cookie': "PHPSESSID=$token;"
-      }
     );
     final body = jsonDecode(response.body);
     if (body['status'] != null) {
@@ -73,59 +70,73 @@ Future realtimeStatus(Server server, String token) async {
 
 Future loginQuery(Server server) async {
   try {
-    final status = await http.get(Uri.parse('${server.address}/admin/api.php'));
+    final status = await http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&summaryRaw'));
     if (status.statusCode == 200) {
       final statusParsed = jsonDecode(status.body);
-      final enableOrDisable = await http.get(Uri.parse(
-        statusParsed['status'] == 'enabled'
-          ? '${server.address}/admin/api.php?auth=${server.token}&enable=0'
-          : '${server.address}/admin/api.php?auth=${server.token}&disable=0'
-      ));
-      if (enableOrDisable.statusCode == 200) {
-        if (enableOrDisable.body == 'Not authorized!' || enableOrDisable.body == 'Session expired! Please re-login on the Pi-hole dashboard.') {
-          return {
-            'result': 'auth_error',
-            'log': AppLog(
-              type: 'login',
-              dateTime: DateTime.now(),
-              statusCode: status.statusCode.toString(), 
-              message: 'auth_error_1',
-              resBody: status.body
-            )
-          };
-        }
-        else {
-          final enableOrDisableParsed = jsonDecode(enableOrDisable.body);
-          if (enableOrDisableParsed.runtimeType != List) {
-            final phpSessId = enableOrDisable.headers['set-cookie']!.split(';')[0].split('=')[1];
-            return {
-              'result': 'success',
-              'status': statusParsed['status'],
-              'phpSessId': phpSessId,
-            };
-          }
-          else {
+      if (statusParsed.runtimeType != List && statusParsed['status'] != null) {
+        final enableOrDisable = await http.get(Uri.parse(
+          statusParsed['status'] == 'enabled'
+            ? '${server.address}/admin/api.php?auth=${server.token}&enable=0'
+            : '${server.address}/admin/api.php?auth=${server.token}&disable=0'
+        ));
+        if (enableOrDisable.statusCode == 200) {
+          if (enableOrDisable.body == 'Not authorized!' || enableOrDisable.body == 'Session expired! Please re-login on the Pi-hole dashboard.' || enableOrDisable.body == [] ) {
             return {
               'result': 'auth_error',
               'log': AppLog(
                 type: 'login',
                 dateTime: DateTime.now(),
                 statusCode: status.statusCode.toString(), 
-                message: 'auth_error_2',
+                message: 'auth_error_1',
                 resBody: status.body
               )
             };
           }
+          else {
+            final enableOrDisableParsed = jsonDecode(enableOrDisable.body);
+            if (enableOrDisableParsed.runtimeType != List) {
+              final phpSessId = enableOrDisable.headers['set-cookie']!.split(';')[0].split('=')[1];
+              return {
+                'result': 'success',
+                'status': statusParsed['status'],
+                'phpSessId': phpSessId,
+              };
+            }
+            else {
+              return {
+                'result': 'auth_error',
+                'log': AppLog(
+                  type: 'login',
+                  dateTime: DateTime.now(),
+                  statusCode: status.statusCode.toString(), 
+                  message: 'auth_error_2',
+                  resBody: status.body
+                )
+              };
+            }
+          }
+        }
+        else {
+          return {
+            'result': 'auth_error',
+            'log': AppLog(
+              type: 'login',
+              dateTime: DateTime.now(),
+              statusCode: status.statusCode.toString(), 
+              message: 'auth_error_3',
+              resBody: status.body
+            )
+          };
         }
       }
       else {
         return {
-          'result': 'no_connection',
+          'result': 'auth_error',
           'log': AppLog(
             type: 'login',
             dateTime: DateTime.now(),
             statusCode: status.statusCode.toString(), 
-            message: 'no_connection_1',
+            message: 'auth_error',
             resBody: status.body
           )
         };
