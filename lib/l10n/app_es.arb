@@ -302,5 +302,6 @@
     "copyLogsClipboard": "Copiar logs al portapapeles",
     "noSavedLogs": "No hay logs guardados",
     "appLogs": "Logs de la aplicación",
-    "errorsApp": "Errores registrados por la app"
+    "errorsApp": "Errores registrados por la app",
+    "switchServer": "Cambiar de servidor"
 }

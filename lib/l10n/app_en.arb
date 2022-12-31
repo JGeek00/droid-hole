@@ -300,5 +300,6 @@
     "copyLogsClipboard": "Copy logs to clipboard",
     "noSavedLogs": "No saved logs",
     "appLogs": "App logs",
-    "errorsApp": "Errors registered by the app"
+    "errorsApp": "Errors registered by the app",
+    "switchServer": "Switch server"
 }
