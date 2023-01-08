@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/functions/format.dart';
 import 'package:droid_hole/constants/colors.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
@@ -84,35 +85,53 @@ class ClientsLastHours extends StatelessWidget {
             ? const Color.fromRGBO(220, 220, 220, 1)
             : const Color.fromRGBO(35, 35, 35, 1),
           maxContentWidth: 150,
-          getTooltipItems: (items) => items.map(
-            (item) {
+          getTooltipItems: (items) {
+            List<LineTooltipItem> tooltipItems = [];
+            for (var item in items) {
               if (hideZeroValues == true) {
-                if(item.y > 0) {
-                  return LineTooltipItem(
-                    "${data['clientsColors'][item.barIndex]['ip']}: ${item.y.toInt().toString()}", 
-                    TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: data['clientsColors'][item.barIndex]['color']
+                if(item.y > 0 && item.barIndex < data.length-1) {
+                  tooltipItems.add(
+                    LineTooltipItem(
+                      "${data['clientsColors'][item.barIndex]['ip']}: ${item.y.toInt().toString()}", 
+                      TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: data['clientsColors'][item.barIndex]['color']
+                      )
                     )
                   );
                 }
-                else {
-                  return null;
-                }
               }
               else {
-                return LineTooltipItem(
-                  "${data['clientsColors'][item.barIndex]['ip']}: ${item.y.toInt().toString()}", 
-                  TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: data['clientsColors'][item.barIndex]['color']
-                  )
-                );
+                if (item.barIndex < data.length-1) {
+                  tooltipItems.add(
+                    LineTooltipItem(
+                      "${data['clientsColors'][item.barIndex]['ip']}: ${item.y.toInt().toString()}", 
+                      TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: data['clientsColors'][item.barIndex]['color']
+                      )
+                    )
+                  );
+                }
               }
             }
-          ).toList(),
+
+            return [
+              LineTooltipItem(
+                formatTimestampForChart(data['time'][items[0].x.toInt()]), 
+                TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: selectedTheme == ThemeMode.light 
+                    ? Colors.black
+                    : Colors.white
+                )
+              ),
+              ...tooltipItems
+            ];
+          }
         ),
       )
     );
@@ -175,10 +194,36 @@ class ClientsLastHours extends StatelessWidget {
         });
       }
 
+      List<String> timestamps = [];
+      final List<String> k = data['domains_over_time'].keys.toList();
+      for (var i = 0; i < k.length; reducedData == true ? i+=6 : i++) {
+        timestamps.add(k[i]);
+      }
+
+      final List<FlSpot> flatLine = [];
+      int xPosition = 0;
+      for (var j = 0; j < data['over_time'].entries.length; reducedData == true ? j+=6 : j++) {
+        flatLine.add(
+          FlSpot(
+            xPosition.toDouble(),
+            0
+          )
+        );
+        xPosition++;
+      }
+      items.add(
+        LineChartBarData(
+          spots: flatLine,
+          color: Colors.transparent,
+          barWidth: 0,
+        ),
+      );
+
       return {
         'data': items,
         'clientsColors': clientsColors,
-        'topPoint': topPoint
+        'topPoint': topPoint,
+        'time': timestamps
       };
     }
 

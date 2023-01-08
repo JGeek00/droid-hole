@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/functions/format.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class QueriesLastHours extends StatelessWidget {
@@ -102,6 +103,12 @@ class QueriesLastHours extends StatelessWidget {
             color: Colors.green.withOpacity(0.2)
           ),
         ),
+        // Hidden bar to allow 3 items on tooltip
+        LineChartBarData(
+          spots: data['data']['domains'],
+          color: Colors.transparent,
+          barWidth: 0,
+        ),
       ],
       lineTouchData: LineTouchData(
         enabled: true,
@@ -110,6 +117,16 @@ class QueriesLastHours extends StatelessWidget {
             ? const Color.fromRGBO(220, 220, 220, 0.9)
             : const Color.fromRGBO(35, 35, 35, 0.9),
           getTooltipItems: (items) => [
+            LineTooltipItem(
+              formatTimestampForChart(data['time'][items[0].x.toInt()]), 
+              TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: selectedTheme == ThemeMode.light 
+                  ? Colors.black
+                  : Colors.white
+              )
+            ),
             LineTooltipItem(
               "Not blocked: ${items[0].y.toInt().toString()}", 
               const TextStyle(
@@ -168,12 +185,19 @@ class QueriesLastHours extends StatelessWidget {
         xPosition++;
       }
 
+      List<String> timestamps = [];
+      final List<String> k = data['domains_over_time'].keys.toList();
+      for (var i = 0; i < k.length; reducedData == true ? i+=6 : i++) {
+        timestamps.add(k[i]);
+      }
+
       return {
         'data': {
           'domains': domains,
           'ads': ads
         },
-        'topPoint': topPoint
+        'topPoint': topPoint,
+        'time': timestamps
       };
     }
 
