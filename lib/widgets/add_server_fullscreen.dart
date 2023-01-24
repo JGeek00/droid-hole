@@ -245,7 +245,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
             showSnackBar(
               context: context, 
               appConfigProvider: appConfigProvider,
-              label: AppLocalizations.of(context)!.cantReaachServer,
+              label: AppLocalizations.of(context)!.cantReachServer,
               color: Colors.red
             );
             appConfigProvider.addLog(result['log']);
@@ -342,7 +342,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           showSnackBar(
             context: context, 
             appConfigProvider: appConfigProvider,
-            label: AppLocalizations.of(context)!.cantReaachServer,
+            label: AppLocalizations.of(context)!.cantReachServer,
             color: Colors.red
           );
         }
