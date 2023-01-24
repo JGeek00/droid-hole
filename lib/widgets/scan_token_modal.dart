@@ -137,10 +137,10 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
               children: [
                 const Icon(
                   Icons.no_photography,
-                  size: 50,
+                  size: 40,
                   color: Colors.grey,
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 25),
                 Text(
                   AppLocalizations.of(context)!.cameraPermission,
                   textAlign: TextAlign.center,

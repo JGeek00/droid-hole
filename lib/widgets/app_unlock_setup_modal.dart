@@ -78,7 +78,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                   showSnackBar(
                     context: context, 
                     appConfigProvider: appConfigProvider,
-                    label: AppLocalizations.of(context)!.biometicUnlockNotActivated,
+                    label: AppLocalizations.of(context)!.biometricUnlockNotActivated,
                     color: Colors.red
                   );
                 }
@@ -103,7 +103,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
           showSnackBar(
             context: context, 
             appConfigProvider: appConfigProvider,
-            label: AppLocalizations.of(context)!.biometicUnlockNotDisabled,
+            label: AppLocalizations.of(context)!.biometricUnlockNotDisabled,
             color: Colors.red
           );
         }
