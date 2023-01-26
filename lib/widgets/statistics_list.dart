@@ -174,16 +174,11 @@ class StatisticsList extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(20),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(
-                color: Colors.black12,
-              )
-            ),
             child: Text(
               label,
               style: const TextStyle(
                 fontSize: 18,
+                fontWeight: FontWeight.w500
               ),
             ),
           ),
@@ -205,13 +200,6 @@ class StatisticsList extends StatelessWidget {
             : NoDataChart(
               topLabel: data1['label']
             ),
-          if (data1['data'] != null && data2['data'] != null) ...[
-            Container(
-              width: double.maxFinite,
-              height: 1,
-              color: Theme.of(context).dividerColor,
-            ),
-          ],
           data2['data'] != null
             ? generateList(
                 data2['data'], 

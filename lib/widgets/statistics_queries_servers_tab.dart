@@ -28,16 +28,11 @@ class QueriesServersTab extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                          color: Colors.black12,
-                        )
-                      ),
                       child: Text(
                         AppLocalizations.of(context)!.queryTypes,
                         style: const TextStyle(
                           fontSize: 18,
+                          fontWeight: FontWeight.w500
                         ),
                       ),
                     ),
@@ -59,14 +54,6 @@ class QueriesServersTab extends StatelessWidget {
             : NoDataChart(
               topLabel: AppLocalizations.of(context)!.queryTypes,
             ),
-          if (
-            serversProvider.getRealtimeStatus!.queryTypes.isEmpty == false &&
-            serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
-          )  Container(
-            width: double.maxFinite,
-            height: 1,
-            color: Theme.of(context).dividerColor,
-          ),
           serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
             ? Padding(
                 padding: const EdgeInsets.only(top: 20, bottom: 10),
@@ -74,16 +61,11 @@ class QueriesServersTab extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                          color: Colors.black12,
-                        )
-                      ),
                       child: Text(
                         AppLocalizations.of(context)!.upstreamServers,
                         style: const TextStyle(
                           fontSize: 18,
+                          fontWeight: FontWeight.w500
                         ),
                       ),
                     ),

@@ -171,8 +171,8 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
                         ),
                         Text(
                           serversProvider.selectedServer!.address,
-                          style: const TextStyle(
-                            color: Colors.grey,
+                          style: TextStyle(
+                            color: Theme.of(context).listTileTheme.textColor,
                             fontSize: 14
                           )
                         )
@@ -204,7 +204,6 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       actions: [
         PopupMenuButton(
           splashRadius: 20,
-          color: Theme.of(context).dialogBackgroundColor,
           itemBuilder: (context) => 
             serversProvider.selectedServer != null 
               ? serversProvider.isServerConnected == true 

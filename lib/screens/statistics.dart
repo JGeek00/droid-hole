@@ -62,16 +62,6 @@ class Statistics extends StatelessWidget {
                       forceElevated: innerBoxIsScrolled,
                       bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
                         ? TabBar(
-                          indicatorSize: TabBarIndicatorSize.label,
-                          indicator: orientation == Orientation.portrait
-                            ? CustomTabIndicatorPortrait(
-                                indicatorColor: Theme.of(context).primaryColor,
-                                itemsTabBar: 3
-                              )
-                            :  CustomTabIndicatorLandscape(
-                                indicatorColor: Theme.of(context).primaryColor,
-                                itemsTabBar: 3
-                              ),
                           tabs: orientation == Orientation.portrait
                             ? [
                                 Tab(

@@ -439,15 +439,6 @@ class _LogsListState extends State<LogsList> {
                           child: Container(
                             width: double.maxFinite,
                             padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              border: index < logsListDisplay.length
-                                ? Border(
-                                    bottom: BorderSide(
-                                      color: Theme.of(context).dividerColor
-                                    )
-                                  )
-                                : null
-                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -462,7 +453,7 @@ class _LogsListState extends State<LogsList> {
                                         logsListDisplay[index].url,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w400,
                                           fontSize: 16
                                         ),
                                       ),
@@ -473,9 +464,11 @@ class _LogsListState extends State<LogsList> {
                                       child: Text(
                                         logsListDisplay[index].device,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13
+                                        style: TextStyle(
+                                          color: Theme.of(context).listTileTheme.textColor,
+                                          fontSize: 14,
+                                          height: 1.4,
+                                          fontWeight: FontWeight.w400,
                                         ),
                                       ),
                                     )
@@ -620,7 +613,6 @@ class _LogsListState extends State<LogsList> {
                 }, 
                 icon: const Icon(Icons.clear_rounded),
                 splashRadius: 20,
-                color: Colors.black,
               )
             ],
             title: Container(
@@ -667,7 +659,6 @@ class _LogsListState extends State<LogsList> {
               splashRadius: 20,
             ),
             PopupMenuButton(
-              color: Theme.of(context).dialogBackgroundColor,
               splashRadius: 20,
               icon: const Icon(Icons.sort_rounded),
               onSelected: (value) => _updateSortStatus(value),
