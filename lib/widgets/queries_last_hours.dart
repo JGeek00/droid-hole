@@ -73,6 +73,12 @@ class QueriesLastHours extends StatelessWidget {
         )
       ),
       lineBarsData: [
+        // Hidden bar to allow 3 items on tooltip
+        LineChartBarData(
+          spots: data['data']['domains'],
+          color: Colors.transparent,
+          barWidth: 0,
+        ),
         LineChartBarData(
           spots: data['data']['ads'],
           color: Colors.blue,
@@ -103,12 +109,6 @@ class QueriesLastHours extends StatelessWidget {
             color: Colors.green.withOpacity(0.2)
           ),
         ),
-        // Hidden bar to allow 3 items on tooltip
-        LineChartBarData(
-          spots: data['data']['domains'],
-          color: Colors.transparent,
-          barWidth: 0,
-        ),
       ],
       lineTouchData: LineTouchData(
         enabled: true,
@@ -128,7 +128,7 @@ class QueriesLastHours extends StatelessWidget {
               )
             ),
             LineTooltipItem(
-              "Not blocked: ${items[0].y.toInt().toString()}", 
+              "Not blocked: ${items[1].y.toInt().toString()}", 
               const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
@@ -136,7 +136,7 @@ class QueriesLastHours extends StatelessWidget {
               )
             ),
             LineTooltipItem(
-              "Blocked: ${items[1].y.toInt().toString()}", 
+              "Blocked: ${items[2].y.toInt().toString()}", 
               const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
