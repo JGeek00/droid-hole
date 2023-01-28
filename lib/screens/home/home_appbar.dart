@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/switch_server_modal.dart';
-import 'package:droid_hole/screens/servers.dart';
+import 'package:droid_hole/screens/servers/servers.dart';
 
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';

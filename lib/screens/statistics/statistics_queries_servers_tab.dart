@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/no_data_chart.dart';
-import 'package:droid_hole/widgets/custom_pie_chart.dart';
-import 'package:droid_hole/widgets/pie_chart_legend.dart';
+import 'package:droid_hole/screens/statistics/no_data_chart.dart';
+import 'package:droid_hole/screens/statistics/custom_pie_chart.dart';
+import 'package:droid_hole/screens/statistics/pie_chart_legend.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 

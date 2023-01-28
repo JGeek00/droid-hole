@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'package:droid_hole/screens/domains.dart';
-import 'package:droid_hole/screens/servers.dart';
+import 'package:droid_hole/screens/domains/domains.dart';
+import 'package:droid_hole/screens/servers/servers.dart';
 import 'package:droid_hole/screens/unlock.dart';
-import 'package:droid_hole/screens/home.dart';
+import 'package:droid_hole/screens/home/home.dart';
 import 'package:droid_hole/screens/login.dart';
-import 'package:droid_hole/screens/logs.dart';
-import 'package:droid_hole/screens/settings.dart';
-import 'package:droid_hole/screens/statistics.dart';
+import 'package:droid_hole/screens/logs/logs.dart';
+import 'package:droid_hole/screens/settings/settings.dart';
+import 'package:droid_hole/screens/statistics/statistics.dart';
 
 import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';

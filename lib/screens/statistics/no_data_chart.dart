@@ -27,16 +27,16 @@ class NoDataChart extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 50),
-          const Icon(
+          Icon(
             Icons.show_chart_rounded,
             size: 40,
-            color: Colors.grey,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
           const SizedBox(height: 30),
           Text(
             AppLocalizations.of(context)!.noData,
-            style: const TextStyle(
-              color: Colors.grey,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.bold,
               fontSize: 16
             ),

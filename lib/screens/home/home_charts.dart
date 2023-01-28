@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/no_data_chart.dart';
-import 'package:droid_hole/widgets/queries_last_hours.dart';
-import 'package:droid_hole/widgets/clients_last_hours.dart';
+import 'package:droid_hole/screens/statistics/no_data_chart.dart';
+import 'package:droid_hole/screens/home/queries_last_hours.dart';
+import 'package:droid_hole/screens/home/clients_last_hours.dart';
 
 import 'package:droid_hole/constants/colors.dart';
 import 'package:droid_hole/functions/conversions.dart';
@@ -188,8 +188,8 @@ class HomeCharts extends StatelessWidget {
               const SizedBox(height: 50),
               Text(
                 AppLocalizations.of(context)!.loadingCharts,
-                style: const TextStyle(
-                  color: Colors.grey,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.bold,
                   fontSize: 22
                 ),

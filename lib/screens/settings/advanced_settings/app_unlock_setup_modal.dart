@@ -93,7 +93,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
             context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.noAvailableBiometrics,
-            color: Colors.grey
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           );
         }
       }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:droid_hole/screens/domains.dart';
-import 'package:droid_hole/screens/settings.dart';
-import 'package:droid_hole/screens/servers.dart';
-import 'package:droid_hole/screens/home.dart';
-import 'package:droid_hole/screens/logs.dart';
-import 'package:droid_hole/screens/statistics.dart';
+import 'package:droid_hole/screens/domains/domains.dart';
+import 'package:droid_hole/screens/settings/settings.dart';
+import 'package:droid_hole/screens/servers/servers.dart';
+import 'package:droid_hole/screens/home/home.dart';
+import 'package:droid_hole/screens/logs/logs.dart';
+import 'package:droid_hole/screens/statistics/statistics.dart';
 
 import 'package:droid_hole/models/app_screen.dart';
 

@@ -2,12 +2,12 @@
 
 import 'dart:io';
 
-import 'package:droid_hole/widgets/clients_filters_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/status_filters_modal.dart';
+import 'package:droid_hole/screens/logs/clients_filters_modal.dart';
+import 'package:droid_hole/screens/logs/status_filters_modal.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/format.dart';
@@ -232,8 +232,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                           filtersProvider.startTime != null 
                                             ? formatTimestamp(filtersProvider.startTime!, "dd/MM/yyyy - HH:mm")
                                             : AppLocalizations.of(context)!.notSelected,
-                                          style: const TextStyle(
-                                            color: Colors.grey,
+                                          style: TextStyle(
+                                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                                             fontSize: 12
                                           ),
                                         )
@@ -283,8 +283,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                           filtersProvider.endTime != null 
                                             ? formatTimestamp(filtersProvider.endTime!, "dd/MM/yyyy - HH:mm")
                                             : AppLocalizations.of(context)!.notSelected,
-                                          style: const TextStyle(
-                                            color: Colors.grey,
+                                          style: TextStyle(
+                                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                                             fontSize: 12
                                           ),
                                         )
@@ -341,8 +341,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                   filtersProvider.statusSelected.length,
                                   14
                                 ),
-                                style: const TextStyle(
-                                  color: Colors.grey
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                                 ),
                               ),
                             ],
@@ -383,8 +383,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                   filtersProvider.selectedClients.length,
                                   filtersProvider.totalClients.length
                                 ),
-                                style: const TextStyle(
-                                  color: Colors.grey
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                                 ),
                               ),
                             ],

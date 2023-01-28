@@ -28,8 +28,8 @@ class CustomListTile extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: padding ?? const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 25
+              vertical: 12,
+              horizontal: 16
             ),
           width: double.maxFinite,
           child: Row(
@@ -38,7 +38,7 @@ class CustomListTile extends StatelessWidget {
                 children: [
                   Icon(
                     leadingIcon,
-                    color: color,
+                    color: color ?? Theme.of(context).colorScheme.onSurface,
                   ),
                   const SizedBox(width: 20),
                 ],
@@ -51,7 +51,7 @@ class CustomListTile extends StatelessWidget {
                       label,
                       style: TextStyle(
                         fontSize: 16,
-                        color: color
+                        color: color ?? Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     if (description != null) Column(
@@ -60,7 +60,7 @@ class CustomListTile extends StatelessWidget {
                         Text(
                           description!,
                           style: TextStyle(
-                            color: color ?? Colors.grey
+                            color: color ?? Theme.of(context).colorScheme.onSurfaceVariant
                           ),
                         )
                       ],

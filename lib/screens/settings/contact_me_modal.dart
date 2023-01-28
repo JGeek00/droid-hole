@@ -88,7 +88,7 @@ class _ContactMeModalState extends State<ContactMeModal> {
                   children: [
                     SvgPicture.asset(
                       'assets/resources/github.svg',
-                      color: Theme.of(context).textTheme.bodyText2!.color,
+                      color: Theme.of(context).colorScheme.onSurface,
                       width: 25,
                       height: 25,
                     ),
@@ -96,17 +96,18 @@ class _ContactMeModalState extends State<ContactMeModal> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "GitHub",
                           style: TextStyle(
-                            fontSize: 16
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.onSurface
                           ),
                         ),
                         const SizedBox(height: 5),
                         Text(
                           AppLocalizations.of(context)!.openIssueGitHub,
-                          style: const TextStyle(
-                            color: Colors.grey
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant
                           ),
                         )
                       ],
@@ -138,10 +139,11 @@ class _ContactMeModalState extends State<ContactMeModal> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "Email",
                               style: TextStyle(
-                                fontSize: 16
+                                fontSize: 16,
+                                color: Theme.of(context).colorScheme.onSurface
                               ),
                             ),
                             const SizedBox(height: 5),
@@ -149,8 +151,8 @@ class _ContactMeModalState extends State<ContactMeModal> {
                               width: width-164,
                               child: Text(
                                 AppLocalizations.of(context)!.writeEmail,
-                                style: const TextStyle(
-                                  color: Colors.grey
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant
                                 ),
                               ),
                             )

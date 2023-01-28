@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/add_server_fullscreen.dart';
+import 'package:droid_hole/screens/servers/add_server_fullscreen.dart';
 
 class NoServerSelected extends StatelessWidget {
   const NoServerSelected({Key? key,}) : super(key: key);
@@ -29,15 +29,15 @@ class NoServerSelected extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const Icon(
+                Icon(
                   Icons.link_off,
                   size: 70,
-                  color: Colors.grey,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
                 Text(
                   AppLocalizations.of(context)!.noServerSelected,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontSize: 24
                   ),
                 ),

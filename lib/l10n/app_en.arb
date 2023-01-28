@@ -301,5 +301,6 @@
     "noSavedLogs": "No saved logs",
     "appLogs": "App logs",
     "errorsApp": "Errors registered by the app",
-    "switchServer": "Switch server"
+    "switchServer": "Switch server",
+    "appSettings": "App settings"
 }

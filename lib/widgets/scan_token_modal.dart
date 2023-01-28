@@ -95,8 +95,8 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
                 Text(
                   AppLocalizations.of(context)!.gettingPermission,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontSize: 16,
                     fontWeight: FontWeight.w500
                   ),
@@ -135,17 +135,17 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
+                Icon(
                   Icons.no_photography,
                   size: 40,
-                  color: Colors.grey,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
                 const SizedBox(height: 25),
                 Text(
                   AppLocalizations.of(context)!.cameraPermission,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontSize: 16,
                     fontWeight: FontWeight.bold
                   ),

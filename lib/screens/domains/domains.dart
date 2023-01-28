@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'package:droid_hole/widgets/domains_list.dart';
-import 'package:droid_hole/widgets/custom_tab_indicator.dart';
+import 'package:droid_hole/screens/domains/domains_list.dart';
 
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -79,49 +78,28 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
                   bottom: TabBar(
                     controller: tabController,
                     onTap: (value) => domainsListProvider.setSelectedTab(value),
-                    indicatorSize: TabBarIndicatorSize.label,
-                    indicator: orientation == Orientation.portrait
-                      ? CustomTabIndicatorPortrait(
-                          indicatorColor: Theme.of(context).colorScheme.primary,
-                          itemsTabBar: 2
-                        )
-                      :  CustomTabIndicatorLandscape(
-                          indicatorColor: Theme.of(context).colorScheme.primary,
-                          itemsTabBar: 2
+                    tabs: [
+                      Tab(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.check_circle_rounded),
+                            SizedBox(width: 10),
+                            Text("Whitelist")
+                          ],
                         ),
-                    tabs: orientation == Orientation.portrait
-                      ? [
-                          const Tab(
-                            icon: Icon(Icons.check_circle_rounded),
-                            text: "Whitelist",
-                          ),
-                          const Tab(
-                            icon: Icon(Icons.block),
-                            text: "Blacklist",
-                          ),
-                        ]
-                      : [
-                        Tab(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.check_circle_rounded),
-                              SizedBox(width: 10),
-                              Text("Whitelist")
-                            ],
-                          ),
+                      ),
+                      Tab(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.block),
+                            SizedBox(width: 10),
+                            Text("Blacklist")
+                          ],
                         ),
-                        Tab(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.block),
-                              SizedBox(width: 10),
-                              Text("Blacklist")
-                            ],
-                          ),
-                        ),
-                      ]
+                      ),
+                    ]
                   )
                 ),
               ),

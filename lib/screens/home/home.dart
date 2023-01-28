@@ -5,11 +5,11 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/home_tile.dart';
-import 'package:droid_hole/widgets/disable_modal.dart';
-import 'package:droid_hole/widgets/home_charts.dart';
+import 'package:droid_hole/screens/home/home_tile.dart';
+import 'package:droid_hole/screens/home/disable_modal.dart';
+import 'package:droid_hole/screens/home/home_charts.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
-import 'package:droid_hole/widgets/home_appbar.dart';
+import 'package:droid_hole/screens/home/home_appbar.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
 import 'package:droid_hole/functions/server_management.dart';
@@ -74,8 +74,8 @@ class _HomeState extends State<Home> {
                 Text(
                   AppLocalizations.of(context)!.loadingStats,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.bold,
                     fontSize: 22
                   ),
@@ -242,8 +242,8 @@ class _HomeState extends State<Home> {
                 Text(
                   AppLocalizations.of(context)!.statsNotLoaded,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.bold,
                     fontSize: 22
                   ),

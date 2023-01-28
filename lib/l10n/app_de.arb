@@ -301,5 +301,6 @@
   "noSavedLogs": "Keine gespeicherten Logs",
   "appLogs": "App Logs",
   "errorsApp": "Von der App registrierte Fehler",
-  "switchServer": "Server wechseln"
+  "switchServer": "Server wechseln",
+  "appSettings": "App Einstellungen"
 }

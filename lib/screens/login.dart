@@ -88,8 +88,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Flexible(
                       child: Text(
                         "${AppLocalizations.of(context)!.connectingTo} ${widget.serversProvider.selectedServer!.alias}...",
-                        style: const TextStyle(
-                          color: Colors.grey,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 22,
                           fontWeight: FontWeight.w500
                         ),

@@ -303,5 +303,6 @@
     "noSavedLogs": "No hay logs guardados",
     "appLogs": "Logs de la aplicación",
     "errorsApp": "Errores registrados por la app",
-    "switchServer": "Cambiar de servidor"
+    "switchServer": "Cambiar de servidor",
+    "appSettings": "Ajustes de la app"
 }

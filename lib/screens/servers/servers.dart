@@ -8,8 +8,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/unlock.dart';
 
-import 'package:droid_hole/widgets/add_server_fullscreen.dart';
-import 'package:droid_hole/widgets/delete_modal.dart';
+import 'package:droid_hole/screens/servers/add_server_fullscreen.dart';
+import 'package:droid_hole/screens/servers/delete_modal.dart';
 
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
@@ -354,7 +354,9 @@ class _ServersPageState extends State<ServersPage> {
 
     return WillPopScope(
       onWillPop: () async {
-        appConfigProvider.setSelectedTab(0);
+        if (serversProvider.selectedServer == null) {
+          appConfigProvider.setSelectedTab(0);
+        }
         return true;
       },
       child: Stack(
@@ -434,9 +436,9 @@ class _ServersPageState extends State<ServersPage> {
                         Text(
                           AppLocalizations.of(context)!.beginAddConnection,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],

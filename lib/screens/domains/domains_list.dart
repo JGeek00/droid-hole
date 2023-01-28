@@ -5,8 +5,8 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/add_domain_modal.dart';
-import 'package:droid_hole/widgets/domain_details_modal.dart';
+import 'package:droid_hole/screens/domains/add_domain_modal.dart';
+import 'package:droid_hole/screens/domains/domain_details_screen.dart';
 
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
@@ -220,9 +220,9 @@ class _DomainsListState extends State<DomainsList> {
               child: Text(
                 AppLocalizations.of(context)!.noDomains,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 24,
-                  color: Colors.grey
+                  color: Theme.of(context).colorScheme.onSurfaceVariant
                 ),
               )
             ),
@@ -236,17 +236,12 @@ class _DomainsListState extends State<DomainsList> {
               itemCount: data.length,
               itemBuilder: (context, index) => ListTile(
                 onTap: () => {
-                  showModalBottomSheet(
-                    context: context, 
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
-                    builder: (context) => DomainDetailsModal(
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => DomainDetailsScreen(
                       domain: data[index], 
-                      statusBarHeight: MediaQuery.of(context).viewPadding.top, 
-                      remove: removeDomain, 
-                      enableDisable: (domain) => {}
+                      remove: removeDomain
                     )
-                  )
+                  ))
                 },
                 title: Text(
                   data[index].domain,
@@ -254,7 +249,12 @@ class _DomainsListState extends State<DomainsList> {
                 ),
                 subtitle: Row(
                   children: [
-                    Text(formatTimestamp(data[index].dateAdded, 'yyyy-MM-dd')),
+                    Text(
+                      formatTimestamp(data[index].dateAdded, 'yyyy-MM-dd'),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant
+                      ),
+                    ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: const Text(
@@ -301,8 +301,8 @@ class _DomainsListState extends State<DomainsList> {
               Text(
                 AppLocalizations.of(context)!.loadingList,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.grey,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 22
                 ),
               )
@@ -330,8 +330,8 @@ class _DomainsListState extends State<DomainsList> {
               Text(
                 AppLocalizations.of(context)!.domainsNotLoaded,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.grey,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 22
                 ),
               )

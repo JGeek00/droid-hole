@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-import 'package:droid_hole/widgets/custom_pie_chart.dart';
-import 'package:droid_hole/widgets/no_data_chart.dart';
-import 'package:droid_hole/widgets/pie_chart_legend.dart';
+import 'package:droid_hole/screens/statistics/custom_pie_chart.dart';
+import 'package:droid_hole/screens/statistics/no_data_chart.dart';
+import 'package:droid_hole/screens/statistics/pie_chart_legend.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -85,9 +85,9 @@ class StatisticsList extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             softWrap: false,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey
+                              color: Theme.of(context).colorScheme.onSurfaceVariant
                             ),
                           ),
                         ],

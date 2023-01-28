@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/selected_server_disconnected.dart';
-import 'package:droid_hole/widgets/statistics_list.dart';
-import 'package:droid_hole/widgets/statistics_queries_servers_tab.dart';
-import 'package:droid_hole/widgets/custom_tab_indicator.dart';
+import 'package:droid_hole/screens/statistics/statistics_list.dart';
+import 'package:droid_hole/screens/statistics/statistics_queries_servers_tab.dart';
 
+import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
@@ -37,8 +36,8 @@ class Statistics extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context)!.loadingStats,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontSize: 22
                   ),
                 )
