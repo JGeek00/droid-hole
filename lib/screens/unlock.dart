@@ -42,7 +42,6 @@ class _UnlockState extends State<Unlock> {
         final result = await loginQuery(serverObj);
         if (result['result'] == 'success') {
           serverObj.enabled = result['status'] == 'enabled' ? true : false;
-          serversProvider.setPhpSessId(result['phpSessId']);
           serversProvider.setselectedServer(serverObj);
           serversProvider.setRefreshServerStatus(true);
           serversProvider.setIsServerConnected(true);
@@ -53,7 +52,6 @@ class _UnlockState extends State<Unlock> {
       }
       appConfigProvider.setAppUnlocked(true);
     }
-    serversProvider.setNeedsLogin(false);
 
     void updateCode(String value) {
       setState(() => _code = value);

@@ -133,7 +133,6 @@ class _DroidHoleState extends State<DroidHole> {
   }
 
   final StatusUpdater statusUpdater = StatusUpdater();
-  bool firstExec = true;
 
   @override
   void initState() {
@@ -148,8 +147,8 @@ class _DroidHoleState extends State<DroidHole> {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    if (firstExec == true || serversProvider.getRefreshServerStatus == true) {
-      if (firstExec == true) {
+    if (serversProvider.startAutoRefresh == true || serversProvider.getRefreshServerStatus == true) {
+      if (serversProvider.startAutoRefresh == true) {
         statusUpdater.context = context;
       }
       if (serversProvider.getRefreshServerStatus == true) {
@@ -157,9 +156,8 @@ class _DroidHoleState extends State<DroidHole> {
       }
       statusUpdater.statusData();
       statusUpdater.overTimeData();
-      setState(() {
-        firstExec = false;
-      });
+
+      serversProvider.setStartAutoRefresh(false);
     }
 
     return DynamicColorBuilder(

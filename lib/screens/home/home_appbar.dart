@@ -30,8 +30,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       final ProcessModal process = ProcessModal(context: context);
       process.open(AppLocalizations.of(context)!.refreshingData);
       final result = await realtimeStatus(
-        serversProvider.selectedServer!,
-        serversProvider.phpSessId!
+        serversProvider.selectedServer!
       );
       process.close();
       if (result['result'] == "success") {
@@ -90,12 +89,11 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
           defaultServer: server.defaultServer,
           enabled: result['status'] == 'enabled' ? true : false
         ));
-        serversProvider.setPhpSessId(result['phpSessId']);
-        final statusResult = await realtimeStatus(server, result['phpSessId']);
+        final statusResult = await realtimeStatus(server);
         if (statusResult['result'] == 'success') {
           serversProvider.setRealtimeStatus(statusResult['data']);
         }
-        final overtimeDataResult = await fetchOverTimeData(server, result['phpSessId']);
+        final overtimeDataResult = await fetchOverTimeData(server);
         if (overtimeDataResult['result'] == 'success') {
           serversProvider.setOvertimeData(overtimeDataResult['data']);
           serversProvider.setOvertimeDataLoadingStatus(1);

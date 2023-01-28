@@ -105,12 +105,11 @@ class _ServersPageState extends State<ServersPage> {
           defaultServer: server.defaultServer,
           enabled: result['status'] == 'enabled' ? true : false
         ));
-        serversProvider.setPhpSessId(result['phpSessId']);
-        final statusResult = await realtimeStatus(server, result['phpSessId']);
+        final statusResult = await realtimeStatus(server);
         if (statusResult['result'] == 'success') {
           serversProvider.setRealtimeStatus(statusResult['data']);
         }
-        final overtimeDataResult = await fetchOverTimeData(server, result['phpSessId']);
+        final overtimeDataResult = await fetchOverTimeData(server);
         if (overtimeDataResult['result'] == 'success') {
           serversProvider.setOvertimeData(overtimeDataResult['data']);
           serversProvider.setOvertimeDataLoadingStatus(1);
@@ -225,9 +224,10 @@ class _ServersPageState extends State<ServersPage> {
                 Text(
                   serversProvider.getServersList[index].address,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w500
+                    fontWeight: FontWeight.w400,
+                    color: Theme.of(context).colorScheme.onSurface
                   ),
                 ),
                 Column(
@@ -235,8 +235,9 @@ class _ServersPageState extends State<ServersPage> {
                     const SizedBox(height: 5),
                     Text(
                       serversProvider.getServersList[index].alias,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant
                       ),
                     )
                   ],
@@ -261,7 +262,10 @@ class _ServersPageState extends State<ServersPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               PopupMenuButton(
-                color: Theme.of(context).colorScheme.onSurface,
+                icon: Icon(
+                  Icons.more_vert_rounded,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     enabled: server.defaultServer == false 
@@ -369,7 +373,6 @@ class _ServersPageState extends State<ServersPage> {
                   ? AppLocalizations.of(context)!.connect
                   : AppLocalizations.of(context)!.servers,
               ),
-              centerTitle: true,
             ),
             body: serversProvider.getServersList.isNotEmpty ? 
               ListView.builder(

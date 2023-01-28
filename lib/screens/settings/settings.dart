@@ -16,7 +16,7 @@ import 'package:droid_hole/widgets/logs_quantity_load_modal.dart';
 import 'package:droid_hole/screens/settings/theme_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/screens/settings/legal_modal.dart';
-import 'package:droid_hole/widgets/auto_refresh_time_modal.dart';
+import 'package:droid_hole/screens/settings/auto_refresh_time_modal.dart';
 
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/config/urls.dart';

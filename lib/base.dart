@@ -9,7 +9,6 @@ import 'package:droid_hole/screens/domains/domains.dart';
 import 'package:droid_hole/screens/servers/servers.dart';
 import 'package:droid_hole/screens/unlock.dart';
 import 'package:droid_hole/screens/home/home.dart';
-import 'package:droid_hole/screens/login.dart';
 import 'package:droid_hole/screens/logs/logs.dart';
 import 'package:droid_hole/screens/settings/settings.dart';
 import 'package:droid_hole/screens/statistics/statistics.dart';
@@ -19,7 +18,6 @@ import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/constants/app_screens.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
-import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
@@ -88,7 +86,6 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
     final domainsListProvider = Provider.of<DomainsListProvider>(context, listen: false);
-    final filtersProvider = Provider.of<FiltersProvider>(context, listen: false);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -116,34 +113,26 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
           ),
           child: appConfigProvider.appUnlocked == false
             ? const Unlock()
-            :  serversProvider.selectedServer != null && serversProvider.needsLogin == true
-              ? LoginScreen(
-                  serversProvider: serversProvider,
-                  filtersProvider: filtersProvider,
-                )
-              : serversProvider.selectedServer != null
-                ? pages[appConfigProvider.selectedTab]
-                : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
+            :  serversProvider.selectedServer != null
+              ? pages[appConfigProvider.selectedTab]
+              : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
         ),
-        bottomNavigationBar:
-          serversProvider.selectedServer != null && serversProvider.needsLogin == true
-            ? null
-            : appConfigProvider.appUnlocked == false
-              ? null
-              : BottomNavBar(
-                  screens: serversProvider.selectedServer != null
-                    ? appScreens
-                    : appScreensNotSelected,
-                  selectedScreen: serversProvider.selectedServer != null
-                    ? appConfigProvider.selectedTab
-                    : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
-                  onChange: (selected) {
-                    if (selected != 3) {
-                      domainsListProvider.setSelectedTab(null);
-                    }
-                    appConfigProvider.setSelectedTab(selected);
-                  },
-                ),
+        bottomNavigationBar: appConfigProvider.appUnlocked == false
+          ? null
+          : BottomNavBar(
+              screens: serversProvider.selectedServer != null
+                ? appScreens
+                : appScreensNotSelected,
+              selectedScreen: serversProvider.selectedServer != null
+                ? appConfigProvider.selectedTab
+                : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
+              onChange: (selected) {
+                if (selected != 3) {
+                  domainsListProvider.setSelectedTab(null);
+                }
+                appConfigProvider.setSelectedTab(selected);
+              },
+            ),
       ),
     );
   }

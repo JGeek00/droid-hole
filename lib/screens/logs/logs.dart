@@ -32,37 +32,18 @@ class Logs extends StatelessWidget {
     final filtersProvider = Provider.of<FiltersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    if (serversProvider.selectedServer != null && serversProvider.isServerConnected == true) {
-      return LogsList(
-        server: serversProvider.selectedServer!, 
-        phpSessId: serversProvider.phpSessId!,
-        selectedStatus: filtersProvider.statusSelected,
-        startTime: filtersProvider.startTime,
-        endTime: filtersProvider.endTime,
-        logsPerQuery: appConfigProvider.logsPerQuery,
-      ); 
-    }
-    else {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.queryLogs),
-          centerTitle: true,
-        ),
-        body: serversProvider.selectedServer != null 
-        ? serversProvider.isServerConnected == true 
-          ? null
-          : const Center(
-              child: SelectedServerDisconnected()
-            )
-        : const NoServerSelected()
-      );
-    }
+    return LogsList(
+      server: serversProvider.selectedServer!, 
+      selectedStatus: filtersProvider.statusSelected,
+      startTime: filtersProvider.startTime,
+      endTime: filtersProvider.endTime,
+      logsPerQuery: appConfigProvider.logsPerQuery,
+    ); 
   }
 }
 
 class LogsList extends StatefulWidget {
   final Server server;
-  final String phpSessId;
   final List<int> selectedStatus;
   final DateTime? startTime;
   final DateTime? endTime;
@@ -71,7 +52,6 @@ class LogsList extends StatefulWidget {
   const LogsList({
     Key? key,
     required this.server,
-    required this.phpSessId,
     required this.selectedStatus,
     required this.startTime,
     required this.endTime,
@@ -148,7 +128,6 @@ class _LogsListState extends State<LogsList> {
     else {
       final result = await fetchLogs(
         server: widget.server,
-        phpSessId: widget.phpSessId,
         from:  minusHoursTimestamp,
         until: timestamp
       );
@@ -288,8 +267,7 @@ class _LogsListState extends State<LogsList> {
       final result = await setWhiteBlacklist(
         server: serversProvider.selectedServer!, 
         domain: log.url, 
-        list: list, 
-        phpSessId: serversProvider.phpSessId!
+        list: list
       );
       loading.close();
       if (result['result'] == 'success') {

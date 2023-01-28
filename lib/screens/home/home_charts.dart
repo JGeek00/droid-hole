@@ -190,7 +190,6 @@ class HomeCharts extends StatelessWidget {
                 AppLocalizations.of(context)!.loadingCharts,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.bold,
                   fontSize: 22
                 ),
               )
@@ -330,7 +329,6 @@ class HomeCharts extends StatelessWidget {
                 AppLocalizations.of(context)!.chartsNotLoaded,
                 style: const TextStyle(
                   color: Colors.grey,
-                  fontWeight: FontWeight.bold,
                   fontSize: 22
                 ),
               )

@@ -8,9 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/home/home_tile.dart';
 import 'package:droid_hole/screens/home/disable_modal.dart';
 import 'package:droid_hole/screens/home/home_charts.dart';
-import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/screens/home/home_appbar.dart';
-import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
 import 'package:droid_hole/functions/server_management.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -76,7 +74,6 @@ class _HomeState extends State<Home> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.bold,
                     fontSize: 22
                   ),
                 )
@@ -244,7 +241,6 @@ class _HomeState extends State<Home> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.bold,
                     fontSize: 22
                   ),
                 )
@@ -282,25 +278,19 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       appBar: const HomeAppBar(),
-      body: serversProvider.selectedServer != null 
-        ? serversProvider.isServerConnected == true 
-          ? RefreshIndicator(
-              onRefresh: () async {
-                await refreshServerStatus(context, serversProvider, appConfigProvider);
-              },
-              child: ListView(
-                controller: scrollController,
-                children: [
-                  tiles(),
-                  const HomeCharts()
-                ],
-              ),
-            )
-          : const Center(
-              child: SelectedServerDisconnected()
-            )
-        : const NoServerSelected(),
-      floatingActionButton: appConfigProvider.showingSnackbar
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await refreshServerStatus(context, serversProvider, appConfigProvider);
+        },
+        child: ListView(
+          controller: scrollController,
+          children: [
+            tiles(),
+            const HomeCharts()
+          ],
+        ),
+      ),
+      floatingActionButton: appConfigProvider.showingSnackbar && serversProvider.getStatusLoading == 1
         ? null
         : isVisible 
           ? FloatingActionButton(

@@ -57,8 +57,6 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
   Widget build(BuildContext context) {
     final domainsListProvider = Provider.of<DomainsListProvider>(context);
 
-    final orientation = MediaQuery.of(context).orientation;
-
     return DefaultTabController(
       length: 2,
       child: NestedScrollView(
@@ -71,33 +69,20 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
                 top: false,
                 sliver: SliverAppBar(
                   title: Text(AppLocalizations.of(context)!.domains),
-                  centerTitle: true,
                   pinned: true,
                   floating: true,
                   forceElevated: innerBoxIsScrolled,
                   bottom: TabBar(
                     controller: tabController,
                     onTap: (value) => domainsListProvider.setSelectedTab(value),
-                    tabs: [
+                    tabs: const [
                       Tab(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.check_circle_rounded),
-                            SizedBox(width: 10),
-                            Text("Whitelist")
-                          ],
-                        ),
+                        icon: Icon(Icons.check_circle_rounded),
+                        text: "Whitelist",
                       ),
                       Tab(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.block),
-                            SizedBox(width: 10),
-                            Text("Blacklist")
-                          ],
-                        ),
+                        icon: Icon(Icons.block),
+                        text: "Blacklist",
                       ),
                     ]
                   )
@@ -119,7 +104,7 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
           ),
           child: TabBarView(
             controller: tabController,
-             children: [
+            children: [
               DomainsList(
                 type: 'whitelist',
                 loadStatus: domainsListProvider.loadingStatus,

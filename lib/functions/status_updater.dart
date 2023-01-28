@@ -34,8 +34,7 @@ class StatusUpdater {
         if (serversProvider.selectedServer != null) {
           String selectedUrlBefore = serversProvider.selectedServer!.address;
           final statusResult = await realtimeStatus(
-            serversProvider.selectedServer!,
-            serversProvider.phpSessId!
+            serversProvider.selectedServer!
           );
           if (statusResult['result'] == 'success') {
             serversProvider.updateselectedServerStatus(
@@ -74,8 +73,7 @@ class StatusUpdater {
       if (serversProvider.selectedServer != null) {
         String statusUrlBefore = serversProvider.selectedServer!.address;
         final statusResult = await fetchOverTimeData(
-          serversProvider.selectedServer!,
-          serversProvider.phpSessId!
+          serversProvider.selectedServer!
         );
         if (statusResult['result'] == 'success') {
           serversProvider.setOvertimeData(statusResult['data']);

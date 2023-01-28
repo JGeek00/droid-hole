@@ -10,8 +10,7 @@ import 'package:droid_hole/services/http_requests.dart';
 
 Future refreshServerStatus(BuildContext context, ServersProvider serversProvider, AppConfigProvider appConfigProvider) async {
   final result = await realtimeStatus(
-    serversProvider.selectedServer!,
-    serversProvider.phpSessId!
+    serversProvider.selectedServer!
   );
   if (result['result'] == "success") {
     serversProvider.updateselectedServerStatus(

@@ -24,7 +24,7 @@ class ServersProvider with ChangeNotifier {
   int _overtimeDataLoading = 0;
   OverTimeData? _overtimeData;
 
-  bool _needsLogin = false;
+  bool _startAutoRefresh = false;
 
   List<Server> get getServersList {
     return _serversList;
@@ -70,9 +70,13 @@ class ServersProvider with ChangeNotifier {
   bool get getRefreshServerStatus {
     return _refreshServerStatus;
   }
+  
+  bool get startAutoRefresh {
+    return _startAutoRefresh;
+  }
 
-  bool get needsLogin {
-    return _needsLogin;
+  void setStartAutoRefresh(bool value) {
+    _startAutoRefresh = value;
   }
 
   void setRefreshServerStatus(bool status) {
@@ -80,11 +84,6 @@ class ServersProvider with ChangeNotifier {
     if (status == true) {
       notifyListeners();
     }
-  }
-
-  void setNeedsLogin(bool status) {
-    _needsLogin = status;
-    notifyListeners();
   }
 
   Future<bool> addServer(Server server) async {
@@ -222,7 +221,7 @@ class ServersProvider with ChangeNotifier {
   }
 
   Future saveFromDb(List<Map<String, dynamic>>? servers, bool connect) async {
-    if (servers != null) {
+   if (servers != null) {
       for (var server in servers) {
         final Server serverObj = Server(
           address: server['address'], 
@@ -231,28 +230,60 @@ class ServersProvider with ChangeNotifier {
           defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
         );
         _serversList.add(serverObj);
-        if (convertFromIntToBool(server['isDefaultServer'])! == true) {
+        if (convertFromIntToBool(server['isDefaultServer']) == true) {
           _selectedServer = serverObj;
-          _needsLogin = true;
+          if (connect == true) {
+            fetchMainData(serverObj);
+          }
+          else {
+            _isServerConnected = null;
+          }
         }
       }
     }
     notifyListeners();
   }
 
+  void fetchMainData(Server server) async {
+    final result = await Future.wait([
+      realtimeStatus(server),
+      fetchOverTimeData(server)
+    ]);
+
+    if (result[0]['result'] == 'success' && result[1]['result'] == 'success') {
+      _realtimeStatus = result[0]['data'];
+      _overtimeData = result[1]['data'];
+      _selectedServer?.enabled = result[0]['data'].status == 'enabled' ? true : false;
+
+      _overtimeDataLoading = 1;
+      _statusLoading = 1;
+
+      _startAutoRefresh = true;
+      _isServerConnected = true;
+    }
+    else {
+      _overtimeDataLoading = 2;
+      _statusLoading = 2;
+
+      _isServerConnected = false;
+    }
+  }
+
   Future<bool> login(Server serverObj) async {
     final result = await loginQuery(serverObj);
     if (result['result'] == 'success') {
-      serverObj.enabled = result['status'] == 'enabled' ? true : false;
+      _selectedServer = serverObj;
+      _realtimeStatus = result['realtimeStatus'];
       _phpSessId = result['phpSessId'];
       _isServerConnected = true;
-      _selectedServer = serverObj;
+      _statusLoading = 1;
       notifyListeners();
       return true;
     }
     else {
       _isServerConnected = false;
       _selectedServer = serverObj;
+      _statusLoading = 2;
       notifyListeners();
       return false;
     }

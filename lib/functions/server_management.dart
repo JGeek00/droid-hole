@@ -17,8 +17,7 @@ void enableServer(BuildContext context) async {
   final ProcessModal process = ProcessModal(context: context);
   process.open(AppLocalizations.of(context)!.enablingServer);
   final result = await enableServerRequest(
-    serversProvider.selectedServer!,
-    serversProvider.phpSessId!,
+    serversProvider.selectedServer!
   );
   process.close();
   if (result['result'] == 'success') {
@@ -47,8 +46,7 @@ void disableServer(int time, BuildContext context) async {
   final ProcessModal process = ProcessModal(context: context);
   process.open(AppLocalizations.of(context)!.disablingServer);
   final result = await disableServerRequest(
-    serversProvider.selectedServer!, 
-    serversProvider.phpSessId!,
+    serversProvider.selectedServer!,
     time
   );
   process.close();

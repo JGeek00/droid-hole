@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/statistics/custom_pie_chart.dart';
 import 'package:droid_hole/screens/statistics/no_data_chart.dart';
 import 'package:droid_hole/screens/statistics/pie_chart_legend.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
+import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/conversions.dart';
 
@@ -26,6 +28,7 @@ class StatisticsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
     final filtersProvider = Provider.of<FiltersProvider>(context);
 
@@ -167,27 +170,81 @@ class StatisticsList extends StatelessWidget {
       );
     }
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          data1['data'] != null 
-            ? generateList(
-                data1['data'], 
-                data1['label']
+    switch (serversProvider.getStatusLoading) {
+      case 0:
+        return SizedBox(
+          width: double.maxFinite,
+          height: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 50),
+              Text(
+                AppLocalizations.of(context)!.loadingStats,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontSize: 22
+                ),
               )
-            : NoDataChart(
-              topLabel: data1['label']
-            ),
-          data2['data'] != null
-            ? generateList(
-                data2['data'], 
-                data2['label']
+            ],
+          ),
+        );
+
+      case 1:
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              data1['data'] != null 
+                ? generateList(
+                    data1['data'], 
+                    data1['label']
+                  )
+                : NoDataChart(
+                  topLabel: data1['label']
+                ),
+              data2['data'] != null
+                ? generateList(
+                    data2['data'], 
+                    data2['label']
+                  )
+                : NoDataChart(
+                  topLabel: data2['label']
+                ),
+            ],
+          ),
+        );
+
+      case 2:
+        return SizedBox(
+          width: double.maxFinite,
+          height: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.error,
+                size: 50,
+                color: Colors.red,
+              ),
+              const SizedBox(height: 50),
+              Text(
+                AppLocalizations.of(context)!.statsNotLoaded,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 22
+                ),
               )
-            : NoDataChart(
-              topLabel: data2['label']
-            ),
-        ],
-      ),
-    );
+            ],
+          ),
+        );
+
+      default:  
+        return const SizedBox();
+    }
   }
 }

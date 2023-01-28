@@ -40,7 +40,7 @@ Future<Response> httpClient({
   }
 }
 
-Future realtimeStatus(Server server, String token) async {
+Future realtimeStatus(Server server) async {
   try {
     final response = await httpClient(
       method: 'get',
@@ -203,14 +203,11 @@ Future loginQuery(Server server) async {
   }
 }
 
-dynamic disableServerRequest(Server server, String phpSessId, int time) async {
+dynamic disableServerRequest(Server server, int time) async {
   try {
     final response = await httpClient(
       method: 'get', 
       url: '${server.address}/admin/api.php?auth=${server.token}&disable=$time',
-      headers: {
-        'Cookie': 'PHPSESSID=$phpSessId'
-      }
     );
     final body = jsonDecode(response.body);
     if (body.runtimeType != List && body['status'] != null) {
@@ -234,14 +231,11 @@ dynamic disableServerRequest(Server server, String phpSessId, int time) async {
   }
 }
 
-dynamic enableServerRequest(Server server, String phpSessId) async {
+dynamic enableServerRequest(Server server) async {
   try {
     final response = await httpClient(
       method: 'get', 
       url: '${server.address}/admin/api.php?auth=${server.token}&enable',
-      headers: {
-        'Cookie': 'PHPSESSID=$phpSessId'
-      }
     );
     final body = jsonDecode(response.body);
     if (body.runtimeType != List && body['status'] != null) {
@@ -266,14 +260,11 @@ dynamic enableServerRequest(Server server, String phpSessId) async {
 }
 
 
-Future fetchOverTimeData(Server server, String phpSessId) async {
+Future fetchOverTimeData(Server server) async {
   try {
     final response = await httpClient(
       method: 'get',
       url: '${server.address}/admin/api.php?auth=${server.token}&overTimeData10mins&overTimeDataClients&getClientNames',
-      headers: {
-        'Cookie': 'PHPSESSID=$phpSessId'
-      }
     );
     final body = jsonDecode(response.body);
     var data = OverTimeData.fromJson(body);
@@ -295,7 +286,6 @@ Future fetchOverTimeData(Server server, String phpSessId) async {
 
 Future fetchLogs({
   required Server server, 
-  required String phpSessId, 
   required DateTime from, 
   required DateTime until, 
 }) async {
@@ -303,9 +293,6 @@ Future fetchLogs({
     final response = await httpClient(
       method: 'get',
       url: '${server.address}/admin/api.php?auth=${server.token}&getAllQueries&from=${from.millisecondsSinceEpoch~/1000}&until=${until.millisecondsSinceEpoch~/1000}',
-      headers: {
-        'Cookie': 'PHPSESSID=$phpSessId'
-      },
       timeout: 20
     );
     final body = jsonDecode(response.body);
@@ -329,7 +316,6 @@ Future setWhiteBlacklist({
   required Server server, 
   required String domain,
   required String list,
-  required String phpSessId
 }) async {
   try {
     final result = await http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=$list&add=$domain'));
