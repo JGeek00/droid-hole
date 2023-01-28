@@ -204,8 +204,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                 child: InkWell(
                                   onTap: () => _selectTime('from'),
                                   borderRadius: BorderRadius.circular(10),
-                                  splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                                  highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  splashColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                  highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 15,
@@ -214,7 +214,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(
-                                        color: Theme.of(context).primaryColor
+                                        color: Theme.of(context).colorScheme.primary
                                       )
                                     ),
                                     child: Column(
@@ -224,7 +224,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 14,
-                                            color: Theme.of(context).primaryColor,
+                                            color: Theme.of(context).colorScheme.primary,
                                           ),
                                         ),
                                         const SizedBox(height: 5),
@@ -255,8 +255,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                 child: InkWell(
                                   onTap: () => _selectTime('to'),
                                   borderRadius: BorderRadius.circular(10),
-                                  splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                                  highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  splashColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                  highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 15,
@@ -265,7 +265,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(
-                                        color: Theme.of(context).primaryColor
+                                        color: Theme.of(context).colorScheme.primary
                                       )
                                     ),
                                     child: Column(
@@ -275,7 +275,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 14,
-                                            color: Theme.of(context).primaryColor
+                                            color: Theme.of(context).colorScheme.primary
                                           ),
                                         ),
                                         const SizedBox(height: 5),
@@ -428,10 +428,10 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                           style: ButtonStyle(
                             foregroundColor: MaterialStateProperty.all(
                               isFilteringValid() == true
-                                ? Theme.of(context).primaryColor
+                                ? Theme.of(context).colorScheme.primary
                                 : Colors.grey
                             ),
-                            overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColor.withOpacity(0.1))
+                            overlayColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary.withOpacity(0.1))
                           ), 
                           child: Text(AppLocalizations.of(context)!.apply),
                         )

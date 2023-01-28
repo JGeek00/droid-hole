@@ -91,7 +91,7 @@ class NumericPad extends StatelessWidget {
                 value,
                 style: TextStyle(
                   fontSize: 30,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold
                 ),
               ),
@@ -101,7 +101,7 @@ class NumericPad extends StatelessWidget {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(30)
                 ),
               ),

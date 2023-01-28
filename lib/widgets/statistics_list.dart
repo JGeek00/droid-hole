@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/widgets/custom_pie_chart.dart';
@@ -93,41 +94,18 @@ class StatisticsList extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 20),
-                    SizedBox(
-                      width: 90,
-                      child: Stack(
-                        alignment: AlignmentDirectional.centerEnd,
-                        children: [
-                          Container(
-                            width: 90,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).dividerColor,
-                              borderRadius: BorderRadius.circular(10)
-                            ),
-                          ),
-                          Container(
-                            width: (((item['value']*100)/totalHits)*90)/100,
-                            height: (((item['value']*100)/totalHits)*90)/100 < 3
-                              ? ((((item['value']*100)/totalHits)*90)/100)*3
-                              : 10,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.only(
-                                topRight: const Radius.circular(10),
-                                bottomRight: const Radius.circular(10),
-                                topLeft: (((item['value']*100)/totalHits)*90)/100 > 7
-                                  ? const Radius.circular(10) 
-                                  : const Radius.circular(0),
-                                bottomLeft: (((item['value']*100)/totalHits)*90)/100 > 7
-                                  ? const Radius.circular(10) 
-                                  : const Radius.circular(0),
-                              )
-                            ),
-                          ),
-                        ],
+                    Flexible(
+                      child: LinearPercentIndicator(
+                        animation: true,
+                        lineHeight: 10,
+                        animationDuration: 500,
+                        curve: Curves.easeOut,
+                        percent: (item['value']/totalHits).toDouble(),
+                        barRadius: const Radius.circular(5),
+                        progressColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

@@ -142,7 +142,7 @@ class _AddDomainModalState extends State<AddDomainModal> {
                               Radio(
                                 value: 'whitelist', 
                                 groupValue: selectedType,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeColor: Theme.of(context).colorScheme.primary,
                                 onChanged: (value) => setState(() => selectedType = value.toString())
                               ),
                               const SizedBox(width: 5),
@@ -158,7 +158,7 @@ class _AddDomainModalState extends State<AddDomainModal> {
                               Radio(
                                 value: 'blacklist', 
                                 groupValue: selectedType,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeColor: Theme.of(context).colorScheme.primary,
                                 onChanged: (value) => setState(() => selectedType = value.toString())
                               ),
                               const SizedBox(width: 5),
@@ -198,7 +198,7 @@ class _AddDomainModalState extends State<AddDomainModal> {
                       onChanged: (value) => {
                         setState((() => wildcard = value))
                       },
-                      activeColor: Theme.of(context).primaryColor,
+                      activeColor: Theme.of(context).colorScheme.primary,
                     )
                   ],
                 ),

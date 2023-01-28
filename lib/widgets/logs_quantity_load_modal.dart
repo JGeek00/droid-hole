@@ -192,7 +192,7 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
                                 color: selectedOption == 0
-                                  ? Theme.of(context).primaryColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).textTheme.bodyText1!.color
                               ),
                               child: Text(AppLocalizations.of(context)!.minutes30),
@@ -218,7 +218,7 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
                                 color: selectedOption == 1
-                                  ? Theme.of(context).primaryColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).textTheme.bodyText1!.color
                               ),
                               child: Text(AppLocalizations.of(context)!.hour1),
@@ -249,7 +249,7 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
                                 color: selectedOption == 2
-                                  ? Theme.of(context).primaryColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).textTheme.bodyText1!.color
                               ),
                               child: Text(AppLocalizations.of(context)!.hours2),
@@ -275,7 +275,7 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
                                 color: selectedOption == 3
-                                  ? Theme.of(context).primaryColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).textTheme.bodyText1!.color
                               ),
                               child: Text(AppLocalizations.of(context)!.hours4),
@@ -306,7 +306,7 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
                                 color: selectedOption == 4
-                                  ? Theme.of(context).primaryColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).textTheme.bodyText1!.color
                               ),
                               child: Text(AppLocalizations.of(context)!.hours6),
@@ -332,7 +332,7 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
                                 color: selectedOption == 5
-                                  ? Theme.of(context).primaryColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).textTheme.bodyText1!.color
                               ),
                               child: Text(AppLocalizations.of(context)!.hours8),
@@ -381,11 +381,11 @@ class _LogsQuantityPerLoadModalState extends State<LogsQuantityPerLoadModal> {
                           : null,
                         style: ButtonStyle(
                           overlayColor: MaterialStateProperty.all(
-                            Theme.of(context).primaryColor.withOpacity(0.1)
+                            Theme.of(context).colorScheme.primary.withOpacity(0.1)
                           ),
                           foregroundColor: MaterialStateProperty.all(
                             selectedOption != null
-                              ? Theme.of(context).primaryColor
+                              ? Theme.of(context).colorScheme.primary
                               : Colors.grey,
                           ),
                         ), 

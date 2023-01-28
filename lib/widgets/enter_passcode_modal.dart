@@ -57,7 +57,7 @@ class _EnterPasscodeModalState extends State<EnterPasscodeModal> {
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all(
                 _code.length == 4
-                  ? Theme.of(context).primaryColor
+                  ? Theme.of(context).colorScheme.primary
                   : Colors.grey
               ),
             ),

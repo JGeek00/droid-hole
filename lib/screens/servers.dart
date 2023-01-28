@@ -71,8 +71,6 @@ class _ServersPageState extends State<ServersPage> {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    final width = MediaQuery.of(context).size.width;
-
     for (var i = 0; i < serversProvider.getServersList.length; i++) {
       expandableControllerList.add(ExpandableController());
     }
@@ -184,12 +182,12 @@ class _ServersPageState extends State<ServersPage> {
                   Container(
                     padding: const EdgeInsets.all(1),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(20)
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.star,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                       size: 10,
                     ),
                   ),
@@ -263,7 +261,7 @@ class _ServersPageState extends State<ServersPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               PopupMenuButton(
-                color: Theme.of(context).dialogBackgroundColor,
+                color: Theme.of(context).colorScheme.onSurface,
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     enabled: server.defaultServer == false 
@@ -379,7 +377,7 @@ class _ServersPageState extends State<ServersPage> {
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).colorScheme.surfaceVariant,
                         width: 1
                       )
                     )

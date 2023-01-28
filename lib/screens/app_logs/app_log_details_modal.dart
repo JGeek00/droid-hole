@@ -90,11 +90,11 @@ class _AppLogDetailsModalState extends State<AppLogDetailsModal> {
                         bottomLeft: Radius.circular(15)
                       ),
                       border: Border.all(
-                        color: Theme.of(context).primaryColor
+                        color: Theme.of(context).colorScheme.primary
                       ),
                       color: valueToShow == 'message'  
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).primaryColor.withOpacity(0.05)
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.primary.withOpacity(0.05)
                     ),
                     child: Text(
                       "Message",
@@ -118,15 +118,15 @@ class _AppLogDetailsModalState extends State<AppLogDetailsModal> {
                     decoration: BoxDecoration(
                       border: Border(
                         top: BorderSide(
-                          color: Theme.of(context).primaryColor
+                          color: Theme.of(context).colorScheme.primary
                         ),
                         bottom: BorderSide(
-                          color: Theme.of(context).primaryColor
+                          color: Theme.of(context).colorScheme.primary
                         ),
                       ),
                       color: valueToShow == 'statusCode'  
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).primaryColor.withOpacity(0.05)
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.primary.withOpacity(0.05)
                     ),
                     child: Text(
                       "Status code",
@@ -161,11 +161,11 @@ class _AppLogDetailsModalState extends State<AppLogDetailsModal> {
                         bottomRight: Radius.circular(15)
                       ),
                       border: Border.all(
-                        color: Theme.of(context).primaryColor
+                        color: Theme.of(context).colorScheme.primary
                       ),
                       color: valueToShow == 'body'  
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).primaryColor.withOpacity(0.05)
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.primary.withOpacity(0.05)
                     ),
                     child: Text(
                       "Body",

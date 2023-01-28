@@ -446,9 +446,9 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                         border: Border.all(
-                          color: Theme.of(context).primaryColor
+                          color: Theme.of(context).colorScheme.primary
                         ),
-                        color: Theme.of(context).primaryColor.withOpacity(0.05)
+                        color: Theme.of(context).colorScheme.primary.withOpacity(0.05)
                       ),
                       child: Column(
                         children: [
@@ -456,7 +456,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                             "$selectedHttp://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}${subrouteFieldController.text}",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor
+                              color: Theme.of(context).colorScheme.primary
                             ),
                           ),
                         ],
@@ -532,7 +532,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                                 Radio(
                                   value: 'http', 
                                   groupValue: selectedHttp,
-                                  activeColor: Theme.of(context).primaryColor,
+                                  activeColor: Theme.of(context).colorScheme.primary,
                                   onChanged: (value) => setState(() => selectedHttp = value.toString())
                                 ),
                                 const SizedBox(width: 5),
@@ -548,7 +548,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                                 Radio(
                                   value: 'https', 
                                   groupValue: selectedHttp,
-                                  activeColor: Theme.of(context).primaryColor,
+                                  activeColor: Theme.of(context).colorScheme.primary,
                                   onChanged: (value) => setState(() => selectedHttp = value.toString())
                                 ),
                                 const SizedBox(width: 5),

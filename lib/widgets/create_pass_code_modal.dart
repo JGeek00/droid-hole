@@ -73,10 +73,10 @@ class _CreatePassCodeModalState extends State<CreatePassCodeModal> {
               foregroundColor: MaterialStateProperty.all(
                 _step == 0
                 ? _code.length == 4
-                  ? Theme.of(context).primaryColor
+                  ? Theme.of(context).colorScheme.primary
                   : Colors.grey
                 : _repeatedCode.length == 4
-                  ? Theme.of(context).primaryColor
+                  ? Theme.of(context).colorScheme.primary
                   : Colors.grey
               ),
             ),

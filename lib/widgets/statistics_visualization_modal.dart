@@ -37,11 +37,11 @@ class StatisticsVisualizationModal extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(28),
                 color: value == appConfigProvider.statisticsVisualizationMode
-                  ? Theme.of(context).primaryColor.withOpacity(0.1)
+                  ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
                   : Theme.of(context).dialogBackgroundColor,
                 border: Border.all(
                   color: value == appConfigProvider.statisticsVisualizationMode
-                    ? Theme.of(context).primaryColor
+                    ? Theme.of(context).colorScheme.primary
                     : Colors.grey
                 )
               ),
@@ -51,7 +51,7 @@ class StatisticsVisualizationModal extends StatelessWidget {
                     icon,
                     size: 50,
                     color: value == appConfigProvider.statisticsVisualizationMode
-                      ? Theme.of(context).primaryColor
+                      ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).textTheme.bodyText1!.color
                   ),
                   const SizedBox(width: 30),
@@ -64,7 +64,7 @@ class StatisticsVisualizationModal extends StatelessWidget {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: value == appConfigProvider.statisticsVisualizationMode
-                            ? Theme.of(context).primaryColor
+                            ? Theme.of(context).colorScheme.primary
                             : Theme.of(context).textTheme.bodyText1!.color
                         ),
                       ),
@@ -75,7 +75,7 @@ class StatisticsVisualizationModal extends StatelessWidget {
                           description,
                           style: TextStyle(
                             color: value == appConfigProvider.statisticsVisualizationMode
-                              ? Theme.of(context).primaryColor
+                              ? Theme.of(context).colorScheme.primary
                               : Theme.of(context).textTheme.bodyText1!.color
                           ),
                         ),

@@ -163,7 +163,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                       color: selectedOption == 0
-                                        ? Theme.of(context).primaryColor
+                                        ? Theme.of(context).colorScheme.primary
                                         : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.seconds30),
@@ -189,7 +189,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                       color: selectedOption == 1
-                                        ? Theme.of(context).primaryColor
+                                        ? Theme.of(context).colorScheme.primary
                                         : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.minute1),
@@ -219,7 +219,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                       color: selectedOption == 2
-                                        ? Theme.of(context).primaryColor
+                                        ? Theme.of(context).colorScheme.primary
                                         : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.minutes2),
@@ -245,7 +245,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                       color: selectedOption == 3
-                                        ? Theme.of(context).primaryColor
+                                        ? Theme.of(context).colorScheme.primary
                                         : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.minutes5),
@@ -275,7 +275,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                       color: selectedOption == 4
-                                        ? Theme.of(context).primaryColor
+                                        ? Theme.of(context).colorScheme.primary
                                         : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.indefinitely),
@@ -301,7 +301,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                       color: selectedOption == 5
-                                        ? Theme.of(context).primaryColor
+                                        ? Theme.of(context).colorScheme.primary
                                         : Theme.of(context).textTheme.bodyText1!.color
                                     ),
                                     child: Text(AppLocalizations.of(context)!.custom),
@@ -356,7 +356,7 @@ class _DisableModalState extends State<DisableModal> {
                                   : null,
                                 style: ButtonStyle(
                                   foregroundColor: _selectionIsValid() == true 
-                                    ? MaterialStateProperty.all(Theme.of(context).primaryColor)
+                                    ? MaterialStateProperty.all(Theme.of(context).colorScheme.primary)
                                     : MaterialStateProperty.all(Colors.grey)
                                 ),
                                 child: Text(AppLocalizations.of(context)!.accept),

@@ -206,10 +206,10 @@ class _ContactMeModalState extends State<ContactMeModal> {
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor.withOpacity(0.05),
+                            color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
                             borderRadius: BorderRadius.circular(24),
                             border: Border.all(
-                              color: Theme.of(context).primaryColor
+                              color: Theme.of(context).colorScheme.primary
                             )
                           ),
                           child: Column(
@@ -218,7 +218,7 @@ class _ContactMeModalState extends State<ContactMeModal> {
                                 AppLocalizations.of(context)!.writeEmailDetails,
                                 textAlign: TextAlign.justify,
                                 style: TextStyle(
-                                  color: Theme.of(context).primaryColor
+                                  color: Theme.of(context).colorScheme.primary
                                 ),
                               ),
                               const SizedBox(height: 10),
@@ -230,7 +230,7 @@ class _ContactMeModalState extends State<ContactMeModal> {
                                     style: ButtonStyle(
                                       elevation: MaterialStateProperty.all(0),
                                       backgroundColor: MaterialStateProperty.all(
-                                        Theme.of(context).primaryColor
+                                        Theme.of(context).colorScheme.primary
                                       ),
                                       foregroundColor: MaterialStateProperty.all(
                                         Theme.of(context).dialogBackgroundColor

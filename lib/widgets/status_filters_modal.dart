@@ -257,9 +257,9 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                         : null,
                       style: ButtonStyle(
                         foregroundColor: MaterialStateProperty.all(
-                          _statusSelected.isNotEmpty ? Theme.of(context).primaryColor : Colors.grey
+                          _statusSelected.isNotEmpty ? Theme.of(context).colorScheme.primary : Colors.grey
                         ),
-                        overlayColor: MaterialStateProperty.all(Theme.of(context).primaryColor.withOpacity(0.1))
+                        overlayColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary.withOpacity(0.1))
                       ), 
                       child: Text(AppLocalizations.of(context)!.apply),
                     ),

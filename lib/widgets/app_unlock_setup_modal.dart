@@ -285,7 +285,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                       ),
                       Switch(
                         value: appConfigProvider.useBiometrics, 
-                        activeColor: Theme.of(context).primaryColor,
+                        activeColor: Theme.of(context).colorScheme.primary,
                         onChanged: appConfigProvider.passCode != null
                           ? (value) => _enableDisableBiometricsUnlock(value)
                           : null

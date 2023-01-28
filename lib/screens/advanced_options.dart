@@ -210,7 +210,7 @@ class AdvancedOptions extends StatelessWidget {
                 trailing: Switch(
                   value: appConfigProvider.overrideSslCheck, 
                   onChanged: _updateSslCheck,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: Theme.of(context).colorScheme.primary,
                 ),
                 onTap: () => _updateSslCheck(!appConfigProvider.overrideSslCheck),
                 padding: const EdgeInsets.only(
@@ -270,7 +270,7 @@ class AdvancedOptions extends StatelessWidget {
                 trailing: Switch(
                   value: appConfigProvider.oneColumnLegend, 
                   onChanged: _updateOneColumnLegend,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: Theme.of(context).colorScheme.primary,
                 ),
               ),
               CustomListTile(
@@ -287,7 +287,7 @@ class AdvancedOptions extends StatelessWidget {
                 trailing: Switch(
                   value: appConfigProvider.reducedDataCharts, 
                   onChanged: _updateUseReducedData,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: Theme.of(context).colorScheme.primary,
                 ),
               ),
               CustomListTile(
@@ -304,7 +304,7 @@ class AdvancedOptions extends StatelessWidget {
                 trailing: Switch(
                   value: appConfigProvider.hideZeroValues, 
                   onChanged: _updateHideZeroValues,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: Theme.of(context).colorScheme.primary,
                 ),
               ),
               CustomListTile(
