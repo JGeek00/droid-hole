@@ -1,13 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:animations/animations.dart';
 import 'package:provider/provider.dart';
 
 import 'package:droid_hole/screens/domains/domains.dart';
 import 'package:droid_hole/screens/servers/servers.dart';
-import 'package:droid_hole/screens/unlock.dart';
 import 'package:droid_hole/screens/home/home.dart';
 import 'package:droid_hole/screens/logs/logs.dart';
 import 'package:droid_hole/screens/settings/settings.dart';
@@ -16,6 +15,8 @@ import 'package:droid_hole/screens/statistics/statistics.dart';
 import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
+import 'package:droid_hole/models/server.dart';
+import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/constants/app_screens.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
@@ -23,13 +24,11 @@ import 'package:droid_hole/providers/servers_provider.dart';
 
 
 class Base extends StatefulWidget {
-  final String? passCode;
-  final void Function(bool) setAppUnlocked;
+  final ServersProvider serversProvider;
 
   const Base({
     Key? key,
-    required this.passCode,
-    required this.setAppUnlocked,
+    required this.serversProvider
   }) : super(key: key); 
 
   @override
@@ -50,6 +49,31 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     const Settings()
   ];
 
+  void fetchMainData(Server server) async {
+    final result = await Future.wait([
+      realtimeStatus(server),
+      fetchOverTimeData(server)
+    ]);
+
+    if (result[0]['result'] == 'success' && result[1]['result'] == 'success') {
+      widget.serversProvider.setRealtimeStatus(result[0]['data']);
+      widget.serversProvider.setOvertimeData(result[1]['data']);
+      widget.serversProvider.updateselectedServerStatus(result[0]['data'].status == 'enabled' ? true : false);
+
+      widget.serversProvider.setOvertimeDataLoadingStatus(1);
+      widget.serversProvider.setStatusLoading(1);
+
+      widget.serversProvider.setStartAutoRefresh(true);
+      widget.serversProvider.setIsServerConnected(true);
+    }
+    else {
+      widget.serversProvider.setOvertimeDataLoadingStatus(2);
+      widget.serversProvider.setStatusLoading(2);
+
+      widget.serversProvider.setIsServerConnected(false);
+    }
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
@@ -65,20 +89,16 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
         );
       }
     });
+    
+    if (widget.serversProvider.selectedServer != null) {
+      fetchMainData(widget.serversProvider.selectedServer!);
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused && widget.passCode != null) {
-      widget.setAppUnlocked(false);
-    }
   }
 
   @override
@@ -111,28 +131,24 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
               child: child,
             )
           ),
-          child: appConfigProvider.appUnlocked == false
-            ? const Unlock()
-            :  serversProvider.selectedServer != null
-              ? pages[appConfigProvider.selectedTab]
-              : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
+          child: serversProvider.selectedServer != null
+            ? pages[appConfigProvider.selectedTab]
+            : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
         ),
-        bottomNavigationBar: appConfigProvider.appUnlocked == false
-          ? null
-          : BottomNavBar(
-              screens: serversProvider.selectedServer != null
-                ? appScreens
-                : appScreensNotSelected,
-              selectedScreen: serversProvider.selectedServer != null
-                ? appConfigProvider.selectedTab
-                : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
-              onChange: (selected) {
-                if (selected != 3) {
-                  domainsListProvider.setSelectedTab(null);
-                }
-                appConfigProvider.setSelectedTab(selected);
-              },
-            ),
+        bottomNavigationBar: BottomNavBar(
+          screens: serversProvider.selectedServer != null
+            ? appScreens
+            : appScreensNotSelected,
+          selectedScreen: serversProvider.selectedServer != null
+            ? appConfigProvider.selectedTab
+            : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
+          onChange: (selected) {
+            if (selected != 3) {
+              domainsListProvider.setSelectedTab(null);
+            }
+            appConfigProvider.setSelectedTab(selected);
+          },
+        ),
       ),
     );
   }

@@ -3,10 +3,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:device_info/device_info.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:vibration/vibration.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:flutter/material.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
@@ -18,6 +19,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/base.dart';
+import 'package:droid_hole/screens/unlock.dart';
+
 import 'package:droid_hole/services/database.dart';
 import 'package:droid_hole/classes/http_override.dart';
 import 'package:droid_hole/config/theme.dart';
@@ -99,7 +102,9 @@ void main() async {
           create: ((context) => configProvider)
         ),
       ],
-      child: Phoenix(child: const DroidHole()),
+      child: Phoenix(
+        child: const DroidHole()
+      ), 
     )
   );
 }
@@ -148,9 +153,7 @@ class _DroidHoleState extends State<DroidHole> {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     if (serversProvider.startAutoRefresh == true || serversProvider.getRefreshServerStatus == true) {
-      if (serversProvider.startAutoRefresh == true) {
-        statusUpdater.context = context;
-      }
+      statusUpdater.context = context;
       if (serversProvider.getRefreshServerStatus == true) {
         serversProvider.setRefreshServerStatus(false);
       }
@@ -186,12 +189,16 @@ class _DroidHoleState extends State<DroidHole> {
           builder: (context, child) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-              child: child!,
+              child: AppLock(
+                builder: (_, __) => child!, 
+                lockScreen: const Unlock(),
+                enabled: appConfigProvider.passCode != null ? true : false,
+                backgroundLockLatency: const Duration(seconds: 0),
+              )
             );
           },
           home: Base(
-            passCode: appConfigProvider.passCode,
-            setAppUnlocked: appConfigProvider.setAppUnlocked,
+            serversProvider: serversProvider,
           )
         );
       }),

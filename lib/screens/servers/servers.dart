@@ -363,102 +363,97 @@ class _ServersPageState extends State<ServersPage> {
         }
         return true;
       },
-      child: Stack(
-        children: [
-          Scaffold(
-            appBar: AppBar(
-              systemOverlayStyle: systemUiOverlayStyleConfig(context),
-              title: Text(
-                widget.isFromBase == true
-                  ? AppLocalizations.of(context)!.connect
-                  : AppLocalizations.of(context)!.servers,
+      child: Scaffold(
+        appBar: AppBar(
+          systemOverlayStyle: systemUiOverlayStyleConfig(context),
+          title: Text(
+            widget.isFromBase == true
+              ? AppLocalizations.of(context)!.connect
+              : AppLocalizations.of(context)!.servers,
+          ),
+        ),
+        body: serversProvider.getServersList.isNotEmpty ? 
+          ListView.builder(
+            controller: scrollController,
+            itemCount: serversProvider.getServersList.length,
+            itemBuilder: (context, index) => Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    width: 1
+                  )
+                )
+              ),
+              child: ExpandableNotifier(
+                controller: expandableControllerList[index],
+                child: Column(
+                  children: [
+                    Expandable(
+                      collapsed: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => expandOrContract(index),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: topRow(serversProvider.getServersList[index], index),
+                          ),
+                        ),
+                      ),
+                      expanded: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => expandOrContract(index),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                topRow(serversProvider.getServersList[index], index),
+                                bottomRow(serversProvider.getServersList[index], index)
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ) 
+                  ],
+                ),
+              ),
+            )
+        ) : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.noConnections,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 22,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      AppLocalizations.of(context)!.beginAddConnection,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            body: serversProvider.getServersList.isNotEmpty ? 
-              ListView.builder(
-                controller: scrollController,
-                itemCount: serversProvider.getServersList.length,
-                itemBuilder: (context, index) => Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Theme.of(context).colorScheme.surfaceVariant,
-                        width: 1
-                      )
-                    )
-                  ),
-                  child: ExpandableNotifier(
-                    controller: expandableControllerList[index],
-                    child: Column(
-                      children: [
-                        Expandable(
-                          collapsed: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => expandOrContract(index),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: topRow(serversProvider.getServersList[index], index),
-                              ),
-                            ),
-                          ),
-                          expanded: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => expandOrContract(index),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    topRow(serversProvider.getServersList[index], index),
-                                    bottomRow(serversProvider.getServersList[index], index)
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                        ) 
-                      ],
-                    ),
-                  ),
-                )
-            ) : Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.noConnections,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 22,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          AppLocalizations.of(context)!.beginAddConnection,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-            floatingActionButton: appConfigProvider.showingSnackbar
-              ? null
-              : isVisible 
-                ? FloatingActionButton(
-                    onPressed: openAddServer,
-                    child: const Icon(Icons.add),
-                  )
-            : null
-          ),
-          if (appConfigProvider.passCode != null && appConfigProvider.appUnlocked == false) const Unlock()
-        ],
+        floatingActionButton: appConfigProvider.showingSnackbar
+          ? null
+          : isVisible 
+            ? FloatingActionButton(
+                onPressed: openAddServer,
+                child: const Icon(Icons.add),
+              )
+        : null
       ),
     );
   }

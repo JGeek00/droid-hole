@@ -45,6 +45,8 @@ This is an unofficial application. The Pi-hole team and the development of the P
 - [flutter local auth invisible](https://pub.dev/packages/flutter_local_auth_invisible)
 - [vibration](https://pub.dev/packages/vibration)
 - [url launcher](https://pub.dev/packages/url_launcher)
+- [percent indicator](https://pub.dev/packages/percent_indicator)
+- [flutter app lock](https://pub.dev/packages/flutter_app_lock)
 
 <br>
 

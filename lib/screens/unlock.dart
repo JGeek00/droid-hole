@@ -1,14 +1,13 @@
 import 'package:droid_hole/widgets/fingerprint_unlock_modal.dart';
 import 'package:droid_hole/widgets/shake_animation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/numeric_pad.dart';
 
-import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
-import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 class Unlock extends StatefulWidget {
@@ -33,33 +32,12 @@ class _UnlockState extends State<Unlock> {
     final height = MediaQuery.of(context).size.height;
     final topBarHeight = MediaQuery.of(context).viewPadding.top;
 
-    final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
-
-    void connectServer() async {
-      if (serversProvider.selectedServer != null) {
-        Server serverObj = serversProvider.selectedServer!;
-        final result = await loginQuery(serverObj);
-        if (result['result'] == 'success') {
-          serverObj.enabled = result['status'] == 'enabled' ? true : false;
-          serversProvider.setselectedServer(serverObj);
-          serversProvider.setRefreshServerStatus(true);
-          serversProvider.setIsServerConnected(true);
-        }
-        else {
-          serversProvider.setIsServerConnected(false);
-        }
-      }
-      appConfigProvider.setAppUnlocked(true);
-    }
 
     void updateCode(String value) {
       setState(() => _code = value);
       if (_code.length == 4 && _code == appConfigProvider.passCode) {
-        setState(() {
-          isLoading = true;
-        });
-        connectServer();
+        AppLock.of(context)!.didUnlock();
       }
       else if (_code.length == 4 && _code != appConfigProvider.passCode) {
         _shakeKey.currentState!.shake();
@@ -81,7 +59,7 @@ class _UnlockState extends State<Unlock> {
                   isLoading = true;
                 });
                 Navigator.pop(ctx);
-                connectServer();
+                AppLock.of(context)!.didUnlock();
               },
             ),
             isScrollControlled: true,

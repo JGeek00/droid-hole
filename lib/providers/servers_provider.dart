@@ -232,41 +232,10 @@ class ServersProvider with ChangeNotifier {
         _serversList.add(serverObj);
         if (convertFromIntToBool(server['isDefaultServer']) == true) {
           _selectedServer = serverObj;
-          if (connect == true) {
-            fetchMainData(serverObj);
-          }
-          else {
-            _isServerConnected = null;
-          }
         }
       }
     }
     notifyListeners();
-  }
-
-  void fetchMainData(Server server) async {
-    final result = await Future.wait([
-      realtimeStatus(server),
-      fetchOverTimeData(server)
-    ]);
-
-    if (result[0]['result'] == 'success' && result[1]['result'] == 'success') {
-      _realtimeStatus = result[0]['data'];
-      _overtimeData = result[1]['data'];
-      _selectedServer?.enabled = result[0]['data'].status == 'enabled' ? true : false;
-
-      _overtimeDataLoading = 1;
-      _statusLoading = 1;
-
-      _startAutoRefresh = true;
-      _isServerConnected = true;
-    }
-    else {
-      _overtimeDataLoading = 2;
-      _statusLoading = 2;
-
-      _isServerConnected = false;
-    }
   }
 
   Future<bool> login(Server serverObj) async {
