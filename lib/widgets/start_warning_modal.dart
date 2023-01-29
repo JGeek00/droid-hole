@@ -25,6 +25,7 @@ class ImportantInfoModal extends StatelessWidget {
             padding: const EdgeInsets.only(top: 20),
             child: Text(
               AppLocalizations.of(context)!.importantAnnouncement,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 24
               ),

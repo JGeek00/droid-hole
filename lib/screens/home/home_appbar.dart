@@ -5,7 +5,7 @@ import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/switch_server_modal.dart';
+import 'package:droid_hole/screens/home/switch_server_modal.dart';
 import 'package:droid_hole/screens/servers/servers.dart';
 
 import 'package:droid_hole/models/server.dart';

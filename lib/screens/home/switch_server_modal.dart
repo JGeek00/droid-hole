@@ -1,3 +1,4 @@
+import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -43,15 +44,9 @@ class SwitchServerModal extends StatelessWidget {
                 Navigator.pop(context);
                 onServerSelect(serversProvider.getServersList[index]);
               },
-              child: ListTile(
-                title: Text(
-                  serversProvider.getServersList[index].alias,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                subtitle: Text(
-                  serversProvider.getServersList[index].address,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              child: CustomListTile(
+                label:serversProvider.getServersList[index].alias,
+                description: serversProvider.getServersList[index].address,
               ),
             ),
           )

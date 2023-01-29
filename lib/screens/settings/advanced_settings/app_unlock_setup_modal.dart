@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/widgets/fingerprint_unlock_modal.dart';
-import 'package:droid_hole/widgets/remove_passcode_modal.dart';
-import 'package:droid_hole/widgets/create_pass_code_modal.dart';
+import 'package:droid_hole/screens/settings/advanced_settings/app_lock/remove_passcode_modal.dart';
+import 'package:droid_hole/screens/settings/advanced_settings/app_lock/create_pass_code_modal.dart';
 
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/snackbar.dart';

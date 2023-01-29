@@ -12,7 +12,7 @@ import 'package:droid_hole/screens/servers/servers.dart';
 
 import 'package:droid_hole/screens/settings/contact_me_modal.dart';
 import 'package:droid_hole/widgets/start_warning_modal.dart';
-import 'package:droid_hole/widgets/logs_quantity_load_modal.dart';
+import 'package:droid_hole/screens/settings/logs_quantity_load_modal.dart';
 import 'package:droid_hole/screens/settings/theme_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/screens/settings/legal_modal.dart';
