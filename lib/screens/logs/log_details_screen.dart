@@ -38,8 +38,8 @@ class LogDetailsScreen extends StatelessWidget {
                 Text(
                   label,
                   style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16
                   ),
                 ),
                 const SizedBox(height: 5),

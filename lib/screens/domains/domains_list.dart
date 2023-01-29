@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/domains/add_domain_modal.dart';
 import 'package:droid_hole/screens/domains/domain_details_screen.dart';
+import 'package:droid_hole/widgets/custom_list_tile.dart';
 
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
@@ -87,8 +88,8 @@ class _DomainsListState extends State<DomainsList> {
         getString(type),
         style: TextStyle(
           color: getColor(type),
-          fontSize: 12,
-          fontWeight: FontWeight.bold
+          fontSize: 13,
+          fontWeight: FontWeight.w400
         ),
       ),
     );
@@ -234,7 +235,7 @@ class _DomainsListState extends State<DomainsList> {
             child: ListView.builder(
               padding: const EdgeInsets.only(top: 0),
               itemCount: data.length,
-              itemBuilder: (context, index) => ListTile(
+              itemBuilder: (context, index) => CustomListTile(
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) => DomainDetailsScreen(
@@ -243,30 +244,9 @@ class _DomainsListState extends State<DomainsList> {
                     )
                   ))
                 },
-                title: Text(
-                  data[index].domain,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                subtitle: Row(
-                  children: [
-                    Text(
-                      formatTimestamp(data[index].dateAdded, 'yyyy-MM-dd'),
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: const Text(
-                        '|',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                    domainType(data[index].type)
-                  ],
-                ),
+                label: data[index].domain,
+                description: formatTimestamp(data[index].dateAdded, 'yyyy-MM-dd'),
+                trailing: domainType(data[index].type),
               )
             ),
           ),

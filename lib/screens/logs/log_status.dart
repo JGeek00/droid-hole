@@ -40,7 +40,7 @@ class LogStatus extends StatelessWidget {
                 text,
                 style: TextStyle(
                   color: color,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w400,
                   fontSize: 13
                 ),  
               )

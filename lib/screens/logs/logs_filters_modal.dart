@@ -154,8 +154,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
           topRight: Radius.circular(24)
         )
       ),
-      height: height > (Platform.isIOS ? 532 : 512)
-        ? (Platform.isIOS ? 532 : 512)
+      height: height > (Platform.isIOS ? 510 : 490)
+        ? (Platform.isIOS ? 510 : 490)
         : height-25,
       child: SingleChildScrollView(
         child: Column(
@@ -181,7 +181,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24
+                    horizontal: 24,
+                    vertical: 12
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,11 +190,11 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                       Text(
                         AppLocalizations.of(context)!.time,
                         style: const TextStyle(
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
                           fontSize: 16
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 16),
                       Column(
                         children: [
                           Row(
@@ -312,7 +313,6 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -320,7 +320,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
-                        vertical: 10
+                        vertical: 12
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -332,7 +332,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                               Text(
                                 AppLocalizations.of(context)!.status,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w400,
                                   fontSize: 16
                                 ),
                               ),
@@ -354,7 +354,6 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -374,7 +373,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                               Text(
                                 AppLocalizations.of(context)!.clients,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w400,
                                   fontSize: 16
                                 ),
                               ),

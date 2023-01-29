@@ -65,7 +65,12 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
         child: InkWell(
           onTap: () => _updateStatusSelected(value),
           child: ListTile(
-            title: Text(label),
+            title: Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w400
+              ),
+            ),
             trailing: Checkbox(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5)

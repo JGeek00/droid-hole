@@ -72,7 +72,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
             title: Text(
               label,
               style: const TextStyle(
-                fontWeight: FontWeight.w500
+                fontWeight: FontWeight.w400
               ),
             ),
             trailing: Checkbox(

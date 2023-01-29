@@ -17,17 +17,19 @@ class ImportantInfoModal extends StatelessWidget {
       scrollable: true,
       title: Column(
         children: [
-          const Icon(
+          Icon(
             Icons.info_rounded,
-            size: 26,
+            size: 24,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: Text(
               AppLocalizations.of(context)!.importantAnnouncement,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 24
+              style: TextStyle(
+                fontSize: 24,
+                color: Theme.of(context).colorScheme.onSurface
               ),
             ),
           ),
@@ -36,14 +38,14 @@ class ImportantInfoModal extends StatelessWidget {
       content:  Column(
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 AppLocalizations.of(context)!.requiredVersions,
-                textAlign: TextAlign.start,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16
                 ),
               ),
               Container(
