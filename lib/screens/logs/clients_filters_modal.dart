@@ -104,11 +104,12 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
         : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight)+1,
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 24),
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
             child: Icon(
               Icons.phone_android_rounded,
-              size: 26,
+              size: 24,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
           Padding(

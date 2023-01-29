@@ -51,11 +51,12 @@ class _ThemeModalState extends State<ThemeModal> {
       ),
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 24),
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
             child: Icon(
               Icons.light_mode_rounded,
-              size: 26,
+              size: 24,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
           Padding(

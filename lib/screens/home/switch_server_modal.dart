@@ -22,9 +22,10 @@ class SwitchServerModal extends StatelessWidget {
       scrollable: true,
       title: Column(
         children: [
-          const Icon(
+          Icon(
             Icons.storage_rounded,
             size: 24,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           const SizedBox(height: 16),
           Text(AppLocalizations.of(context)!.switchServer)

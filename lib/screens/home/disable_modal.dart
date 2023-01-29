@@ -119,13 +119,14 @@ class _DisableModalState extends State<DisableModal> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(
+                Padding(
+                  padding: const EdgeInsets.only(
                     top: 14
                   ),
                   child: Icon(
                     Icons.gpp_bad_rounded,
-                    size: 26,
+                    size: 24,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
                 Padding(

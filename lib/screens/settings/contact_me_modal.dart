@@ -57,9 +57,10 @@ class _ContactMeModalState extends State<ContactMeModal> {
       contentPadding: const EdgeInsets.all(0),
       title: Column(
         children: [
-          const Icon(
+          Icon(
             Icons.contact_page_rounded,
-            size: 26,
+            size: 24,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),

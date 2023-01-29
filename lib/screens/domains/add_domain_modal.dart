@@ -118,9 +118,10 @@ class _AddDomainModalState extends State<AddDomainModal> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.domain_add_rounded,
-                      size: 26,
+                      size: 24,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(20),

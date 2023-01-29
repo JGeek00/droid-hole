@@ -160,11 +160,12 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 24),
+            Padding(
+              padding: const EdgeInsets.only(top: 24),
               child: Icon(
                 Icons.filter_list,
-                size: 26,
+                size: 24,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
             Padding(

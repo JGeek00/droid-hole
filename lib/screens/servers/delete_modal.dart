@@ -46,9 +46,10 @@ class DeleteModal extends StatelessWidget {
     return AlertDialog(
       title: Column(
         children: [
-          const Icon(
+          Icon(
             Icons.delete,
-            size: 26,
+            size: 24,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),
