@@ -88,6 +88,7 @@ class LogDetailsScreen extends StatelessWidget {
         title: Text(AppLocalizations.of(context)!.logDetails),
         actions: [
           blackWhiteListButton(),
+          const SizedBox(width: 10)
         ],
       ),
       body: ListView(

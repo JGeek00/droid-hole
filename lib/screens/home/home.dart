@@ -276,28 +276,37 @@ class _HomeState extends State<Home> {
       }
     }
 
-    return Scaffold(
-      appBar: const HomeAppBar(),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await refreshServerStatus(context, serversProvider, appConfigProvider);
-        },
-        child: ListView(
-          controller: scrollController,
-          children: [
-            tiles(),
-            const HomeCharts()
-          ],
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: const HomeAppBar(),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await refreshServerStatus(context, serversProvider, appConfigProvider);
+            },
+            child: ListView(
+              controller: scrollController,
+              children: [
+                tiles(),
+                const HomeCharts()
+              ],
+            ),
+          ),
         ),
-      ),
-      floatingActionButton: appConfigProvider.showingSnackbar && serversProvider.getStatusLoading == 1
-        ? null
-        : isVisible 
-          ? FloatingActionButton(
-              onPressed: enableDisableServer,
-              child: const Icon(Icons.shield_rounded),
-            )
-          : null
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeInOut,
+          bottom: isVisible && serversProvider.getStatusLoading == 1 ?
+            appConfigProvider.showingSnackbar
+              ? 70 : 20
+            : -70,
+          right: 20,
+          child: FloatingActionButton(
+            onPressed: enableDisableServer,
+            child: const Icon(Icons.shield_rounded),
+          )
+        )
+      ],
     );
   }
 }

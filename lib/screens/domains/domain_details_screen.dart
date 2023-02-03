@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/domains/delete_domain_modal.dart';
 import 'package:droid_hole/screens/domains/domain_comment_modal.dart';
 
 import 'package:droid_hole/functions/format.dart';
@@ -74,12 +75,18 @@ class DomainDetailsScreen extends StatelessWidget {
         title: Text(AppLocalizations.of(context)!.domainDetails),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              remove(domain);
-            }, 
+            onPressed: () => showDialog(
+              context: context, 
+              builder: (context) => DeleteDomainModal(
+                onConfirm: () {
+                  Navigator.pop(context);
+                  remove(domain);
+                },
+              )
+            ),
             icon: const Icon(Icons.delete_rounded)
-          )
+          ),
+          const SizedBox(width: 10)
         ],
       ),
       body: ListView(

@@ -138,6 +138,7 @@ class _DomainsListState extends State<DomainsList> {
 
       if (result['result'] == 'success') {
         domainsListProvider.removeDomainFromList(domain);
+        Navigator.pop(context);
         showSnackBar(
           context: context, 
           appConfigProvider: appConfigProvider,

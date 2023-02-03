@@ -302,5 +302,7 @@
   "appLogs": "App Logs",
   "errorsApp": "Von der App registrierte Fehler",
   "switchServer": "Server wechseln",
-  "appSettings": "App Einstellungen"
+  "appSettings": "App Einstellungen",
+  "deleteDomain": "Domain löschen",
+  "deleteDomainMessage": "Sind Sie sicher, dass Sie diese Domain löschen möchten?"
 }

@@ -302,7 +302,7 @@ class HomeCharts extends StatelessWidget {
                       children: generateLegend(serversProvider.getOvertimeData!.clients),
                     ),
                   ),
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 16),
                 ],
               )
               : NoDataChart(

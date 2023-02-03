@@ -457,10 +457,10 @@ Future removeDomainFromList({
         return "black";
 
       case 2:
-        return "regex_black";
+        return "regex_white";
 
       case 3:
-        return "regex_white";
+        return "regex_black";
 
       default:
         return "";

@@ -302,5 +302,7 @@
     "appLogs": "App logs",
     "errorsApp": "Errors registered by the app",
     "switchServer": "Switch server",
-    "appSettings": "App settings"
+    "appSettings": "App settings",
+    "deleteDomain": "Delete domain",
+    "deleteDomainMessage": "Are you sure you want to delete this domain?"
 }
