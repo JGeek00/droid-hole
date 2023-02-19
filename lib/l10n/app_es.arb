@@ -306,5 +306,11 @@
     "switchServer": "Cambiar de servidor",
     "appSettings": "Ajustes de la app",
     "deleteDomain": "Eliminar dominio",
-    "deleteDomainMessage": "¿Estás seguro que deseas eliminar este dominio?"
+    "deleteDomainMessage": "¿Estás seguro que deseas eliminar este dominio?",
+    "serverName": "Nombre del servidor",
+    "connection": "Conexión",
+    "authentication": "Autenticación",
+    "basicAuth": "Autenticación Basic",
+    "username": "Nombre de usuario",
+    "basicAuthInfo": "Si tu servidor está detrás de una autenticación básica, puedes rellenar aquí las credenciales. Asegúrate de rellenar ambos campos, si no no podrás guardar la conexión."
 }

@@ -304,5 +304,11 @@
     "switchServer": "Switch server",
     "appSettings": "App settings",
     "deleteDomain": "Delete domain",
-    "deleteDomainMessage": "Are you sure you want to delete this domain?"
+    "deleteDomainMessage": "Are you sure you want to delete this domain?",
+    "serverName": "Server name",
+    "connection": "Connection",
+    "authentication": "Autenticación",
+    "basicAuth": "Basic authentication",
+    "username": "Username",
+    "basicAuthInfo": "If your server is behind a basic authentication, you can fill here the corresponding credentials. Make sure to fill both fields or you won't be able to save the connection."
 }

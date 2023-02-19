@@ -3,14 +3,29 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:droid_hole/models/app_log.dart';
-import 'package:droid_hole/models/domain.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:droid_hole/models/app_log.dart';
+import 'package:droid_hole/models/domain.dart';
+import 'package:droid_hole/functions/encode_basic_auth.dart';
 import 'package:droid_hole/models/overtime_data.dart';
 import 'package:droid_hole/models/realtime_status.dart';
 import 'package:droid_hole/models/server.dart';
+
+bool checkBasicAuth(String? username, String? password) {
+  if (
+    username != null && 
+    password != null &&
+    username != '' && 
+    password != ''
+  ) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
 
 Future<Response> httpClient({
   required String method, 
@@ -19,12 +34,25 @@ Future<Response> httpClient({
   Map<String, String>? headers,
   Map<String, dynamic>? body,
   int? timeout,
+  Map<String, dynamic>? basicAuth,
 }) async {  
+  final Map<String, String>? h = basicAuth != null && checkBasicAuth(basicAuth['username'], basicAuth['password'])
+    ? headers != null
+      ? {
+          ...headers,
+          'Authorization': 'Basic ${encodeBasicAuth(basicAuth['username'], basicAuth['password'])}'
+        }
+      : {
+          'Authorization': 'Basic ${encodeBasicAuth(basicAuth['username'], basicAuth['password'])}'
+        }
+    : headers;
+
   switch (method) {
     case 'post':
       return http.post(
         Uri.parse(url),
-        body: body
+        body: body,
+        headers: h
       ).timeout(
         const Duration(seconds: 10)
       );
@@ -33,7 +61,7 @@ Future<Response> httpClient({
     default:
       return http.get(
         Uri.parse(url),
-        headers: headers
+        headers: h
       ).timeout(
         Duration(seconds: timeout ??  10)
       );
@@ -45,6 +73,10 @@ Future realtimeStatus(Server server) async {
     final response = await httpClient(
       method: 'get',
       url: '${server.address}/admin/api.php?auth=${server.token}&summaryRaw&topItems&getForwardDestinations&getQuerySources&topClientsBlocked&getQueryTypes',
+      basicAuth: {
+        'username': server.basicAuthUser,
+        'password': server.basicAuthPassword
+      }
     );
     final body = jsonDecode(response.body);
     if (body['status'] != null) {
@@ -70,15 +102,25 @@ Future realtimeStatus(Server server) async {
 
 Future loginQuery(Server server) async {
   try {
-    final status = await http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&summaryRaw'));
+    final status = await http.get(
+      Uri.parse('${server.address}/admin/api.php?auth=${server.token}&summaryRaw'),
+      headers: checkBasicAuth(server.basicAuthUser, server.basicAuthPassword) == true ? {
+        'Authorization': 'Basic ${encodeBasicAuth(server.basicAuthUser!, server.basicAuthPassword!)}'
+      } : null
+    );
     if (status.statusCode == 200) {
       final statusParsed = jsonDecode(status.body);
       if (statusParsed.runtimeType != List && statusParsed['status'] != null) {
-        final enableOrDisable = await http.get(Uri.parse(
-          statusParsed['status'] == 'enabled'
-            ? '${server.address}/admin/api.php?auth=${server.token}&enable=0'
-            : '${server.address}/admin/api.php?auth=${server.token}&disable=0'
-        ));
+        final enableOrDisable = await http.get(
+          Uri.parse(
+            statusParsed['status'] == 'enabled'
+              ? '${server.address}/admin/api.php?auth=${server.token}&enable=0'
+              : '${server.address}/admin/api.php?auth=${server.token}&disable=0'
+          ),
+          headers: checkBasicAuth(server.basicAuthUser, server.basicAuthPassword) == true ? {
+            'Authorization': 'Basic ${encodeBasicAuth(server.basicAuthUser!, server.basicAuthPassword!)}'
+          } : null
+        );
         if (enableOrDisable.statusCode == 200) {
           if (enableOrDisable.body == 'Not authorized!' || enableOrDisable.body == 'Session expired! Please re-login on the Pi-hole dashboard.' || enableOrDisable.body == [] ) {
             return {
@@ -208,6 +250,10 @@ dynamic disableServerRequest(Server server, int time) async {
     final response = await httpClient(
       method: 'get', 
       url: '${server.address}/admin/api.php?auth=${server.token}&disable=$time',
+      basicAuth: {
+        'username': server.basicAuthUser,
+        'password': server.basicAuthPassword
+      }
     );
     final body = jsonDecode(response.body);
     if (body.runtimeType != List && body['status'] != null) {
@@ -236,6 +282,10 @@ dynamic enableServerRequest(Server server) async {
     final response = await httpClient(
       method: 'get', 
       url: '${server.address}/admin/api.php?auth=${server.token}&enable',
+      basicAuth: {
+        'username': server.basicAuthUser,
+        'password': server.basicAuthPassword
+      }
     );
     final body = jsonDecode(response.body);
     if (body.runtimeType != List && body['status'] != null) {
@@ -265,6 +315,10 @@ Future fetchOverTimeData(Server server) async {
     final response = await httpClient(
       method: 'get',
       url: '${server.address}/admin/api.php?auth=${server.token}&overTimeData10mins&overTimeDataClients&getClientNames',
+      basicAuth: {
+        'username': server.basicAuthUser,
+        'password': server.basicAuthPassword
+      }
     );
     final body = jsonDecode(response.body);
     var data = OverTimeData.fromJson(body);
@@ -293,7 +347,11 @@ Future fetchLogs({
     final response = await httpClient(
       method: 'get',
       url: '${server.address}/admin/api.php?auth=${server.token}&getAllQueries&from=${from.millisecondsSinceEpoch~/1000}&until=${until.millisecondsSinceEpoch~/1000}',
-      timeout: 20
+      timeout: 20,
+      basicAuth: {
+        'username': server.basicAuthUser,
+        'password': server.basicAuthPassword
+      }
     );
     final body = jsonDecode(response.body);
     return {
@@ -358,6 +416,10 @@ dynamic testHash(Server server, String hash) async {
     final status = await httpClient(
       method: 'get',
       url: '${server.address}/admin/api.php',
+      basicAuth: {
+        'username': server.basicAuthUser,
+        'password': server.basicAuthPassword
+      }
     );
     if (status.statusCode == 200) {
       final body = jsonDecode(status.body);
@@ -365,6 +427,10 @@ dynamic testHash(Server server, String hash) async {
         final response = await httpClient(
           method: 'get', 
           url: '${server.address}/admin/api.php?auth=$hash&${body['status'] == 'enabled' ? 'enable' : 'disable'}',
+          basicAuth: {
+            'username': server.basicAuthUser,
+            'password': server.basicAuthPassword
+          }
         );
         if (response.statusCode == 200) {
           final body2 = jsonDecode(response.body);

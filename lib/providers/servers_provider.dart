@@ -228,6 +228,8 @@ class ServersProvider with ChangeNotifier {
           alias: server['alias'],
           token: server['token'],
           defaultServer: convertFromIntToBool(server['isDefaultServer'])!,
+          basicAuthUser: server['basicAuthUser'],
+          basicAuthPassword: server['basicAuthPassword']
         );
         _serversList.add(serverObj);
         if (convertFromIntToBool(server['isDefaultServer']) == true) {
@@ -262,7 +264,7 @@ class ServersProvider with ChangeNotifier {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawInsert(
-          'INSERT INTO servers (address, alias, token, isDefaultServer) VALUES ("${server.address}", "${server.alias}", "${server.token}", 0)',
+          'INSERT INTO servers (address, alias, token, isDefaultServer, basicAuthUser, basicAuthPassword) VALUES ("${server.address}", "${server.alias}", "${server.token}", 0, "${server.basicAuthUser}", "${server.basicAuthPassword}")',
         );
         return true;
       });
@@ -275,7 +277,7 @@ class ServersProvider with ChangeNotifier {
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawUpdate(
-          'UPDATE servers SET alias = "${server.alias}", token = "${server.token}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)} WHERE address = "${server.address}"',
+          'UPDATE servers SET alias = "${server.alias}", token = "${server.token}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)}, basicAuthUser = "${server.basicAuthUser}", basicAuthPassword = "${server.basicAuthPassword}" WHERE address = "${server.address}"',
         );
         return true;
       });

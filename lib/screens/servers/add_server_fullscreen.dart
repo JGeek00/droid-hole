@@ -1,11 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:droid_hole/models/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/section_label.dart';
 import 'package:droid_hole/widgets/scan_token_modal.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -27,6 +27,8 @@ class AddServerFullscreen extends StatefulWidget {
   State<AddServerFullscreen> createState() => _AddServerFullscreenState();
 }
 
+enum ConnectionType { http, https}
+
 class _AddServerFullscreenState extends State<AddServerFullscreen> {
   TextEditingController addressFieldController = TextEditingController();
   String? addressFieldError;
@@ -36,7 +38,9 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
   String? subrouteFieldError;
   TextEditingController aliasFieldController = TextEditingController();
   TextEditingController tokenFieldController = TextEditingController();
-  String selectedHttp = 'http';
+  ConnectionType connectionType = ConnectionType.http;
+  TextEditingController basicAuthUser = TextEditingController();
+  TextEditingController basicAuthPassword = TextEditingController();
   bool defaultCheckbox = false;
 
   String? errorUrl;
@@ -48,14 +52,18 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
 
   bool isConnecting = false;
 
-  void _checkDataValid() {
+  void checkDataValid() {
     if (
       addressFieldController.text != '' &&
       addressFieldError == null &&
       subrouteFieldError == null &&
       portFieldError == null &&
       aliasFieldController.text != '' &&
-      tokenFieldController.text != ''
+      tokenFieldController.text != '' &&
+      (
+        (basicAuthUser.text != '' && basicAuthPassword.text != '') ||
+        (basicAuthUser.text == '' && basicAuthPassword.text == '')
+      )
     ) {
       setState(() {
         allDataValid = true;
@@ -68,7 +76,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
     }
   }
 
-  void _validateAddress(String? value) {
+  void validateAddress(String? value) {
     if (value != null && value != '') {
       RegExp ipAddress = RegExp(r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$');
       RegExp domain = RegExp(r'^([a-z0-9|-]+\.)*[a-z0-9|-]+\.[a-z]+$');
@@ -88,10 +96,10 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         addressFieldError = AppLocalizations.of(context)!.ipCannotEmpty;
       });
     }
-    _checkDataValid();
+    checkDataValid();
   }
 
-  void _validateSubroute(String? value) {
+  void validateSubroute(String? value) {
     if (value != null && value != '') {
       RegExp subrouteRegexp = RegExp(r'^\/\b([A-Za-z0-9_\-~/]*)[^\/|\.|\:]$');
       if (subrouteRegexp.hasMatch(value) == true) {
@@ -110,10 +118,10 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         subrouteFieldError = null;
       });
     }
-    _checkDataValid();
+    checkDataValid();
   }
 
-  void _validatePort(String? value) {
+  void validatePort(String? value) {
     if (value != null && value != '') {
       if (int.tryParse(value) != null && int.parse(value) <= 65535) {
         setState(() {
@@ -131,10 +139,10 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         portFieldError = null;
       });
     }
-    _checkDataValid();
+    checkDataValid();
   }
 
-  void _openHowCreateConnection() {
+  void openHowCreateConnection() {
     FlutterWebBrowser.openWebPage(
       url: "https://github.com/JGeek00/droid-hole/wiki/Create-a-connection",
       customTabsOptions: const CustomTabsOptions(
@@ -159,8 +167,12 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       portFieldController.text = splitted.length == 3 ? splitted[2] : '';
       aliasFieldController.text = widget.server!.alias;
       tokenFieldController.text = widget.server!.token ?? '';
+      basicAuthUser.text = widget.server!.basicAuthUser ?? '';
+      basicAuthPassword.text = widget.server!.basicAuthPassword ?? '';
       setState(() {
-        selectedHttp = widget.server!.address.split(':')[0];
+        connectionType = widget.server!.address.split(':')[0] == 'https' 
+          ? ConnectionType.https 
+          : ConnectionType.http;
         defaultCheckbox = widget.server!.defaultServer;
       });
     }
@@ -173,12 +185,12 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
 
     final mediaQuery = MediaQuery.of(context);
 
-    void _connect() async {
+    void connect() async {
       FocusManager.instance.primaryFocus?.unfocus();
       setState(() {
         isConnecting = true;
       });
-      final String url = "$selectedHttp://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}${subrouteFieldController.text}";
+      final String url = "${connectionType.name}://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}${subrouteFieldController.text}";
       final exists = await serversProvider.checkUrlExists(url);
       if (exists['result'] == 'success' && exists['exists'] == true) {
         setState(() {
@@ -207,6 +219,8 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           alias: aliasFieldController.text,
           token: tokenFieldController.text, 
           defaultServer: false,
+          basicAuthUser: basicAuthUser.text,
+          basicAuthPassword: basicAuthPassword.text
         );
         final result = await loginQuery(serverObj);
         if (result['result'] == 'success') {
@@ -216,7 +230,9 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
             alias: serverObj.alias,
             token: serverObj.token,
             defaultServer: defaultCheckbox,
-            enabled: result['status'] == 'enabled' ? true : false
+            enabled: result['status'] == 'enabled' ? true : false,
+            basicAuthUser: basicAuthUser.text,
+            basicAuthPassword: basicAuthPassword.text
           ));
         }
         else {
@@ -281,7 +297,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       }
     }
 
-    void _save() async {
+    void save() async {
       FocusManager.instance.primaryFocus?.unfocus();
       setState(() {
         errorUrl = null;
@@ -293,6 +309,8 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         alias: aliasFieldController.text,
         token: tokenFieldController.text,
         defaultServer: false,
+        basicAuthUser: basicAuthUser.text,
+        basicAuthPassword: basicAuthPassword.text
       );
       final result = await loginQuery(serverObj);
       if (result['result'] == 'success') {
@@ -301,6 +319,8 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           alias: aliasFieldController.text,
           token: tokenFieldController.text,
           defaultServer: defaultCheckbox,
+          basicAuthUser: basicAuthUser.text,
+          basicAuthPassword: basicAuthPassword.text
         );
         final result = await serversProvider.editServer(server);
         if (result == true) {
@@ -373,12 +393,16 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       }
     }
 
-    bool _validData() {
+    bool validData() {
       if (
         addressFieldController.text != '' && 
         subrouteFieldError == null &&
         addressFieldError == null &&
-        aliasFieldController.text != ''
+        aliasFieldController.text != '' && 
+        (
+          (basicAuthUser.text != '' && basicAuthPassword.text != '') ||
+          (basicAuthUser.text == '' && basicAuthPassword.text == '')
+        )
       ) {
         return true;
       }
@@ -410,7 +434,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
             elevation: 5,
             actions: [
               IconButton(
-                onPressed: _openHowCreateConnection, 
+                onPressed: openHowCreateConnection, 
                 icon: const Icon(Icons.help_outline_rounded),
                 tooltip: AppLocalizations.of(context)!.howCreateConnection,
               ),
@@ -420,8 +444,8 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                   tooltip: widget.server != null 
                     ? AppLocalizations.of(context)!.save 
                     : AppLocalizations.of(context)!.connect,
-                  onPressed: _validData()
-                    ? widget.server != null ? _save : _connect
+                  onPressed: validData()
+                    ? widget.server != null ? save : connect
                     : null,
                   icon: widget.server != null 
                     ? const Icon(Icons.save_rounded)
@@ -453,7 +477,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                       child: Column(
                         children: [
                           Text(
-                            "$selectedHttp://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}${subrouteFieldController.text}",
+                            "${connectionType.name}://${addressFieldController.text}${portFieldController.text != '' ? ':${portFieldController.text}' : ''}${subrouteFieldController.text}",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.primary
@@ -462,10 +486,48 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                         ],
                       ),
                     ),
+                    SectionLabel(
+                      label: AppLocalizations.of(context)!.connection,
+                      padding: const EdgeInsets.symmetric(vertical: 16)
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: TextField(
+                        controller: aliasFieldController,
+                        onChanged: (value) => checkDataValid(),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.badge_outlined),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10)
+                            )
+                          ),
+                          labelText: AppLocalizations.of(context)!.serverName,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      width: double.maxFinite,
+                      child: SegmentedButton<ConnectionType>(
+                        segments: const [
+                          ButtonSegment(
+                            value: ConnectionType.http,
+                            label: Text("HTTP")
+                          ),
+                          ButtonSegment(
+                            value: ConnectionType.https,
+                            label: Text("HTTPS")
+                          ),
+                        ], 
+                        selected: <ConnectionType>{connectionType},
+                        onSelectionChanged: (value) => setState(() => connectionType = value.first),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: TextFormField(
-                        onChanged: (value) => _validateAddress(value),
+                        onChanged: (value) => validateAddress(value),
                         controller: addressFieldController,
                         enabled: widget.server != null ? false : true,
                         decoration: InputDecoration(
@@ -483,7 +545,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 30),
                       child: TextFormField(
-                        onChanged: (value) => _validateSubroute(value),
+                        onChanged: (value) => validateSubroute(value),
                         controller: subrouteFieldController,
                         enabled: widget.server != null ? false : true,
                         decoration: InputDecoration(
@@ -503,7 +565,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 30),
                       child: TextFormField(
-                        onChanged: (value) => _validatePort(value),
+                        onChanged: (value) => validatePort(value),
                         controller: portFieldController,
                         enabled: widget.server != null ? false : true,
                         keyboardType: TextInputType.number,
@@ -519,61 +581,12 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          GestureDetector(
-                            onTap: () => setState(() => selectedHttp = 'http'),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Radio(
-                                  value: 'http', 
-                                  groupValue: selectedHttp,
-                                  activeColor: Theme.of(context).colorScheme.primary,
-                                  onChanged: (value) => setState(() => selectedHttp = value.toString())
-                                ),
-                                const SizedBox(width: 5),
-                                const Text("HTTP")
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => setState(() => selectedHttp = 'https'),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Radio(
-                                  value: 'https', 
-                                  groupValue: selectedHttp,
-                                  activeColor: Theme.of(context).colorScheme.primary,
-                                  onChanged: (value) => setState(() => selectedHttp = value.toString())
-                                ),
-                                const SizedBox(width: 5),
-                                const Text("HTTPS")
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: TextField(
-                        controller: aliasFieldController,
-                        onChanged: (value) => _checkDataValid(),
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.badge_outlined),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10)
-                            )
-                          ),
-                          labelText: AppLocalizations.of(context)!.alias,
-                        ),
-                      ),
+                    SectionLabel(
+                      label: AppLocalizations.of(context)!.authentication,
+                      padding: const EdgeInsets.only(
+                        top: 30,
+                        bottom: 10
+                      )
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -586,7 +599,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                               obscureText: true,
                               keyboardType: TextInputType.visiblePassword,
                               controller: tokenFieldController,
-                              onChanged: (value) => _checkDataValid(),
+                              onChanged: (value) => checkDataValid(),
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.key_rounded),
                                 border: const OutlineInputBorder(
@@ -606,25 +619,88 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                         ],
                       ),
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.info_rounded,
-                          color: Theme.of(context).textTheme.bodyText1?.color
-                        ),
-                        const SizedBox(width: 16),
-                        SizedBox(
-                          width: mediaQuery.size.width - 88,
-                          child: Text(
-                            AppLocalizations.of(context)!.tokenInstructions,
-                            style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyText1?.color
+                    Card(
+                      margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_rounded,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
-                          )
-                        )
-                      ],
+                            const SizedBox(width: 16),
+                            Flexible(
+                              child: Text(
+                                AppLocalizations.of(context)!.tokenInstructions,
+                              )
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 20),
+                    SectionLabel(
+                      label: AppLocalizations.of(context)!.basicAuth,
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                        bottom: 10
+                      )
+                    ),
+                    Card(
+                      margin: const EdgeInsets.only(top: 20, bottom: 10),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_rounded,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 16),
+                            Flexible(
+                              child: Text(
+                                AppLocalizations.of(context)!.basicAuthInfo,
+                              )
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        onChanged: (_) => checkDataValid(),
+                        controller: basicAuthUser,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.person_rounded),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10)
+                            )
+                          ),
+                          labelText: AppLocalizations.of(context)!.username,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, bottom: 30),
+                      child: TextFormField(
+                        onChanged: (_) => checkDataValid(),
+                        controller: basicAuthPassword,
+                        obscureText: true,
+                        keyboardType: TextInputType.visiblePassword,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.key_rounded),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10)
+                            )
+                          ),
+                          labelText: AppLocalizations.of(context)!.password,
+                        ),
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

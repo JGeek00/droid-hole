@@ -4,6 +4,8 @@ class Server {
   String? token;
   bool defaultServer;
   bool? enabled;
+  String? basicAuthUser;
+  String? basicAuthPassword;
 
   Server({
     required this.address,
@@ -11,5 +13,7 @@ class Server {
     this.token,
     required this.defaultServer,
     this.enabled,
+    this.basicAuthUser,
+    this.basicAuthPassword
   });
 }
