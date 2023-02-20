@@ -358,6 +358,8 @@ Future fetchLogs({
       'result': 'success',
       'data': body['data']
     };
+  } on FormatException {
+    return {'result': 'token'};
   } on SocketException {
     return {'result': 'socket'};
   } on TimeoutException {
@@ -376,9 +378,16 @@ Future setWhiteBlacklist({
   required String list,
 }) async {
   try {
-    final result = await http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=$list&add=$domain'));
-    if (result.statusCode == 200) {
-      final json = jsonDecode(result.body);
+    final response = await httpClient(
+      method: 'get',
+      url: '${server.address}/admin/api.php?auth=${server.token}&list=$list&add=$domain',
+      basicAuth: {
+        'username': server.basicAuthUser,
+        'password': server.basicAuthPassword
+      }
+    );
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
       if (json.runtimeType == List<dynamic>) {
         return {'result': 'error', 'message': 'not_exists'};
       }
@@ -397,8 +406,6 @@ Future setWhiteBlacklist({
     else {
       return {'result': 'error'};
     }
-  } on FormatException {
-    return {'result': 'token'};
   } on SocketException {
     return {'result': 'socket'};
   } on TimeoutException {
@@ -467,12 +474,31 @@ dynamic testHash(Server server, String hash) async {
 Future getDomainLists({
   required Server server
 }) async {
+  Map<String, String>? headers;
+  if (checkBasicAuth(server.basicAuthUser, server.basicAuthPassword) == true) {
+    headers = {
+      'Authorization': 'Basic ${encodeBasicAuth(server.basicAuthUser!, server.basicAuthPassword!)}'
+    };
+  }
+
   try {
     final results = await Future.wait([
-      http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=white')),
-      http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=regex_white')),
-      http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=black')),
-      http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=regex_black')),
+      http.get(
+        Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=white'),
+        headers: headers
+      ),
+      http.get(
+        Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=regex_white'),
+        headers: headers
+      ),
+      http.get(
+        Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=black'),
+        headers: headers
+      ),
+      http.get(
+        Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=regex_black'),
+        headers: headers
+      ),
     ]);
 
     if (
@@ -534,9 +560,16 @@ Future removeDomainFromList({
   }
 
   try {
-    final result = await http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=${getType(domain.type)}&sub=${domain.domain}'));
-    if (result.statusCode == 200) {
-      final json = jsonDecode(result.body);
+    final response = await httpClient(
+      method: 'get',
+      url: '${server.address}/admin/api.php?auth=${server.token}&list=${getType(domain.type)}&sub=${domain.domain}',
+      basicAuth: {
+        'username': server.basicAuthUser,
+        'password': server.basicAuthPassword
+      }
+    );
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
       if (json.runtimeType == List<dynamic>) {
         return {'result': 'error', 'message': 'not_exists'};
       }
@@ -553,13 +586,11 @@ Future removeDomainFromList({
       return {'result': 'error'};
     }
   } on SocketException {
-    return {'result': 'no_connection'};
+    return {'result': 'socket'};
   } on TimeoutException {
-    return {'result': 'no_connection'};
+    return {'result': 'timeout'};
   } on HandshakeException {
     return {'result': 'ssl_error'};
-  } on FormatException {
-    return {'result': 'auth_error'};
   }
   catch (e) {
     return {'result': 'error'};
@@ -571,9 +602,16 @@ Future addDomainToList({
   required Map<String, dynamic> domainData,
 }) async {
   try {
-    final result = await http.get(Uri.parse('${server.address}/admin/api.php?auth=${server.token}&list=${domainData['list']}&add=${domainData['domain']}'));
-    if (result.statusCode == 200) {
-      final json = jsonDecode(result.body);
+    final response = await httpClient(
+      method: 'get',
+      url: '${server.address}/admin/api.php?auth=${server.token}&list=${domainData['list']}&add=${domainData['domain']}',
+      basicAuth: {
+        'username': server.basicAuthUser,
+        'password': server.basicAuthPassword
+      }
+    );
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
       if (json.runtimeType == List<dynamic>) {
         return {'result': 'error'};
       }
