@@ -17,7 +17,6 @@ ThemeData lightTheme(ColorScheme? dynamicColorScheme) => ThemeData(
     textColor: dynamicColorScheme != null ? dynamicColorScheme.onSurfaceVariant : const Color.fromRGBO(117, 117, 117, 1),
     iconColor: dynamicColorScheme != null ? dynamicColorScheme.onSurfaceVariant : const Color.fromRGBO(117, 117, 117, 1),
   ),
-  androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
 );
 
 ThemeData darkTheme(ColorScheme? dynamicColorScheme) => ThemeData(
@@ -36,7 +35,6 @@ ThemeData darkTheme(ColorScheme? dynamicColorScheme) => ThemeData(
     textColor: dynamicColorScheme != null ? dynamicColorScheme.onSurfaceVariant : const Color.fromRGBO(187, 187, 187, 1),
     iconColor: dynamicColorScheme != null ? dynamicColorScheme.onSurfaceVariant : const Color.fromRGBO(187, 187, 187, 1),
   ),
-  androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
 );
 
 ThemeData lightThemeOldVersions() => ThemeData(
@@ -55,7 +53,6 @@ ThemeData lightThemeOldVersions() => ThemeData(
     iconColor: Color.fromRGBO(117, 117, 117, 1),
   ),
   brightness: Brightness.light,
-  androidOverscrollIndicator: AndroidOverscrollIndicator.stretch
 );
 
 ThemeData darkThemeOldVersions() => ThemeData(
@@ -77,5 +74,4 @@ ThemeData darkThemeOldVersions() => ThemeData(
     iconColor: Color.fromRGBO(187, 187, 187, 1),
   ),
   brightness: Brightness.dark,
-  androidOverscrollIndicator: AndroidOverscrollIndicator.stretch
 );
