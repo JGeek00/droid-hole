@@ -165,7 +165,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 0
                                         ? Theme.of(context).colorScheme.primary
-                                        : Theme.of(context).textTheme.bodyLarge!.color
+                                        : Theme.of(context).colorScheme.onSurfaceVariant
                                     ),
                                     child: Text(AppLocalizations.of(context)!.seconds30),
                                   ),
@@ -191,7 +191,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 1
                                         ? Theme.of(context).colorScheme.primary
-                                        : Theme.of(context).textTheme.bodyLarge!.color
+                                        : Theme.of(context).colorScheme.onSurfaceVariant
                                     ),
                                     child: Text(AppLocalizations.of(context)!.minute1),
                                   ),
@@ -221,7 +221,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 2
                                         ? Theme.of(context).colorScheme.primary
-                                        : Theme.of(context).textTheme.bodyLarge!.color
+                                        : Theme.of(context).colorScheme.onSurfaceVariant
                                     ),
                                     child: Text(AppLocalizations.of(context)!.minutes2),
                                   ),
@@ -247,7 +247,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 3
                                         ? Theme.of(context).colorScheme.primary
-                                        : Theme.of(context).textTheme.bodyLarge!.color
+                                        : Theme.of(context).colorScheme.onSurfaceVariant
                                     ),
                                     child: Text(AppLocalizations.of(context)!.minutes5),
                                   ),
@@ -277,7 +277,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 4
                                         ? Theme.of(context).colorScheme.primary
-                                        : Theme.of(context).textTheme.bodyLarge!.color
+                                        : Theme.of(context).colorScheme.onSurfaceVariant
                                     ),
                                     child: Text(AppLocalizations.of(context)!.indefinitely),
                                   ),
@@ -303,7 +303,7 @@ class _DisableModalState extends State<DisableModal> {
                                       fontSize: 14,
                                       color: selectedOption == 5
                                         ? Theme.of(context).colorScheme.primary
-                                        : Theme.of(context).textTheme.bodyLarge!.color
+                                        : Theme.of(context).colorScheme.onSurfaceVariant
                                     ),
                                     child: Text(AppLocalizations.of(context)!.custom),
                                   ),
