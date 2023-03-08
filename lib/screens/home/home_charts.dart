@@ -327,8 +327,8 @@ class HomeCharts extends StatelessWidget {
               const SizedBox(height: 50),
               Text(
                 AppLocalizations.of(context)!.chartsNotLoaded,
-                style: const TextStyle(
-                  color: Colors.grey,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 22
                 ),
               )

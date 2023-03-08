@@ -196,8 +196,8 @@ class _ContactMeModalState extends State<ContactMeModal> {
                                   width: width-164,
                                   child: Text(
                                     AppLocalizations.of(context)!.writeEmail,
-                                    style: const TextStyle(
-                                      color: Colors.grey
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant
                                     ),
                                   ),
                                 ),

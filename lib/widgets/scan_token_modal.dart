@@ -128,7 +128,7 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
             decoration: BoxDecoration(
               border: Border.all(
                 width: 2,
-                color: Colors.grey,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               borderRadius: BorderRadius.circular(10)
             ),

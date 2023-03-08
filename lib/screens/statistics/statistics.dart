@@ -144,8 +144,8 @@ class Statistics extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context)!.statsNotLoaded,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontSize: 22
                   ),
                 )

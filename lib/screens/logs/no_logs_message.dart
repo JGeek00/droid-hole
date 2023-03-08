@@ -45,8 +45,8 @@ class NoLogsMessage extends StatelessWidget {
                     child: Text(
                       noLogsMessage(),
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.grey,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 24,
                       ),
                     ),
