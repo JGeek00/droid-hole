@@ -20,10 +20,10 @@ class NoDataChart extends StatelessWidget {
         children: [
           Text(
             topLabel,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.onSurface
             ),
           ),
           const SizedBox(height: 50),
@@ -37,8 +37,8 @@ class NoDataChart extends StatelessWidget {
             AppLocalizations.of(context)!.noData,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.bold,
-              fontSize: 16
+              fontWeight: FontWeight.w700,
+              fontSize: 14
             ),
           ),
           const SizedBox(height: 30)
