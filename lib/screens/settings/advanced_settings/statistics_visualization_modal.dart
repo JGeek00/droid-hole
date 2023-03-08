@@ -52,7 +52,7 @@ class StatisticsVisualizationModal extends StatelessWidget {
                     size: 50,
                     color: value == appConfigProvider.statisticsVisualizationMode
                       ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).textTheme.bodyText1!.color
+                      : Theme.of(context).colorScheme.onSurfaceVariant
                   ),
                   const SizedBox(width: 30),
                   Column(
@@ -65,7 +65,7 @@ class StatisticsVisualizationModal extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: value == appConfigProvider.statisticsVisualizationMode
                             ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).textTheme.bodyText1!.color
+                            : Theme.of(context).colorScheme.onSurfaceVariant
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -76,7 +76,7 @@ class StatisticsVisualizationModal extends StatelessWidget {
                           style: TextStyle(
                             color: value == appConfigProvider.statisticsVisualizationMode
                               ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).textTheme.bodyText1!.color
+                              : Theme.of(context).colorScheme.onSurfaceVariant
                           ),
                         ),
                       )
