@@ -310,5 +310,6 @@
     "authentication": "Autenticación",
     "basicAuth": "Basic authentication",
     "username": "Username",
-    "basicAuthInfo": "If your server is behind a basic authentication, you can fill here the corresponding credentials. Make sure to fill both fields or you won't be able to save the connection."
+    "basicAuthInfo": "If your server is behind a basic authentication, you can fill here the corresponding credentials. Make sure to fill both fields or you won't be able to save the connection.",
+    "searchDomainInternet": "Search domain on the Internet"
 }

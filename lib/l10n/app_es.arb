@@ -312,5 +312,6 @@
     "authentication": "Autenticación",
     "basicAuth": "Autenticación Basic",
     "username": "Nombre de usuario",
-    "basicAuthInfo": "Si tu servidor está detrás de una autenticación básica, puedes rellenar aquí las credenciales. Asegúrate de rellenar ambos campos, si no no podrás guardar la conexión."
+    "basicAuthInfo": "Si tu servidor está detrás de una autenticación básica, puedes rellenar aquí las credenciales. Asegúrate de rellenar ambos campos, si no no podrás guardar la conexión.",
+    "searchDomainInternet": "Buscar el dominio en Internet"
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/logs/log_status.dart';
 
 import 'package:droid_hole/models/log.dart';
+import 'package:droid_hole/constants/search_domain_base_url.dart';
 import 'package:droid_hole/functions/format.dart';
 
 class LogDetailsScreen extends StatelessWidget {
@@ -83,10 +85,31 @@ class LogDetailsScreen extends StatelessWidget {
       }
     }
 
+    void searchDomain(String domain) {
+      FlutterWebBrowser.openWebPage(
+        url: "$searchDomainBaseUrlGoogle$domain",
+        customTabsOptions: const CustomTabsOptions(
+          instantAppsEnabled: true,
+          showTitle: true,
+          urlBarHidingEnabled: false,
+        ),
+        safariVCOptions: const SafariViewControllerOptions(
+          barCollapsingEnabled: true,
+          dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
+          modalPresentationCapturesStatusBarAppearance: true,
+        )
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.logDetails),
         actions: [
+          IconButton(
+            onPressed: () => searchDomain(log.url), 
+            icon: const Icon(Icons.travel_explore_rounded),
+            tooltip: AppLocalizations.of(context)!.searchDomainInternet,
+          ),
           blackWhiteListButton(),
           const SizedBox(width: 10)
         ],
