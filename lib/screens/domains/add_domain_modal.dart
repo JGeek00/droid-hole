@@ -15,30 +15,33 @@ class AddDomainModal extends StatefulWidget {
   State<AddDomainModal> createState() => _AddDomainModalState();
 }
 
+enum ListType { whitelist, blacklist }
+
 class _AddDomainModalState extends State<AddDomainModal> {
   final TextEditingController domainController = TextEditingController();
   String? domainError; 
-  String selectedType = '';
+  ListType selectedType = ListType.whitelist;
   bool wildcard = false;
   bool allDataValid = false;
 
   @override
   void initState() {
-    selectedType = widget.selectedlist;
+    selectedType = widget.selectedlist == 'whitelist' 
+      ? ListType.whitelist : ListType.blacklist;
     super.initState();
   }
 
   String getSelectedList() {
-    if (selectedType == 'whitelist' && wildcard == false) {
+    if (selectedType == ListType.whitelist && wildcard == false) {
       return "white";
     }
-    else if (selectedType == 'whitelist' && wildcard == true) {
+    else if (selectedType == ListType.whitelist && wildcard == true) {
       return "regex_white";
     }
-    if (selectedType == 'blacklist' && wildcard == false) {
+    if (selectedType == ListType.blacklist && wildcard == false) {
       return "black";
     }
-    else if (selectedType == 'blacklist' && wildcard == true) {
+    else if (selectedType == ListType.blacklist && wildcard == true) {
       return "regex_black";
     }
     else {
@@ -132,42 +135,23 @@ class _AddDomainModalState extends State<AddDomainModal> {
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: () => setState(() => selectedType = 'whitelist'),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Radio(
-                                value: 'whitelist', 
-                                groupValue: selectedType,
-                                activeColor: Theme.of(context).colorScheme.primary,
-                                onChanged: (value) => setState(() => selectedType = value.toString())
-                              ),
-                              const SizedBox(width: 5),
-                              const Text("Whitelist")
-                            ],
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      width: double.maxFinite,
+                      child: SegmentedButton<ListType>(
+                        segments: const [
+                          ButtonSegment(
+                            value: ListType.whitelist,
+                            label: Text("Whitelist")
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () => setState(() => selectedType = 'blacklist'),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Radio(
-                                value: 'blacklist', 
-                                groupValue: selectedType,
-                                activeColor: Theme.of(context).colorScheme.primary,
-                                onChanged: (value) => setState(() => selectedType = value.toString())
-                              ),
-                              const SizedBox(width: 5),
-                              const Text("Blacklist")
-                            ],
+                          ButtonSegment(
+                            value: ListType.blacklist,
+                            label: Text("Blacklist")
                           ),
-                        ),
-                      ],
+                        ], 
+                        selected: <ListType>{selectedType},
+                        onSelectionChanged: (value) => setState(() => selectedType = value.first),
+                      ),
                     ),
                     Container(
                       width: double.maxFinite,
