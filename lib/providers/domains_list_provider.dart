@@ -9,7 +9,14 @@ class DomainsListProvider with ChangeNotifier {
   List<Domain> _whitelistDomains = [];
   List<Domain> _blacklistDomains = [];
 
+  List<Domain> _filteredWhitelistDomains = [];
+  List<Domain> _filteredBlacklistDomains = [];
+
   int? _selectedTab;
+
+  String _searchTerm = "";
+
+  bool _searchMode = false;
 
   int get loadingStatus {
     return _loadingStatus;
@@ -23,8 +30,24 @@ class DomainsListProvider with ChangeNotifier {
     return _blacklistDomains;
   }
 
+  List<Domain> get filteredWhitelistDomains {
+    return _filteredWhitelistDomains;
+  }
+
+  List<Domain> get filteredBlacklistDomains {
+    return _filteredBlacklistDomains;
+  }
+
   int? get selectedTab {
     return _selectedTab;
+  }
+  
+  String get searchTerm {
+    return _searchTerm;
+  }
+
+  bool get searchMode {
+    return _searchMode;
   }
 
   void setLoadingStatus(int status) {
@@ -45,17 +68,43 @@ class DomainsListProvider with ChangeNotifier {
     _selectedTab = tab;
   }
 
+  void setSearchMode(bool value) {
+    _searchMode = value;
+    notifyListeners();
+  }
+
+  void onSearch(String value) {
+    _searchTerm = value;
+
+    if (value != "") {
+      _filteredBlacklistDomains = _blacklistDomains.where((i) => i.domain.contains(value)).toList();
+      _filteredWhitelistDomains = _whitelistDomains.where((i) => i.domain.contains(value)).toList();
+    }
+    else {
+      _filteredBlacklistDomains = _blacklistDomains;
+      _filteredWhitelistDomains = _whitelistDomains;
+    }
+
+    notifyListeners();
+  }
+
   Future fetchDomainsList(Server server) async {
     final result = await getDomainLists(server: server);
     if (result['result'] == 'success') {
-      setWhitelistDomains([
+      final List<Domain> whitelist = [
         ...result['data']['whitelist'],
         ...result['data']['whitelistRegex']
-      ]);
-      setBlacklistDomains([
+      ];
+      _whitelistDomains = whitelist;
+      _filteredWhitelistDomains = whitelist.where((i) => i.domain.contains(_searchTerm)).toList();
+
+      final List<Domain> blacklist = [
         ...result['data']['blacklist'],
         ...result['data']['blacklistRegex']
-      ]);
+      ];
+      _blacklistDomains = blacklist;
+      _filteredBlacklistDomains = blacklist.where((i) => i.domain.contains(_searchTerm)).toList();
+
       _loadingStatus = 1;
     }
     else {
@@ -67,9 +116,11 @@ class DomainsListProvider with ChangeNotifier {
   void removeDomainFromList(Domain domain) {
     if (domain.type == 0 || domain.type == 2) {
       _whitelistDomains = _whitelistDomains.where((item) => item.id != domain.id).toList();
+      _filteredWhitelistDomains = _filteredWhitelistDomains.where((item) => item.id != domain.id).toList();
     }
     else if (domain.type == 1 || domain.type == 3) {
       _blacklistDomains = _blacklistDomains.where((item) => item.id != domain.id).toList();
+      _filteredBlacklistDomains = _filteredBlacklistDomains.where((item) => item.id != domain.id).toList();
     }
     notifyListeners();
   }

@@ -22,12 +22,14 @@ class DomainsList extends StatefulWidget {
   final String type;
   final int loadStatus;
   final ScrollController scrollController;
+  final List<Domain> domainsList;
 
   const DomainsList({
     Key? key,
     required this.type,
     required this.loadStatus,
     required this.scrollController,
+    required this.domainsList,
   }) : super(key: key);
 
   @override
@@ -121,10 +123,6 @@ class _DomainsListState extends State<DomainsList> {
     final domainsListProvider = Provider.of<DomainsListProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    final List<Domain> data = widget.type == 'whitelist'
-      ? domainsListProvider.whitelistDomains
-      : domainsListProvider.blacklistDomains;
-
     void removeDomain(Domain domain) async {
       final ProcessModal process = ProcessModal(context: context);
       process.open(AppLocalizations.of(context)!.deleting);
@@ -215,7 +213,7 @@ class _DomainsListState extends State<DomainsList> {
     Widget listContent() {
       return Stack(
         children: [
-          if (data.isEmpty) Container(
+          if (widget.domainsList.isEmpty) Container(
             height: double.maxFinite,
             padding: const EdgeInsets.all(20),
             child: Center(
@@ -229,25 +227,25 @@ class _DomainsListState extends State<DomainsList> {
               )
             ),
           ),
-          if (data.isNotEmpty) RefreshIndicator(
+          if (widget.domainsList.isNotEmpty) RefreshIndicator(
             onRefresh: () async {
               await domainsListProvider.fetchDomainsList(serversProvider.selectedServer!);
             },
             child: ListView.builder(
               padding: const EdgeInsets.only(top: 0),
-              itemCount: data.length,
+              itemCount: widget.domainsList.length,
               itemBuilder: (context, index) => CustomListTile(
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) => DomainDetailsScreen(
-                      domain: data[index], 
+                      domain: widget.domainsList[index], 
                       remove: removeDomain
                     )
                   ))
                 },
-                label: data[index].domain,
-                description: formatTimestamp(data[index].dateAdded, 'yyyy-MM-dd'),
-                trailing: domainType(data[index].type),
+                label: widget.domainsList[index].domain,
+                description: formatTimestamp(widget.domainsList[index].dateAdded, 'yyyy-MM-dd'),
+                trailing: domainType(widget.domainsList[index].type),
               )
             ),
           ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/domains/domains_list.dart';
 
+import 'package:droid_hole/models/domain.dart';
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
@@ -41,6 +42,8 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
   late TabController tabController;
   final ScrollController scrollController = ScrollController();
 
+  final TextEditingController searchController = TextEditingController();
+
   @override
   void initState() {
     widget.domainsListProvider.fetchDomainsList(widget.server);
@@ -68,10 +71,42 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
               sliver: SliverSafeArea(
                 top: false,
                 sliver: SliverAppBar(
-                  title: Text(AppLocalizations.of(context)!.domains),
+                  title: domainsListProvider.searchMode 
+                    ? TextFormField(
+                        initialValue: domainsListProvider.searchTerm,
+                        onChanged: domainsListProvider.onSearch,
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          hintText: "${AppLocalizations.of(context)!.searchDomains}...",
+                          hintStyle: const TextStyle(
+                            fontWeight: FontWeight.w400
+                          ),
+                          border: InputBorder.none,
+                          prefixIcon: Icon(
+                            Icons.search_rounded,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          )
+                        ),
+                      )
+                    : Text(AppLocalizations.of(context)!.domains),
                   pinned: true,
                   floating: true,
                   forceElevated: innerBoxIsScrolled,
+                  actions: [
+                    if (domainsListProvider.searchMode == false) IconButton(
+                      onPressed: () => domainsListProvider.setSearchMode(true), 
+                      icon: const Icon(Icons.search)
+                    ),
+                    if (domainsListProvider.searchMode == true) IconButton(
+                      onPressed: () => setState(() {
+                        domainsListProvider.setSearchMode(false);
+                        searchController.text = "";
+                        domainsListProvider.onSearch("");
+                      }), 
+                      icon: const Icon(Icons.close_rounded)
+                    ),
+                    const SizedBox(width: 10)
+                  ],
                   bottom: TabBar(
                     controller: tabController,
                     onTap: (value) => domainsListProvider.setSelectedTab(value),
@@ -85,7 +120,7 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
                         text: "Blacklist",
                       ),
                     ]
-                  )
+                  ),
                 ),
               ),
             )
@@ -108,12 +143,14 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
               DomainsList(
                 type: 'whitelist',
                 loadStatus: domainsListProvider.loadingStatus,
-                scrollController: scrollController
+                scrollController: scrollController,
+                domainsList: domainsListProvider.filteredWhitelistDomains,
               ),
               DomainsList(
                 type: 'blacklist',
                 loadStatus: domainsListProvider.loadingStatus,
-                scrollController: scrollController
+                scrollController: scrollController,
+                domainsList: domainsListProvider.filteredBlacklistDomains,
               )
             ],
           )
