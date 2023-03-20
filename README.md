@@ -1,7 +1,24 @@
-# DroidHole
-DroidHole is an unofficial Pi-hole® client for Android. It allows the user to manage multiple Pi-hole® servers from one application and device.
+<h1 align="center">
+  <img src="https://github.com/JGeek00/droid-hole/raw/master/assets/other/banner.png" />
+</h1>
 
-[<img src="/assets/other/get_google_play.png" width="300px">](https://play.google.com/store/apps/details?id=com.jgeek00.droid_hole)
+<h5 align="center">
+  <b>
+    DroidHole is an unnoficial
+    <a href="https://pi-hole.net/" target="_blank" rel="noopener noreferrer">
+      Pi-hole®
+    </a> 
+    client developed with Flutter.</b>
+</h5>
+
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.jgeek00.droid_hole" target="_blank" rel="noopener noreferrer">
+    <img src="/assets/other/get_google_play.png" width="300px">
+  </a>
+  <a href="https://github.com/JGeek00/droid-hole/releases" target="_blank" rel="noopener noreferrer">
+    <img src="/assets/other/get-github.png" width="300px">
+  </a>
+</p>
 
 ## Main features
 <p>▶ Manage your Pi-hole® server on an easy way.</p>
@@ -18,6 +35,9 @@ DroidHole does not collect any personal user data. All data stored into the appl
 
 ## Disclaimer
 This is an unofficial application. The Pi-hole team and the development of the Pi-hole software is not related in any way with this application.
+
+## Recommended lists
+On [this repository](https://github.com/JuanRodenas/Pihole_list) you can find some recommended lists. Thanks to [JuanRodenas](https://github.com/JuanRodenas).
 
 ## Third party libraries
 - [provider](https://pub.dev/packages/provider)
