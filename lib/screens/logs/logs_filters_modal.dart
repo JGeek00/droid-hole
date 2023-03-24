@@ -28,6 +28,7 @@ class LogsFiltersModal extends StatefulWidget {
   State<LogsFiltersModal> createState() => _LogsFiltersModalState();
 }
 
+enum RequestStatus { all, blocked, allowed }
 class _LogsFiltersModalState extends State<LogsFiltersModal> {
   String? timeError;
 
@@ -37,7 +38,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
 
     final height = MediaQuery.of(context).size.height;
 
-    void _openStatusModal() {
+    void openStatusModal() {
       showModalBottomSheet(
         context: context, 
         builder: (context) => StatusFiltersModal(
@@ -51,7 +52,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
         isScrollControlled: true,
       );
     }
-    void _openClientsModal() {
+    void openClientsModal() {
       showModalBottomSheet(
         context: context, 
         builder: (context) => ClientsFiltersModal(
@@ -66,7 +67,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
       );
     }
 
-    String _statusText(items, maxItems) {
+    String statusText(items, maxItems) {
       if (items == 0) {
         return AppLocalizations.of(context)!.noItemsSelected;
       }
@@ -78,7 +79,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
       }
     }
 
-    void _selectTime(String time) async {
+    void selectTime(String time) async {
       DateTime now = DateTime.now();
       DateTime? dateValue = await showDatePicker(
         context: context, 
@@ -142,7 +143,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
       }
     }
 
-    void _resetFilters() {
+    void resetFilters() {
       filtersProvider.resetFilters();
     }
 
@@ -154,8 +155,8 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
           topRight: Radius.circular(24)
         )
       ),
-      height: height > (Platform.isIOS ? 510 : 490)
-        ? (Platform.isIOS ? 510 : 490)
+      height: height > (Platform.isIOS ? 620 : 600)
+        ? (Platform.isIOS ? 620 : 600)
         : height-25,
       child: SingleChildScrollView(
         child: Column(
@@ -204,7 +205,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(10),
                                 child: InkWell(
-                                  onTap: () => _selectTime('from'),
+                                  onTap: () => selectTime('from'),
                                   borderRadius: BorderRadius.circular(10),
                                   splashColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                                   highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
@@ -255,7 +256,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(10),
                                 child: InkWell(
-                                  onTap: () => _selectTime('to'),
+                                  onTap: () => selectTime('to'),
                                   borderRadius: BorderRadius.circular(10),
                                   splashColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                                   highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
@@ -313,10 +314,47 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                     ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  child: Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.status,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  width: double.maxFinite,
+                  child: SegmentedButton<RequestStatus>(
+                    segments: [
+                      ButtonSegment(
+                        value: RequestStatus.all,
+                        label: Text(AppLocalizations.of(context)!.all)
+                      ),
+                      ButtonSegment(
+                        value: RequestStatus.allowed,
+                        label: Text(AppLocalizations.of(context)!.allowed)
+                      ),
+                      ButtonSegment(
+                        value: RequestStatus.blocked,
+                        label: Text(AppLocalizations.of(context)!.blocked)
+                      ),
+                    ], 
+                    selected: <RequestStatus>{filtersProvider.requestStatus},
+                    onSelectionChanged: (value) => setState(() => filtersProvider.setRequestStatus(value.first)),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: _openStatusModal,
+                    onTap: openStatusModal,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
@@ -330,7 +368,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                AppLocalizations.of(context)!.status,
+                                AppLocalizations.of(context)!.advancedStatusFiltering,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16
@@ -338,7 +376,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                _statusText(
+                                statusText(
                                   filtersProvider.statusSelected.length,
                                   14
                                 ),
@@ -357,7 +395,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: _openClientsModal,
+                    onTap: openClientsModal,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
@@ -379,7 +417,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                _statusText(
+                                statusText(
                                   filtersProvider.selectedClients.length,
                                   filtersProvider.totalClients.length
                                 ),
@@ -407,7 +445,7 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                      onPressed: _resetFilters, 
+                      onPressed: resetFilters, 
                       child: Text(AppLocalizations.of(context)!.reset),
                     ),
                     Row(

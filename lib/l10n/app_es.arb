@@ -10,8 +10,8 @@
     "domainsAdlists": "Dominios en Adlists",
     "totalQueries24": "Total de peticiones en últimas 24 horas",
     "clientActivity24": "Actividad de clientes en últimas 24 horas",
-    "blocked": "Bloqueadas",
-    "notBlocked": "No bloqueadas",
+    "blocked": "Bloqueados",
+    "notBlocked": "No bloqueados",
     "refresh": "Refrescar",
     "openWebPanel": "Abrir panel web",
     "changeServer": "Cambiar servidor",
@@ -314,5 +314,8 @@
     "username": "Nombre de usuario",
     "basicAuthInfo": "Si tu servidor está detrás de una autenticación básica, puedes rellenar aquí las credenciales. Asegúrate de rellenar ambos campos, si no no podrás guardar la conexión.",
     "searchDomainInternet": "Buscar el dominio en Internet",
-    "searchDomains": "Buscar dominios"
+    "searchDomains": "Buscar dominios",
+    "all": "Todos",
+    "allowed": "Permitidos",
+    "advancedStatusFiltering": "Filtros de estado avanzados"
 }

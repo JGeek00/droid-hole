@@ -312,5 +312,8 @@
   "username": "Nutzername",
   "basicAuthInfo": "Wenn sich Ihr Server hinter einer Basisauthentifizierung befindet, können Sie hier die entsprechenden Anmeldeinformationen eingeben. Stellen Sie sicher, dass Sie beide Felder ausfüllen, sonst können Sie die Verbindung nicht speichern.",
   "searchDomainInternet": "Suchen Sie Domain im Internet",
-  "searchDomains": "Suchdomänen"
+  "searchDomains": "Suchdomänen",
+  "all": "Alle",
+  "allowed": "Erlaubt",
+  "advancedStatusFiltering": "Erweiterte Statusfilterung"
 }

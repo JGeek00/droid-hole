@@ -312,5 +312,8 @@
     "username": "Username",
     "basicAuthInfo": "If your server is behind a basic authentication, you can fill here the corresponding credentials. Make sure to fill both fields or you won't be able to save the connection.",
     "searchDomainInternet": "Search domain on the Internet",
-    "searchDomains": "Search domains"
+    "searchDomains": "Search domains",
+    "all": "All",
+    "allowed": "Allowed",
+    "advancedStatusFiltering": "Advanced status filtering"
 }
