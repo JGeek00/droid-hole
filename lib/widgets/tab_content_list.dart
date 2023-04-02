@@ -4,7 +4,7 @@ import 'package:droid_hole/constants/enums.dart';
 
 class CustomTabContentList extends StatelessWidget {
   final Widget Function() loadingGenerator;
-  final List data;
+  final int itemsCount;
   final Widget Function(int index) contentWidget;
   final Widget noData;
   final Widget Function() errorGenerator;
@@ -14,7 +14,7 @@ class CustomTabContentList extends StatelessWidget {
   const CustomTabContentList({
     Key? key,
     required this.loadingGenerator,
-    required this.data,
+    required this.itemsCount,
     required this.contentWidget,
     required this.noData,
     required this.errorGenerator,
@@ -61,12 +61,13 @@ class CustomTabContentList extends StatelessWidget {
                     SliverOverlapInjector(
                       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                     ),
-                    if (data.isNotEmpty) SliverList(
+                    if (itemsCount > 0) SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) => contentWidget(index),
+                        childCount: itemsCount
                       ),
                     ),
-                    SliverFillRemaining(
+                    if (itemsCount == 0) SliverFillRemaining(
                       child: noData,
                     )
                   ],

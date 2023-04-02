@@ -79,7 +79,7 @@ class _AddDomainModalState extends State<AddDomainModal> {
     if (
       domainController.text != '' &&
       domainError == null &&
-      (selectedType == 'blacklist' || selectedType == 'whitelist')
+      (selectedType == ListType.blacklist || selectedType == ListType.whitelist)
     ) {
       setState(() {
         allDataValid = true;
@@ -99,8 +99,8 @@ class _AddDomainModalState extends State<AddDomainModal> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: Container(
-        height: height > 448
-          ? 448
+        height: height > 466
+          ? 466
           : height - 30,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(

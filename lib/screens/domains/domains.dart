@@ -122,34 +122,22 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
             )
           ];
         }), 
-        body: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            border: Border(
-              top: BorderSide(
-                color: Theme.of(context).brightness == Brightness.light
-                  ? const Color.fromRGBO(220, 220, 220, 1)
-                  : const Color.fromRGBO(50, 50, 50, 1)
-              )
+        body: TabBarView(
+          controller: tabController,
+          children: [
+            DomainsList(
+              type: 'whitelist',
+              loadStatus: domainsListProvider.loadingStatus,
+              scrollController: scrollController,
+              domainsList: domainsListProvider.filteredWhitelistDomains,
+            ),
+            DomainsList(
+              type: 'blacklist',
+              loadStatus: domainsListProvider.loadingStatus,
+              scrollController: scrollController,
+              domainsList: domainsListProvider.filteredBlacklistDomains,
             )
-          ),
-          child: TabBarView(
-            controller: tabController,
-            children: [
-              DomainsList(
-                type: 'whitelist',
-                loadStatus: domainsListProvider.loadingStatus,
-                scrollController: scrollController,
-                domainsList: domainsListProvider.filteredWhitelistDomains,
-              ),
-              DomainsList(
-                type: 'blacklist',
-                loadStatus: domainsListProvider.loadingStatus,
-                scrollController: scrollController,
-                domainsList: domainsListProvider.filteredBlacklistDomains,
-              )
-            ],
-          )
+          ],
         ),
       )
     );

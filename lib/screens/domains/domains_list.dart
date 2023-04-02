@@ -212,57 +212,6 @@ class _DomainsListState extends State<DomainsList> {
       );
     }
 
-    Widget listContent() {
-      return Stack(
-        children: [
-          if (widget.domainsList.isEmpty) Container(
-            height: double.maxFinite,
-            padding: const EdgeInsets.all(20),
-            child: Center(
-              child: Text(
-                AppLocalizations.of(context)!.noDomains,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant
-                ),
-              )
-            ),
-          ),
-          if (widget.domainsList.isNotEmpty) ListView.builder(
-            padding: const EdgeInsets.only(top: 0),
-            itemCount: widget.domainsList.length,
-            itemBuilder: (context, index) => CustomListTile(
-              onTap: () => {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => DomainDetailsScreen(
-                    domain: widget.domainsList[index], 
-                    remove: removeDomain
-                  )
-                ))
-              },
-              label: widget.domainsList[index].domain,
-              description: formatTimestamp(widget.domainsList[index].dateAdded, 'yyyy-MM-dd'),
-              trailing: domainType(widget.domainsList[index].type),
-            )
-          ),
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 100),
-            curve: Curves.easeInOut,
-            bottom: isVisible ?
-              appConfigProvider.showingSnackbar
-                ? 70 : 20
-              : -70,
-            right: 20,
-            child: FloatingActionButton(
-              onPressed: openModalAddDomainToList,
-              child: const Icon(Icons.add),
-            )
-          )
-        ],
-      );
-    }
-
     return Stack(
       children: [
         CustomTabContentList(
@@ -286,20 +235,21 @@ class _DomainsListState extends State<DomainsList> {
               ],
             ),
           ), 
-          data: widget.domainsList,
+          itemsCount: widget.domainsList.length,
           contentWidget: (index) => CustomListTile(
             onTap: () => {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) => DomainDetailsScreen(
-                  domain: widget.domainsList[index], 
-                  remove: removeDomain
+                    domain: widget.domainsList[index], 
+                    remove: removeDomain
+                  )
                 )
-              ))
+              )
             },
             label: widget.domainsList[index].domain,
             description: formatTimestamp(widget.domainsList[index].dateAdded, 'yyyy-MM-dd'),
             trailing: domainType(widget.domainsList[index].type),
-          ), 
+          ),
           noData:  Container(
             height: double.maxFinite,
             padding: const EdgeInsets.all(20),
