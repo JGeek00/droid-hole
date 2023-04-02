@@ -16,6 +16,7 @@ import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/models/server.dart';
+import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/constants/app_screens.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -61,14 +62,14 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
       widget.serversProvider.updateselectedServerStatus(result[0]['data'].status == 'enabled' ? true : false);
 
       widget.serversProvider.setOvertimeDataLoadingStatus(1);
-      widget.serversProvider.setStatusLoading(1);
+      widget.serversProvider.setStatusLoading(LoadStatus.loaded);
 
       widget.serversProvider.setStartAutoRefresh(true);
       widget.serversProvider.setIsServerConnected(true);
     }
     else {
       widget.serversProvider.setOvertimeDataLoadingStatus(2);
-      widget.serversProvider.setStatusLoading(2);
+      widget.serversProvider.setStatusLoading(LoadStatus.error);
 
       widget.serversProvider.setIsServerConnected(false);
     }

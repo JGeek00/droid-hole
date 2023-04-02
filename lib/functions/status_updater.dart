@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -50,8 +51,8 @@ class StatusUpdater {
               if (serversProvider.isServerConnected == true) {
                 serversProvider.setIsServerConnected(false);
               }
-              if (serversProvider.getStatusLoading == 0) {
-                serversProvider.setStatusLoading(2);
+              if (serversProvider.getStatusLoading == LoadStatus.loading) {
+                serversProvider.setStatusLoading(LoadStatus.error);
               }
             }
           }

@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/domains/domains_list.dart';
 
-import 'package:droid_hole/models/domain.dart';
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
@@ -68,59 +67,56 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
           return [
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: SliverSafeArea(
-                top: false,
-                sliver: SliverAppBar(
-                  title: domainsListProvider.searchMode 
-                    ? TextFormField(
-                        initialValue: domainsListProvider.searchTerm,
-                        onChanged: domainsListProvider.onSearch,
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                          hintText: "${AppLocalizations.of(context)!.searchDomains}...",
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.w400
-                          ),
-                          border: InputBorder.none,
-                          prefixIcon: Icon(
-                            Icons.search_rounded,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          )
+              sliver: SliverAppBar(
+                title: domainsListProvider.searchMode 
+                  ? TextFormField(
+                      initialValue: domainsListProvider.searchTerm,
+                      onChanged: domainsListProvider.onSearch,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                        hintText: "${AppLocalizations.of(context)!.searchDomains}...",
+                        hintStyle: const TextStyle(
+                          fontWeight: FontWeight.w400
                         ),
-                      )
-                    : Text(AppLocalizations.of(context)!.domains),
-                  pinned: true,
-                  floating: true,
-                  forceElevated: innerBoxIsScrolled,
-                  actions: [
-                    if (domainsListProvider.searchMode == false) IconButton(
-                      onPressed: () => domainsListProvider.setSearchMode(true), 
-                      icon: const Icon(Icons.search)
-                    ),
-                    if (domainsListProvider.searchMode == true) IconButton(
-                      onPressed: () => setState(() {
-                        domainsListProvider.setSearchMode(false);
-                        searchController.text = "";
-                        domainsListProvider.onSearch("");
-                      }), 
-                      icon: const Icon(Icons.close_rounded)
-                    ),
-                    const SizedBox(width: 10)
-                  ],
-                  bottom: TabBar(
-                    controller: tabController,
-                    onTap: (value) => domainsListProvider.setSelectedTab(value),
-                    tabs: const [
-                      Tab(
-                        icon: Icon(Icons.check_circle_rounded),
-                        text: "Whitelist",
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.search_rounded,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        )
                       ),
-                      Tab(
-                        icon: Icon(Icons.block),
-                        text: "Blacklist",
-                      ),
-                    ]
+                    )
+                  : Text(AppLocalizations.of(context)!.domains),
+                pinned: true,
+                floating: true,
+                forceElevated: innerBoxIsScrolled,
+                actions: [
+                  if (domainsListProvider.searchMode == false) IconButton(
+                    onPressed: () => domainsListProvider.setSearchMode(true), 
+                    icon: const Icon(Icons.search)
                   ),
+                  if (domainsListProvider.searchMode == true) IconButton(
+                    onPressed: () => setState(() {
+                      domainsListProvider.setSearchMode(false);
+                      searchController.text = "";
+                      domainsListProvider.onSearch("");
+                    }), 
+                    icon: const Icon(Icons.close_rounded)
+                  ),
+                  const SizedBox(width: 10)
+                ],
+                bottom: TabBar(
+                  controller: tabController,
+                  onTap: (value) => domainsListProvider.setSelectedTab(value),
+                  tabs: const [
+                    Tab(
+                      icon: Icon(Icons.check_circle_rounded),
+                      text: "Whitelist",
+                    ),
+                    Tab(
+                      icon: Icon(Icons.block),
+                      text: "Blacklist",
+                    ),
+                  ]
                 ),
               ),
             )

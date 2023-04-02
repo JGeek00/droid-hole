@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:droid_hole/constants/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
 
@@ -18,7 +19,7 @@ class ServersProvider with ChangeNotifier {
   String? _phpSessId;
   bool _refreshServerStatus = false;
 
-  int _statusLoading = 0;
+  LoadStatus _statusLoading = LoadStatus.loading;
   RealtimeStatus? _realtimeStatus;
 
   int _overtimeDataLoading = 0;
@@ -46,7 +47,7 @@ class ServersProvider with ChangeNotifier {
     return _realtimeStatus;
   }
 
-  int get getStatusLoading {
+  LoadStatus get getStatusLoading {
     return _statusLoading;
   }
 
@@ -167,14 +168,14 @@ class ServersProvider with ChangeNotifier {
     }
   }
 
-  void setStatusLoading(int status) {
+  void setStatusLoading(LoadStatus status) {
     _statusLoading = status;
     notifyListeners();
   }
 
   void setRealtimeStatus(RealtimeStatus realtimeStatus) {
     _realtimeStatus = realtimeStatus;
-    _statusLoading = 1;
+    _statusLoading = LoadStatus.loaded;
     notifyListeners();
   }
 
@@ -247,14 +248,14 @@ class ServersProvider with ChangeNotifier {
       _realtimeStatus = result['realtimeStatus'];
       _phpSessId = result['phpSessId'];
       _isServerConnected = true;
-      _statusLoading = 1;
+      _statusLoading = LoadStatus.loaded;
       notifyListeners();
       return true;
     }
     else {
       _isServerConnected = false;
       _selectedServer = serverObj;
-      _statusLoading = 2;
+      _statusLoading = LoadStatus.error;
       notifyListeners();
       return false;
     }

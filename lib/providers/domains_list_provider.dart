@@ -1,3 +1,4 @@
+import 'package:droid_hole/constants/enums.dart';
 import 'package:flutter/material.dart';
 
 import 'package:droid_hole/models/server.dart';
@@ -5,7 +6,7 @@ import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/models/domain.dart';
 
 class DomainsListProvider with ChangeNotifier {
-  int _loadingStatus = 0;
+  LoadStatus _loadingStatus = LoadStatus.loading;
   List<Domain> _whitelistDomains = [];
   List<Domain> _blacklistDomains = [];
 
@@ -18,7 +19,7 @@ class DomainsListProvider with ChangeNotifier {
 
   bool _searchMode = false;
 
-  int get loadingStatus {
+  LoadStatus get loadingStatus {
     return _loadingStatus;
   }
 
@@ -50,7 +51,7 @@ class DomainsListProvider with ChangeNotifier {
     return _searchMode;
   }
 
-  void setLoadingStatus(int status) {
+  void setLoadingStatus(LoadStatus status) {
     _loadingStatus = status;
   }
 
@@ -105,10 +106,10 @@ class DomainsListProvider with ChangeNotifier {
       _blacklistDomains = blacklist;
       _filteredBlacklistDomains = blacklist.where((i) => i.domain.contains(_searchTerm)).toList();
 
-      _loadingStatus = 1;
+      _loadingStatus = LoadStatus.loaded;
     }
     else {
-      _loadingStatus = 2;
+      _loadingStatus = LoadStatus.error;
     }
     notifyListeners();
   }

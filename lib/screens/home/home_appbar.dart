@@ -13,6 +13,7 @@ import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/functions/snackbar.dart';
+import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
@@ -42,8 +43,8 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       }
       else {
         serversProvider.setIsServerConnected(false);
-        if (serversProvider.getStatusLoading == 0) {
-          serversProvider.setStatusLoading(2);
+        if (serversProvider.getStatusLoading == LoadStatus.loading) {
+          serversProvider.setStatusLoading(LoadStatus.error);
         }
         showSnackBar(
           context: context, 

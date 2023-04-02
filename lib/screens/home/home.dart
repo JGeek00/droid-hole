@@ -11,6 +11,7 @@ import 'package:droid_hole/screens/home/home_charts.dart';
 import 'package:droid_hole/screens/home/home_appbar.dart';
 
 import 'package:droid_hole/functions/server_management.dart';
+import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/refresh_server_status.dart';
 import 'package:droid_hole/functions/conversions.dart';
@@ -59,7 +60,7 @@ class _HomeState extends State<Home> {
 
     Widget tiles() {
       switch (serversProvider.getStatusLoading) {
-        case 0:
+        case LoadStatus.loading:
           return SizedBox(
             width: double.maxFinite,
             height: 300,
@@ -81,7 +82,7 @@ class _HomeState extends State<Home> {
             ),
           );
 
-        case 1:
+        case LoadStatus.loaded:
           return Column(
             children: !(orientation == Orientation.landscape && height < 1000) 
               ? [
@@ -222,7 +223,7 @@ class _HomeState extends State<Home> {
             ],
           );
 
-        case 2: 
+        case LoadStatus.error: 
           return SizedBox(
             width: double.maxFinite,
             height: 300,
@@ -296,7 +297,7 @@ class _HomeState extends State<Home> {
         AnimatedPositioned(
           duration: const Duration(milliseconds: 100),
           curve: Curves.easeInOut,
-          bottom: isVisible && serversProvider.getStatusLoading == 1 ?
+          bottom: isVisible && serversProvider.getStatusLoading == LoadStatus.loaded ?
             appConfigProvider.showingSnackbar
               ? 70 : 20
             : -70,

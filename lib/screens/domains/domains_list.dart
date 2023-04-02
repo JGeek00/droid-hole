@@ -8,10 +8,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/domains/add_domain_modal.dart';
 import 'package:droid_hole/screens/domains/domain_details_screen.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
+import 'package:droid_hole/widgets/tab_content_list.dart';
 
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
+import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -20,7 +22,7 @@ import 'package:droid_hole/models/domain.dart';
 
 class DomainsList extends StatefulWidget {
   final String type;
-  final int loadStatus;
+  final LoadStatus loadStatus;
   final ScrollController scrollController;
   final List<Domain> domainsList;
 
@@ -227,27 +229,22 @@ class _DomainsListState extends State<DomainsList> {
               )
             ),
           ),
-          if (widget.domainsList.isNotEmpty) RefreshIndicator(
-            onRefresh: () async {
-              await domainsListProvider.fetchDomainsList(serversProvider.selectedServer!);
-            },
-            child: ListView.builder(
-              padding: const EdgeInsets.only(top: 0),
-              itemCount: widget.domainsList.length,
-              itemBuilder: (context, index) => CustomListTile(
-                onTap: () => {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => DomainDetailsScreen(
-                      domain: widget.domainsList[index], 
-                      remove: removeDomain
-                    )
-                  ))
-                },
-                label: widget.domainsList[index].domain,
-                description: formatTimestamp(widget.domainsList[index].dateAdded, 'yyyy-MM-dd'),
-                trailing: domainType(widget.domainsList[index].type),
-              )
-            ),
+          if (widget.domainsList.isNotEmpty) ListView.builder(
+            padding: const EdgeInsets.only(top: 0),
+            itemCount: widget.domainsList.length,
+            itemBuilder: (context, index) => CustomListTile(
+              onTap: () => {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => DomainDetailsScreen(
+                    domain: widget.domainsList[index], 
+                    remove: removeDomain
+                  )
+                ))
+              },
+              label: widget.domainsList[index].domain,
+              description: formatTimestamp(widget.domainsList[index].dateAdded, 'yyyy-MM-dd'),
+              trailing: domainType(widget.domainsList[index].type),
+            )
           ),
           AnimatedPositioned(
             duration: const Duration(milliseconds: 100),
@@ -266,60 +263,98 @@ class _DomainsListState extends State<DomainsList> {
       );
     }
 
-    switch (widget.loadStatus) {
-      case 0:
-        return SizedBox(
-          width: double.maxFinite,
-          height: 300,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 50),
-              Text(
-                AppLocalizations.of(context)!.loadingList,
+    return Stack(
+      children: [
+        CustomTabContentList(
+          loadingGenerator: () => SizedBox(
+            width: double.maxFinite,
+            height: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context)!.loadingList,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 22
+                  ),
+                )
+              ],
+            ),
+          ), 
+          data: widget.domainsList,
+          contentWidget: (index) => CustomListTile(
+            onTap: () => {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => DomainDetailsScreen(
+                  domain: widget.domainsList[index], 
+                  remove: removeDomain
+                )
+              ))
+            },
+            label: widget.domainsList[index].domain,
+            description: formatTimestamp(widget.domainsList[index].dateAdded, 'yyyy-MM-dd'),
+            trailing: domainType(widget.domainsList[index].type),
+          ), 
+          noData:  Container(
+            height: double.maxFinite,
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: Text(
+                AppLocalizations.of(context)!.noDomains,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 22
+                  fontSize: 24,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant
                 ),
               )
-            ],
+            ),
           ),
-        );
-      
-      case 1:
-        return listContent();
-      
-      case 2:
-        return SizedBox(
-          width: double.maxFinite,
-          height: 300,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error,
-                size: 50,
-                color: Colors.red,
-              ),
-              const SizedBox(height: 50),
-              Text(
-                AppLocalizations.of(context)!.domainsNotLoaded,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 22
+          errorGenerator: () => SizedBox(
+            width: double.maxFinite,
+            height: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error,
+                  size: 50,
+                  color: Colors.red,
                 ),
-              )
-            ],
-          ),
-        );
-
-      default:
-        return const SizedBox();
-    }
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context)!.domainsNotLoaded,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 22
+                  ),
+                )
+              ],
+            ),
+          ), 
+          loadStatus: widget.loadStatus, 
+          onRefresh: () async => await domainsListProvider.fetchDomainsList(serversProvider.selectedServer!)
+        ),
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeInOut,
+          bottom: isVisible ?
+            appConfigProvider.showingSnackbar
+              ? 70 : 20
+            : -70,
+          right: 20,
+          child: FloatingActionButton(
+            onPressed: openModalAddDomainToList,
+            child: const Icon(Icons.add),
+          )
+        )
+      ],
+    );
   }
 }

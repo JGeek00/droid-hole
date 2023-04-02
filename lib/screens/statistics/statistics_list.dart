@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/statistics/custom_pie_chart.dart';
 import 'package:droid_hole/screens/statistics/no_data_chart.dart';
 import 'package:droid_hole/screens/statistics/pie_chart_legend.dart';
+import 'package:droid_hole/widgets/tab_content.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -13,17 +14,15 @@ import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/conversions.dart';
 
 class StatisticsList extends StatelessWidget {
-  final Map<String, dynamic> data1;
-  final Map<String, dynamic> data2;
   final String countLabel;
   final String type;
+  final Future<void> Function() onRefresh;
 
   const StatisticsList({
     Key? key,
-    required this.data1,
-    required this.data2,
     required this.countLabel,
     required this.type,
+    required this.onRefresh
   }) : super(key: key);
 
   @override
@@ -170,81 +169,71 @@ class StatisticsList extends StatelessWidget {
       );
     }
 
-    switch (serversProvider.getStatusLoading) {
-      case 0:
-        return SizedBox(
-          width: double.maxFinite,
-          height: 300,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 50),
-              Text(
-                AppLocalizations.of(context)!.loadingStats,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 22
-                ),
-              )
-            ],
-          ),
-        );
-
-      case 1:
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              data1['data'] != null 
-                ? generateList(
-                    data1['data'], 
-                    data1['label']
-                  )
-                : NoDataChart(
-                  topLabel: data1['label']
-                ),
-              data2['data'] != null
-                ? generateList(
-                    data2['data'], 
-                    data2['label']
-                  )
-                : NoDataChart(
-                  topLabel: data2['label']
-                ),
-            ],
-          ),
-        );
-
-      case 2:
-        return SizedBox(
-          width: double.maxFinite,
-          height: 300,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error,
-                size: 50,
-                color: Colors.red,
+    return CustomTabContent(
+      loadingGenerator: () => SizedBox(
+        width: double.maxFinite,
+        height: 300,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 50),
+            Text(
+              AppLocalizations.of(context)!.loadingStats,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 22
               ),
-              const SizedBox(height: 50),
-              Text(
-                AppLocalizations.of(context)!.statsNotLoaded,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 22
-                ),
-              )
-            ],
+            )
+          ],
+        ),
+      ), 
+      contentGenerator: () => [
+        serversProvider.getRealtimeStatus!.topQueries.isNotEmpty
+          ? generateList(
+              serversProvider.getRealtimeStatus!.topQueries, 
+              AppLocalizations.of(context)!.topPermittedDomains
+            )
+          : NoDataChart(
+            topLabel: AppLocalizations.of(context)!.topPermittedDomains
           ),
-        );
-
-      default:  
-        return const SizedBox();
-    }
+        serversProvider.getRealtimeStatus!.topAds.isNotEmpty
+          ? generateList(
+              serversProvider.getRealtimeStatus!.topAds, 
+              AppLocalizations.of(context)!.topBlockedDomains
+            )
+          : NoDataChart(
+              topLabel: AppLocalizations.of(context)!.topBlockedDomains
+            ),
+      ],
+      errorGenerator: () => SizedBox(
+        width: double.maxFinite,
+        height: 300,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error,
+              size: 50,
+              color: Colors.red,
+            ),
+            const SizedBox(height: 50),
+            Text(
+              AppLocalizations.of(context)!.statsNotLoaded,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 22
+              ),
+            )
+          ],
+        ),
+      ), 
+      loadStatus: serversProvider.getStatusLoading, 
+      onRefresh: onRefresh
+    );
   }
 }

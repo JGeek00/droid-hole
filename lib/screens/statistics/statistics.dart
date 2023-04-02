@@ -15,227 +15,59 @@ class Statistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
-    final appConfigProvider = Provider.of<AppConfigProvider>(context);
-
-    final orientation = MediaQuery.of(context).orientation;
-
-    Widget _generateBody() {
-      switch (serversProvider.getStatusLoading) {
-        case 0:
-          return SizedBox(
-            width: double.maxFinite,
-            height: 300,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 50),
-                Text(
-                  AppLocalizations.of(context)!.loadingStats,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontSize: 22
-                  ),
-                )
-              ],
-            ),
-          );
-
-        case 1:
-          return NestedScrollView(
-            headerSliverBuilder: ((context, innerBoxIsScrolled) {
-              return [
-                SliverOverlapAbsorber(
-                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                  sliver: SliverSafeArea(
-                    top: false,
-                    sliver: SliverAppBar(
-                      title: Text(AppLocalizations.of(context)!.statistics),
-                      centerTitle: true,
-                      pinned: true,
-                      floating: true,
-                      forceElevated: innerBoxIsScrolled,
-                      bottom: serversProvider.selectedServer != null && serversProvider.isServerConnected == true  
-                        ? TabBar(
-                          tabs: orientation == Orientation.portrait
-                            ? [
-                                Tab(
-                                  icon: const Icon(Icons.dns_rounded),
-                                  text: AppLocalizations.of(context)!.queriesServers,
-                                ),
-                                Tab(
-                                  icon: const Icon(Icons.http_rounded),
-                                  text: AppLocalizations.of(context)!.domains,
-                                ),
-                                Tab(
-                                  icon: const Icon(Icons.devices_rounded),
-                                  text: AppLocalizations.of(context)!.clients,
-                                ),
-                              ]
-                            : [
-                              Tab(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.dns_rounded),
-                                    const SizedBox(width: 10),
-                                    Text(AppLocalizations.of(context)!.queriesServers)
-                                  ],
-                                ),
-                              ),
-                              Tab(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.http_rounded),
-                                    const SizedBox(width: 10),
-                                    Text(AppLocalizations.of(context)!.domains)
-                                  ],
-                                ),
-                              ),
-                              Tab(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.devices_rounded),
-                                    const SizedBox(width: 10),
-                                    Text(AppLocalizations.of(context)!.clients)
-                                  ],
-                                ),
-                              ),
-                            ]
-                        )
-                      : null
-                    ),
-                  ),
-                )
-              ];
-            }),
-            body: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: Theme.of(context).brightness == Brightness.light
-                      ? const Color.fromRGBO(220, 220, 220, 1)
-                      : const Color.fromRGBO(50, 50, 50, 1)
-                  )
-                )
-              ),
-              
-            ),
-          );
-
-        case 2:
-          return SizedBox(
-            width: double.maxFinite,
-            height: 300,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.error,
-                  size: 50,
-                  color: Colors.red,
-                ),
-                const SizedBox(height: 50),
-                Text(
-                  AppLocalizations.of(context)!.statsNotLoaded,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontSize: 22
-                  ),
-                )
-              ],
-            ),
-          );
-
-        default:
-          return const SizedBox();
-      }
-    }
+    final appConfigProvider = Provider.of<AppConfigProvider>(context);    
 
     return DefaultTabController(
       length: 3,
-      child: RefreshIndicator(
-        onRefresh: () async {
-          await refreshServerStatus(context, serversProvider, appConfigProvider);
-        },
-        child: Scaffold(
-          body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return [
-                SliverOverlapAbsorber(
-                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                  sliver: SliverSafeArea(
-                    top: false,
-                    sliver: SliverAppBar(
-                      title: Text(AppLocalizations.of(context)!.statistics),
-                      pinned: true,
-                      floating: true,
-                      forceElevated: innerBoxIsScrolled,
-                      bottom: TabBar(
-                        tabs: [
-                          Tab(
-                            icon: const Icon(Icons.dns_rounded),
-                            text: AppLocalizations.of(context)!.queriesServers,
-                          ),
-                          Tab(
-                            icon: const Icon(Icons.http_rounded),
-                            text: AppLocalizations.of(context)!.domains,
-                          ),
-                          Tab(
-                            icon: const Icon(Icons.devices_rounded),
-                            text: AppLocalizations.of(context)!.clients,
-                          ),
-                        ]
-                      )
-                    ),
-                  ),
-                )
-              ];
-            },
-            body: TabBarView(
-              children: [
-                const QueriesServersTab(),
-                StatisticsList(
-                  data1: {
-                    "data": serversProvider.getStatusLoading == 1 && serversProvider.getRealtimeStatus!.topQueries.isNotEmpty == true 
-                      ? serversProvider.getRealtimeStatus!.topQueries
-                      : null,
-                    "label": AppLocalizations.of(context)!.topPermittedDomains
-                  },
-                  data2: {
-                    "data": serversProvider.getStatusLoading == 1 && serversProvider.getRealtimeStatus!.topAds.isNotEmpty == true 
-                      ? serversProvider.getRealtimeStatus!.topAds
-                      : null,
-                    "label": AppLocalizations.of(context)!.topBlockedDomains
-                  },
-                  countLabel: AppLocalizations.of(context)!.hits,
-                  type: "domains",
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverAppBar(
+                  title: Text(AppLocalizations.of(context)!.statistics),
+                  pinned: true,
+                  floating: true,
+                  centerTitle: false,
+                  forceElevated: innerBoxIsScrolled,
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(
+                        icon: const Icon(Icons.dns_rounded),
+                        text: AppLocalizations.of(context)!.queriesServers,
+                      ),
+                      Tab(
+                        icon: const Icon(Icons.http_rounded),
+                        text: AppLocalizations.of(context)!.domains,
+                      ),
+                      Tab(
+                        icon: const Icon(Icons.devices_rounded),
+                        text: AppLocalizations.of(context)!.clients,
+                      ),
+                    ]
+                  )
                 ),
-                StatisticsList(
-                  data1: {
-                    "data": serversProvider.getStatusLoading == 1 && serversProvider.getRealtimeStatus!.topSources.isNotEmpty == true 
-                      ? serversProvider.getRealtimeStatus!.topSources
-                      : null,
-                    "label": AppLocalizations.of(context)!.topClients
-                  },
-                  data2: {
-                    "data": serversProvider.getStatusLoading == 1 && serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty == true 
-                      ? serversProvider.getRealtimeStatus!.topSourcesBlocked
-                      : null,
-                    "label": AppLocalizations.of(context)!.topClientsBlocked
-                  },
-                  countLabel: AppLocalizations.of(context)!.requests,
-                  type: "clients",
-                ),
-              ]
-            ),
-          )
+              )
+            ];
+          },
+          body: TabBarView(
+            children: [
+              QueriesServersTab(
+                onRefresh: () async => await refreshServerStatus(context, serversProvider, appConfigProvider),
+              ),
+              StatisticsList(
+                countLabel: AppLocalizations.of(context)!.hits,
+                type: "domains",
+                onRefresh: () async => await refreshServerStatus(context, serversProvider, appConfigProvider),
+              ),
+              StatisticsList(
+                countLabel: AppLocalizations.of(context)!.requests,
+                type: "clients",
+                onRefresh: () async => await refreshServerStatus(context, serversProvider, appConfigProvider),
+              ),
+            ]
+          ),
         )
       )
     );
