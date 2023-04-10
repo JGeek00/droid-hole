@@ -87,30 +87,31 @@ class ClientsLastHours extends StatelessWidget {
           maxContentWidth: 150,
           getTooltipItems: (items) {
             List<LineTooltipItem> tooltipItems = [];
-            for (var item in items) {
+
+            for (var i = 0; i < items.length-1; i++) {
               if (hideZeroValues == true) {
-                if(item.y > 0 && item.barIndex < data.length-1) {
+                if (items[i].y > 0 && items[i].barIndex < data.length-1) {
                   tooltipItems.add(
                     LineTooltipItem(
-                      "${data['clientsColors'][item.barIndex]['ip']}: ${item.y.toInt().toString()}", 
+                      "${data['clientsColors'][items[i].barIndex]['ip']}: ${items[i].y.toInt().toString()}", 
                       TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: data['clientsColors'][item.barIndex]['color']
+                        color: data['clientsColors'][items[i].barIndex]['color']
                       )
                     )
                   );
                 }
               }
               else {
-                if (item.barIndex < data.length-1) {
+                if (items[i].barIndex < data.length-1) {
                   tooltipItems.add(
                     LineTooltipItem(
-                      "${data['clientsColors'][item.barIndex]['ip']}: ${item.y.toInt().toString()}", 
+                      "${data['clientsColors'][items[i].barIndex]['ip']}: ${items[i].y.toInt().toString()}", 
                       TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: data['clientsColors'][item.barIndex]['color']
+                        color: data['clientsColors'][items[i].barIndex]['color']
                       )
                     )
                   );
