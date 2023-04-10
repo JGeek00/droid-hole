@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -89,32 +91,32 @@ class _HomeState extends State<Home> {
                 Row(
                   children: [
                     HomeTile(
-                      mainWidth: (width-56)/2,
-                      innerWidth: (width-80)/2,
+                      mainWidth: (width-48)/2,
+                      innerWidth: (width-72)/2,
                       icon: Icons.public, 
                       iconColor: const Color.fromARGB(255, 64, 146, 66), 
                       color: Colors.green, 
                       label: AppLocalizations.of(context)!.totalQueries, 
-                      value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, "en_US"),
+                      value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday,Platform.localeName),
                       margin: const EdgeInsets.only(
-                        top: 20,
-                        left: 20,
+                        top: 16,
+                        left: 16,
                         right: 8,
                         bottom: 8
                       )
                     ),
                     HomeTile(
-                      mainWidth: (width-56)/2,
-                      innerWidth: (width-80)/2,
+                      mainWidth: (width-48)/2,
+                      innerWidth: (width-72)/2,
                       icon: Icons.block, 
                       iconColor: const Color.fromARGB(255, 28, 127, 208), 
                       color: Colors.blue, 
                       label: AppLocalizations.of(context)!.queriesBlocked, 
-                      value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, "en_US"),
+                      value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
                       margin: const EdgeInsets.only(
-                        top: 20,
+                        top: 16,
                         left: 8,
-                        right: 20,
+                        right: 16,
                         bottom: 8
                       )
                     ),
@@ -123,33 +125,33 @@ class _HomeState extends State<Home> {
                 Row(
                   children: [
                     HomeTile(
-                      mainWidth: (width-56)/2,
-                      innerWidth: (width-80)/2,
+                      mainWidth: (width-48)/2,
+                      innerWidth: (width-72)/2,
                       icon: Icons.pie_chart, 
                       iconColor: const Color.fromARGB(255, 219, 131, 0), 
                       color: Colors.orange, 
                       label: AppLocalizations.of(context)!.percentageBlocked, 
-                      value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday)}%",
+                      value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday, Platform.localeName)}%",
                       margin: const EdgeInsets.only(
                         top: 8,
-                        left: 20,
+                        left: 16,
                         right: 8,
-                        bottom: 20
+                        bottom: 16
                       )
                     ),
                     HomeTile(
-                      mainWidth: (width-56)/2,
-                      innerWidth: (width-80)/2,
+                      mainWidth: (width-48)/2,
+                      innerWidth: (width-72)/2,
                       icon: Icons.list, 
                       iconColor: const Color.fromARGB(255, 211, 58, 47), 
                       color: Colors.red, 
                       label: AppLocalizations.of(context)!.domainsAdlists, 
-                      value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, "en_US"),
+                      value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),
                       margin: const EdgeInsets.only(
                         top: 8,
                         left: 8,
-                        right: 20,
-                        bottom: 20
+                        right: 16,
+                        bottom: 16
                       )
                     ),
                   ],
@@ -165,7 +167,7 @@ class _HomeState extends State<Home> {
                     iconColor: const Color.fromARGB(255, 64, 146, 66), 
                     color: Colors.green, 
                     label: AppLocalizations.of(context)!.totalQueries, 
-                    value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, "en_US"),
+                    value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, Platform.localeName),
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 20,
@@ -180,7 +182,7 @@ class _HomeState extends State<Home> {
                     iconColor: const Color.fromARGB(255, 28, 127, 208), 
                     color: Colors.blue, 
                     label: AppLocalizations.of(context)!.queriesBlocked, 
-                    value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, "en_US"),
+                    value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 8,
@@ -195,7 +197,7 @@ class _HomeState extends State<Home> {
                     iconColor: const Color.fromARGB(255, 219, 131, 0), 
                     color: Colors.orange, 
                     label: AppLocalizations.of(context)!.percentageBlocked, 
-                    value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday)}%",
+                    value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday, Platform.localeName)}%",
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 8,
@@ -210,7 +212,7 @@ class _HomeState extends State<Home> {
                     iconColor: const Color.fromARGB(255, 211, 58, 47), 
                     color: Colors.red, 
                     label: AppLocalizations.of(context)!.domainsAdlists, 
-                    value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, "en_US"),
+                    value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 8,

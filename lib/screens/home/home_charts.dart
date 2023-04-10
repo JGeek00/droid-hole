@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/statistics/no_data_chart.dart';
 import 'package:droid_hole/screens/home/queries_last_hours.dart';
 import 'package:droid_hole/screens/home/clients_last_hours.dart';
+import 'package:droid_hole/widgets/section_label.dart';
 
 import 'package:droid_hole/constants/colors.dart';
 import 'package:droid_hole/functions/conversions.dart';
@@ -201,64 +202,54 @@ class HomeCharts extends StatelessWidget {
         return Column(
           children: [
             checkExistsData(serversProvider.getOvertimeDataJson!['domains_over_time']) && checkExistsData(serversProvider.getOvertimeDataJson!['ads_over_time'])
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SectionLabel(label: AppLocalizations.of(context)!.totalQueries24),
+                  Container(
+                    width: double.maxFinite,
+                    height: 350,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: QueriesLastHours(
+                      data: serversProvider.getOvertimeDataJson!,
+                      reducedData: appConfigProvider.reducedDataCharts,
+                    )
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const SizedBox(height: 20),
-                      Text(
-                        AppLocalizations.of(context)!.totalQueries24,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: double.maxFinite,
-                        height: 350,
-                        child: QueriesLastHours(
-                          data: serversProvider.getOvertimeDataJson!,
-                          reducedData: appConfigProvider.reducedDataCharts,
-                        )
+                      Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.blue
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(AppLocalizations.of(context)!.blocked)
+                        ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.blue
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(AppLocalizations.of(context)!.blocked)
-                            ],
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.green
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.green
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(AppLocalizations.of(context)!.notBlocked)
-                            ],
-                          ),
+                          const SizedBox(width: 10),
+                          Text(AppLocalizations.of(context)!.notBlocked)
                         ],
-                      )
+                      ),
                     ],
-                  ),
-                )
+                  )
+                ],
+              )
               : NoDataChart(
                   topLabel: AppLocalizations.of(context)!.totalQueries24,
                 ),
@@ -268,32 +259,22 @@ class HomeCharts extends StatelessWidget {
               ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        Text(
-                          AppLocalizations.of(context)!.clientActivity24,
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SectionLabel(label: AppLocalizations.of(context)!.clientActivity24),
+                      Container(
+                        width: double.maxFinite,
+                        height: 300,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: ClientsLastHours(
+                          realtimeListIps: clientsListIps,
+                          data: serversProvider.getOvertimeDataJson!,
+                          reducedData: appConfigProvider.reducedDataCharts,
+                          hideZeroValues: appConfigProvider.hideZeroValues,
                         ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: double.maxFinite,
-                          height: 300,
-                          child: ClientsLastHours(
-                            realtimeListIps: clientsListIps,
-                            data: serversProvider.getOvertimeDataJson!,
-                            reducedData: appConfigProvider.reducedDataCharts,
-                            hideZeroValues: appConfigProvider.hideZeroValues,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     width: double.maxFinite,

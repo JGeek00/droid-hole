@@ -24,8 +24,9 @@ int? convertFromBoolToInt(bool value) {
   }
 }
 
-double formatPercentage(double value) {
-  return (value * 100).truncateToDouble() / 100;
+String formatPercentage(double value, String locale) {
+  final NumberFormat f = NumberFormat("###.##", locale);
+  return f.format(value);
 }
 
 String intFormat(int value, String locale) {

@@ -6,6 +6,7 @@ import 'package:droid_hole/screens/statistics/no_data_chart.dart';
 import 'package:droid_hole/screens/statistics/pie_chart_legend.dart';
 import 'package:droid_hole/screens/statistics/custom_pie_chart.dart';
 import 'package:droid_hole/widgets/tab_content.dart';
+import 'package:droid_hole/widgets/section_label.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
 
@@ -50,17 +51,14 @@ class QueriesServersTab extends StatelessWidget {
               padding: const EdgeInsets.only(top: 20, bottom: 10),
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: Text(
-                      AppLocalizations.of(context)!.queryTypes,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500
-                      ),
+                  SectionLabel(
+                    label: AppLocalizations.of(context)!.queryTypes,
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      left: 16,
+                      bottom: 24
                     ),
                   ),
-                  const SizedBox(height: 30),
                   SizedBox(
                     width: width-40,
                     child: CustomPieChart(
@@ -83,17 +81,14 @@ class QueriesServersTab extends StatelessWidget {
               padding: const EdgeInsets.only(top: 20, bottom: 10),
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: Text(
-                      AppLocalizations.of(context)!.upstreamServers,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500
-                      ),
+                  SectionLabel(
+                    label: AppLocalizations.of(context)!.upstreamServers,
+                    padding: const EdgeInsets.only(
+                      top: 16,
+                      left: 16,
+                      bottom: 24
                     ),
                   ),
-                  const SizedBox(height: 30),
                   SizedBox(
                     width: width-40,
                     child: CustomPieChart(

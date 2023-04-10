@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:droid_hole/constants/colors.dart';
+import 'package:droid_hole/functions/conversions.dart';
 import 'package:flutter/material.dart';
 
 class PieChartLegend extends StatelessWidget {
@@ -17,7 +20,7 @@ class PieChartLegend extends StatelessWidget {
   Widget build(BuildContext context) { 
     final width = MediaQuery.of(context).size.width;
 
-    List<Widget> _generateLegendList(Map<String, dynamic> data) {
+    List<Widget> generateLegendList(Map<String, dynamic> data) {
       List<Widget> items = [];
       int index = 0;
       data.forEach((key, value) {
@@ -60,7 +63,9 @@ class PieChartLegend extends StatelessWidget {
                     SizedBox(
                       width: 65,
                       child: Text(
-                        "${value.toString()}${dataUnit != null ? " $dataUnit" : ''}",
+                        dataUnit == "%"
+                          ? "${formatPercentage(value, Platform.localeName)} %"
+                          : "${value.toString()}${dataUnit != null ? " $dataUnit" : ''}",
                         textAlign: TextAlign.end,
                       )
                     ),
@@ -76,7 +81,7 @@ class PieChartLegend extends StatelessWidget {
     }
 
     return Column(
-      children: _generateLegendList(data),
+      children: generateLegendList(data),
     );
   }
 }

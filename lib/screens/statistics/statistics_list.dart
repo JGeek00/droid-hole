@@ -1,3 +1,4 @@
+import 'package:droid_hole/widgets/section_label.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -151,15 +152,12 @@ class StatisticsList extends StatelessWidget {
       
       return Column(
         children: [
-          Container(
-            margin: const EdgeInsets.all(20),
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500
-              ),
+          SectionLabel(
+            label: label,
+            padding: const EdgeInsets.only(
+              top: 24,
+              left: 16,
+              bottom: 16
             ),
           ),
           appConfigProvider.statisticsVisualizationMode == 0
