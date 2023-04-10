@@ -190,24 +190,51 @@ class StatisticsList extends StatelessWidget {
           ],
         ),
       ), 
-      contentGenerator: () => [
-        serversProvider.getRealtimeStatus!.topQueries.isNotEmpty
-          ? generateList(
-              serversProvider.getRealtimeStatus!.topQueries, 
-              AppLocalizations.of(context)!.topPermittedDomains
-            )
-          : NoDataChart(
-            topLabel: AppLocalizations.of(context)!.topPermittedDomains
-          ),
-        serversProvider.getRealtimeStatus!.topAds.isNotEmpty
-          ? generateList(
-              serversProvider.getRealtimeStatus!.topAds, 
-              AppLocalizations.of(context)!.topBlockedDomains
-            )
-          : NoDataChart(
-              topLabel: AppLocalizations.of(context)!.topBlockedDomains
-            ),
-      ],
+      contentGenerator: () {
+        if (type == "domains") {
+          return [
+            serversProvider.getRealtimeStatus!.topQueries.isNotEmpty
+              ? generateList(
+                  serversProvider.getRealtimeStatus!.topQueries, 
+                  AppLocalizations.of(context)!.topPermittedDomains
+                )
+              : NoDataChart(
+                topLabel: AppLocalizations.of(context)!.noData
+              ),
+            serversProvider.getRealtimeStatus!.topAds.isNotEmpty
+              ? generateList(
+                  serversProvider.getRealtimeStatus!.topAds, 
+                  AppLocalizations.of(context)!.topBlockedDomains
+                )
+              : NoDataChart(
+                  topLabel: AppLocalizations.of(context)!.noData
+                ),
+          ];
+        }
+        else if (type == "clients") {
+          return [
+            serversProvider.getRealtimeStatus!.topSources.isNotEmpty
+              ? generateList(
+                  serversProvider.getRealtimeStatus!.topSources, 
+                  AppLocalizations.of(context)!.topClients
+                )
+              : NoDataChart(
+                topLabel: AppLocalizations.of(context)!.noData
+              ),
+            serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty
+              ? generateList(
+                  serversProvider.getRealtimeStatus!.topSourcesBlocked, 
+                  AppLocalizations.of(context)!.topClientsBlocked
+                )
+              : NoDataChart(
+                  topLabel: AppLocalizations.of(context)!.noData
+                ),
+          ];
+        }
+        else {
+          return [];
+        }
+      },
       errorGenerator: () => SizedBox(
         width: double.maxFinite,
         height: 300,
