@@ -17,7 +17,6 @@ import 'package:droid_hole/widgets/section_label.dart';
 import 'package:droid_hole/screens/settings/legal_modal.dart';
 import 'package:droid_hole/screens/settings/auto_refresh_time_modal.dart';
 
-import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/config/urls.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
