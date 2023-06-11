@@ -21,7 +21,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/base.dart';
 import 'package:droid_hole/screens/unlock.dart';
 
-import 'package:droid_hole/services/database.dart';
+import 'package:droid_hole/services/database/database.dart';
 import 'package:droid_hole/classes/http_override.dart';
 import 'package:droid_hole/config/theme.dart';
 import 'package:droid_hole/providers/status_provider.dart';

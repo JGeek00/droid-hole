@@ -1,4 +1,5 @@
 import 'package:droid_hole/models/app_log.dart';
+import 'package:droid_hole/services/database/queries.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -178,7 +179,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setUseBiometrics(bool biometrics) async {
-    final updated = await _updateUseBiometricAuthDb(biometrics == true ? 1 : 0);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'useBiometricAuth',
+      value: biometrics == true ? 1 : 0
+    );
     if (updated == true) {
       _useBiometrics = biometrics == true ? 1 : 0;
       notifyListeners();
@@ -190,7 +195,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setImportantInfoReaden(bool status) async {
-    final updated = await _updateImportantInfoReadenDb(status == true ? 1 : 0);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'importantInfoReaden',
+      value: status == true ? 1 : 0
+    );
     if (updated == true) {
       _importantInfoReaden = status == true ? 1 : 0;
       notifyListeners();
@@ -203,10 +212,18 @@ class AppConfigProvider with ChangeNotifier {
 
   Future<bool> setPassCode(String? code) async {
     if (_useBiometrics == 1) {
-      final updated = await _updateUseBiometricAuthDb(0);
+      final updated = await updateConfigQuery(
+        db: _dbInstance!,
+        column: 'useBiometricAuth',
+        value: 0
+      );
       if (updated == true) {
         _useBiometrics = 0;
-        final updated2 = await updatePassCodeDb(code);
+        final updated2 = await updateConfigQuery(
+          db: _dbInstance!,
+          column: 'passCode',
+          value: code
+        );
         if (updated2 == true) {
           _passCode = code;
           notifyListeners();
@@ -221,7 +238,11 @@ class AppConfigProvider with ChangeNotifier {
       }
     }
     else {
-      final updated = await updatePassCodeDb(code);
+      final updated = await updateConfigQuery(
+        db: _dbInstance!,
+        column: 'passCode',
+        value: code
+      );
       if (updated == true) {
         _passCode = code;
         notifyListeners();
@@ -234,7 +255,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setAutoRefreshTime(int seconds) async {
-    final updated = await updateAutoRefreshTimeDb(seconds);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'autoRefreshTime',
+      value: seconds
+    );
     if (updated == true) {
       _autoRefreshTime = seconds;
       notifyListeners();
@@ -246,7 +271,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setLogsPerQuery(double time) async {
-    final updated = await updateLogsPerQueryDb(time);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'logsPerQuery',
+      value: time
+    );
     if (updated == true) {
       _logsPerQuery = time;
       notifyListeners();
@@ -279,7 +308,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setOverrideSslCheck(bool status) async {
-    final updated = await _updateOverrideSslCheck(status == true ? 1 : 0);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'overrideSslCheck',
+      value: status == true ? 1 : 0
+    );
     if (updated == true) {
       _overrideSslCheck = status == true ? 1 : 0;
       notifyListeners();
@@ -291,7 +324,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setOneColumnLegend(bool status) async {
-    final updated = await _updateOneColumnLegend(status == true ? 1 : 0);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'oneColumnLegend',
+      value: status == true ? 1 : 0
+    );
     if (updated == true) {
       _oneColumnLegend = status == true ? 1 : 0;
       notifyListeners();
@@ -303,7 +340,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setReducedDataCharts(bool status) async {
-    final updated = await _updateReducedDataCharts(status == true ? 1 : 0);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'reducedDataCharts',
+      value: status == true ? 1 : 0
+    );
     if (updated == true) {
       _reducedDataCharts = status == true ? 1 : 0;
       notifyListeners();
@@ -315,7 +356,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setHideZeroValues(bool status) async {
-    final updated = await _updateHideZeroValuesDb(status == true ? 1 : 0);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'hideZeroValues',
+      value: status == true ? 1 : 0
+    );
     if (updated == true) {
       _hideZeroValues = status == true ? 1 : 0;
       notifyListeners();
@@ -327,7 +372,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setSelectedTheme(int value) async {
-    final updated = await _updateThemeDb(value);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'theme',
+      value: value
+    );
     if (updated == true) {
       _selectedTheme = value;
       notifyListeners();
@@ -339,7 +388,11 @@ class AppConfigProvider with ChangeNotifier {
   }
 
   Future<bool> setStatisticsVisualizationMode(int value) async {
-    final updated = await _updateStatisticsVisualizationModeDb(value);
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'statisticsVisualizationMode',
+      value: value
+    );
     if (updated == true) {
       _statisticsVisualizationMode = value;
       notifyListeners();
@@ -350,169 +403,26 @@ class AppConfigProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateAutoRefreshTimeDb(int value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET autoRefreshTime = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> updatePassCodeDb(String? value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET passCode = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> updateLogsPerQueryDb(double value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET logsPerQuery = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> _updateThemeDb(int value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET theme = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> _updateStatisticsVisualizationModeDb(int value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET statisticsVisualizationMode = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> _updateOverrideSslCheck(int value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET overrideSslCheck = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> _updateOneColumnLegend(int value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET oneColumnLegend = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> _updateReducedDataCharts(int value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET reducedDataCharts = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> _updateHideZeroValuesDb(int value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET hideZeroValues = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> _updateUseBiometricAuthDb(int value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET useBiometricAuth = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> _updateImportantInfoReadenDb(int value) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET importantInfoReaden = $value',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
   Future<bool> restoreAppConfig() async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE appConfig SET autoRefreshTime = 5, theme = 0, overrideSslCheck = 0, oneColumnLegend = 0, reducedDataCharts = 0, logsPerQuery = 2, passCode = null, useBiometricAuth = 0',
-        );
-        _autoRefreshTime = 5;
-        _selectedTheme = 0;
-        _overrideSslCheck = 0;
-        _oneColumnLegend = 0;
-        _reducedDataCharts = 0;
-        _logsPerQuery = 2;
-        _passCode = null;
-        _useBiometrics = 0;
-        _importantInfoReaden = 0;
-        _hideZeroValues = 0;
-        _statisticsVisualizationMode = 0;
-        return true;
-      });
-    } catch (e) {
+    final result = await restoreAppConfigQuery(_dbInstance!);
+    if (result == true) {
+      _autoRefreshTime = 5;
+      _selectedTheme = 0;
+      _overrideSslCheck = 0;
+      _oneColumnLegend = 0;
+      _reducedDataCharts = 0;
+      _logsPerQuery = 2;
+      _passCode = null;
+      _useBiometrics = 0;
+      _importantInfoReaden = 0;
+      _hideZeroValues = 0;
+      _statisticsVisualizationMode = 0;
+
+      notifyListeners();
+
+      return true;
+    }
+    else {
       return false;
     }
   }
