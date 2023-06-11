@@ -1,8 +1,8 @@
 import 'package:droid_hole/models/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:device_info/device_info.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class AppConfigProvider with ChangeNotifier {
