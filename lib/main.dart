@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:vibration/vibration.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/scheduler.dart';
@@ -23,6 +24,7 @@ import 'package:droid_hole/screens/unlock.dart';
 import 'package:droid_hole/services/database.dart';
 import 'package:droid_hole/classes/http_override.dart';
 import 'package:droid_hole/config/theme.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/status_updater.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
@@ -32,7 +34,13 @@ import 'package:droid_hole/providers/servers_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  if (Platform.isWindows || Platform.isLinux) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+
   ServersProvider serversProvider = ServersProvider();
+  StatusProvider statusProvider = StatusProvider();
   FiltersProvider filtersProvider = FiltersProvider();
   DomainsListProvider domainsListProvider = DomainsListProvider();
   AppConfigProvider configProvider = AppConfigProvider();
@@ -87,6 +95,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: ((context) => serversProvider)
+        ),
+        ChangeNotifierProvider(
+          create: ((context) => statusProvider)
         ),
         ChangeNotifierProvider(
           create: ((context) => filtersProvider)
@@ -145,18 +156,18 @@ class _DroidHoleState extends State<DroidHole> {
 
   @override
   Widget build(BuildContext context) {
-    final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    if (serversProvider.startAutoRefresh == true || serversProvider.getRefreshServerStatus == true) {
+    if (statusProvider.startAutoRefresh == true || statusProvider.getRefreshServerStatus == true) {
       statusUpdater.context = context;
-      if (serversProvider.getRefreshServerStatus == true) {
-        serversProvider.setRefreshServerStatus(false);
+      if (statusProvider.getRefreshServerStatus == true) {
+        statusProvider.setRefreshServerStatus(false);
       }
       statusUpdater.statusData();
       statusUpdater.overTimeData();
 
-      serversProvider.setStartAutoRefresh(false);
+      statusProvider.setStartAutoRefresh(false);
     }
 
     return DynamicColorBuilder(
@@ -193,9 +204,7 @@ class _DroidHoleState extends State<DroidHole> {
               )
             );
           },
-          home: Base(
-            serversProvider: serversProvider,
-          )
+          home: const Base()
         );
       }),
     );

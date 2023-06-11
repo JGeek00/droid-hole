@@ -1,4 +1,3 @@
-import 'package:droid_hole/widgets/section_label.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -7,9 +6,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/statistics/custom_pie_chart.dart';
 import 'package:droid_hole/screens/statistics/no_data_chart.dart';
 import 'package:droid_hole/screens/statistics/pie_chart_legend.dart';
+import 'package:droid_hole/widgets/section_label.dart';
 import 'package:droid_hole/widgets/tab_content.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/conversions.dart';
@@ -29,6 +30,7 @@ class StatisticsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
     final filtersProvider = Provider.of<FiltersProvider>(context);
 
@@ -191,17 +193,17 @@ class StatisticsList extends StatelessWidget {
       contentGenerator: () {
         if (type == "domains") {
           return [
-            serversProvider.getRealtimeStatus!.topQueries.isNotEmpty
+            statusProvider.getRealtimeStatus!.topQueries.isNotEmpty
               ? generateList(
-                  serversProvider.getRealtimeStatus!.topQueries, 
+                  statusProvider.getRealtimeStatus!.topQueries, 
                   AppLocalizations.of(context)!.topPermittedDomains
                 )
               : NoDataChart(
                 topLabel: AppLocalizations.of(context)!.noData
               ),
-            serversProvider.getRealtimeStatus!.topAds.isNotEmpty
+            statusProvider.getRealtimeStatus!.topAds.isNotEmpty
               ? generateList(
-                  serversProvider.getRealtimeStatus!.topAds, 
+                  statusProvider.getRealtimeStatus!.topAds, 
                   AppLocalizations.of(context)!.topBlockedDomains
                 )
               : NoDataChart(
@@ -211,17 +213,17 @@ class StatisticsList extends StatelessWidget {
         }
         else if (type == "clients") {
           return [
-            serversProvider.getRealtimeStatus!.topSources.isNotEmpty
+            statusProvider.getRealtimeStatus!.topSources.isNotEmpty
               ? generateList(
-                  serversProvider.getRealtimeStatus!.topSources, 
+                  statusProvider.getRealtimeStatus!.topSources, 
                   AppLocalizations.of(context)!.topClients
                 )
               : NoDataChart(
                 topLabel: AppLocalizations.of(context)!.noData
               ),
-            serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty
+            statusProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty
               ? generateList(
-                  serversProvider.getRealtimeStatus!.topSourcesBlocked, 
+                  statusProvider.getRealtimeStatus!.topSourcesBlocked, 
                   AppLocalizations.of(context)!.topClientsBlocked
                 )
               : NoDataChart(
@@ -257,7 +259,7 @@ class StatisticsList extends StatelessWidget {
           ],
         ),
       ), 
-      loadStatus: serversProvider.getStatusLoading, 
+      loadStatus: statusProvider.getStatusLoading, 
       onRefresh: onRefresh
     );
   }

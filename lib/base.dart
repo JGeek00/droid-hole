@@ -18,6 +18,7 @@ import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/services/http_requests.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/constants/app_screens.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
@@ -25,12 +26,7 @@ import 'package:droid_hole/providers/servers_provider.dart';
 
 
 class Base extends StatefulWidget {
-  final ServersProvider serversProvider;
-
-  const Base({
-    Key? key,
-    required this.serversProvider
-  }) : super(key: key); 
+  const Base({Key? key}) : super(key: key); 
 
   @override
   State<Base> createState() => _BaseState();
@@ -51,32 +47,37 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
   ];
 
   void fetchMainData(Server server) async {
+    final statusProvider = Provider.of<StatusProvider>(context, listen: false);
+    final serversProvider = Provider.of<ServersProvider>(context, listen: false);
+
     final result = await Future.wait([
       realtimeStatus(server),
       fetchOverTimeData(server)
     ]);
 
     if (result[0]['result'] == 'success' && result[1]['result'] == 'success') {
-      widget.serversProvider.setRealtimeStatus(result[0]['data']);
-      widget.serversProvider.setOvertimeData(result[1]['data']);
-      widget.serversProvider.updateselectedServerStatus(result[0]['data'].status == 'enabled' ? true : false);
+      statusProvider.setRealtimeStatus(result[0]['data']);
+      statusProvider.setOvertimeData(result[1]['data']);
+      serversProvider.updateselectedServerStatus(result[0]['data'].status == 'enabled' ? true : false);
 
-      widget.serversProvider.setOvertimeDataLoadingStatus(1);
-      widget.serversProvider.setStatusLoading(LoadStatus.loaded);
+      statusProvider.setOvertimeDataLoadingStatus(1);
+      statusProvider.setStatusLoading(LoadStatus.loaded);
 
-      widget.serversProvider.setStartAutoRefresh(true);
-      widget.serversProvider.setIsServerConnected(true);
+      statusProvider.setStartAutoRefresh(true);
+      statusProvider.setIsServerConnected(true);
     }
     else {
-      widget.serversProvider.setOvertimeDataLoadingStatus(2);
-      widget.serversProvider.setStatusLoading(LoadStatus.error);
+      statusProvider.setOvertimeDataLoadingStatus(2);
+      statusProvider.setStatusLoading(LoadStatus.error);
 
-      widget.serversProvider.setIsServerConnected(false);
+      statusProvider.setIsServerConnected(false);
     }
   }
 
   @override
   void initState() {
+    final serversProvider = Provider.of<ServersProvider>(context, listen: false);
+
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();
@@ -91,8 +92,8 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
       }
     });
     
-    if (widget.serversProvider.selectedServer != null) {
-      fetchMainData(widget.serversProvider.selectedServer!);
+    if (serversProvider.selectedServer != null) {
+      fetchMainData(serversProvider.selectedServer!);
     }
   }
 

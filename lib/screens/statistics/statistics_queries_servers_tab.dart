@@ -8,7 +8,7 @@ import 'package:droid_hole/screens/statistics/custom_pie_chart.dart';
 import 'package:droid_hole/widgets/tab_content.dart';
 import 'package:droid_hole/widgets/section_label.dart';
 
-import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 
 class QueriesServersTab extends StatelessWidget {
   final Future<void> Function() onRefresh;
@@ -20,7 +20,7 @@ class QueriesServersTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
 
@@ -46,7 +46,7 @@ class QueriesServersTab extends StatelessWidget {
         ),
       ), 
       contentGenerator: () => [
-        serversProvider.getRealtimeStatus!.queryTypes.isEmpty == false
+        statusProvider.getRealtimeStatus!.queryTypes.isEmpty == false
           ? Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 10),
               child: Column(
@@ -62,12 +62,12 @@ class QueriesServersTab extends StatelessWidget {
                   SizedBox(
                     width: width-40,
                     child: CustomPieChart(
-                      data: serversProvider.getRealtimeStatus!.queryTypes,
+                      data: statusProvider.getRealtimeStatus!.queryTypes,
                     )
                   ),
                   const SizedBox(height: 20),
                   PieChartLegend(
-                    data: serversProvider.getRealtimeStatus!.queryTypes,
+                    data: statusProvider.getRealtimeStatus!.queryTypes,
                     dataUnit: '%',
                   )
                 ]
@@ -76,7 +76,7 @@ class QueriesServersTab extends StatelessWidget {
           : NoDataChart(
             topLabel: AppLocalizations.of(context)!.queryTypes,
           ),
-        serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
+        statusProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
           ? Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 10),
               child: Column(
@@ -92,12 +92,12 @@ class QueriesServersTab extends StatelessWidget {
                   SizedBox(
                     width: width-40,
                     child: CustomPieChart(
-                      data: serversProvider.getRealtimeStatus!.forwardDestinations,
+                      data: statusProvider.getRealtimeStatus!.forwardDestinations,
                     )
                   ),
                   const SizedBox(height: 20),
                   PieChartLegend(
-                    data: serversProvider.getRealtimeStatus!.forwardDestinations,
+                    data: statusProvider.getRealtimeStatus!.forwardDestinations,
                     dataUnit: '%',
                   )
                 ] 
@@ -131,7 +131,7 @@ class QueriesServersTab extends StatelessWidget {
           ],
         ),
       ), 
-      loadStatus: serversProvider.getStatusLoading, 
+      loadStatus: statusProvider.getStatusLoading, 
       onRefresh: onRefresh
     );
   }

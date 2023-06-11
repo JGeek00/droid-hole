@@ -8,10 +8,10 @@ import 'package:droid_hole/screens/home/clients_last_hours.dart';
 import 'package:droid_hole/widgets/section_label.dart';
 
 import 'package:droid_hole/constants/colors.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/overtime_data.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
-import 'package:droid_hole/providers/servers_provider.dart';
 
 class HomeCharts extends StatelessWidget {
   const HomeCharts({Key? key}) : super(key: key);
@@ -29,15 +29,15 @@ class HomeCharts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final orientation = MediaQuery.of(context).orientation;
 
-    final List<String> clientsListIps = serversProvider.getRealtimeStatus != null
-      ? convertFromMapToList(serversProvider.getRealtimeStatus!.topSources).map(
+    final List<String> clientsListIps = statusProvider.getRealtimeStatus != null
+      ? convertFromMapToList(statusProvider.getRealtimeStatus!.topSources).map(
           (client) {
             final split = client['label'].toString().split('|');
             if (split.length > 1) {
@@ -80,7 +80,7 @@ class HomeCharts extends StatelessWidget {
                   height: 10,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: getColor(serversProvider.getOvertimeData!.clients[i], i)
+                    color: getColor(statusProvider.getOvertimeData!.clients[i], i)
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -88,15 +88,15 @@ class HomeCharts extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if ( serversProvider.getOvertimeData!.clients[i].name != '') ...[
+                      if ( statusProvider.getOvertimeData!.clients[i].name != '') ...[
                         Text(
-                          serversProvider.getOvertimeData!.clients[i].name,
+                          statusProvider.getOvertimeData!.clients[i].name,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 2),
                       ],
                       Text(
-                        serversProvider.getOvertimeData!.clients[i].ip,
+                        statusProvider.getOvertimeData!.clients[i].ip,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
@@ -176,7 +176,7 @@ class HomeCharts extends StatelessWidget {
       }
     }
 
-    switch (serversProvider.getOvertimeDataLoadStatus) {
+    switch (statusProvider.getOvertimeDataLoadStatus) {
       case 0:
         return SizedBox(
           width: double.maxFinite,
@@ -201,7 +201,7 @@ class HomeCharts extends StatelessWidget {
       case 1:
         return Column(
           children: [
-            checkExistsData(serversProvider.getOvertimeDataJson!['domains_over_time']) && checkExistsData(serversProvider.getOvertimeDataJson!['ads_over_time'])
+            checkExistsData(statusProvider.getOvertimeDataJson!['domains_over_time']) && checkExistsData(statusProvider.getOvertimeDataJson!['ads_over_time'])
               ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -211,7 +211,7 @@ class HomeCharts extends StatelessWidget {
                     height: 350,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: QueriesLastHours(
-                      data: serversProvider.getOvertimeDataJson!,
+                      data: statusProvider.getOvertimeDataJson!,
                       reducedData: appConfigProvider.reducedDataCharts,
                     )
                   ),
@@ -254,8 +254,8 @@ class HomeCharts extends StatelessWidget {
                   topLabel: AppLocalizations.of(context)!.totalQueries24,
                 ),
             const SizedBox(height: 20),
-            serversProvider.getOvertimeDataJson!['over_time'].keys.length > 0 &&
-            serversProvider.getOvertimeDataJson!['clients'].length > 0 
+            statusProvider.getOvertimeDataJson!['over_time'].keys.length > 0 &&
+            statusProvider.getOvertimeDataJson!['clients'].length > 0 
               ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -269,7 +269,7 @@ class HomeCharts extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: ClientsLastHours(
                           realtimeListIps: clientsListIps,
-                          data: serversProvider.getOvertimeDataJson!,
+                          data: statusProvider.getOvertimeDataJson!,
                           reducedData: appConfigProvider.reducedDataCharts,
                           hideZeroValues: appConfigProvider.hideZeroValues,
                         ),
@@ -280,7 +280,7 @@ class HomeCharts extends StatelessWidget {
                     width: double.maxFinite,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: generateLegend(serversProvider.getOvertimeData!.clients),
+                      children: generateLegend(statusProvider.getOvertimeData!.clients),
                     ),
                   ),
                   const SizedBox(height: 16),

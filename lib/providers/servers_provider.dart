@@ -1,12 +1,8 @@
 import 'dart:async';
-
-import 'package:droid_hole/constants/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/models/overtime_data.dart';
-import 'package:droid_hole/models/realtime_status.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/server.dart';
 
@@ -15,17 +11,6 @@ class ServersProvider with ChangeNotifier {
   Database? _dbInstance;
 
   Server? _selectedServer;
-  bool? _isServerConnected;
-  String? _phpSessId;
-  bool _refreshServerStatus = false;
-
-  LoadStatus _statusLoading = LoadStatus.loading;
-  RealtimeStatus? _realtimeStatus;
-
-  int _overtimeDataLoading = 0;
-  OverTimeData? _overtimeData;
-
-  bool _startAutoRefresh = false;
 
   List<Server> get getServersList {
     return _serversList;
@@ -33,58 +18,6 @@ class ServersProvider with ChangeNotifier {
 
   Server? get selectedServer {
     return _selectedServer;
-  }
-
-  String? get phpSessId {
-    return _phpSessId;
-  }
-
-  bool? get isServerConnected {
-    return _isServerConnected;
-  }
-
-  RealtimeStatus? get getRealtimeStatus {
-    return _realtimeStatus;
-  }
-
-  LoadStatus get getStatusLoading {
-    return _statusLoading;
-  }
-
-  OverTimeData? get getOvertimeData {
-    return _overtimeData;
-  }
-
-  Map<String, dynamic>? get getOvertimeDataJson {
-    if (_overtimeData != null) {
-      return _overtimeData!.toJson();
-    }
-    else {
-      return null;
-    }
-  }
-
-  int get getOvertimeDataLoadStatus {
-    return _overtimeDataLoading;
-  }
-
-  bool get getRefreshServerStatus {
-    return _refreshServerStatus;
-  }
-  
-  bool get startAutoRefresh {
-    return _startAutoRefresh;
-  }
-
-  void setStartAutoRefresh(bool value) {
-    _startAutoRefresh = value;
-  }
-
-  void setRefreshServerStatus(bool status) {
-    _refreshServerStatus = status;
-    if (status == true) {
-      notifyListeners();
-    }
   }
 
   Future<bool> addServer(Server server) async {
@@ -168,37 +101,6 @@ class ServersProvider with ChangeNotifier {
     }
   }
 
-  void setStatusLoading(LoadStatus status) {
-    _statusLoading = status;
-    notifyListeners();
-  }
-
-  void setRealtimeStatus(RealtimeStatus realtimeStatus) {
-    _realtimeStatus = realtimeStatus;
-    _statusLoading = LoadStatus.loaded;
-    notifyListeners();
-  }
-
-  void setPhpSessId(String value) {
-    _phpSessId = value;
-    notifyListeners();
-  }
-
-  void setIsServerConnected(bool status) {
-    _isServerConnected = status;
-    notifyListeners();
-  }
-
-  void setOvertimeDataLoadingStatus(int status) {
-    _overtimeDataLoading = status;
-    notifyListeners();
-  }
-
-  void setOvertimeData(OverTimeData value) {
-    _overtimeData = value;
-    notifyListeners();
-  }
-
   Future<bool> settoken(Server server) async {
     try {
       return await _dbInstance!.transaction((txn) async {
@@ -223,6 +125,7 @@ class ServersProvider with ChangeNotifier {
 
   Future saveFromDb(List<Map<String, dynamic>>? servers, bool connect) async {
    if (servers != null) {
+      Server? defaultServer;
       for (var server in servers) {
         final Server serverObj = Server(
           address: server['address'], 
@@ -234,28 +137,30 @@ class ServersProvider with ChangeNotifier {
         );
         _serversList.add(serverObj);
         if (convertFromIntToBool(server['isDefaultServer']) == true) {
-          _selectedServer = serverObj;
+          defaultServer = serverObj;
         }
+
+        if (defaultServer != null) {
+          _selectedServer = defaultServer;
+        }
+
+        notifyListeners();
       }
     }
-    notifyListeners();
+    else {
+      notifyListeners();
+    }
   }
 
   Future<bool> login(Server serverObj) async {
     final result = await loginQuery(serverObj);
     if (result['result'] == 'success') {
       _selectedServer = serverObj;
-      _realtimeStatus = result['realtimeStatus'];
-      _phpSessId = result['phpSessId'];
-      _isServerConnected = true;
-      _statusLoading = LoadStatus.loaded;
       notifyListeners();
       return true;
     }
     else {
-      _isServerConnected = false;
       _selectedServer = serverObj;
-      _statusLoading = LoadStatus.error;
       notifyListeners();
       return false;
     }
@@ -344,12 +249,6 @@ class ServersProvider with ChangeNotifier {
 
   void setselectedServer(Server? server) {
     _selectedServer = server;
-    if (server != null) {
-      _isServerConnected = true;
-    }
-    else {
-      _isServerConnected = false;
-    }
     notifyListeners();
   }
 
@@ -366,9 +265,8 @@ class ServersProvider with ChangeNotifier {
 
   Future<bool> deleteDbData() async {
     _serversList = [];
-    _isServerConnected = false;
     _selectedServer = null;
-    _phpSessId = null;
+
     try {
       return await _dbInstance!.transaction((txn) async {
         await txn.rawDelete(

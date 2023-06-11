@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +55,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final height = MediaQuery.of(context).size.height;
@@ -61,7 +63,7 @@ class _HomeState extends State<Home> {
     final orientation = MediaQuery.of(context).orientation;
 
     Widget tiles() {
-      switch (serversProvider.getStatusLoading) {
+      switch (statusProvider.getStatusLoading) {
         case LoadStatus.loading:
           return SizedBox(
             width: double.maxFinite,
@@ -97,7 +99,7 @@ class _HomeState extends State<Home> {
                       iconColor: const Color.fromARGB(255, 64, 146, 66), 
                       color: Colors.green, 
                       label: AppLocalizations.of(context)!.totalQueries, 
-                      value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday,Platform.localeName),
+                      value: intFormat(statusProvider.getRealtimeStatus!.dnsQueriesToday,Platform.localeName),
                       margin: const EdgeInsets.only(
                         top: 16,
                         left: 16,
@@ -112,7 +114,7 @@ class _HomeState extends State<Home> {
                       iconColor: const Color.fromARGB(255, 28, 127, 208), 
                       color: Colors.blue, 
                       label: AppLocalizations.of(context)!.queriesBlocked, 
-                      value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
+                      value: intFormat(statusProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
                       margin: const EdgeInsets.only(
                         top: 16,
                         left: 8,
@@ -131,7 +133,7 @@ class _HomeState extends State<Home> {
                       iconColor: const Color.fromARGB(255, 219, 131, 0), 
                       color: Colors.orange, 
                       label: AppLocalizations.of(context)!.percentageBlocked, 
-                      value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday, Platform.localeName)}%",
+                      value: "${formatPercentage(statusProvider.getRealtimeStatus!.adsPercentageToday, Platform.localeName)}%",
                       margin: const EdgeInsets.only(
                         top: 8,
                         left: 16,
@@ -146,7 +148,7 @@ class _HomeState extends State<Home> {
                       iconColor: const Color.fromARGB(255, 211, 58, 47), 
                       color: Colors.red, 
                       label: AppLocalizations.of(context)!.domainsAdlists, 
-                      value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),
+                      value: intFormat(statusProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),
                       margin: const EdgeInsets.only(
                         top: 8,
                         left: 8,
@@ -167,7 +169,7 @@ class _HomeState extends State<Home> {
                     iconColor: const Color.fromARGB(255, 64, 146, 66), 
                     color: Colors.green, 
                     label: AppLocalizations.of(context)!.totalQueries, 
-                    value: intFormat(serversProvider.getRealtimeStatus!.dnsQueriesToday, Platform.localeName),
+                    value: intFormat(statusProvider.getRealtimeStatus!.dnsQueriesToday, Platform.localeName),
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 20,
@@ -182,7 +184,7 @@ class _HomeState extends State<Home> {
                     iconColor: const Color.fromARGB(255, 28, 127, 208), 
                     color: Colors.blue, 
                     label: AppLocalizations.of(context)!.queriesBlocked, 
-                    value: intFormat(serversProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
+                    value: intFormat(statusProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 8,
@@ -197,7 +199,7 @@ class _HomeState extends State<Home> {
                     iconColor: const Color.fromARGB(255, 219, 131, 0), 
                     color: Colors.orange, 
                     label: AppLocalizations.of(context)!.percentageBlocked, 
-                    value: "${formatPercentage(serversProvider.getRealtimeStatus!.adsPercentageToday, Platform.localeName)}%",
+                    value: "${formatPercentage(statusProvider.getRealtimeStatus!.adsPercentageToday, Platform.localeName)}%",
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 8,
@@ -212,7 +214,7 @@ class _HomeState extends State<Home> {
                     iconColor: const Color.fromARGB(255, 211, 58, 47), 
                     color: Colors.red, 
                     label: AppLocalizations.of(context)!.domainsAdlists, 
-                    value: intFormat(serversProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),
+                    value: intFormat(statusProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),
                     margin: const EdgeInsets.only(
                       top: 20,
                       left: 8,
@@ -258,7 +260,7 @@ class _HomeState extends State<Home> {
 
     void enableDisableServer() async {
       if (
-        serversProvider.isServerConnected == true &&
+        statusProvider.isServerConnected == true &&
         serversProvider.selectedServer != null
       ) {
         if (serversProvider.selectedServer?.enabled == true) {
@@ -285,7 +287,7 @@ class _HomeState extends State<Home> {
           appBar: const HomeAppBar(),
           body: RefreshIndicator(
             onRefresh: () async {
-              await refreshServerStatus(context, serversProvider, appConfigProvider);
+              await refreshServerStatus(context);
             },
             child: ListView(
               controller: scrollController,
@@ -299,7 +301,7 @@ class _HomeState extends State<Home> {
         AnimatedPositioned(
           duration: const Duration(milliseconds: 100),
           curve: Curves.easeInOut,
-          bottom: isVisible && serversProvider.getStatusLoading == LoadStatus.loaded ?
+          bottom: isVisible && statusProvider.getStatusLoading == LoadStatus.loaded ?
             appConfigProvider.showingSnackbar
               ? 70 : 20
             : -70,

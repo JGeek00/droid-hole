@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/rendering.dart';
@@ -69,6 +70,7 @@ class _ServersPageState extends State<ServersPage> {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     for (var i = 0; i < serversProvider.getServersList.length; i++) {
@@ -107,18 +109,18 @@ class _ServersPageState extends State<ServersPage> {
         ));
         final statusResult = await realtimeStatus(server);
         if (statusResult['result'] == 'success') {
-          serversProvider.setRealtimeStatus(statusResult['data']);
+          statusProvider.setRealtimeStatus(statusResult['data']);
         }
         final overtimeDataResult = await fetchOverTimeData(server);
         if (overtimeDataResult['result'] == 'success') {
-          serversProvider.setOvertimeData(overtimeDataResult['data']);
-          serversProvider.setOvertimeDataLoadingStatus(1);
+          statusProvider.setOvertimeData(overtimeDataResult['data']);
+          statusProvider.setOvertimeDataLoadingStatus(1);
         }
         else {
-          serversProvider.setOvertimeDataLoadingStatus(2);
+          statusProvider.setOvertimeDataLoadingStatus(2);
         }
-        serversProvider.setIsServerConnected(true);
-        serversProvider.setRefreshServerStatus(true);
+        statusProvider.setIsServerConnected(true);
+        statusProvider.setRefreshServerStatus(true);
       }
 
       final ProcessModal process = ProcessModal(context: context);
@@ -167,7 +169,7 @@ class _ServersPageState extends State<ServersPage> {
             Icon(
               Icons.storage_rounded,
               color: serversProvider.selectedServer != null && serversProvider.selectedServer?.address == server.address
-                ? serversProvider.isServerConnected == true 
+                ? statusProvider.isServerConnected == true 
                   ? Colors.green
                   : Colors.orange
                 : null,
@@ -200,7 +202,7 @@ class _ServersPageState extends State<ServersPage> {
         return Icon(
           Icons.storage_rounded,
           color: serversProvider.selectedServer != null && serversProvider.selectedServer?.address == server.address
-            ? serversProvider.isServerConnected == true 
+            ? statusProvider.isServerConnected == true 
               ? Colors.green
               : Colors.orange
             : null,
@@ -316,7 +318,7 @@ class _ServersPageState extends State<ServersPage> {
                     margin: const EdgeInsets.only(right: 12),
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     decoration: BoxDecoration(
-                      color: serversProvider.isServerConnected == true
+                      color: statusProvider.isServerConnected == true
                         ? Colors.green
                         : Colors.orange,
                       borderRadius: BorderRadius.circular(30)
@@ -324,14 +326,14 @@ class _ServersPageState extends State<ServersPage> {
                     child: Row(
                       children: [
                         Icon(
-                          serversProvider.isServerConnected == true
+                          statusProvider.isServerConnected == true
                             ? Icons.check
                             : Icons.warning,
                           color: Colors.white,
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          serversProvider.isServerConnected == true
+                          statusProvider.isServerConnected == true
                             ? AppLocalizations.of(context)!.connected
                             : AppLocalizations.of(context)!.selectedDisconnected,
                           style: const TextStyle(

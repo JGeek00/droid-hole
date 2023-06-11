@@ -11,6 +11,7 @@ import 'package:droid_hole/screens/servers/servers.dart';
 import 'package:droid_hole/models/server.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/constants/enums.dart';
@@ -23,6 +24,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   PreferredSizeWidget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
@@ -38,13 +40,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         serversProvider.updateselectedServerStatus(
           result['data'].status == 'enabled' ? true : false
         );
-        serversProvider.setIsServerConnected(true);
-        serversProvider.setRealtimeStatus(result['data']);
+        statusProvider.setIsServerConnected(true);
+        statusProvider.setRealtimeStatus(result['data']);
       }
       else {
-        serversProvider.setIsServerConnected(false);
-        if (serversProvider.getStatusLoading == LoadStatus.loading) {
-          serversProvider.setStatusLoading(LoadStatus.error);
+        statusProvider.setIsServerConnected(false);
+        if (statusProvider.getStatusLoading == LoadStatus.loading) {
+          statusProvider.setStatusLoading(LoadStatus.error);
         }
         showSnackBar(
           context: context, 
@@ -64,7 +66,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     void openWebPanel() {
-      if (serversProvider.isServerConnected == true) {
+      if (statusProvider.isServerConnected == true) {
         FlutterWebBrowser.openWebPage(
           url: '${serversProvider.selectedServer!.address}/admin/',
           customTabsOptions: const CustomTabsOptions(
@@ -92,18 +94,18 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ));
         final statusResult = await realtimeStatus(server);
         if (statusResult['result'] == 'success') {
-          serversProvider.setRealtimeStatus(statusResult['data']);
+          statusProvider.setRealtimeStatus(statusResult['data']);
         }
         final overtimeDataResult = await fetchOverTimeData(server);
         if (overtimeDataResult['result'] == 'success') {
-          serversProvider.setOvertimeData(overtimeDataResult['data']);
-          serversProvider.setOvertimeDataLoadingStatus(1);
+          statusProvider.setOvertimeData(overtimeDataResult['data']);
+          statusProvider.setOvertimeDataLoadingStatus(1);
         }
         else {
-          serversProvider.setOvertimeDataLoadingStatus(2);
+          statusProvider.setOvertimeDataLoadingStatus(2);
         }
-        serversProvider.setIsServerConnected(true);
-        serversProvider.setRefreshServerStatus(true);
+        statusProvider.setIsServerConnected(true);
+        statusProvider.setRefreshServerStatus(true);
       }
 
       final ProcessModal process = ProcessModal(context: context);
@@ -145,13 +147,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: serversProvider.selectedServer != null 
                 ? [
                     Icon(
-                      serversProvider.isServerConnected == true 
+                      statusProvider.isServerConnected == true 
                         ? serversProvider.selectedServer!.enabled == true 
                           ? Icons.verified_user_rounded
                           : Icons.gpp_bad_rounded
                         : Icons.shield_rounded,
                       size: 30,
-                      color: serversProvider.isServerConnected == true 
+                      color: statusProvider.isServerConnected == true 
                         ? serversProvider.selectedServer!.enabled == true
                           ? Colors.green
                           : Colors.red
@@ -205,7 +207,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           splashRadius: 20,
           itemBuilder: (context) => 
             serversProvider.selectedServer != null 
-              ? serversProvider.isServerConnected == true 
+              ? statusProvider.isServerConnected == true 
                 ? [
                     PopupMenuItem(
                       onTap: refresh,

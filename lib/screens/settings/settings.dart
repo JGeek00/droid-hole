@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:droid_hole/widgets/section_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
@@ -9,12 +8,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/settings/advanced_settings/advanced_options.dart';
 import 'package:droid_hole/screens/servers/servers.dart';
-
 import 'package:droid_hole/screens/settings/contact_me_modal.dart';
 import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:droid_hole/screens/settings/logs_quantity_load_modal.dart';
 import 'package:droid_hole/screens/settings/theme_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
+import 'package:droid_hole/widgets/section_label.dart';
 import 'package:droid_hole/screens/settings/legal_modal.dart';
 import 'package:droid_hole/screens/settings/auto_refresh_time_modal.dart';
 
@@ -22,6 +21,7 @@ import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/config/urls.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class Settings extends StatelessWidget {
@@ -30,6 +30,7 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
@@ -114,7 +115,7 @@ class Settings extends StatelessWidget {
     }
 
      void openWeb(String url) {
-      if (serversProvider.isServerConnected == true) {
+      if (statusProvider.isServerConnected == true) {
         FlutterWebBrowser.openWebPage(
           url: url,
           customTabsOptions: const CustomTabsOptions(
@@ -181,7 +182,7 @@ class Settings extends StatelessWidget {
             leadingIcon: Icons.storage_rounded,
             label: AppLocalizations.of(context)!.servers, 
             description: serversProvider.selectedServer != null 
-              ? serversProvider.isServerConnected == true
+              ? statusProvider.isServerConnected == true
                 ? "${AppLocalizations.of(context)!.connectedTo} ${serversProvider.selectedServer!.alias}"
                 : AppLocalizations.of(context)!.notConnectServer
               : AppLocalizations.of(context)!.notSelected,
