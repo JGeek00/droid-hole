@@ -7,8 +7,6 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/screens/unlock.dart';
-
 import 'package:droid_hole/screens/servers/add_server_fullscreen.dart';
 import 'package:droid_hole/screens/servers/delete_modal.dart';
 

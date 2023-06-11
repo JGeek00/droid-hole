@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/app_logs/app_logs.dart';
-import 'package:droid_hole/screens/unlock.dart';
 import 'package:droid_hole/widgets/section_label.dart';
 import 'package:droid_hole/screens/settings/advanced_settings/reset_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';

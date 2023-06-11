@@ -19,10 +19,15 @@ import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBar({Key? key}) : super(key: key);
+  final bool innerBoxIsScrolled;
+
+  const HomeAppBar({
+    Key? key,
+    required this.innerBoxIsScrolled
+  }) : super(key: key);
 
   @override
-  PreferredSizeWidget build(BuildContext context) {
+  Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
@@ -135,71 +140,61 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
     }
 
-    return AppBar(
+    return SliverAppBar.large(
       systemOverlayStyle: systemUiOverlayStyleConfig(context),
-      toolbarHeight: 70,
+      pinned: true,
+      floating: true,
+      centerTitle: false,
+      forceElevated: innerBoxIsScrolled,
+      leading: Icon(
+        statusProvider.isServerConnected == true 
+          ? serversProvider.selectedServer!.enabled == true 
+            ? Icons.verified_user_rounded
+            : Icons.gpp_bad_rounded
+          : Icons.shield_rounded,
+        size: 30,
+        color: statusProvider.isServerConnected == true 
+          ? serversProvider.selectedServer!.enabled == true
+            ? Colors.green
+            : Colors.red
+          : Colors.grey
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
             onTap: openSwitchServerModal,
-            child: Row(
-              children: serversProvider.selectedServer != null 
-                ? [
-                    Icon(
-                      statusProvider.isServerConnected == true 
-                        ? serversProvider.selectedServer!.enabled == true 
-                          ? Icons.verified_user_rounded
-                          : Icons.gpp_bad_rounded
-                        : Icons.shield_rounded,
-                      size: 30,
-                      color: statusProvider.isServerConnected == true 
-                        ? serversProvider.selectedServer!.enabled == true
-                          ? Colors.green
-                          : Colors.red
-                        : Colors.grey
-                    ),
-                    const SizedBox(width: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          serversProvider.selectedServer!.alias,
-                          style: const TextStyle(
-                            fontSize: 20
-                          ),
-                        ),
-                        Text(
-                          serversProvider.selectedServer!.address,
-                          style: TextStyle(
-                            color: Theme.of(context).listTileTheme.textColor,
-                            fontSize: 14
-                          )
-                        )
-                      ],
-                    ),
-                  ]
-                : [
-                  const Icon(
-                    Icons.shield,
-                    color: Colors.grey,
-                    size: 30,
-                  ),
-                  const SizedBox(width: 20),
-                  SizedBox(
-                    width: width - 128,
-                    child: Text(
-                      AppLocalizations.of(context)!.noServerSelected,
-                      overflow: TextOverflow.ellipsis,
+            child: serversProvider.selectedServer != null 
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      serversProvider.selectedServer!.alias,
                       style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontSize: 20
                       ),
                     ),
+                    Text(
+                      serversProvider.selectedServer!.address,
+                      style: TextStyle(
+                        color: Theme.of(context).listTileTheme.textColor,
+                        fontSize: 14
+                      )
+                    )
+                  ],
+                )
+              : SizedBox(
+                  width: width - 128,
+                  child: Text(
+                    AppLocalizations.of(context)!.noServerSelected,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ]
-            ),
-          ),
+                ),
+          )
         ],
       ),
       actions: [

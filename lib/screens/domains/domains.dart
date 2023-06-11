@@ -109,12 +109,24 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
                   onTap: (value) => domainsListProvider.setSelectedTab(value),
                   tabs: const [
                     Tab(
-                      icon: Icon(Icons.check_circle_rounded),
-                      text: "Whitelist",
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.check_circle_rounded),
+                          SizedBox(width: 16),
+                          Text("Whitelist")
+                        ],
+                      ),
                     ),
                     Tab(
-                      icon: Icon(Icons.block),
-                      text: "Blacklist",
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.block),
+                          SizedBox(width: 16),
+                          Text("Blacklist")
+                        ],
+                      ),
                     ),
                   ]
                 ),

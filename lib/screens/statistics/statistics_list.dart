@@ -11,7 +11,6 @@ import 'package:droid_hole/widgets/tab_content.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/providers/status_provider.dart';
-import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/conversions.dart';
 
@@ -29,7 +28,6 @@ class StatisticsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final serversProvider = Provider.of<ServersProvider>(context);
     final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
     final filtersProvider = Provider.of<FiltersProvider>(context);

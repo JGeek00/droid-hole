@@ -284,18 +284,34 @@ class _HomeState extends State<Home> {
     return Stack(
       children: [
         Scaffold(
-          appBar: const HomeAppBar(),
-          body: RefreshIndicator(
-            onRefresh: () async {
-              await refreshServerStatus(context);
+          body: NestedScrollView(
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverOverlapAbsorber(
+                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  sliver: HomeAppBar(innerBoxIsScrolled: innerBoxIsScrolled)
+                ),
+              ];
             },
-            child: ListView(
-              controller: scrollController,
-              children: [
-                tiles(),
-                const HomeCharts()
-              ],
-            ),
+            body: SafeArea(
+              top: false,
+              bottom: false,
+              child: Builder(
+                builder: (context) => CustomScrollView(
+                  slivers: [
+                    SliverOverlapInjector(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    ),
+                    SliverList.list(
+                      children: [
+                        tiles(),
+                        const HomeCharts()
+                      ]
+                    )
+                  ],
+                ),
+              )
+            )
           ),
         ),
         AnimatedPositioned(

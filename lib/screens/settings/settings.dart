@@ -162,117 +162,142 @@ class Settings extends StatelessWidget {
       }
     }
 
-    return  Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle: systemUiOverlayStyleConfig(context),
-        title: Text(AppLocalizations.of(context)!.settings)
-      ),
-      body: ListView(
-        children: [
-          SectionLabel(
-            label: AppLocalizations.of(context)!.appSettings, 
-          ),
-          CustomListTile(
-            leadingIcon: Icons.light_mode_rounded,
-            label: AppLocalizations.of(context)!.theme, 
-            description: getThemeString(),
-            onTap: openThemeModal,
-          ),
-          CustomListTile(
-            leadingIcon: Icons.storage_rounded,
-            label: AppLocalizations.of(context)!.servers, 
-            description: serversProvider.selectedServer != null 
-              ? statusProvider.isServerConnected == true
-                ? "${AppLocalizations.of(context)!.connectedTo} ${serversProvider.selectedServer!.alias}"
-                : AppLocalizations.of(context)!.notConnectServer
-              : AppLocalizations.of(context)!.notSelected,
-            onTap: () => {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const ServersPage()
-                ),
+    return Scaffold(
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar.large(
+                pinned: true,
+                floating: true,
+                centerTitle: false,
+                forceElevated: innerBoxIsScrolled,
+                title: Text(AppLocalizations.of(context)!.settings),
               )
-            }
-          ),
-          CustomListTile(
-            leadingIcon: Icons.update,
-            label: AppLocalizations.of(context)!.autoRefreshTime, 
-            description: "${appConfigProvider.getAutoRefreshTime.toString()} ${AppLocalizations.of(context)!.seconds}",
-            onTap: openAutoRefreshTimeModal
-          ),
-          CustomListTile(
-            leadingIcon: Icons.list_rounded,
-            label: AppLocalizations.of(context)!.logsQuantityPerLoad, 
-            description: "${appConfigProvider.logsPerQuery == 0.5 ? '30' : appConfigProvider.logsPerQuery.toInt()} ${appConfigProvider.logsPerQuery == 0.5 ? AppLocalizations.of(context)!.minutes : AppLocalizations.of(context)!.hours}",
-            onTap: openLogsQuantityPerLoad
-          ),
-          CustomListTile(
-            leadingIcon: Icons.settings,
-            label: AppLocalizations.of(context)!.advancedSetup, 
-            description: AppLocalizations.of(context)!.advancedSetupDescription,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const AdvancedOptions()
+            ),
+          ];
+        },
+        body: SafeArea(
+          top: false,
+          bottom: false,
+          child: Builder(
+            builder: (context) => CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
-              );
-            }
-          ),
-          SectionLabel(
-            label: AppLocalizations.of(context)!.about, 
-          ),
-          CustomListTile(
-            label: AppLocalizations.of(context)!.importantInformation, 
-            description: AppLocalizations.of(context)!.readIssues, 
-            onTap: openImportantInformationModal
-          ),
-          CustomListTile(
-            label: AppLocalizations.of(context)!.legal, 
-            description: AppLocalizations.of(context)!.legalInfo, 
-            onTap: openLegalModal
-          ),
-          if (appConfigProvider.getAppInfo != null) CustomListTile(
-            label: AppLocalizations.of(context)!.appVersion, 
-            description: appConfigProvider.getAppInfo!.version
-          ),
-          CustomListTile(
-            label: AppLocalizations.of(context)!.contactDeveloper, 
-            description: AppLocalizations.of(context)!.issuesSuggestions, 
-            onTap: openContactModal,
-          ),
-          CustomListTile(
-            label: AppLocalizations.of(context)!.createdBy, 
-            description: "JGeek00"
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  onPressed: () => openWeb(Urls.playStore), 
-                  icon: SvgPicture.asset(
-                    'assets/resources/google-play.svg',
-                    color: Theme.of(context).colorScheme.onSurface,
-                    width: 30,
-                    height: 30,
-                  ),
-                  tooltip: AppLocalizations.of(context)!.visitGooglePlay,
-                ),
-                IconButton(
-                  onPressed: () => openWeb(Urls.gitHub), 
-                  icon: SvgPicture.asset(
-                    'assets/resources/github.svg',
-                    color: Theme.of(context).colorScheme.onSurface,
-                    width: 30,
-                    height: 30,
-                  ),
-                  tooltip: AppLocalizations.of(context)!.gitHub,
-                ),
+                SliverList.list(
+                  children: [
+                    SectionLabel(
+                      label: AppLocalizations.of(context)!.appSettings, 
+                    ),
+                    CustomListTile(
+                      leadingIcon: Icons.light_mode_rounded,
+                      label: AppLocalizations.of(context)!.theme, 
+                      description: getThemeString(),
+                      onTap: openThemeModal,
+                    ),
+                    CustomListTile(
+                      leadingIcon: Icons.storage_rounded,
+                      label: AppLocalizations.of(context)!.servers, 
+                      description: serversProvider.selectedServer != null 
+                        ? statusProvider.isServerConnected == true
+                          ? "${AppLocalizations.of(context)!.connectedTo} ${serversProvider.selectedServer!.alias}"
+                          : AppLocalizations.of(context)!.notConnectServer
+                        : AppLocalizations.of(context)!.notSelected,
+                      onTap: () => {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ServersPage()
+                          ),
+                        )
+                      }
+                    ),
+                    CustomListTile(
+                      leadingIcon: Icons.update,
+                      label: AppLocalizations.of(context)!.autoRefreshTime, 
+                      description: "${appConfigProvider.getAutoRefreshTime.toString()} ${AppLocalizations.of(context)!.seconds}",
+                      onTap: openAutoRefreshTimeModal
+                    ),
+                    CustomListTile(
+                      leadingIcon: Icons.list_rounded,
+                      label: AppLocalizations.of(context)!.logsQuantityPerLoad, 
+                      description: "${appConfigProvider.logsPerQuery == 0.5 ? '30' : appConfigProvider.logsPerQuery.toInt()} ${appConfigProvider.logsPerQuery == 0.5 ? AppLocalizations.of(context)!.minutes : AppLocalizations.of(context)!.hours}",
+                      onTap: openLogsQuantityPerLoad
+                    ),
+                    CustomListTile(
+                      leadingIcon: Icons.settings,
+                      label: AppLocalizations.of(context)!.advancedSetup, 
+                      description: AppLocalizations.of(context)!.advancedSetupDescription,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const AdvancedOptions()
+                          ),
+                        );
+                      }
+                    ),
+                    SectionLabel(
+                      label: AppLocalizations.of(context)!.about, 
+                    ),
+                    CustomListTile(
+                      label: AppLocalizations.of(context)!.importantInformation, 
+                      description: AppLocalizations.of(context)!.readIssues, 
+                      onTap: openImportantInformationModal
+                    ),
+                    CustomListTile(
+                      label: AppLocalizations.of(context)!.legal, 
+                      description: AppLocalizations.of(context)!.legalInfo, 
+                      onTap: openLegalModal
+                    ),
+                    if (appConfigProvider.getAppInfo != null) CustomListTile(
+                      label: AppLocalizations.of(context)!.appVersion, 
+                      description: appConfigProvider.getAppInfo!.version
+                    ),
+                    CustomListTile(
+                      label: AppLocalizations.of(context)!.contactDeveloper, 
+                      description: AppLocalizations.of(context)!.issuesSuggestions, 
+                      onTap: openContactModal,
+                    ),
+                    CustomListTile(
+                      label: AppLocalizations.of(context)!.createdBy, 
+                      description: "JGeek00"
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            onPressed: () => openWeb(Urls.playStore), 
+                            icon: SvgPicture.asset(
+                              'assets/resources/google-play.svg',
+                              color: Theme.of(context).colorScheme.onSurface,
+                              width: 30,
+                              height: 30,
+                            ),
+                            tooltip: AppLocalizations.of(context)!.visitGooglePlay,
+                          ),
+                          IconButton(
+                            onPressed: () => openWeb(Urls.gitHub), 
+                            icon: SvgPicture.asset(
+                              'assets/resources/github.svg',
+                              color: Theme.of(context).colorScheme.onSurface,
+                              width: 30,
+                              height: 30,
+                            ),
+                            tooltip: AppLocalizations.of(context)!.gitHub,
+                          ),
+                        ],
+                      ),
+                    )
+                  ]
+                )
               ],
             ),
           )
-        ],
+        )
       ),
     );
   }

@@ -707,9 +707,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                         Checkbox(
                           value: defaultCheckbox,
                           onChanged: widget.server == null ? (value) => {
-                            setState(() => {
-                              defaultCheckbox = !defaultCheckbox
-                            })
+                            setState(() => defaultCheckbox = !defaultCheckbox)
                           } : null,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -717,9 +715,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                         ),
                         GestureDetector(
                           onTap: widget.server == null ? (() => {
-                            setState(() => {
-                              defaultCheckbox = !defaultCheckbox
-                            })
+                            setState(() => defaultCheckbox = !defaultCheckbox)
                           }) : null,
                           child: Text(
                             AppLocalizations.of(context)!.defaultConnection,

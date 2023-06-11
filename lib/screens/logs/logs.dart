@@ -8,9 +8,7 @@ import 'package:droid_hole/screens/logs/log_tile.dart';
 import 'package:droid_hole/screens/logs/no_logs_message.dart';
 import 'package:droid_hole/screens/logs/log_details_screen.dart';
 import 'package:droid_hole/screens/logs/logs_filters_modal.dart';
-import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/custom_radio.dart';
-import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
