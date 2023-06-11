@@ -63,12 +63,20 @@ dependencies:
   sentry_flutter: ^7.5.2
   flutter_dotenv: ^5.0.2
   contextmenu: ^3.0.0
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding
+      path: plugins/window_size
+  flutter_split_view:
+    git:
+      url: https://github.com/JGeek00/flutter_split_view
+      ref: master-alt
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.3
-  flutter_native_splash: ^2.2.3+1
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.2.10+1
   build_runner: ^2.1.11
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -86,6 +94,12 @@ flutter_icons:
   android: true
   ios: true
   remove_alpha_ios: true
+  macos:
+    generate: true
+    image_path: "assets/icon/icon-macos.png"
+  windows:
+    generate: true
+    image_path: "assets/icon/icon-background-circle.png"
 
 
 flutter_native_splash:
@@ -178,6 +192,7 @@ flutter:
     - assets/icon/icon-background-circle.png
     - assets/icon/icon-no-background.png
     - assets/icon/icon-background.png
+    - assets/icon/icon-macos.png
     - assets/icon/icon-background-ios.png
     - assets/resources/google-play.svg
     - assets/resources/github.svg

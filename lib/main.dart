@@ -15,6 +15,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:window_size/window_size.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -34,6 +35,10 @@ import 'package:droid_hole/providers/servers_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowMinSize(const Size(500, 500));
+  }
+
   if (Platform.isWindows || Platform.isLinux) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
@@ -51,10 +56,6 @@ void main() async {
     HttpOverrides.global = MyHttpOverrides();
   }
 
-  final bool canAuthenticateWithBiometrics = await LocalAuthentication.canCheckBiometrics;
-  List<BiometricType> availableBiometrics = await LocalAuthentication.getAvailableBiometrics();
-  configProvider.setBiometricsSupport(canAuthenticateWithBiometrics);
-
   serversProvider.setDbInstance(dbData['dbInstance']);
   configProvider.saveFromDb(dbData['dbInstance'], dbData['appConfig']);
   await serversProvider.saveFromDb(
@@ -62,18 +63,34 @@ void main() async {
     dbData['appConfig']['passCode'] != null ? false : true
   );
 
-  if (
-    canAuthenticateWithBiometrics && 
-    availableBiometrics.contains(BiometricType.fingerprint) == false && 
-    dbData['useBiometricAuth'] == 1
-  ) {
-    await configProvider.setUseBiometrics(false);
+  try {
+    if (Platform.isAndroid || Platform.isIOS) {
+      final bool canAuthenticateWithBiometrics = await LocalAuthentication.canCheckBiometrics;
+      List<BiometricType> availableBiometrics = await LocalAuthentication.getAvailableBiometrics();
+      configProvider.setBiometricsSupport(canAuthenticateWithBiometrics);
+      
+      if (
+        canAuthenticateWithBiometrics && 
+        availableBiometrics.contains(BiometricType.fingerprint) == false && 
+        dbData['useBiometricAuth'] == 1
+      ) {
+        await configProvider.setUseBiometrics(false);
+      }
+    }
+  } catch (e) {
+    configProvider.setBiometricsSupport(false);
   }
 
-  if (await Vibration.hasCustomVibrationsSupport() != null) {
-    configProvider.setValidVibrator(true);
-  }
-  else {
+  try {
+    if (Platform.isAndroid || Platform.isIOS) {
+      if (await Vibration.hasCustomVibrationsSupport() != null) {
+        configProvider.setValidVibrator(true);
+      }
+      else {
+        configProvider.setValidVibrator(false);
+      }
+    }
+  } catch (e) {
     configProvider.setValidVibrator(false);
   }
 
