@@ -297,18 +297,24 @@ class _HomeState extends State<Home> {
               top: false,
               bottom: false,
               child: Builder(
-                builder: (context) => CustomScrollView(
-                  slivers: [
-                    SliverOverlapInjector(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                    ),
-                    SliverList.list(
-                      children: [
-                        tiles(),
-                        const HomeCharts()
-                      ]
-                    )
-                  ],
+                builder: (context) => RefreshIndicator(
+                  edgeOffset: 70,
+                  onRefresh: () async{
+                    await refreshServerStatus(context);
+                  },
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverOverlapInjector(
+                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      ),
+                      SliverList.list(
+                        children: [
+                          tiles(),
+                          const HomeCharts()
+                        ]
+                      )
+                    ],
+                  ),
                 ),
               )
             )
