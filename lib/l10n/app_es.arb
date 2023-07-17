@@ -317,5 +317,6 @@
     "searchDomains": "Buscar dominios",
     "all": "Todos",
     "allowed": "Permitidos",
-    "advancedStatusFiltering": "Filtros de estado avanzados"
+    "advancedStatusFiltering": "Filtros de estado avanzados",
+    "selectOptionLeftColumn": "Selecciona una opción de la columna de la izquierda."
 }

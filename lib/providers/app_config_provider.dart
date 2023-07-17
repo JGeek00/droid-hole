@@ -26,6 +26,7 @@ class AppConfigProvider with ChangeNotifier {
   int _importantInfoReaden = 0;
   int _hideZeroValues = 0;
   int _statisticsVisualizationMode = 0;
+  int? _selectedSettingsScreen;
 
   final List<AppLog> _logs = [];
 
@@ -133,6 +134,10 @@ class AppConfigProvider with ChangeNotifier {
     return _logs;
   }
 
+  int? get selectedSettingsScreen {
+    return _selectedSettingsScreen;
+  }
+
   void setShowingSnackbar(bool status) {
     _showingSnackbar = status;
     notifyListeners();
@@ -176,6 +181,13 @@ class AppConfigProvider with ChangeNotifier {
   void addLog(AppLog log) {
     _logs.add(log);
     notifyListeners();
+  }
+
+  void setSelectedSettingsScreen({required int? screen, bool? notify}) {
+    _selectedSettingsScreen = screen;
+    if (notify == true) {
+      notifyListeners();
+    }
   }
 
   Future<bool> setUseBiometrics(bool biometrics) async {

@@ -4,18 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_split_view/flutter_split_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/screens/settings/logs_quantity_load_screen.dart';
 import 'package:droid_hole/screens/settings/advanced_settings/advanced_options.dart';
+import 'package:droid_hole/screens/settings/theme_screen.dart';
+import 'package:droid_hole/screens/settings/auto_refresh_time_screen.dart';
 import 'package:droid_hole/screens/servers/servers.dart';
 import 'package:droid_hole/screens/settings/contact_me_modal.dart';
 import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:droid_hole/screens/settings/logs_quantity_load_modal.dart';
-import 'package:droid_hole/screens/settings/theme_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
+import 'package:droid_hole/widgets/custom_settings_tile.dart';
 import 'package:droid_hole/widgets/section_label.dart';
 import 'package:droid_hole/screens/settings/legal_modal.dart';
-import 'package:droid_hole/screens/settings/auto_refresh_time_modal.dart';
 
 import 'package:droid_hole/config/urls.dart';
 import 'package:droid_hole/functions/snackbar.dart';
@@ -28,40 +31,84 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
+    if (width > 900) {
+      return SplitView.material(
+        hideDivider: true,
+        flexWidth: const FlexWidth(mainViewFlexWidth: 1, secondaryViewFlexWidth: 2),
+        placeholder: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              AppLocalizations.of(context)!.selectOptionLeftColumn,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                color: Theme.of(context).colorScheme.onSurfaceVariant
+              ),
+            ),
+          ),
+        ),
+        child: const SettingsWidget(),
+      );
+    }
+    else {
+      return const SettingsWidget();
+    }
+  }
+}
+
+class SettingsWidget extends StatelessWidget {
+  const SettingsWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+    final width = MediaQuery.of(context).size.width;
 
-    void openAutoRefreshTimeModal() {
-      showModalBottomSheet(
-        context: context, 
-        isScrollControlled: true,
-        builder: (context) => AutoRefreshTimeModal(
-          time: appConfigProvider.getAutoRefreshTime,
-          onChange: (time) async {
-            final result = await appConfigProvider.setAutoRefreshTime(time);
-            if (result == true) {
-              showSnackBar(
-                context: context, 
-                appConfigProvider: appConfigProvider,
-                label: AppLocalizations.of(context)!.updateTimeChanged,
-                color: Colors.green
-              );
-            }
-            else {
-              showSnackBar(
-                context: context, 
-                appConfigProvider: appConfigProvider,
-                label: AppLocalizations.of(context)!.cannotChangeUpdateTime,
-                color: Colors.red
-              );
-            }
+    if (width <= 900 && appConfigProvider.selectedSettingsScreen != null) {
+      appConfigProvider.setSelectedSettingsScreen(screen: null);
+    }
+
+    Widget settingsTile({
+      required String title,
+      required String subtitle,
+      required IconData icon,
+      Widget? trailing,
+      required Widget screenToNavigate,
+      required int thisItem
+    }) {
+      if (width > 900) {
+        return CustomSettingsTile(
+          title: title, 
+          subtitle: subtitle,
+          icon: icon,
+          trailing: trailing,
+          thisItem: thisItem, 
+          selectedItem: appConfigProvider.selectedSettingsScreen,
+          onTap: () {
+            appConfigProvider.setSelectedSettingsScreen(screen: thisItem, notify: true);
+            SplitView.of(context).setSecondary(screenToNavigate);
           },
-        ),
-        backgroundColor: Colors.transparent,
-      );
+        );
+      }
+      else {
+        return CustomListTile(
+          label: title,
+          description: subtitle,
+          leadingIcon: icon,
+          trailing: trailing,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => screenToNavigate)
+            );
+          },
+        );
+      }
     }
 
     void openLogsQuantityPerLoad() {
@@ -101,19 +148,8 @@ class Settings extends StatelessWidget {
       );
     }
 
-    void openThemeModal() {
-      showModalBottomSheet(
-        context: context, 
-        isScrollControlled: true,
-        builder: (context) => ThemeModal(
-          statusBarHeight: statusBarHeight,
-          selectedTheme: appConfigProvider.selectedThemeNumber,
-        ),
-        backgroundColor: Colors.transparent,
-      );
-    }
 
-     void openWeb(String url) {
+    void openWeb(String url) {
       if (statusProvider.isServerConnected == true) {
         FlutterWebBrowser.openWebPage(
           url: url,
@@ -191,51 +227,44 @@ class Settings extends StatelessWidget {
                     SectionLabel(
                       label: AppLocalizations.of(context)!.appSettings, 
                     ),
-                    CustomListTile(
-                      leadingIcon: Icons.light_mode_rounded,
-                      label: AppLocalizations.of(context)!.theme, 
-                      description: getThemeString(),
-                      onTap: openThemeModal,
+                    settingsTile(
+                      icon: Icons.light_mode_rounded,
+                      title: AppLocalizations.of(context)!.theme, 
+                      subtitle: getThemeString(),
+                      thisItem: 0,
+                      screenToNavigate: const ThemeScreen()
                     ),
-                    CustomListTile(
-                      leadingIcon: Icons.storage_rounded,
-                      label: AppLocalizations.of(context)!.servers, 
-                      description: serversProvider.selectedServer != null 
+                    settingsTile(
+                      icon: Icons.storage_rounded,
+                      title: AppLocalizations.of(context)!.servers, 
+                      subtitle: serversProvider.selectedServer != null 
                         ? statusProvider.isServerConnected == true
                           ? "${AppLocalizations.of(context)!.connectedTo} ${serversProvider.selectedServer!.alias}"
                           : AppLocalizations.of(context)!.notConnectServer
                         : AppLocalizations.of(context)!.notSelected,
-                      onTap: () => {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const ServersPage()
-                          ),
-                        )
-                      }
+                      screenToNavigate: const ServersPage(),
+                      thisItem: 1
                     ),
-                    CustomListTile(
-                      leadingIcon: Icons.update,
-                      label: AppLocalizations.of(context)!.autoRefreshTime, 
-                      description: "${appConfigProvider.getAutoRefreshTime.toString()} ${AppLocalizations.of(context)!.seconds}",
-                      onTap: openAutoRefreshTimeModal
+                    settingsTile(
+                      icon: Icons.update,
+                      title: AppLocalizations.of(context)!.autoRefreshTime, 
+                      subtitle: "${appConfigProvider.getAutoRefreshTime.toString()} ${AppLocalizations.of(context)!.seconds}",
+                      thisItem: 2,
+                      screenToNavigate: const AutoRefreshTimeScreen()
                     ),
-                    CustomListTile(
-                      leadingIcon: Icons.list_rounded,
-                      label: AppLocalizations.of(context)!.logsQuantityPerLoad, 
-                      description: "${appConfigProvider.logsPerQuery == 0.5 ? '30' : appConfigProvider.logsPerQuery.toInt()} ${appConfigProvider.logsPerQuery == 0.5 ? AppLocalizations.of(context)!.minutes : AppLocalizations.of(context)!.hours}",
-                      onTap: openLogsQuantityPerLoad
+                    settingsTile(
+                      icon: Icons.list_rounded,
+                      title: AppLocalizations.of(context)!.logsQuantityPerLoad, 
+                      subtitle: "${appConfigProvider.logsPerQuery == 0.5 ? '30' : appConfigProvider.logsPerQuery.toInt()} ${appConfigProvider.logsPerQuery == 0.5 ? AppLocalizations.of(context)!.minutes : AppLocalizations.of(context)!.hours}",
+                      thisItem: 3,
+                      screenToNavigate: const LogsQuantityLoadScreen()
                     ),
-                    CustomListTile(
-                      leadingIcon: Icons.settings,
-                      label: AppLocalizations.of(context)!.advancedSetup, 
-                      description: AppLocalizations.of(context)!.advancedSetupDescription,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const AdvancedOptions()
-                          ),
-                        );
-                      }
+                    settingsTile(
+                      icon: Icons.settings,
+                      title: AppLocalizations.of(context)!.advancedSetup, 
+                      subtitle: AppLocalizations.of(context)!.advancedSetupDescription,
+                      screenToNavigate: const AdvancedOptions(),
+                      thisItem: 4,
                     ),
                     SectionLabel(
                       label: AppLocalizations.of(context)!.about, 

@@ -11,7 +11,7 @@ import 'package:droid_hole/screens/settings/advanced_settings/reset_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/screens/settings/advanced_settings/app_unlock_setup_modal.dart';
 import 'package:droid_hole/screens/settings/advanced_settings/enter_passcode_modal.dart';
-import 'package:droid_hole/screens/settings/advanced_settings/statistics_visualization_modal.dart';
+import 'package:droid_hole/screens/settings/advanced_settings/statistics_visualization_screen.dart';
 
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/functions/snackbar.dart';
@@ -28,6 +28,7 @@ class AdvancedOptions extends StatelessWidget {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final topBarHeight = MediaQuery.of(context).viewPadding.top;
+    final width = MediaQuery.of(context).size.width;
 
     void updateSslCheck(bool newStatus) async {
       final result = await appConfigProvider.setOverrideSslCheck(newStatus);
@@ -123,7 +124,8 @@ class AdvancedOptions extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(
           fullscreenDialog: true,
           builder: (BuildContext context) => EnterPasscodeModal(
-            onConfirm: () => reset()
+            onConfirm: () => reset(),
+            window: width > 700,
           ),
         ));
       }
@@ -144,39 +146,53 @@ class AdvancedOptions extends StatelessWidget {
 
     void openAppUnlockModal() {
       void openModal() {
-        showModalBottomSheet(
-          context: context, 
-          builder: (context) => AppUnlockSetupModal(
-            topBarHeight: topBarHeight,
-            useBiometrics: appConfigProvider.useBiometrics,
-          ),
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent
-        );
+        if (width > 700) {
+          showDialog(
+            context: context, 
+            builder: (context) => AppUnlockSetupModal(
+              topBarHeight: topBarHeight,
+              useBiometrics: appConfigProvider.useBiometrics,
+              window: true,
+            ),
+          );
+        }
+        else {
+          showModalBottomSheet(
+            context: context, 
+            builder: (context) => AppUnlockSetupModal(
+              topBarHeight: topBarHeight,
+              useBiometrics: appConfigProvider.useBiometrics,
+              window: false,
+            ),
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent
+          );
+        }
       }
       
       if (appConfigProvider.passCode != null) {
-        Navigator.push(context, MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (BuildContext context) => EnterPasscodeModal(
-            onConfirm: () => openModal()
-          ),
-        ));
+        if (width > 700) {
+          showDialog(
+            context: context, 
+            builder: (BuildContext context) => EnterPasscodeModal(
+              onConfirm: () => openModal(),
+              window: true,
+            ),
+          );
+        }
+        else {
+          Navigator.push(context, MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (BuildContext context) => EnterPasscodeModal(
+              onConfirm: () => openModal(),
+              window: false,
+            ),
+          ));
+        }
       }
       else {
         openModal();
       }
-    }
-
-    void showStatisticsVisualizationModeSheet() {
-      showModalBottomSheet(
-        context: context, 
-        builder: (context) => StatisticsVisualizationModal(
-          statusBarHeight: topBarHeight
-        ),
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent
-      );
     }
 
     return Scaffold(
@@ -194,7 +210,6 @@ class AdvancedOptions extends StatelessWidget {
             trailing: Switch(
               value: appConfigProvider.overrideSslCheck, 
               onChanged: updateSslCheck,
-              activeColor: Theme.of(context).colorScheme.primary,
             ),
             onTap: () => updateSslCheck(!appConfigProvider.overrideSslCheck),
             padding: const EdgeInsets.only(
@@ -231,7 +246,6 @@ class AdvancedOptions extends StatelessWidget {
             trailing: Switch(
               value: appConfigProvider.oneColumnLegend, 
               onChanged: updateOneColumnLegend,
-              activeColor: Theme.of(context).colorScheme.primary,
             ),
           ),
           CustomListTile(
@@ -248,7 +262,6 @@ class AdvancedOptions extends StatelessWidget {
             trailing: Switch(
               value: appConfigProvider.reducedDataCharts, 
               onChanged: updateUseReducedData,
-              activeColor: Theme.of(context).colorScheme.primary,
             ),
           ),
           CustomListTile(
@@ -265,14 +278,15 @@ class AdvancedOptions extends StatelessWidget {
             trailing: Switch(
               value: appConfigProvider.hideZeroValues, 
               onChanged: updateHideZeroValues,
-              activeColor: Theme.of(context).colorScheme.primary,
             ),
           ),
           CustomListTile(
             leadingIcon: Icons.pie_chart_rounded,
             label: AppLocalizations.of(context)!.domainsClientsDataMode,
             description: AppLocalizations.of(context)!.domainsClientsDataModeDescription,
-            onTap: showStatisticsVisualizationModeSheet,
+            onTap: () => Navigator.push(context, MaterialPageRoute(
+              builder: (context) => const StatisticsVisualizationScreen()
+            )),
             padding: const EdgeInsets.only(
               top: 10,
               bottom: 10,

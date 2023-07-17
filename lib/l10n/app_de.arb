@@ -315,5 +315,6 @@
   "searchDomains": "Suchdomänen",
   "all": "Alle",
   "allowed": "Erlaubt",
-  "advancedStatusFiltering": "Erweiterte Statusfilterung"
+  "advancedStatusFiltering": "Erweiterte Statusfilterung",
+  "selectOptionLeftColumn": "Wählen Sie eine Option aus der linken Spalte aus."
 }
