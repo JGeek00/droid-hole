@@ -9,13 +9,27 @@ class NoServerSelected extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
 
     void _selectServer() {
       Future.delayed(const Duration(seconds: 0), () => {
-        Navigator.push(context, MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (BuildContext context) => const AddServerFullscreen()
-        ))
+        if (width > 900) {
+          showDialog(
+            context: context, 
+            builder: (context) => const AddServerFullscreen(
+              window: true,
+            ),
+            barrierDismissible: false
+          )
+        }
+        else {
+          Navigator.push(context, MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (BuildContext context) => const AddServerFullscreen(
+              window: false,
+            )
+          ))
+        }
       });
     }
 

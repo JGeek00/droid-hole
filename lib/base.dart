@@ -5,11 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
 import 'package:provider/provider.dart';
 
-import 'package:droid_hole/screens/domains/domains.dart';
+import 'package:droid_hole/widgets/navigation_rail.dart';
 import 'package:droid_hole/screens/servers/servers.dart';
 import 'package:droid_hole/screens/home/home.dart';
 import 'package:droid_hole/screens/logs/logs.dart';
 import 'package:droid_hole/screens/settings/settings.dart';
+import 'package:droid_hole/screens/domains/domains.dart';
 import 'package:droid_hole/screens/statistics/statistics.dart';
 
 import 'package:droid_hole/widgets/start_warning_modal.dart';
@@ -109,6 +110,8 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
     final domainsListProvider = Provider.of<DomainsListProvider>(context, listen: false);
 
+    final width = MediaQuery.of(context).size.width;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -124,7 +127,40 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
           : Brightness.light,
       ),
       child: Scaffold(
-        body: PageTransitionSwitcher(
+        body: width > 900
+          ? Row(
+            children: [
+              CustomNavigationRail(
+                screens: serversProvider.selectedServer != null
+                  ? appScreens
+                  : appScreensNotSelected,
+                selectedScreen: serversProvider.selectedServer != null
+                  ? appConfigProvider.selectedTab
+                  : appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab,
+                onChange: (selected) {
+                  if (selected != 3) {
+                    domainsListProvider.setSelectedTab(null);
+                  }
+                  appConfigProvider.setSelectedTab(selected);
+                },
+              ),
+              Expanded(
+                child: PageTransitionSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  transitionBuilder: (
+                    (child, primaryAnimation, secondaryAnimation) => FadeThroughTransition(
+                      animation: primaryAnimation, 
+                      secondaryAnimation: secondaryAnimation,
+                      child: child,
+                    )
+                  ),
+                  child: serversProvider.selectedServer != null
+                    ? pages[appConfigProvider.selectedTab]
+                    : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
+                ),
+              ),
+            ],
+          ) : PageTransitionSwitcher(
           duration: const Duration(milliseconds: 200),
           transitionBuilder: (
             (child, primaryAnimation, secondaryAnimation) => FadeThroughTransition(
@@ -137,7 +173,7 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
             ? pages[appConfigProvider.selectedTab]
             : pagesNotSelected[appConfigProvider.selectedTab > 1 ? 0 : appConfigProvider.selectedTab]
         ),
-        bottomNavigationBar: BottomNavBar(
+        bottomNavigationBar: width <= 900 ? BottomNavBar(
           screens: serversProvider.selectedServer != null
             ? appScreens
             : appScreensNotSelected,
@@ -150,7 +186,7 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
             }
             appConfigProvider.setSelectedTab(selected);
           },
-        ),
+        ) : null,
       ),
     );
   }

@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:droid_hole/providers/status_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/rendering.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/servers/add_server_fullscreen.dart';
 import 'package:droid_hole/screens/servers/delete_modal.dart';
 
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/functions/snackbar.dart';
@@ -71,16 +71,33 @@ class _ServersPageState extends State<ServersPage> {
     final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
+    final width = MediaQuery.of(context).size.width;
+
     for (var i = 0; i < serversProvider.getServersList.length; i++) {
       expandableControllerList.add(ExpandableController());
     }
 
     void openAddServer({Server? server}) async {
       await Future.delayed(const Duration(seconds: 0), (() => {
-        Navigator.push(context, MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (BuildContext context) => AddServerFullscreen(server: server)
-        ))
+        if (width > 900) {
+          showDialog(
+            context: context, 
+            builder: (context) => AddServerFullscreen(
+              server: server,
+              window: true,
+            ),
+            barrierDismissible: false
+          )
+        }
+        else {
+          Navigator.push(context, MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (BuildContext context) => AddServerFullscreen(
+              server: server,
+              window: false,
+            )
+          ))
+        }
       }));
     }
 
