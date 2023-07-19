@@ -6,10 +6,12 @@ import 'package:droid_hole/widgets/option_box.dart';
 
 class DisableModal extends StatefulWidget {
   final void Function(int) onDisable;
+  final bool window;
 
   const DisableModal({
     Key? key,
-    required this.onDisable
+    required this.onDisable,
+    required this.window
   }) : super(key: key);
 
   @override
@@ -298,67 +300,131 @@ class _DisableModalState extends State<DisableModal> {
       );
     } 
 
-    return Padding(
-      padding: mediaQueryData.viewInsets,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).dialogBackgroundColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(28),
-            topRight: Radius.circular(28)
+    if (widget.window == true) {
+      return Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 500
+          ),
+          child: Padding(
+            padding: mediaQueryData.viewInsets,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SingleChildScrollView(
+                  child: Wrap(
+                    children: [
+                      ExpandableNotifier(
+                        controller: expandableController,
+                        child: Expandable(
+                          collapsed: options(),
+                          expanded: Column(
+                            children: [
+                              options(),
+                              inputField()
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context), 
+                        child: Text(AppLocalizations.of(context)!.cancel),
+                      ),
+                      const SizedBox(width: 20),
+                      TextButton(
+                        onPressed: _selectionIsValid() == true 
+                          ? () {
+                              Navigator.pop(context);
+                              widget.onDisable(_getTime());
+                            }
+                          : null,
+                        style: ButtonStyle(
+                          foregroundColor: _selectionIsValid() == true 
+                            ? MaterialStateProperty.all(Theme.of(context).colorScheme.primary)
+                            : MaterialStateProperty.all(Colors.grey)
+                        ),
+                        child: Text(AppLocalizations.of(context)!.accept),
+                      )
+                    ]
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SingleChildScrollView(
-              child: Wrap(
-                children: [
-                  ExpandableNotifier(
-                    controller: expandableController,
-                    child: Expandable(
-                      collapsed: options(),
-                      expanded: Column(
-                        children: [
-                          options(),
-                          inputField()
-                        ],
+      );
+    }
+    else {
+      return Padding(
+        padding: mediaQueryData.viewInsets,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).dialogBackgroundColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(28),
+              topRight: Radius.circular(28)
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SingleChildScrollView(
+                child: Wrap(
+                  children: [
+                    ExpandableNotifier(
+                      controller: expandableController,
+                      child: Expandable(
+                        collapsed: options(),
+                        expanded: Column(
+                          children: [
+                            options(),
+                            inputField()
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context), 
-                    child: Text(AppLocalizations.of(context)!.cancel),
-                  ),
-                  const SizedBox(width: 20),
-                  TextButton(
-                    onPressed: _selectionIsValid() == true 
-                      ? () {
-                          Navigator.pop(context);
-                          widget.onDisable(_getTime());
-                        }
-                      : null,
-                    style: ButtonStyle(
-                      foregroundColor: _selectionIsValid() == true 
-                        ? MaterialStateProperty.all(Theme.of(context).colorScheme.primary)
-                        : MaterialStateProperty.all(Colors.grey)
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context), 
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
-                    child: Text(AppLocalizations.of(context)!.accept),
-                  )
-                ]
-              ),
-            )
-          ],
+                    const SizedBox(width: 20),
+                    TextButton(
+                      onPressed: _selectionIsValid() == true 
+                        ? () {
+                            Navigator.pop(context);
+                            widget.onDisable(_getTime());
+                          }
+                        : null,
+                      style: ButtonStyle(
+                        foregroundColor: _selectionIsValid() == true 
+                          ? MaterialStateProperty.all(Theme.of(context).colorScheme.primary)
+                          : MaterialStateProperty.all(Colors.grey)
+                      ),
+                      child: Text(AppLocalizations.of(context)!.accept),
+                    )
+                  ]
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }

@@ -30,7 +30,7 @@ class OptionBox extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: optionsValue == itemValue
-                ? Theme.of(context).colorScheme.secondaryContainer
+                ? Theme.of(context).colorScheme.primary
                 : Theme.of(context).colorScheme.onSurfaceVariant
             ),
             color: optionsValue == itemValue

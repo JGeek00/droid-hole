@@ -87,144 +87,65 @@ class _HomeState extends State<Home> {
           );
 
         case LoadStatus.loaded:
-          return Column(
-            children: !(orientation == Orientation.landscape && height < 1000) 
-              ? [
-                Row(
-                  children: [
-                    HomeTile(
-                      mainWidth: (width-48)/2,
-                      innerWidth: (width-72)/2,
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Wrap(
+              runSpacing: 16,
+              children: [
+                FractionallySizedBox(
+                  widthFactor: width > 1000 ? 0.25 : 0.5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: HomeTile(
                       icon: Icons.public, 
                       iconColor: const Color.fromARGB(255, 64, 146, 66), 
                       color: Colors.green, 
                       label: AppLocalizations.of(context)!.totalQueries, 
                       value: intFormat(statusProvider.getRealtimeStatus!.dnsQueriesToday,Platform.localeName),
-                      margin: const EdgeInsets.only(
-                        top: 16,
-                        left: 16,
-                        right: 8,
-                        bottom: 8
-                      )
                     ),
-                    HomeTile(
-                      mainWidth: (width-48)/2,
-                      innerWidth: (width-72)/2,
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: width > 1000 ? 0.25 : 0.5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: HomeTile(
                       icon: Icons.block, 
                       iconColor: const Color.fromARGB(255, 28, 127, 208), 
                       color: Colors.blue, 
                       label: AppLocalizations.of(context)!.queriesBlocked, 
                       value: intFormat(statusProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
-                      margin: const EdgeInsets.only(
-                        top: 16,
-                        left: 8,
-                        right: 16,
-                        bottom: 8
-                      )
                     ),
-                  ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    HomeTile(
-                      mainWidth: (width-48)/2,
-                      innerWidth: (width-72)/2,
+                FractionallySizedBox(
+                  widthFactor: width > 1000 ? 0.25 : 0.5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: HomeTile(
                       icon: Icons.pie_chart, 
                       iconColor: const Color.fromARGB(255, 219, 131, 0), 
                       color: Colors.orange, 
                       label: AppLocalizations.of(context)!.percentageBlocked, 
                       value: "${formatPercentage(statusProvider.getRealtimeStatus!.adsPercentageToday, Platform.localeName)}%",
-                      margin: const EdgeInsets.only(
-                        top: 8,
-                        left: 16,
-                        right: 8,
-                        bottom: 16
-                      )
                     ),
-                    HomeTile(
-                      mainWidth: (width-48)/2,
-                      innerWidth: (width-72)/2,
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: width > 1000 ? 0.25 : 0.5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: HomeTile(
                       icon: Icons.list, 
                       iconColor: const Color.fromARGB(255, 211, 58, 47), 
                       color: Colors.red, 
                       label: AppLocalizations.of(context)!.domainsAdlists, 
                       value: intFormat(statusProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),
-                      margin: const EdgeInsets.only(
-                        top: 8,
-                        left: 8,
-                        right: 16,
-                        bottom: 16
-                      )
                     ),
-                  ],
-                )
-              ]
-            : [
-              Row(
-                children: [
-                  HomeTile(
-                    mainWidth: (width-88)/4,
-                      innerWidth: (width-80)/4,
-                    icon: Icons.public, 
-                    iconColor: const Color.fromARGB(255, 64, 146, 66), 
-                    color: Colors.green, 
-                    label: AppLocalizations.of(context)!.totalQueries, 
-                    value: intFormat(statusProvider.getRealtimeStatus!.dnsQueriesToday, Platform.localeName),
-                    margin: const EdgeInsets.only(
-                      top: 20,
-                      left: 20,
-                      right: 8,
-                      bottom: 20
-                    )
                   ),
-                  HomeTile(
-                    mainWidth: (width-88)/4,
-                    innerWidth: (width-80)/4,
-                    icon: Icons.block, 
-                    iconColor: const Color.fromARGB(255, 28, 127, 208), 
-                    color: Colors.blue, 
-                    label: AppLocalizations.of(context)!.queriesBlocked, 
-                    value: intFormat(statusProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
-                    margin: const EdgeInsets.only(
-                      top: 20,
-                      left: 8,
-                      right: 8,
-                      bottom: 20
-                    )
-                  ),
-                  HomeTile(
-                    mainWidth: (width-88)/4,
-                    innerWidth: (width-80)/4,
-                    icon: Icons.pie_chart, 
-                    iconColor: const Color.fromARGB(255, 219, 131, 0), 
-                    color: Colors.orange, 
-                    label: AppLocalizations.of(context)!.percentageBlocked, 
-                    value: "${formatPercentage(statusProvider.getRealtimeStatus!.adsPercentageToday, Platform.localeName)}%",
-                    margin: const EdgeInsets.only(
-                      top: 20,
-                      left: 8,
-                      right: 8,
-                      bottom: 20
-                    )
-                  ),
-                  HomeTile(
-                    mainWidth: (width-88)/4,
-                    innerWidth: (width-80)/4,
-                    icon: Icons.list, 
-                    iconColor: const Color.fromARGB(255, 211, 58, 47), 
-                    color: Colors.red, 
-                    label: AppLocalizations.of(context)!.domainsAdlists, 
-                    value: intFormat(statusProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),
-                    margin: const EdgeInsets.only(
-                      top: 20,
-                      left: 8,
-                      right: 20,
-                      bottom: 20
-                    )
-                  ),
-                ],
-              )
-            ],
+                ),
+              ],
+            ),
           );
 
         case LoadStatus.error: 
@@ -264,16 +185,28 @@ class _HomeState extends State<Home> {
         serversProvider.selectedServer != null
       ) {
         if (serversProvider.selectedServer?.enabled == true) {
-          showModalBottomSheet(
-            context: context, 
-            isScrollControlled: true,
-            builder: (_) => DisableModal(
-              onDisable: (time) => disableServer(time, context)
-            ),
-            backgroundColor: Colors.transparent,
-            isDismissible: true,
-            enableDrag: true,
-          );
+          if (width > 700) {
+            showDialog(
+              context: context, 
+              builder: (_) => DisableModal(
+                onDisable: (time) => disableServer(time, context),
+                window: true,
+              ),
+            );
+          }
+          else {
+            showModalBottomSheet(
+              context: context, 
+              isScrollControlled: true,
+              builder: (_) => DisableModal(
+                onDisable: (time) => disableServer(time, context),
+                window: false,
+              ),
+              backgroundColor: Colors.transparent,
+              isDismissible: true,
+              enableDrag: true,
+            );
+          }
         }
         else {
           enableServer(context);
@@ -310,6 +243,7 @@ class _HomeState extends State<Home> {
                       SliverList.list(
                         children: [
                           tiles(),
+                          const SizedBox(height: 24),
                           const HomeCharts()
                         ]
                       )

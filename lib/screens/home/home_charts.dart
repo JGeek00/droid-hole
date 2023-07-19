@@ -33,8 +33,6 @@ class HomeCharts extends StatelessWidget {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-    final orientation = MediaQuery.of(context).orientation;
 
     final List<String> clientsListIps = statusProvider.getRealtimeStatus != null
       ? convertFromMapToList(statusProvider.getRealtimeStatus!.topSources).map(
@@ -50,129 +48,13 @@ class HomeCharts extends StatelessWidget {
         ).toList()
       : [];
 
-    List<Widget> generateLegend(List values) {
-      List<Widget> generateRow(int length) {
-        Widget generateItem(int i, int itemsPerRow) {
-          Color getColor(Client client, int index) {
-            final exists = clientsListIps.indexOf(client.ip);
-            if (exists >= 0) {
-              return colors[exists];
-            }
-            else {
-              return client.color;
-            }
-          }
-          return Container(
-            width: appConfigProvider.oneColumnLegend == true
-              ? ((width-60)/itemsPerRow)
-              : itemsPerRow == 2 
-                ? ((width-60)/itemsPerRow)
-                : ((width-100)/itemsPerRow),
-            margin: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 10
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: getColor(statusProvider.getOvertimeData!.clients[i], i)
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if ( statusProvider.getOvertimeData!.clients[i].name != '') ...[
-                        Text(
-                          statusProvider.getOvertimeData!.clients[i].name,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 2),
-                      ],
-                      Text(
-                        statusProvider.getOvertimeData!.clients[i].ip,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        }
-
-        List<Widget> widgets = [];
-        if (appConfigProvider.oneColumnLegend == true) {
-          for (var i = 0; i < length; i++) {
-            widgets.add(
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      generateItem(i, 1),
-                    ],
-                  ),
-                ],
-              )
-            );
-          }
-        }
-        else {
-          if (!(orientation == Orientation.landscape && height < 1000)) {
-            for (var i = 0; i < length; i+=2) {
-              widgets.add(
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        generateItem(i, 2),
-                        i+1 < length ? generateItem(i+1, 2) : const SizedBox(),
-                      ],
-                    ),
-                  ],
-                )
-              );
-            }
-          }
-          else {
-            for (var i = 0; i < length; i+=4) {
-              widgets.add(
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        generateItem(i, 4),
-                        i+1 < length ? generateItem(i+1, 4) : const SizedBox(),
-                        i+2 < length ? generateItem(i+2, 4) : const SizedBox(),
-                        i+3 < length ? generateItem(i+3, 4) : const SizedBox(),
-                      ],
-                    ),
-                  ],
-                )
-              );
-            }
-          }
-        }
-        return widgets;
-      }
-
-      if (values.length % 2 == 0) {
-        return generateRow(values.length);
+    Color getColor(Client client, int index) {
+      final exists = clientsListIps.indexOf(client.ip);
+      if (exists >= 0) {
+        return colors[exists];
       }
       else {
-        return generateRow(values.length);
+        return client.color;
       }
     }
 
@@ -199,96 +81,143 @@ class HomeCharts extends StatelessWidget {
         );
 
       case 1:
-        return Column(
+        return Wrap(
           children: [
-            checkExistsData(statusProvider.getOvertimeDataJson!['domains_over_time']) && checkExistsData(statusProvider.getOvertimeDataJson!['ads_over_time'])
-              ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SectionLabel(label: AppLocalizations.of(context)!.totalQueries24),
-                  Container(
-                    width: double.maxFinite,
-                    height: 350,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: QueriesLastHours(
-                      data: statusProvider.getOvertimeDataJson!,
-                      reducedData: appConfigProvider.reducedDataCharts,
+            FractionallySizedBox(
+              widthFactor: width > 1000 ? 0.5 : 1,
+              child: checkExistsData(statusProvider.getOvertimeDataJson!['domains_over_time']) && checkExistsData(statusProvider.getOvertimeDataJson!['ads_over_time'])
+                ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SectionLabel(label: AppLocalizations.of(context)!.totalQueries24),
+                    Container(
+                      width: double.maxFinite,
+                      height: 350,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: QueriesLastHours(
+                        data: statusProvider.getOvertimeDataJson!,
+                        reducedData: appConfigProvider.reducedDataCharts,
+                      )
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.blue
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(AppLocalizations.of(context)!.blocked)
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.green
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(AppLocalizations.of(context)!.notBlocked)
+                          ],
+                        ),
+                      ],
                     )
+                  ],
+                )
+                : NoDataChart(
+                    topLabel: AppLocalizations.of(context)!.totalQueries24,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.blue
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(AppLocalizations.of(context)!.blocked)
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.green
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(AppLocalizations.of(context)!.notBlocked)
-                        ],
-                      ),
-                    ],
-                  )
-                ],
-              )
-              : NoDataChart(
-                  topLabel: AppLocalizations.of(context)!.totalQueries24,
-                ),
-            const SizedBox(height: 20),
-            statusProvider.getOvertimeDataJson!['over_time'].keys.length > 0 &&
-            statusProvider.getOvertimeDataJson!['clients'].length > 0 
-              ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
+            ),
+            FractionallySizedBox(
+              widthFactor: width > 1000 ? 0.5 : 1,
+              child: statusProvider.getOvertimeDataJson!['over_time'].keys.length > 0 &&
+                statusProvider.getOvertimeDataJson!['clients'].length > 0 
+                  ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SectionLabel(label: AppLocalizations.of(context)!.clientActivity24),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SectionLabel(label: AppLocalizations.of(context)!.clientActivity24),
+                          Container(
+                            width: double.maxFinite,
+                            height: 350,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: ClientsLastHours(
+                              realtimeListIps: clientsListIps,
+                              data: statusProvider.getOvertimeDataJson!,
+                              reducedData: appConfigProvider.reducedDataCharts,
+                              hideZeroValues: appConfigProvider.hideZeroValues,
+                            ),
+                          ),
+                        ],
+                      ),
                       Container(
                         width: double.maxFinite,
-                        height: 300,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ClientsLastHours(
-                          realtimeListIps: clientsListIps,
-                          data: statusProvider.getOvertimeDataJson!,
-                          reducedData: appConfigProvider.reducedDataCharts,
-                          hideZeroValues: appConfigProvider.hideZeroValues,
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Wrap(
+                          runSpacing: 16,
+                          children: statusProvider.getOvertimeData!.clients.asMap().entries.map((entry) => FractionallySizedBox(
+                            widthFactor: width > 1000 && statusProvider.getOvertimeData!.clients.length > 3 
+                              ? 0.33 
+                              : width > 350 
+                                ? 0.5
+                                : 1,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 10
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: getColor(entry.value, entry.key)
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      if (entry.value.name != '') ...[
+                                        Text(
+                                          entry.value.name,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 2),
+                                      ],
+                                      Text(
+                                        entry.value.ip,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          )).toList(),
                         ),
                       ),
                     ],
-                  ),
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: generateLegend(statusProvider.getOvertimeData!.clients),
+                  )
+                  : NoDataChart(
+                      topLabel: AppLocalizations.of(context)!.clientActivity24,
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              )
-              : NoDataChart(
-                  topLabel: AppLocalizations.of(context)!.clientActivity24,
-                ),
+            )
           ],
         );
 

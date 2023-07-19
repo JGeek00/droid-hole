@@ -33,7 +33,6 @@ class _EnterPasscodeModalState extends State<EnterPasscodeModal> {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
 
     void _finish() async {
       if (appConfigProvider.passCode == _code) {
