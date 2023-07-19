@@ -18,8 +18,6 @@ class PieChartLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) { 
-    final width = MediaQuery.of(context).size.width;
-
     List<Widget> generateLegendList(Map<String, dynamic> data) {
       List<Widget> items = [];
       int index = 0;

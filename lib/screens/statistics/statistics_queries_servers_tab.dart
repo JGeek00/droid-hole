@@ -22,8 +22,6 @@ class QueriesServersTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final statusProvider = Provider.of<StatusProvider>(context);
 
-    final width = MediaQuery.of(context).size.width;
-
     return CustomTabContent(
       loadingGenerator: () => SizedBox(
         width: double.maxFinite,

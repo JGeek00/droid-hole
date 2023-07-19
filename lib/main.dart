@@ -212,7 +212,11 @@ class _DroidHoleState extends State<DroidHole> {
           ],
           builder: (context, child) {
             return MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              data: MediaQuery.of(context).copyWith(
+                textScaleFactor: !(Platform.isAndroid || Platform.isIOS) 
+                  ? 0.9
+                  : 1.0
+              ),
               child: AppLock(
                 builder: (_, __) => child!, 
                 lockScreen: const Unlock(),
