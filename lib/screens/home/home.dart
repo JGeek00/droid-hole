@@ -58,9 +58,7 @@ class _HomeState extends State<Home> {
     final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final orientation = MediaQuery.of(context).orientation;
 
     Widget tiles() {
       switch (statusProvider.getStatusLoading) {
