@@ -97,8 +97,6 @@ class _AddDomainModalState extends State<AddDomainModal> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-
     Widget content() {
       return Wrap(
         alignment: WrapAlignment.center,

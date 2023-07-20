@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:droid_hole/screens/logs/log_status.dart';
-
 import 'package:droid_hole/models/domain.dart';
 import 'package:droid_hole/functions/format.dart';
 
