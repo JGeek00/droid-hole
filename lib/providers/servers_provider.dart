@@ -2,12 +2,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
 
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/services/database/queries.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/server.dart';
 
 class ServersProvider with ChangeNotifier {
+  AppConfigProvider? _appConfigProvider;
+
+  update(AppConfigProvider? provider) {
+    _appConfigProvider = provider;
+  }
+
   List<Server> _serversList = [];
   Database? _dbInstance;
 
@@ -168,8 +175,12 @@ class ServersProvider with ChangeNotifier {
     return await checkUrlExistsQuery(_dbInstance!, url);
   }
 
-  void setselectedServer(Server? server) {
+  void setselectedServer({
+    required Server? server, 
+    bool? toHomeTab
+  }) {
     _selectedServer = server;
+    if (toHomeTab == true) _appConfigProvider!.setSelectedTab(0);
     notifyListeners();
   }
 

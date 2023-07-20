@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 Future<dynamic> saveServerQuery(Database db, Server server) async {
   try {
-    return await db.transaction((txn) async {
+    await db.transaction((txn) async {
       await txn.insert(
         'servers',
         { 
@@ -16,10 +16,10 @@ Future<dynamic> saveServerQuery(Database db, Server server) async {
           'basicAuthPassword': server.basicAuthPassword,
         }
       );
-      return null;
     });
+    return true;
   } catch (e) {
-    return e;
+    return null;
   }
 }
 
@@ -47,7 +47,7 @@ Future<dynamic> editServerQuery(Database db, Server server) async {
 
 Future<dynamic> setDefaultServerQuery(Database db, String url) async {
   try {
-    return await db.transaction((txn) async {
+    await db.transaction((txn) async {
       await txn.update(
         'servers',
         {'isDefaultServer': '0'},
@@ -57,13 +57,13 @@ Future<dynamic> setDefaultServerQuery(Database db, String url) async {
       await txn.update(
         'servers',
         {'isDefaultServer': '1'},
-        where: 'id = ?',
+        where: 'address = ?',
         whereArgs: [url]
       );
-      return null;
     });
+    return true;
   } catch (e) {
-    return e;
+    return null;
   }
 }
 

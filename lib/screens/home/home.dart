@@ -212,7 +212,7 @@ class _HomeState extends State<Home> {
       }
     }
 
-    return Stack(
+    return serversProvider.selectedServer != null ? Stack(
       children: [
         Scaffold(
           body: NestedScrollView(
@@ -266,6 +266,6 @@ class _HomeState extends State<Home> {
           )
         )
       ],
-    );
+    ) : const SizedBox();
   }
 }

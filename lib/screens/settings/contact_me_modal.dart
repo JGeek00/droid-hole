@@ -1,9 +1,10 @@
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_web_browser/flutter_web_browser.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart'
+;
+import 'package:droid_hole/functions/open_url.dart';
 
 class ContactMeModal extends StatefulWidget {
   const ContactMeModal({Key? key}) : super(key: key);
@@ -14,22 +15,6 @@ class ContactMeModal extends StatefulWidget {
 
 class _ContactMeModalState extends State<ContactMeModal> {
   final expandableController = ExpandableController();
-
-  void _openGitHubIsues() {
-    FlutterWebBrowser.openWebPage(
-      url: 'https://github.com/JGeek00/droid-hole/issues',
-      customTabsOptions: const CustomTabsOptions(
-        instantAppsEnabled: true,
-        showTitle: true,
-        urlBarHidingEnabled: false,
-      ),
-      safariVCOptions: const SafariViewControllerOptions(
-        barCollapsingEnabled: true,
-        dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
-        modalPresentationCapturesStatusBarAppearance: true,
-      )
-    );
-  }
 
   void _sendEmail() {
     String? encodeQueryParameters(Map<String, String> params) {
@@ -79,7 +64,7 @@ class _ContactMeModalState extends State<ContactMeModal> {
           Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: _openGitHubIsues,
+              onTap: () => openUrl('https://github.com/JGeek00/droid-hole/issues'),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 10, 

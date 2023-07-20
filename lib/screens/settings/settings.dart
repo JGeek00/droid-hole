@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_split_view/flutter_split_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,6 +20,7 @@ import 'package:droid_hole/widgets/section_label.dart';
 import 'package:droid_hole/screens/settings/legal_modal.dart';
 
 import 'package:droid_hole/config/urls.dart';
+import 'package:droid_hole/functions/open_url.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/status_provider.dart';
@@ -59,8 +59,15 @@ class Settings extends StatelessWidget {
   }
 }
 
-class SettingsWidget extends StatelessWidget {
+class SettingsWidget extends StatefulWidget {
   const SettingsWidget({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsWidget> createState() => _SettingsWidgetState();
+}
+
+class _SettingsWidgetState extends State<SettingsWidget> {
+  int? selectedScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +96,9 @@ class SettingsWidget extends StatelessWidget {
           icon: icon,
           trailing: trailing,
           thisItem: thisItem, 
-          selectedItem: appConfigProvider.selectedSettingsScreen,
+          selectedItem: selectedScreen,
           onTap: () {
-            appConfigProvider.setSelectedSettingsScreen(screen: thisItem, notify: true);
+            setState(() => selectedScreen = thisItem);
             SplitView.of(context).setSecondary(screenToNavigate);
           },
         );
@@ -146,25 +153,6 @@ class SettingsWidget extends StatelessWidget {
         context: context, 
         builder: (context) => const LegalModal(),
       );
-    }
-
-
-    void openWeb(String url) {
-      if (statusProvider.isServerConnected == true) {
-        FlutterWebBrowser.openWebPage(
-          url: url,
-          customTabsOptions: const CustomTabsOptions(
-            instantAppsEnabled: true,
-            showTitle: true,
-            urlBarHidingEnabled: false,
-          ),
-          safariVCOptions: const SafariViewControllerOptions(
-            barCollapsingEnabled: true,
-            dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
-            modalPresentationCapturesStatusBarAppearance: true,
-          )
-        );
-      }
     }
 
     void openImportantInformationModal() {
@@ -298,7 +286,7 @@ class SettingsWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(
-                            onPressed: () => openWeb(Urls.playStore), 
+                            onPressed: () => openUrl(Urls.playStore), 
                             icon: SvgPicture.asset(
                               'assets/resources/google-play.svg',
                               color: Theme.of(context).colorScheme.onSurface,
@@ -308,7 +296,7 @@ class SettingsWidget extends StatelessWidget {
                             tooltip: AppLocalizations.of(context)!.visitGooglePlay,
                           ),
                           IconButton(
-                            onPressed: () => openWeb(Urls.gitHub), 
+                            onPressed: () => openUrl(Urls.gitHub), 
                             icon: SvgPicture.asset(
                               'assets/resources/github.svg',
                               color: Theme.of(context).colorScheme.onSurface,

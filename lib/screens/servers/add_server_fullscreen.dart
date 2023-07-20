@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -11,6 +10,7 @@ import 'package:droid_hole/widgets/section_label.dart';
 import 'package:droid_hole/widgets/scan_token_modal.dart';
 
 import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/functions/open_url.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/services/http_requests.dart';
@@ -143,22 +143,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
       });
     }
     checkDataValid();
-  }
-
-  void openHowCreateConnection() {
-    FlutterWebBrowser.openWebPage(
-      url: "https://github.com/JGeek00/droid-hole/wiki/Create-a-connection",
-      customTabsOptions: const CustomTabsOptions(
-        instantAppsEnabled: true,
-        showTitle: true,
-        urlBarHidingEnabled: false,
-      ),
-      safariVCOptions: const SafariViewControllerOptions(
-        barCollapsingEnabled: true,
-        dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
-        modalPresentationCapturesStatusBarAppearance: true,
-      )
-    );
   }
 
   @override
@@ -750,7 +734,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
                     Row(
                       children: [
                         IconButton(
-                          onPressed: openHowCreateConnection, 
+                          onPressed: () => openUrl("https://github.com/JGeek00/droid-hole/wiki/Create-a-connection",), 
                           icon: const Icon(Icons.help_outline_rounded),
                           tooltip: AppLocalizations.of(context)!.howCreateConnection,
                         ),
@@ -789,7 +773,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
               title: Text(AppLocalizations.of(context)!.createConnection),
               actions: [
                 IconButton(
-                  onPressed: openHowCreateConnection, 
+                  onPressed: () => openUrl("https://github.com/JGeek00/droid-hole/wiki/Create-a-connection",), 
                   icon: const Icon(Icons.help_outline_rounded),
                   tooltip: AppLocalizations.of(context)!.howCreateConnection,
                 ),

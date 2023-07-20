@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -9,6 +8,7 @@ import 'package:droid_hole/screens/home/switch_server_modal.dart';
 import 'package:droid_hole/screens/servers/servers.dart';
 
 import 'package:droid_hole/models/server.dart';
+import 'package:droid_hole/functions/open_url.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/status_provider.dart';
@@ -70,33 +70,17 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       });
     }
 
-    void openWebPanel() {
-      if (statusProvider.isServerConnected == true) {
-        FlutterWebBrowser.openWebPage(
-          url: '${serversProvider.selectedServer!.address}/admin/',
-          customTabsOptions: const CustomTabsOptions(
-            instantAppsEnabled: true,
-            showTitle: true,
-            urlBarHidingEnabled: false,
-          ),
-          safariVCOptions: const SafariViewControllerOptions(
-            barCollapsingEnabled: true,
-            dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
-            modalPresentationCapturesStatusBarAppearance: true,
-          )
-        );
-      }
-    }
-
     void connectToServer(Server server) async {
       Future connectSuccess(result) async {
-        serversProvider.setselectedServer(Server(
-          address: server.address,
-          alias: server.alias,
-          token: server.token!,
-          defaultServer: server.defaultServer,
-          enabled: result['status'] == 'enabled' ? true : false
-        ));
+        serversProvider.setselectedServer(
+          server: Server(
+            address: server.address,
+            alias: server.alias,
+            token: server.token!,
+            defaultServer: server.defaultServer,
+            enabled: result['status'] == 'enabled' ? true : false
+          )
+        );
         final statusResult = await realtimeStatus(server);
         if (statusResult['result'] == 'success') {
           statusProvider.setRealtimeStatus(statusResult['data']);
@@ -215,7 +199,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       )
                     ),
                     PopupMenuItem(
-                      onTap: openWebPanel,
+                      onTap: () => openUrl('${serversProvider.selectedServer!.address}/admin/'),
                       child: Row(
                         children: [
                           const Icon(Icons.web),

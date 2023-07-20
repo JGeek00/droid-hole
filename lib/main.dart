@@ -125,6 +125,10 @@ void main() async {
         ChangeNotifierProvider(
           create: ((context) => configProvider)
         ),
+        ChangeNotifierProxyProvider<AppConfigProvider, ServersProvider>(
+          create: (context) => serversProvider, 
+          update: (context, appConfig, servers) => servers!..update(appConfig),
+        ),
       ],
       child: Phoenix(
         child: const DroidHole()
