@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,12 +8,14 @@ class StatusFiltersModal extends StatefulWidget {
   final double statusBarHeight;
   final double bottomNavBarHeight;
   final List<int> statusSelected;
+  final bool window;
 
   const StatusFiltersModal({
     Key? key,
     required this.statusBarHeight,
     required this.bottomNavBarHeight,
     required this.statusSelected,
+    required this.window
   }) : super(key: key);
 
   @override
@@ -102,131 +102,113 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
       }
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(28),
-          topRight: Radius.circular(28)
-        ),
-        color: Theme.of(context).dialogBackgroundColor,
-      ),
-      height: mediaQuery.size.height >= (Platform.isIOS ? 999 : 979) 
-        ? (Platform.isIOS ? 999 : 979) 
-        : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight)+1,
-      child: Column(
+    Widget content() {
+      return Wrap(
+        alignment: WrapAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 24),
-            child: Icon(
-              Icons.shield_rounded,
-              size: 24,
-              color: Theme.of(context).colorScheme.secondary,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height*0.8
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 24,
-                  bottom: 24
-                ),
-                child: Text(
-                  AppLocalizations.of(context)!.logsStatus,
-                  style: const TextStyle(
-                    fontSize: 24
+            child: ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Icon(
+                    Icons.shield_rounded,
+                    size: 24,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              SizedBox(
-                height: mediaQuery.size.height >= (Platform.isIOS ? 1017 : 989) 
-                  ? (Platform.isIOS ? 819 : 799)
-                  : (Platform.isIOS 
-                    ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+238)
-                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+219)
-                  ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "Blocked (gravity)", 
-                        value: 1
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 24,
+                        bottom: 24
                       ),
-                      _listItem(
-                        icon: Icons.verified_user_rounded, 
-                        label: "OK (forwarded)", 
-                        value: 2
+                      child: Text(
+                        AppLocalizations.of(context)!.logsStatus,
+                        style: const TextStyle(
+                          fontSize: 24
+                        ),
                       ),
-                      _listItem(
-                        icon: Icons.verified_user_rounded, 
-                        label: "OK (cache)", 
-                        value: 3
-                      ),
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "Blocked (regex blacklist", 
-                        value: 4
-                      ),
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "Blocked (exact blacklist)", 
-                        value: 5
-                      ),
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "Blocked (external, IP)", 
-                        value: 6
-                      ),
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "Blocked (external, NULL)", 
-                        value: 7
-                      ),
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "Blocked (external, NXRA)", 
-                        value: 8
-                      ),
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "Blocked (gravity, CNAME)", 
-                        value: 9
-                      ),
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "Blocked (regex blacklist, CNAME)", 
-                        value: 10
-                      ),
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "Blocked (exact blacklist, CNAME)", 
-                        value: 11
-                      ),
-                      _listItem(
-                        icon: Icons.refresh_rounded, 
-                        label: "Retried", 
-                        value: 12
-                      ),
-                      _listItem(
-                        icon: Icons.refresh_rounded, 
-                        label: "Retried (ignored)", 
-                        value: 13
-                      ),
-                      _listItem(
-                        icon: Icons.gpp_bad_rounded, 
-                        label: "OK (already forwarded)", 
-                        value: 14
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "Blocked (gravity)", 
+                  value: 1
+                ),
+                _listItem(
+                  icon: Icons.verified_user_rounded, 
+                  label: "OK (forwarded)", 
+                  value: 2
+                ),
+                _listItem(
+                  icon: Icons.verified_user_rounded, 
+                  label: "OK (cache)", 
+                  value: 3
+                ),
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "Blocked (regex blacklist", 
+                  value: 4
+                ),
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "Blocked (exact blacklist)", 
+                  value: 5
+                ),
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "Blocked (external, IP)", 
+                  value: 6
+                ),
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "Blocked (external, NULL)", 
+                  value: 7
+                ),
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "Blocked (external, NXRA)", 
+                  value: 8
+                ),
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "Blocked (gravity, CNAME)", 
+                  value: 9
+                ),
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "Blocked (regex blacklist, CNAME)", 
+                  value: 10
+                ),
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "Blocked (exact blacklist, CNAME)", 
+                  value: 11
+                ),
+                _listItem(
+                  icon: Icons.refresh_rounded, 
+                  label: "Retried", 
+                  value: 12
+                ),
+                _listItem(
+                  icon: Icons.refresh_rounded, 
+                  label: "Retried (ignored)", 
+                  value: 13
+                ),
+                _listItem(
+                  icon: Icons.gpp_bad_rounded, 
+                  label: "OK (already forwarded)", 
+                  value: 14
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(20),
@@ -270,7 +252,30 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
             ),
           ),
         ],
-      ),
-    );
+      );
+    }
+
+    if (widget.window == true) {
+      return Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 500
+          ),
+          child: content()
+        ),
+      );
+    }
+    else {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(28),
+            topRight: Radius.circular(28)
+          ),
+          color: Theme.of(context).dialogBackgroundColor,
+        ),
+        child: content()
+      );
+    }
   }
 }

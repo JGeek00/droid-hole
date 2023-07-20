@@ -286,29 +286,54 @@ class _LogsState extends State<Logs> {
     }
 
     void showFiltersModal() {
-      showModalBottomSheet(
-        context: context, 
-        builder: (context) => LogsFiltersModal(
-          statusBarHeight: statusBarHeight,
-          bottomNavBarHeight: bottomNavBarHeight,
-          filterLogs: () {
-            setState(() {
-              masterStartTime = filtersProvider.startTime;
-              masterEndTime = filtersProvider.endTime;
-              loadStatus = 0;
-            });
-            loadLogs(
-              replaceOldLogs: true,
-              inStartTime: filtersProvider.startTime,
-              inEndTime: filtersProvider.endTime
-            );
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        isDismissible: true, 
-        enableDrag: true,
-        isScrollControlled: true,
-      );
+      if (width > 900) {
+        showDialog(
+          context: context, 
+          builder: (context) => LogsFiltersModal(
+            statusBarHeight: statusBarHeight,
+            bottomNavBarHeight: bottomNavBarHeight,
+            filterLogs: () {
+              setState(() {
+                masterStartTime = filtersProvider.startTime;
+                masterEndTime = filtersProvider.endTime;
+                loadStatus = 0;
+              });
+              loadLogs(
+                replaceOldLogs: true,
+                inStartTime: filtersProvider.startTime,
+                inEndTime: filtersProvider.endTime
+              );
+            },
+            window: true,
+          ),
+        );
+      }
+      else {
+        showModalBottomSheet(
+          context: context, 
+          builder: (context) => LogsFiltersModal(
+            statusBarHeight: statusBarHeight,
+            bottomNavBarHeight: bottomNavBarHeight,
+            filterLogs: () {
+              setState(() {
+                masterStartTime = filtersProvider.startTime;
+                masterEndTime = filtersProvider.endTime;
+                loadStatus = 0;
+              });
+              loadLogs(
+                replaceOldLogs: true,
+                inStartTime: filtersProvider.startTime,
+                inEndTime: filtersProvider.endTime
+              );
+            },
+            window: false,
+          ),
+          backgroundColor: Colors.transparent,
+          isDismissible: true, 
+          enableDrag: true,
+          isScrollControlled: true,
+        );
+      }
     }
 
     void searchLogs(String value) {

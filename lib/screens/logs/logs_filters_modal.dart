@@ -16,12 +16,14 @@ class LogsFiltersModal extends StatefulWidget {
   final double statusBarHeight;
   final double bottomNavBarHeight;
   final void Function() filterLogs;
+  final bool window;
 
   const LogsFiltersModal({
     Key? key,
     required this.statusBarHeight,
     required this.bottomNavBarHeight,
     required this.filterLogs,
+    required this.window
   }) : super(key: key);
 
   @override
@@ -36,35 +38,63 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
   Widget build(BuildContext context) {
     final filtersProvider = Provider.of<FiltersProvider>(context);
 
-    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
 
     void openStatusModal() {
-      showModalBottomSheet(
-        context: context, 
-        builder: (context) => StatusFiltersModal(
-          statusBarHeight: widget.statusBarHeight,
-          bottomNavBarHeight: widget.bottomNavBarHeight,
-          statusSelected: filtersProvider.statusSelected,
-        ),
-        backgroundColor: Colors.transparent,
-        isDismissible: true, 
-        enableDrag: true,
-        isScrollControlled: true,
-      );
+      if (width > 900) {
+        showDialog(
+          context: context, 
+          builder: (context) => StatusFiltersModal(
+            statusBarHeight: widget.statusBarHeight,
+            bottomNavBarHeight: widget.bottomNavBarHeight,
+            statusSelected: filtersProvider.statusSelected,
+            window: true,
+          ),
+        );
+      }
+      else {
+        showModalBottomSheet(
+          context: context, 
+          builder: (context) => StatusFiltersModal(
+            statusBarHeight: widget.statusBarHeight,
+            bottomNavBarHeight: widget.bottomNavBarHeight,
+            statusSelected: filtersProvider.statusSelected,
+            window: false,
+          ),
+          backgroundColor: Colors.transparent,
+          isDismissible: true, 
+          enableDrag: true,
+          isScrollControlled: true,
+        );
+      }
     }
     void openClientsModal() {
-      showModalBottomSheet(
+      if (width > 900) {
+        showDialog(
+          context: context, 
+          builder: (context) => ClientsFiltersModal(
+            statusBarHeight: widget.statusBarHeight,
+            bottomNavBarHeight: widget.bottomNavBarHeight,
+            selectedClients: filtersProvider.selectedClients,
+            window: true,
+          ),
+        );
+      }
+      else {
+        showModalBottomSheet(
         context: context, 
-        builder: (context) => ClientsFiltersModal(
-          statusBarHeight: widget.statusBarHeight,
-          bottomNavBarHeight: widget.bottomNavBarHeight,
-          selectedClients: filtersProvider.selectedClients
-        ),
-        backgroundColor: Colors.transparent,
-        isDismissible: true, 
-        enableDrag: true,
-        isScrollControlled: true,
-      );
+          builder: (context) => ClientsFiltersModal(
+            statusBarHeight: widget.statusBarHeight,
+            bottomNavBarHeight: widget.bottomNavBarHeight,
+            selectedClients: filtersProvider.selectedClients,
+            window: false,
+          ),
+          backgroundColor: Colors.transparent,
+          isDismissible: true, 
+          enableDrag: true,
+          isScrollControlled: true,
+        );
+      }
     }
 
     String statusText(items, maxItems) {
@@ -147,39 +177,30 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
       filtersProvider.resetFilters();
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).dialogBackgroundColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24)
-        )
-      ),
-      height: height > (Platform.isIOS ? 620 : 600)
-        ? (Platform.isIOS ? 620 : 600)
-        : height-25,
-      child: SingleChildScrollView(
-        child: Column(
+    Widget content() {
+      return SingleChildScrollView(
+        child: Wrap(
+          alignment: WrapAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: Icon(
-                Icons.filter_list,
-                size: 24,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Text(
-                AppLocalizations.of(context)!.filters,
-                style: const TextStyle(
-                  fontSize: 24
-                ),
-              ),
-            ),
             Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Icon(
+                    Icons.filter_list,
+                    size: 24,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Text(
+                    AppLocalizations.of(context)!.filters,
+                    style: const TextStyle(
+                      fontSize: 24
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
@@ -481,7 +502,30 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
             )
           ],
         ),
-      ),
-    );
+      );
+    }
+
+    if (widget.window == true) {
+      return Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 500
+          ),
+          child: content()
+        ),
+      );
+    }
+    else {
+      return Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).dialogBackgroundColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24)
+          )
+        ),
+        child: content()
+      );
+    }
   }
 }
