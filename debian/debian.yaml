@@ -5,7 +5,7 @@ flutter_app:
 
 control:
   Package: DroidHole
-  Version: 3.9.1
+  Version: <REPLACE_VERSION_NUMBER_ACTIONS>
   Architecture: amd64
   Essential: no
   Priority: optional
