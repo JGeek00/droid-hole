@@ -50,8 +50,6 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
   Widget build(BuildContext context) {
     final filtersProvider = Provider.of<FiltersProvider>(context);
 
-    final mediaQuery = MediaQuery.of(context);
-
     void updateList() {
       filtersProvider.setSelectedClients(_selectedClients);
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/screens/domains/delete_domain_modal.dart';
 import 'package:droid_hole/screens/domains/domain_comment_modal.dart';
 
@@ -20,37 +21,6 @@ class DomainDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-
-    Widget item(IconData icon, String label, Widget value) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            Icon(icon),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15
-                  ),
-                ),
-                const SizedBox(height: 5),
-                SizedBox(
-                  width: mediaQuery.size.width - 114,
-                  child: value,
-                )
-              ],
-            )
-          ],
-        ),
-      );  
-    }
-
     String getType(int type) {
       switch (type) {
         case 0:
@@ -91,47 +61,32 @@ class DomainDetailsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          item(
-            Icons.domain, 
-            AppLocalizations.of(context)!.domain, 
-            Text(
-              domain.domain,
-              overflow: TextOverflow.ellipsis,
-            ),
+          CustomListTile(
+            leadingIcon: Icons.domain, 
+            label: AppLocalizations.of(context)!.domain, 
+            description: domain.domain,
           ),
-          item(
-            Icons.category_rounded, 
-            AppLocalizations.of(context)!.type, 
-            Text(
-              getType(domain.type),
-              overflow: TextOverflow.ellipsis,
-            ),
+          CustomListTile(
+            leadingIcon: Icons.category_rounded, 
+            label: AppLocalizations.of(context)!.type, 
+            description: getType(domain.type),
           ),
-          item(
-            Icons.schedule_rounded, 
-            AppLocalizations.of(context)!.dateAdded, 
-            Text(
-              formatTimestamp(domain.dateAdded, 'yyyy-MM-dd'),
-              overflow: TextOverflow.ellipsis,
-            ),
+          CustomListTile(
+            leadingIcon: Icons.schedule_rounded, 
+            label: AppLocalizations.of(context)!.dateAdded, 
+            description: formatTimestamp(domain.dateAdded, 'yyyy-MM-dd'),
           ),
-          item(
-            Icons.update_rounded, 
-            AppLocalizations.of(context)!.dateModified, 
-            Text(
-              formatTimestamp(domain.dateModified, 'yyyy-MM-dd'),
-              overflow: TextOverflow.ellipsis,
-            ),
+          CustomListTile(
+            leadingIcon: Icons.update_rounded, 
+            label: AppLocalizations.of(context)!.dateModified, 
+            description: formatTimestamp(domain.dateModified, 'yyyy-MM-dd'),
           ),
-          item(
-            Icons.check, 
-            AppLocalizations.of(context)!.status, 
-            Text(
-              domain.enabled == 1
-                ? AppLocalizations.of(context)!.enabled
-                : AppLocalizations.of(context)!.disabled,
-              overflow: TextOverflow.ellipsis,
-            ),
+          CustomListTile(
+            leadingIcon: Icons.check, 
+            label: AppLocalizations.of(context)!.status, 
+            description: domain.enabled == 1
+              ? AppLocalizations.of(context)!.enabled
+              : AppLocalizations.of(context)!.disabled,
           ),
           Material(
             color: Colors.transparent,
@@ -145,15 +100,12 @@ class DomainDetailsScreen extends StatelessWidget {
                     )
                   )
                 } : null,
-              child: item(
-                Icons.comment_rounded, 
-                AppLocalizations.of(context)!.comment, 
-                Text(
-                  domain.comment == "" 
-                    ? AppLocalizations.of(context)!.noComment
-                    : domain.comment,
-                  overflow: TextOverflow.ellipsis,
-                )
+              child: CustomListTile(
+                leadingIcon: Icons.comment_rounded, 
+                label: AppLocalizations.of(context)!.comment, 
+                description: domain.comment == "" 
+                  ? AppLocalizations.of(context)!.noComment
+                  : domain.comment,
               ),
             ),
           ),

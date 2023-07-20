@@ -52,8 +52,6 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
   Widget build(BuildContext context) {
     final filtersProvider = Provider.of<FiltersProvider>(context);
 
-    final mediaQuery = MediaQuery.of(context);
-
     void updateList() {
       filtersProvider.setStatusSelected(_statusSelected);
     }

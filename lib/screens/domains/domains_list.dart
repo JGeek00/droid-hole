@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/domains/add_domain_modal.dart';
+import 'package:droid_hole/screens/domains/domain_tile.dart';
 import 'package:droid_hole/screens/domains/domain_details_screen.dart';
-import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/widgets/tab_content_list.dart';
 
 import 'package:droid_hole/providers/domains_list_provider.dart';
@@ -17,7 +17,6 @@ import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
-import 'package:droid_hole/functions/format.dart';
 import 'package:droid_hole/models/domain.dart';
 
 class DomainsList extends StatefulWidget {
@@ -25,6 +24,8 @@ class DomainsList extends StatefulWidget {
   final LoadStatus loadStatus;
   final ScrollController scrollController;
   final List<Domain> domainsList;
+  final void Function(Domain) onDomainSelected;
+  final Domain? selectedDomain;
 
   const DomainsList({
     Key? key,
@@ -32,6 +33,8 @@ class DomainsList extends StatefulWidget {
     required this.loadStatus,
     required this.scrollController,
     required this.domainsList,
+    required this.onDomainSelected,
+    required this.selectedDomain
   }) : super(key: key);
 
   @override
@@ -40,64 +43,6 @@ class DomainsList extends StatefulWidget {
 
 class _DomainsListState extends State<DomainsList> {
   late bool isVisible;
-
-  Widget domainType(int type) {
-    String getString(int type) {
-      switch (type) {
-        case 0:
-          return "Whitelist";
-
-        case 1:
-          return "Blacklist";
-
-        case 2:
-          return "Whitelist Regex";
-
-        case 3:
-          return "Blacklist Regex";
-
-        default:
-          return "";
-       }
-    }
-
-    Color getColor(int type) {
-      switch (type) {
-        case 0:
-          return Colors.green;
-
-        case 1:
-          return Colors.red;
-
-        case 2:
-          return Colors.blue;
-
-        case 3:
-          return Colors.orange;
-
-        default:
-          return Colors.white;
-      }
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 4,
-        vertical: 2
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50)
-      ),
-      child: Text(
-        getString(type),
-        style: TextStyle(
-          color: getColor(type),
-          fontSize: 13,
-          fontWeight: FontWeight.w400
-        ),
-      ),
-    );
-  }
 
   @override
   void initState() {
@@ -164,52 +109,67 @@ class _DomainsListState extends State<DomainsList> {
       }
     }
 
-    void openModalAddDomainToList() {
-      showModalBottomSheet(
-        context: context, 
-        builder: (ctx) => AddDomainModal(
-          selectedlist: widget.type,
-          addDomain: (value) async {
-            final ProcessModal process = ProcessModal(context: context);
-            process.open(AppLocalizations.of(context)!.addingDomain);
+    void onAddDomain(Map<String, dynamic> value) async {
+      final ProcessModal process = ProcessModal(context: context);
+      process.open(AppLocalizations.of(context)!.addingDomain);
 
-            final result = await addDomainToList(
-              server: serversProvider.selectedServer!, 
-              domainData: value
-            );
-
-            process.close();
-
-            if (result['result'] == 'success') {
-              domainsListProvider.fetchDomainsList(serversProvider.selectedServer!);
-              showSnackBar(
-                context: context, 
-                appConfigProvider: appConfigProvider,
-                label: AppLocalizations.of(context)!.domainAdded,
-                color: Colors.green
-              );
-            }
-            else if (result['result'] == 'already_added') {
-              showSnackBar(
-                context: context, 
-                appConfigProvider: appConfigProvider,
-                label: AppLocalizations.of(context)!.domainAlreadyAdded,
-                color: Colors.orange
-              );
-            }
-            else {
-              showSnackBar(
-                context: context, 
-                appConfigProvider: appConfigProvider,
-                label: AppLocalizations.of(context)!.cannotAddDomain,
-                color: Colors.red
-              );
-            } 
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true
+      final result = await addDomainToList(
+        server: serversProvider.selectedServer!, 
+        domainData: value
       );
+
+      process.close();
+
+      if (result['result'] == 'success') {
+        domainsListProvider.fetchDomainsList(serversProvider.selectedServer!);
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.domainAdded,
+          color: Colors.green
+        );
+      }
+      else if (result['result'] == 'already_added') {
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.domainAlreadyAdded,
+          color: Colors.orange
+        );
+      }
+      else {
+        showSnackBar(
+          context: context, 
+          appConfigProvider: appConfigProvider,
+          label: AppLocalizations.of(context)!.cannotAddDomain,
+          color: Colors.red
+        );
+      } 
+    }
+
+    void openModalAddDomainToList() {
+      if (MediaQuery.of(context).size.width > 900) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AddDomainModal(
+            selectedlist: widget.type,
+            addDomain: onAddDomain,
+            window: true,
+          ),
+        );
+      }
+      else {
+        showModalBottomSheet(
+          context: context, 
+          builder: (ctx) => AddDomainModal(
+            selectedlist: widget.type,
+            addDomain: onAddDomain,
+            window: false,
+          ),
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true
+        );
+      }
     }
 
     return Stack(
@@ -236,19 +196,27 @@ class _DomainsListState extends State<DomainsList> {
             ),
           ), 
           itemsCount: widget.domainsList.length,
-          contentWidget: (index) => CustomListTile(
-            onTap: () => {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) => DomainDetailsScreen(
-                    domain: widget.domainsList[index], 
-                    remove: removeDomain
-                  )
-                )
-              )
-            },
-            label: widget.domainsList[index].domain,
-            description: formatTimestamp(widget.domainsList[index].dateAdded, 'yyyy-MM-dd'),
-            trailing: domainType(widget.domainsList[index].type),
+          contentWidget: (index) => Padding(
+            padding: index == 0 
+              ? const EdgeInsets.only(top: 16) 
+              : const EdgeInsets.all(0),
+            child: DomainTile(
+              domain:  widget.domainsList[index],
+              isDomainSelected: widget.selectedDomain == widget.domainsList[index],
+              showDomainDetails: (domain) {
+                widget.onDomainSelected(widget.domainsList[index]);
+                if (MediaQuery.of(context).size.width <= 900) {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => DomainDetailsScreen(
+                        domain: widget.domainsList[index], 
+                        remove: removeDomain,
+                      )
+                    )
+                  );
+                }
+              },  
+          
+            ),
           ),
           noData:  Container(
             height: double.maxFinite,
