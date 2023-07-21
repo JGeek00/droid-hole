@@ -63,7 +63,8 @@ class _HomeState extends State<Home> {
     Widget tiles() {
       switch (statusProvider.getStatusLoading) {
         case LoadStatus.loading:
-          return SizedBox(
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             width: double.maxFinite,
             height: 300,
             child: Column(
@@ -147,8 +148,9 @@ class _HomeState extends State<Home> {
           );
 
         case LoadStatus.error: 
-          return SizedBox(
+          return Container(
             width: double.maxFinite,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             height: 300,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -242,7 +244,8 @@ class _HomeState extends State<Home> {
                         children: [
                           tiles(),
                           const SizedBox(height: 24),
-                          const HomeCharts()
+                          const HomeCharts(),
+                          const SizedBox(height: 16),
                         ]
                       )
                     ],

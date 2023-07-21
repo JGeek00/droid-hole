@@ -48,3 +48,6 @@ app.*.map.json
 
 # Missing translations file
 untranslated.txt
+
+# Env file
+.env

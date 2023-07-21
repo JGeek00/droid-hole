@@ -3,8 +3,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:vibration/vibration.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -43,6 +46,8 @@ void main() async {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }
+
+  await dotenv.load(fileName: '.env');
 
   ServersProvider serversProvider = ServersProvider();
   StatusProvider statusProvider = StatusProvider();
@@ -107,7 +112,7 @@ void main() async {
     configProvider.setIosInfo(iosInfo);
   }
 
-  runApp(
+  void startApp() => runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -135,6 +140,27 @@ void main() async {
       ), 
     )
   );
+
+  if (
+    (
+      kReleaseMode &&
+      (dotenv.env['SENTRY_DSN'] != null && dotenv.env['SENTRY_DSN'] != "")
+    ) || (
+      dotenv.env['ENABLE_SENTRY'] == "true" &&
+      (dotenv.env['SENTRY_DSN'] != null && dotenv.env['SENTRY_DSN'] != "")
+    )
+  ) {
+    SentryFlutter.init(
+      (options) {
+        options.dsn = dotenv.env['SENTRY_DSN'];
+        options.sendDefaultPii = false;
+      },
+      appRunner: () => startApp()
+    );
+  }
+  else {
+    startApp();
+  }
 }
 
 Future<PackageInfo> loadAppInfo() async {
