@@ -78,7 +78,7 @@ jobs:
       - name: Create folder to build dmg
         run: mkdir $MACOS_APP_RELEASE_PATH/DroidHole
       - name: Copy app into folder
-        run: cp -r $MACOS_APP_RELEASE_PATH/DroidHole.app $MACOS_APP_RELEASE_PATH/DroidHole.app
+        run: cp -r $MACOS_APP_RELEASE_PATH/DroidHole.app $MACOS_APP_RELEASE_PATH/DroidHole/DroidHole.app
       - name: Generate symbolic link to Applications dir
         run: ln -s /Applications $MACOS_APP_RELEASE_PATH/DroidHole
       - name: Generate dmg
