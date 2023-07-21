@@ -31,7 +31,7 @@
 <p>Requires Android 8.0+</p>
 
 ## Privacy policy
-DroidHole does not collect any personal user data. All data stored into the application is kept on the user's device.
+Check the privacy policy [here](https://github.com/JGeek00/droid-hole/wiki/Privacy-policy).
 
 ## Disclaimer
 This is an unofficial application. The Pi-hole team and the development of the Pi-hole software is not related in any way with this application.
