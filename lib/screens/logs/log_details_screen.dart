@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/logs/log_status.dart';
+import 'package:droid_hole/widgets/custom_list_tile.dart';
 
+import 'package:droid_hole/functions/open_url.dart';
 import 'package:droid_hole/models/log.dart';
 import 'package:droid_hole/constants/search_domain_base_url.dart';
 import 'package:droid_hole/functions/format.dart';
@@ -20,8 +21,6 @@ class LogDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-
     Widget item(IconData icon, String label, Widget value) {
       return Padding(
         padding: const EdgeInsets.symmetric(
@@ -45,10 +44,7 @@ class LogDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                SizedBox(
-                  width: mediaQuery.size.width - 114,
-                  child: value,
-                )
+                value
               ],
             )
           ],
@@ -85,28 +81,12 @@ class LogDetailsScreen extends StatelessWidget {
       }
     }
 
-    void searchDomain(String domain) {
-      FlutterWebBrowser.openWebPage(
-        url: "$searchDomainBaseUrlGoogle$domain",
-        customTabsOptions: const CustomTabsOptions(
-          instantAppsEnabled: true,
-          showTitle: true,
-          urlBarHidingEnabled: false,
-        ),
-        safariVCOptions: const SafariViewControllerOptions(
-          barCollapsingEnabled: true,
-          dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
-          modalPresentationCapturesStatusBarAppearance: true,
-        )
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.logDetails),
         actions: [
           IconButton(
-            onPressed: () => searchDomain(log.url), 
+            onPressed: () => openUrl("$searchDomainBaseUrlGoogle${log.url}"), 
             icon: const Icon(Icons.travel_explore_rounded),
             tooltip: AppLocalizations.of(context)!.searchDomainInternet,
           ),
@@ -116,73 +96,40 @@ class LogDetailsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          item(
-            Icons.link, 
-            AppLocalizations.of(context)!.url, 
-            Text(
-              log.url,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant
-              ),
-            )
+          CustomListTile(
+            leadingIcon: Icons.link, 
+            label: AppLocalizations.of(context)!.url, 
+            description: log.url,
           ),
-          item(
-            Icons.http_rounded, 
-            AppLocalizations.of(context)!.type, 
-            Text(
-              log.type,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant
-              ),
-            )
+          CustomListTile(
+            leadingIcon: Icons.http_rounded, 
+            label: AppLocalizations.of(context)!.type, 
+            description: log.type,
           ),
-          item(
-            Icons.phone_android_rounded, 
-            AppLocalizations.of(context)!.device, 
-            Text(
-              log.device,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant
-              ),
-            )
+          CustomListTile(
+            leadingIcon: Icons.phone_android_rounded, 
+            label: AppLocalizations.of(context)!.device, 
+            description: log.device,
           ),
-          item(
-            Icons.access_time_outlined, 
-            AppLocalizations.of(context)!.time, 
-            Text(
-              formatTimestamp(log.dateTime, 'HH:mm:ss'),
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant
-              ),
-            )
+          CustomListTile(
+            leadingIcon: Icons.access_time_outlined, 
+            label: AppLocalizations.of(context)!.time, 
+            description: formatTimestamp(log.dateTime, 'HH:mm:ss'),
           ),
           item(
             Icons.shield_outlined, 
             AppLocalizations.of(context)!.status, 
             LogStatus(status: log.status, showIcon: false)
           ),
-          if (log.status == '2' && log.answeredBy != null) item(
-            Icons.domain, 
-            AppLocalizations.of(context)!.answeredBy, 
-            Text(
-              log.answeredBy!,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant
-              ),
-            )
+          if (log.status == '2' && log.answeredBy != null) CustomListTile(
+            leadingIcon: Icons.domain, 
+            label: AppLocalizations.of(context)!.answeredBy, 
+            description: log.answeredBy!,
           ),
-          item(
-            Icons.system_update_alt_outlined, 
-            AppLocalizations.of(context)!.reply, 
-            Text(
-              "${log.replyType} (${(log.replyTime/10)} ms)",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant
-              ),
-            )
+          CustomListTile(
+            leadingIcon: Icons.system_update_alt_outlined, 
+            label: AppLocalizations.of(context)!.reply, 
+            description: "${log.replyType} (${(log.replyTime/10)} ms)",
           ),
         ],
       ),

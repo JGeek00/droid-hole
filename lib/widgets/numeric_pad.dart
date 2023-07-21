@@ -10,12 +10,14 @@ class NumericPad extends StatelessWidget {
   final GlobalKey? shakeKey;
   final String code;
   final void Function(String) onInput;
+  final bool window;
 
   const NumericPad({
     Key? key,
     this.shakeKey,
     required this.code,
     required this.onInput,
+    required this.window
   }) : super(key: key);
 
   @override
@@ -24,62 +26,6 @@ class NumericPad extends StatelessWidget {
 
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
-    Widget _numberButton({
-      required String number
-    }) {
-      return SizedBox(
-        width: (width-160)/3,
-        height: height-180 < 426
-          ? null
-          : (width-160)/3,
-        child: ElevatedButton(
-          onPressed: code.length < 4
-            ? () {
-                if (appConfigProvider.validVibrator) {
-                  Vibration.vibrate(duration: 15, amplitude: 128);
-                }
-                String newCode = "$code$number";
-                onInput(newCode);
-              }
-            : () => {},
-          style: ButtonStyle(
-            shadowColor: MaterialStateProperty.all(Colors.transparent)
-          ),
-          child: Text(
-            number,
-            style: TextStyle(
-              fontSize: height-180 < 426 ? 20 : 40
-            ),
-          )
-        ),
-      );
-    }
-
-    Widget _backButton() {
-      return SizedBox(
-        width: (width-160)/3,
-        height: height-180 < 426
-          ? null
-          : (width-160)/3,
-        child: ElevatedButton(
-          onPressed: code.isNotEmpty
-            ? () {
-                Vibration.vibrate(duration: 10);
-                String newCode = code.substring(0, code.length - 1);
-                onInput(newCode);
-              }
-            : () {},
-          style: ButtonStyle(
-            shadowColor: MaterialStateProperty.all(Colors.transparent)
-          ),
-          child: Icon(
-            Icons.backspace,
-            size: height-180 < 426 ? 10 : 30
-          )
-        ),
-      );
-    }
 
     Widget _number(String? value) {
       return SizedBox(
@@ -105,19 +51,88 @@ class NumericPad extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30)
                 ),
               ),
-            ),
+        )
       );
     }
 
-    return SizedBox(
-      height: height-180 < 426
-        ? height-100
-        : null,
-      width: width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ShakeAnimation(
+    Widget gridItem({
+      required int number
+    }) {
+      return Expanded(
+        flex: 1,
+        child: AspectRatio(
+          aspectRatio: 1/1,
+          child: Padding(
+            padding: EdgeInsets.all(
+              width <= 700 
+                ? width > height ? height*0.05 : width*0.05
+                : 10
+            ),
+            child: ElevatedButton(
+              onPressed: code.length < 4
+                ? () {
+                    if (appConfigProvider.validVibrator) {
+                      Vibration.vibrate(duration: 15, amplitude: 128);
+                    }
+                    String newCode = "$code$number";
+                    onInput(newCode);
+                  }
+                : () => {},
+              style: ButtonStyle(
+                shadowColor: MaterialStateProperty.all(Colors.transparent)
+              ),
+              child: Text(
+                number.toString(),
+                style: TextStyle(
+                  fontSize: height > 700 ? 40 : 25
+                ),
+              )
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget backButton() {
+      return Expanded(
+        flex: 1,
+        child: AspectRatio(
+          aspectRatio: 1/1,
+          child: Padding(
+            padding: EdgeInsets.all(
+              width <= 700 
+                ? width > height ? height*0.05 : width*0.05
+                : 10
+            ),
+            child: ElevatedButton(
+              onPressed: code.isNotEmpty
+                ? () {
+                    Vibration.vibrate(duration: 10);
+                    String newCode = code.substring(0, code.length - 1);
+                    onInput(newCode);
+                  }
+                : () {},
+              style: ButtonStyle(
+                shadowColor: MaterialStateProperty.all(Colors.transparent)
+              ),
+              child: Icon(
+                Icons.backspace,
+                size: height > 700 ? 40 : 25
+              )
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: height*0.05
+          ),
+          child: ShakeAnimation(
             key: shakeKey,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -133,61 +148,102 @@ class NumericPad extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: height-180 < 426 ? 20 : 50
+        ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          height: width <= 700 
+            ? height-((height*0.1)+40)-60 
+            : height-((height*0.1)+40)-200,
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    gridItem(number: 1),
+                    gridItem(number: 2),
+                    gridItem(number: 3)
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    gridItem(number: 4),
+                    gridItem(number: 5),
+                    gridItem(number: 6)
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    gridItem(number: 7),
+                    gridItem(number: 8),
+                    gridItem(number: 9)
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    const Expanded(flex: 1, child: SizedBox()),
+                    gridItem(number: 0),
+                    backButton()
+                  ],
+                ),
+              ),
+            ],
           ),
-          SizedBox(
-            height: height-180 < 426
-              ? height-160
-              : 426,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _numberButton(number: "1"),
-                    const SizedBox(width: 30),
-                    _numberButton(number: "2"),
-                    const SizedBox(width: 30),
-                    _numberButton(number: "3"),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _numberButton(number: "4"),
-                    const SizedBox(width: 30),
-                    _numberButton(number: "5"),
-                    const SizedBox(width: 30),
-                    _numberButton(number: "6"),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _numberButton(number: "7"),
-                    const SizedBox(width: 30),
-                    _numberButton(number: "8"),
-                    const SizedBox(width: 30),
-                    _numberButton(number: "9"),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(width: (width-160)/3),
-                    const SizedBox(width: 30),
-                    _numberButton(number: "0"),
-                    const SizedBox(width: 30),
-                    _backButton()
-                  ],
-                )
-              ],
-            ),
-          )
-        ],
-      )
+        )
+        // Column(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     Row(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         _numberButton(number: "1"),
+        //         const SizedBox(width: 30),
+        //         _numberButton(number: "2"),
+        //         const SizedBox(width: 30),
+        //         _numberButton(number: "3"),
+        //       ],
+        //     ),
+        //     const SizedBox(height: 20),
+        //     Row(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         _numberButton(number: "4"),
+        //         const SizedBox(width: 30),
+        //         _numberButton(number: "5"),
+        //         const SizedBox(width: 30),
+        //         _numberButton(number: "6"),
+        //       ],
+        //     ),
+        //     const SizedBox(height: 20),
+        //     Row(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         _numberButton(number: "7"),
+        //         const SizedBox(width: 30),
+        //         _numberButton(number: "8"),
+        //          const SizedBox(width: 30),
+        //         _numberButton(number: "9"),
+        //       ],
+        //     ),
+        //     const SizedBox(height: 20),
+        //     Row(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         SizedBox(width: window == false ? ((width-160)/3+10) : 100),
+        //         _numberButton(number: "0"),
+        //         const SizedBox(width: 30),
+        //         _backButton()
+        //       ],
+        //     ),
+        //     const SizedBox(height: 20),
+        //   ],
+        // )
+      ],
     );
   }
 }

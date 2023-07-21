@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=DroidHole
+Comment=Manage your Pi-hole® server
+Exec=DroidHole
+Icon=${SNAP}/meta/gui/droid-hole.png
+Terminal=false
+Type=Application
+Categories=Utilities;

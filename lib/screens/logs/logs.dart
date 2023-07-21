@@ -8,9 +8,7 @@ import 'package:droid_hole/screens/logs/log_tile.dart';
 import 'package:droid_hole/screens/logs/no_logs_message.dart';
 import 'package:droid_hole/screens/logs/log_details_screen.dart';
 import 'package:droid_hole/screens/logs/logs_filters_modal.dart';
-import 'package:droid_hole/widgets/no_server_selected.dart';
 import 'package:droid_hole/widgets/custom_radio.dart';
-import 'package:droid_hole/widgets/selected_server_disconnected.dart';
 
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
@@ -21,48 +19,17 @@ import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/models/log.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
-import 'package:droid_hole/models/server.dart';
 
-class Logs extends StatelessWidget {
+class Logs extends StatefulWidget {
   const Logs({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final serversProvider = Provider.of<ServersProvider>(context);
-    final filtersProvider = Provider.of<FiltersProvider>(context);
-    final appConfigProvider = Provider.of<AppConfigProvider>(context);
-
-    return LogsList(
-      server: serversProvider.selectedServer!, 
-      selectedStatus: filtersProvider.statusSelected,
-      startTime: filtersProvider.startTime,
-      endTime: filtersProvider.endTime,
-      logsPerQuery: appConfigProvider.logsPerQuery,
-    ); 
-  }
+  State<Logs> createState() => _LogsState();
 }
 
-class LogsList extends StatefulWidget {
-  final Server server;
-  final List<int> selectedStatus;
-  final DateTime? startTime;
-  final DateTime? endTime;
-  final double logsPerQuery;
+class _LogsState extends State<Logs> {
+  Log? selectedLog;
 
-  const LogsList({
-    Key? key,
-    required this.server,
-    required this.selectedStatus,
-    required this.startTime,
-    required this.endTime,
-    required this.logsPerQuery
-  }) : super(key: key);
-
-  @override
-  State<LogsList> createState() => _LogsListState();
-}
-
-class _LogsListState extends State<LogsList> {
   DateTime? _lastTimestamp;
   bool _isLoadingMore = false;
 
@@ -84,6 +51,8 @@ class _LogsListState extends State<LogsList> {
     DateTime? inEndTime, 
     required bool replaceOldLogs,
   }) async {
+    final logsPerQuery = Provider.of<AppConfigProvider>(context, listen: false).logsPerQuery;
+
     DateTime? startTime = masterStartTime ?? inStartTime;
     DateTime? endTime = masterEndTime ?? inEndTime;
     late DateTime? timestamp;
@@ -97,9 +66,9 @@ class _LogsListState extends State<LogsList> {
     if (_lastTimestamp == null || replaceOldLogs == true) {
       final now = DateTime.now();
       timestamp = endTime ?? now;
-      DateTime newOldTimestamp = widget.logsPerQuery == 0.5 
+      DateTime newOldTimestamp = logsPerQuery == 0.5 
         ? DateTime(timestamp.year, timestamp.month, timestamp.day, timestamp.hour, timestamp.minute-30, timestamp.second)
-        : DateTime(timestamp.year, timestamp.month, timestamp.day, timestamp.hour-widget.logsPerQuery.toInt(), timestamp.minute, timestamp.second);
+        : DateTime(timestamp.year, timestamp.month, timestamp.day, timestamp.hour-logsPerQuery.toInt(), timestamp.minute, timestamp.second);
       if (startTime != null) {
         minusHoursTimestamp = newOldTimestamp.isAfter(startTime) ? newOldTimestamp : startTime;
       }
@@ -109,9 +78,9 @@ class _LogsListState extends State<LogsList> {
     }
     else {
       timestamp = _lastTimestamp!;
-      DateTime newOldTimestamp = widget.logsPerQuery == 0.5 
+      DateTime newOldTimestamp = logsPerQuery == 0.5 
         ? DateTime(_lastTimestamp!.year, _lastTimestamp!.month, _lastTimestamp!.day, _lastTimestamp!.hour, _lastTimestamp!.minute-30, _lastTimestamp!.second)
-        : DateTime(_lastTimestamp!.year, _lastTimestamp!.month, _lastTimestamp!.day, _lastTimestamp!.hour-widget.logsPerQuery.toInt(), _lastTimestamp!.minute, _lastTimestamp!.second);
+        : DateTime(_lastTimestamp!.year, _lastTimestamp!.month, _lastTimestamp!.day, _lastTimestamp!.hour-logsPerQuery.toInt(), _lastTimestamp!.minute, _lastTimestamp!.second);
       if (startTime != null) {
         minusHoursTimestamp = newOldTimestamp.isAfter(startTime) ? newOldTimestamp : startTime;
       }
@@ -127,7 +96,7 @@ class _LogsListState extends State<LogsList> {
     }
     else {
       final result = await fetchLogs(
-        server: widget.server,
+        server: Provider.of<ServersProvider>(context, listen: false).selectedServer!,
         from:  minusHoursTimestamp,
         until: timestamp
       );
@@ -305,38 +274,66 @@ class _LogsListState extends State<LogsList> {
     }
 
     void showLogDetails(Log log) {
-      Navigator.push(context, MaterialPageRoute(
-        builder: (context) => LogDetailsScreen(
-          log: log, 
-          whiteBlackList: whiteBlackList,
-        )
-      ));
+      setState(() => selectedLog = log);
+      if (width <= 1000) {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) => LogDetailsScreen(
+            log: log, 
+            whiteBlackList: whiteBlackList,
+          )
+        ));
+      }
     }
 
     void showFiltersModal() {
-      showModalBottomSheet(
-        context: context, 
-        builder: (context) => LogsFiltersModal(
-          statusBarHeight: statusBarHeight,
-          bottomNavBarHeight: bottomNavBarHeight,
-          filterLogs: () {
-            setState(() {
-              masterStartTime = filtersProvider.startTime;
-              masterEndTime = filtersProvider.endTime;
-              loadStatus = 0;
-            });
-            loadLogs(
-              replaceOldLogs: true,
-              inStartTime: filtersProvider.startTime,
-              inEndTime: filtersProvider.endTime
-            );
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        isDismissible: true, 
-        enableDrag: true,
-        isScrollControlled: true,
-      );
+      if (width > 900) {
+        showDialog(
+          context: context, 
+          builder: (context) => LogsFiltersModal(
+            statusBarHeight: statusBarHeight,
+            bottomNavBarHeight: bottomNavBarHeight,
+            filterLogs: () {
+              setState(() {
+                masterStartTime = filtersProvider.startTime;
+                masterEndTime = filtersProvider.endTime;
+                loadStatus = 0;
+              });
+              loadLogs(
+                replaceOldLogs: true,
+                inStartTime: filtersProvider.startTime,
+                inEndTime: filtersProvider.endTime
+              );
+            },
+            window: true,
+          ),
+        );
+      }
+      else {
+        showModalBottomSheet(
+          context: context, 
+          builder: (context) => LogsFiltersModal(
+            statusBarHeight: statusBarHeight,
+            bottomNavBarHeight: bottomNavBarHeight,
+            filterLogs: () {
+              setState(() {
+                masterStartTime = filtersProvider.startTime;
+                masterEndTime = filtersProvider.endTime;
+                loadStatus = 0;
+              });
+              loadLogs(
+                replaceOldLogs: true,
+                inStartTime: filtersProvider.startTime,
+                inEndTime: filtersProvider.endTime
+              );
+            },
+            window: false,
+          ),
+          backgroundColor: Colors.transparent,
+          isDismissible: true, 
+          enableDrag: true,
+          isScrollControlled: true,
+        );
+      }
     }
 
     void searchLogs(String value) {
@@ -395,12 +392,13 @@ class _LogsListState extends State<LogsList> {
                     else {
                       return LogTile(
                         log: logsListDisplay[index], 
-                        showLogDetails: showLogDetails
+                        showLogDetails: showLogDetails,
+                        isLogSelected: logsListDisplay[index] == selectedLog
                       );
                     }
                   }
                 )
-              : NoLogsMessage(logsPerQuery: widget.logsPerQuery)
+              : NoLogsMessage(logsPerQuery: appConfigProvider.logsPerQuery)
           );
 
         case 2:
@@ -469,191 +467,214 @@ class _LogsListState extends State<LogsList> {
       }
     }
 
-    return Scaffold(
-      appBar: _showSearchBar == true
-        ? AppBar(
-            toolbarHeight: 60,
-            leading: IconButton(
-              onPressed: () {
-                setState(() {
-                  _showSearchBar = false;
-                  _searchController.text = "";
-                });
-                _scrollController.animateTo(
-                  0, 
-                  duration: const Duration(milliseconds: 250), 
-                  curve: Curves.easeInOut
-                );
-              },
-              icon: const Icon(Icons.arrow_back),
-              splashRadius: 20,
-            ),
-            actions: [
-              IconButton(     
+    Widget scaffold() {
+      return Scaffold(
+        appBar: _showSearchBar == true
+          ? AppBar(
+              toolbarHeight: 60,
+              leading: IconButton(
                 onPressed: () {
-                  setState(() => _searchController.text = "");
+                  setState(() {
+                    _showSearchBar = false;
+                    _searchController.text = "";
+                  });
                   _scrollController.animateTo(
                     0, 
                     duration: const Duration(milliseconds: 250), 
                     curve: Curves.easeInOut
                   );
-                }, 
-                icon: const Icon(Icons.clear_rounded),
+                },
+                icon: const Icon(Icons.arrow_back),
                 splashRadius: 20,
-              )
-            ],
-            title: Container(
-              width: width-136,
-              height: 60,
-              margin: const EdgeInsets.only(bottom: 5),
-              child: Center(
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: searchLogs,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.normal
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: AppLocalizations.of(context)!.searchUrl,
-                    hintStyle: const TextStyle(
+              ),
+              actions: [
+                IconButton(     
+                  onPressed: () {
+                    setState(() => _searchController.text = "");
+                    _scrollController.animateTo(
+                      0, 
+                      duration: const Duration(milliseconds: 250), 
+                      curve: Curves.easeInOut
+                    );
+                  }, 
+                  icon: const Icon(Icons.clear_rounded),
+                  splashRadius: 20,
+                )
+              ],
+              title: Container(
+                width: width-136,
+                height: 60,
+                margin: const EdgeInsets.only(bottom: 5),
+                child: Center(
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: searchLogs,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.normal
                     ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: AppLocalizations.of(context)!.searchUrl,
+                      hintStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              )
             )
-          )
-        : AppBar(
-            systemOverlayStyle: systemUiOverlayStyleConfig(context),
-            title: Text(AppLocalizations.of(context)!.queryLogs),
-            toolbarHeight: 60,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _showSearchBar = true;
-                  });
-                }, 
-                icon: const Icon(Icons.search_rounded),
-                splashRadius: 20,
-              ),
-              IconButton(
-                onPressed: showFiltersModal, 
-                icon: const Icon(Icons.filter_list_rounded),
-                splashRadius: 20,
-              ),
-              PopupMenuButton(
-                splashRadius: 20,
-                icon: const Icon(Icons.sort_rounded),
-                onSelected: (value) => updateSortStatus(value),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.arrow_downward_rounded),
-                            const SizedBox(width: 15),
-                            Text(AppLocalizations.of(context)!.fromLatestToOldest),
-                          ],
-                        ),
-                        CustomRadio(
-                          value: 0, 
-                          groupValue: sortStatus, 
-                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                        )
-                      ],
-                    )
-                  ),
-                  PopupMenuItem(
-                    value: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.arrow_upward_rounded),
-                            const SizedBox(width: 15),
-                            Text(AppLocalizations.of(context)!.fromOldestToLatest),
-                          ],
-                        ),
-                        CustomRadio(
-                          value: 1, 
-                          groupValue: sortStatus, 
-                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                        )
-                      ],
-                    )
-                  ),
-                ]
-              )
-            ],
-            bottom: areFiltersApplied() == true
-              ? PreferredSize(
-                  preferredSize: const Size(double.maxFinite, 50),
-                  child: Container(
-                    width: double.maxFinite,
-                    height: 50,
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        const SizedBox(width: 5),
-                        if (filtersProvider.startTime != null || filtersProvider.endTime != null) buildChip(
-                          AppLocalizations.of(context)!.time, 
-                          const Icon(Icons.access_time_rounded),
-                          () {
-                            filtersProvider.resetTime();
-                            setState(() {
-                              loadStatus = 0;
-                            });
-                            loadLogs(replaceOldLogs: true);
-                          }
-                        ),
-                        if (filtersProvider.statusSelected.length < 13) buildChip(
-                          filtersProvider.statusSelected.length == 1
-                            ? logStatusString[filtersProvider.statusSelected[0]-1]
-                            : "${filtersProvider.statusSelected.length} ${AppLocalizations.of(context)!.statusSelected}",
-                          const Icon(Icons.shield),
-                          () {
-                            scrollToTop();
-                            filtersProvider.resetStatus();
-                          },
-                        ),
-                        if (filtersProvider.selectedClients.isNotEmpty && filtersProvider.selectedClients.length < filtersProvider.totalClients.length) buildChip(
-                          filtersProvider.selectedClients.length == 1
-                            ? filtersProvider.selectedClients[0]
-                            : "${filtersProvider.selectedClients.length} ${AppLocalizations.of(context)!.clientsSelected}",
-                          const Icon(Icons.devices),
-                          () {
-                            scrollToTop();
-                            filtersProvider.resetClients();
-                          },
-                        ),
-                        if (filtersProvider.selectedDomain != null) buildChip(
-                          filtersProvider.selectedDomain!,
-                          const Icon(Icons.http_rounded),
-                          () {
-                            scrollToTop();
-                            filtersProvider.setSelectedDomain(null);
-                          },
-                        ),
-                        const SizedBox(width: 5),
-                      ],
-                    )
-                  ),
+          : AppBar(
+              systemOverlayStyle: systemUiOverlayStyleConfig(context),
+              title: Text(AppLocalizations.of(context)!.queryLogs),
+              toolbarHeight: 60,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _showSearchBar = true;
+                    });
+                  }, 
+                  icon: const Icon(Icons.search_rounded),
+                  splashRadius: 20,
+                ),
+                IconButton(
+                  onPressed: showFiltersModal, 
+                  icon: const Icon(Icons.filter_list_rounded),
+                  splashRadius: 20,
+                ),
+                PopupMenuButton(
+                  splashRadius: 20,
+                  icon: const Icon(Icons.sort_rounded),
+                  onSelected: (value) => updateSortStatus(value),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.arrow_downward_rounded),
+                              const SizedBox(width: 15),
+                              Text(AppLocalizations.of(context)!.fromLatestToOldest),
+                            ],
+                          ),
+                          CustomRadio(
+                            value: 0, 
+                            groupValue: sortStatus, 
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                          )
+                        ],
+                      )
+                    ),
+                    PopupMenuItem(
+                      value: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.arrow_upward_rounded),
+                              const SizedBox(width: 15),
+                              Text(AppLocalizations.of(context)!.fromOldestToLatest),
+                            ],
+                          ),
+                          CustomRadio(
+                            value: 1, 
+                            groupValue: sortStatus, 
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                          )
+                        ],
+                      )
+                    ),
+                  ]
                 )
-            : const PreferredSize(
-                preferredSize: Size(0, 0),
-                child: SizedBox(),
-              )
+              ],
+              bottom: areFiltersApplied() == true
+                ? PreferredSize(
+                    preferredSize: const Size(double.maxFinite, 50),
+                    child: Container(
+                      width: double.maxFinite,
+                      height: 50,
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          const SizedBox(width: 5),
+                          if (filtersProvider.startTime != null || filtersProvider.endTime != null) buildChip(
+                            AppLocalizations.of(context)!.time, 
+                            const Icon(Icons.access_time_rounded),
+                            () {
+                              filtersProvider.resetTime();
+                              setState(() {
+                                loadStatus = 0;
+                              });
+                              loadLogs(replaceOldLogs: true);
+                            }
+                          ),
+                          if (filtersProvider.statusSelected.length < 13) buildChip(
+                            filtersProvider.statusSelected.length == 1
+                              ? logStatusString[filtersProvider.statusSelected[0]-1]
+                              : "${filtersProvider.statusSelected.length} ${AppLocalizations.of(context)!.statusSelected}",
+                            const Icon(Icons.shield),
+                            () {
+                              scrollToTop();
+                              filtersProvider.resetStatus();
+                            },
+                          ),
+                          if (filtersProvider.selectedClients.isNotEmpty && filtersProvider.selectedClients.length < filtersProvider.totalClients.length) buildChip(
+                            filtersProvider.selectedClients.length == 1
+                              ? filtersProvider.selectedClients[0]
+                              : "${filtersProvider.selectedClients.length} ${AppLocalizations.of(context)!.clientsSelected}",
+                            const Icon(Icons.devices),
+                            () {
+                              scrollToTop();
+                              filtersProvider.resetClients();
+                            },
+                          ),
+                          if (filtersProvider.selectedDomain != null) buildChip(
+                            filtersProvider.selectedDomain!,
+                            const Icon(Icons.http_rounded),
+                            () {
+                              scrollToTop();
+                              filtersProvider.setSelectedDomain(null);
+                            },
+                          ),
+                          const SizedBox(width: 5),
+                        ],
+                      )
+                    ),
+                  )
+              : const PreferredSize(
+                  preferredSize: Size(0, 0),
+                  child: SizedBox(),
+                )
+            ),
+        body: status()
+      );
+    }
+
+    if (width > 1000) {
+      return Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: scaffold()
           ),
-      body: status()
-    );
+          Expanded(
+            flex: 4,
+            child: selectedLog != null ? LogDetailsScreen(
+                log: selectedLog!, 
+                whiteBlackList: whiteBlackList
+              ) : const SizedBox()
+          )
+        ],
+      );
+    }
+    else {
+      return scaffold();
+    }
   }
 }

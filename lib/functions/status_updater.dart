@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class StatusUpdater {
   Timer? _overTimeDataTimer;
 
   int? _previousRefreshTime;
-  void _updateStatusData(ServersProvider serversProvider, AppConfigProvider appConfigProvider) {
+  void _updateStatusData(ServersProvider serversProvider, StatusProvider statusProvider, AppConfigProvider appConfigProvider) {
     // Sets previousRefreshTime when is not initialized
     _previousRefreshTime ??= appConfigProvider.getAutoRefreshTime;
 
@@ -27,7 +28,7 @@ class StatusUpdater {
             ? _statusDataTimer!.cancel()
             : timer!.cancel();
         _previousRefreshTime = appConfigProvider.getAutoRefreshTime;
-        _updateStatusData(serversProvider, appConfigProvider);
+        _updateStatusData(serversProvider, statusProvider, appConfigProvider);
       }
 
       if (isRunning == false) {
@@ -41,18 +42,18 @@ class StatusUpdater {
             serversProvider.updateselectedServerStatus(
               statusResult['data'].status == 'enabled' ? true : false
             );
-            serversProvider.setRealtimeStatus(statusResult['data']);
-            if (serversProvider.isServerConnected == false) {
-              serversProvider.setIsServerConnected(true);
+            statusProvider.setRealtimeStatus(statusResult['data']);
+            if (statusProvider.isServerConnected == false) {
+              statusProvider.setIsServerConnected(true);
             }
           }
           else {
             if (selectedUrlBefore == serversProvider.selectedServer!.address) {
-              if (serversProvider.isServerConnected == true) {
-                serversProvider.setIsServerConnected(false);
+              if (statusProvider.isServerConnected == true) {
+                statusProvider.setIsServerConnected(false);
               }
-              if (serversProvider.getStatusLoading == LoadStatus.loading) {
-                serversProvider.setStatusLoading(LoadStatus.error);
+              if (statusProvider.getStatusLoading == LoadStatus.loading) {
+                statusProvider.setStatusLoading(LoadStatus.error);
               }
             }
           }
@@ -69,7 +70,7 @@ class StatusUpdater {
     timerFn();
   }
 
-  void _updateOverTimeData(ServersProvider serversProvider, FiltersProvider filtersProvider) {
+  void _updateOverTimeData(ServersProvider serversProvider, StatusProvider statusProvider, FiltersProvider filtersProvider) {
     void timerFn({Timer? timer}) async {
       if (serversProvider.selectedServer != null) {
         String statusUrlBefore = serversProvider.selectedServer!.address;
@@ -77,7 +78,7 @@ class StatusUpdater {
           serversProvider.selectedServer!
         );
         if (statusResult['result'] == 'success') {
-          serversProvider.setOvertimeData(statusResult['data']);
+          statusProvider.setOvertimeData(statusResult['data']);
           List<dynamic> clients = statusResult['data'].clients.map((client) {
             if (client.name != '') {
               return client.name.toString();
@@ -87,18 +88,18 @@ class StatusUpdater {
             }
           }).toList();
           filtersProvider.setClients(List<String>.from(clients));
-          serversProvider.setOvertimeDataLoadingStatus(1);
-          if (serversProvider.isServerConnected == false) {
-            serversProvider.setIsServerConnected(true);
+          statusProvider.setOvertimeDataLoadingStatus(1);
+          if (statusProvider.isServerConnected == false) {
+            statusProvider.setIsServerConnected(true);
           }
         }
         else {
           if (statusUrlBefore == serversProvider.selectedServer!.address) {
-            if (serversProvider.isServerConnected == true) {
-              serversProvider.setIsServerConnected(false);
+            if (statusProvider.isServerConnected == true) {
+              statusProvider.setIsServerConnected(false);
             }
-            if (serversProvider.getOvertimeDataLoadStatus == 0) {
-              serversProvider.setOvertimeDataLoadingStatus(2);
+            if (statusProvider.getOvertimeDataLoadStatus == 0) {
+              statusProvider.setOvertimeDataLoadingStatus(2);
             }
           }
         }
@@ -115,30 +116,32 @@ class StatusUpdater {
 
   void statusData() {
     final serversProvider = Provider.of<ServersProvider>(context!);
+    final statusProvider = Provider.of<StatusProvider>(context!);
     final appConfigProvider = Provider.of<AppConfigProvider>(context!);
 
-    if (serversProvider.isServerConnected == true && _statusDataTimer == null) {
-      _updateStatusData(serversProvider, appConfigProvider);
+    if (statusProvider.isServerConnected == true && _statusDataTimer == null) {
+      _updateStatusData(serversProvider, statusProvider, appConfigProvider);
     }
-    else if (serversProvider.isServerConnected == true && _statusDataTimer != null && _statusDataTimer!.isActive == false) {
-      _updateStatusData(serversProvider, appConfigProvider);
+    else if (statusProvider.isServerConnected == true && _statusDataTimer != null && _statusDataTimer!.isActive == false) {
+      _updateStatusData(serversProvider, statusProvider, appConfigProvider);
     }
-    else if (serversProvider.isServerConnected == false && _statusDataTimer != null) {
+    else if (statusProvider.isServerConnected == false && _statusDataTimer != null) {
       _statusDataTimer!.cancel();
     }
   }
 
   void overTimeData() {
     final serversProvider = Provider.of<ServersProvider>(context!);
+    final statusProvider = Provider.of<StatusProvider>(context!);
     final filtersProvider = Provider.of<FiltersProvider>(context!);
 
-    if (serversProvider.isServerConnected == true && _overTimeDataTimer == null) {
-      _updateOverTimeData(serversProvider, filtersProvider);
+    if (statusProvider.isServerConnected == true && _overTimeDataTimer == null) {
+      _updateOverTimeData(serversProvider, statusProvider, filtersProvider);
     }
-    else if (serversProvider.isServerConnected == true && _overTimeDataTimer != null && _overTimeDataTimer!.isActive == false) {
-      _updateOverTimeData(serversProvider, filtersProvider);
+    else if (statusProvider.isServerConnected == true && _overTimeDataTimer != null && _overTimeDataTimer!.isActive == false) {
+      _updateOverTimeData(serversProvider, statusProvider, filtersProvider);
     }
-    else if (serversProvider.isServerConnected == false && _overTimeDataTimer != null) {
+    else if (statusProvider.isServerConnected == false && _overTimeDataTimer != null) {
       _overTimeDataTimer!.cancel();
     }
   }

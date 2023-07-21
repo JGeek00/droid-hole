@@ -18,23 +18,23 @@ class OptionBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.circular(20),
       child: InkWell(
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(20),
         onTap: () => onTap(itemValue),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeInOut,
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: optionsValue == itemValue
                 ? Theme.of(context).colorScheme.primary
-                : Colors.grey
+                : Theme.of(context).colorScheme.onSurfaceVariant
             ),
             color: optionsValue == itemValue
-              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+              ? Theme.of(context).colorScheme.secondaryContainer
               : Colors.transparent,
           ),
           child: child,

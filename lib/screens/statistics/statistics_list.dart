@@ -1,4 +1,3 @@
-import 'package:droid_hole/widgets/section_label.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -7,10 +6,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/screens/statistics/custom_pie_chart.dart';
 import 'package:droid_hole/screens/statistics/no_data_chart.dart';
 import 'package:droid_hole/screens/statistics/pie_chart_legend.dart';
+import 'package:droid_hole/widgets/section_label.dart';
 import 'package:droid_hole/widgets/tab_content.dart';
 
 import 'package:droid_hole/providers/filters_provider.dart';
-import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/conversions.dart';
 
@@ -28,11 +28,77 @@ class StatisticsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
+
+    return CustomTabContent(
+      loadingGenerator: () => SizedBox(
+        width: double.maxFinite,
+        height: 300,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 50),
+            Text(
+              AppLocalizations.of(context)!.loadingStats,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 22
+              ),
+            )
+          ],
+        ),
+      ), 
+      contentGenerator: () => [
+        StatisticsListContent(type: type, countLabel: countLabel)
+      ],
+      errorGenerator: () => SizedBox(
+        width: double.maxFinite,
+        height: 300,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error,
+              size: 50,
+              color: Colors.red,
+            ),
+            const SizedBox(height: 50),
+            Text(
+              AppLocalizations.of(context)!.statsNotLoaded,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 22
+              ),
+            )
+          ],
+        ),
+      ), 
+      loadStatus: statusProvider.getStatusLoading, 
+      onRefresh: onRefresh
+    );
+  }
+}
+
+class StatisticsListContent extends StatelessWidget {
+  final String type;
+  final String countLabel;
+
+  const StatisticsListContent({
+    Key? key,
+    required this.type,
+    required this.countLabel
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
     final filtersProvider = Provider.of<FiltersProvider>(context);
-
-    final width = MediaQuery.of(context).size.width;
 
     void navigateFilter(String value) {
       if (type == 'clients') {
@@ -68,8 +134,8 @@ class StatisticsList extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: width - 150,
+                    Expanded(
+                      flex: 2,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -97,7 +163,8 @@ class StatisticsList extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Flexible(
+                    Expanded(
+                      flex: 1,
                       child: LinearPercentIndicator(
                         animation: true,
                         lineHeight: 10,
@@ -167,98 +234,52 @@ class StatisticsList extends StatelessWidget {
       );
     }
 
-    return CustomTabContent(
-      loadingGenerator: () => SizedBox(
-        width: double.maxFinite,
-        height: 300,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(height: 50),
-            Text(
-              AppLocalizations.of(context)!.loadingStats,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontSize: 22
-              ),
-            )
-          ],
-        ),
-      ), 
-      contentGenerator: () {
-        if (type == "domains") {
-          return [
-            serversProvider.getRealtimeStatus!.topQueries.isNotEmpty
-              ? generateList(
-                  serversProvider.getRealtimeStatus!.topQueries, 
-                  AppLocalizations.of(context)!.topPermittedDomains
-                )
-              : NoDataChart(
-                topLabel: AppLocalizations.of(context)!.noData
-              ),
-            serversProvider.getRealtimeStatus!.topAds.isNotEmpty
-              ? generateList(
-                  serversProvider.getRealtimeStatus!.topAds, 
-                  AppLocalizations.of(context)!.topBlockedDomains
-                )
-              : NoDataChart(
-                  topLabel: AppLocalizations.of(context)!.noData
-                ),
-          ];
-        }
-        else if (type == "clients") {
-          return [
-            serversProvider.getRealtimeStatus!.topSources.isNotEmpty
-              ? generateList(
-                  serversProvider.getRealtimeStatus!.topSources, 
-                  AppLocalizations.of(context)!.topClients
-                )
-              : NoDataChart(
-                topLabel: AppLocalizations.of(context)!.noData
-              ),
-            serversProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty
-              ? generateList(
-                  serversProvider.getRealtimeStatus!.topSourcesBlocked, 
-                  AppLocalizations.of(context)!.topClientsBlocked
-                )
-              : NoDataChart(
-                  topLabel: AppLocalizations.of(context)!.noData
-                ),
-          ];
-        }
-        else {
-          return [];
-        }
-      },
-      errorGenerator: () => SizedBox(
-        width: double.maxFinite,
-        height: 300,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error,
-              size: 50,
-              color: Colors.red,
+    if (type == "domains") {
+      return Column(
+        children: [
+          statusProvider.getRealtimeStatus!.topQueries.isNotEmpty
+            ? generateList(
+                statusProvider.getRealtimeStatus!.topQueries, 
+                AppLocalizations.of(context)!.topPermittedDomains
+              )
+            : NoDataChart(
+              topLabel: AppLocalizations.of(context)!.noData
             ),
-            const SizedBox(height: 50),
-            Text(
-              AppLocalizations.of(context)!.statsNotLoaded,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontSize: 22
+          statusProvider.getRealtimeStatus!.topAds.isNotEmpty
+            ? generateList(
+                statusProvider.getRealtimeStatus!.topAds, 
+                AppLocalizations.of(context)!.topBlockedDomains
+              )
+            : NoDataChart(
+                topLabel: AppLocalizations.of(context)!.noData
               ),
-            )
-          ],
-        ),
-      ), 
-      loadStatus: serversProvider.getStatusLoading, 
-      onRefresh: onRefresh
-    );
+        ]
+      );
+    }
+    else if (type == "clients") {
+      return Column(
+        children: [
+          statusProvider.getRealtimeStatus!.topSources.isNotEmpty
+            ? generateList(
+                statusProvider.getRealtimeStatus!.topSources, 
+                AppLocalizations.of(context)!.topClients
+              )
+            : NoDataChart(
+              topLabel: AppLocalizations.of(context)!.noData
+            ),
+          statusProvider.getRealtimeStatus!.topSourcesBlocked.isNotEmpty
+            ? generateList(
+                statusProvider.getRealtimeStatus!.topSourcesBlocked, 
+                AppLocalizations.of(context)!.topClientsBlocked
+              )
+            : NoDataChart(
+                topLabel: AppLocalizations.of(context)!.noData
+              ),
+        ]
+       );
+    }
+    else {
+      return const SizedBox();
+    }
   }
 }

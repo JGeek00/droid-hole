@@ -8,7 +8,7 @@ import 'package:droid_hole/screens/statistics/custom_pie_chart.dart';
 import 'package:droid_hole/widgets/tab_content.dart';
 import 'package:droid_hole/widgets/section_label.dart';
 
-import 'package:droid_hole/providers/servers_provider.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 
 class QueriesServersTab extends StatelessWidget {
   final Future<void> Function() onRefresh;
@@ -20,9 +20,7 @@ class QueriesServersTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final serversProvider = Provider.of<ServersProvider>(context);
-
-    final width = MediaQuery.of(context).size.width;
+    final statusProvider = Provider.of<StatusProvider>(context);
 
     return CustomTabContent(
       loadingGenerator: () => SizedBox(
@@ -46,66 +44,7 @@ class QueriesServersTab extends StatelessWidget {
         ),
       ), 
       contentGenerator: () => [
-        serversProvider.getRealtimeStatus!.queryTypes.isEmpty == false
-          ? Padding(
-              padding: const EdgeInsets.only(top: 20, bottom: 10),
-              child: Column(
-                children: [
-                  SectionLabel(
-                    label: AppLocalizations.of(context)!.queryTypes,
-                    padding: const EdgeInsets.only(
-                      top: 8,
-                      left: 16,
-                      bottom: 24
-                    ),
-                  ),
-                  SizedBox(
-                    width: width-40,
-                    child: CustomPieChart(
-                      data: serversProvider.getRealtimeStatus!.queryTypes,
-                    )
-                  ),
-                  const SizedBox(height: 20),
-                  PieChartLegend(
-                    data: serversProvider.getRealtimeStatus!.queryTypes,
-                    dataUnit: '%',
-                  )
-                ]
-              ),
-            )
-          : NoDataChart(
-            topLabel: AppLocalizations.of(context)!.queryTypes,
-          ),
-        serversProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
-          ? Padding(
-              padding: const EdgeInsets.only(top: 20, bottom: 10),
-              child: Column(
-                children: [
-                  SectionLabel(
-                    label: AppLocalizations.of(context)!.upstreamServers,
-                    padding: const EdgeInsets.only(
-                      top: 16,
-                      left: 16,
-                      bottom: 24
-                    ),
-                  ),
-                  SizedBox(
-                    width: width-40,
-                    child: CustomPieChart(
-                      data: serversProvider.getRealtimeStatus!.forwardDestinations,
-                    )
-                  ),
-                  const SizedBox(height: 20),
-                  PieChartLegend(
-                    data: serversProvider.getRealtimeStatus!.forwardDestinations,
-                    dataUnit: '%',
-                  )
-                ] 
-              ),
-            )
-          : NoDataChart(
-            topLabel: AppLocalizations.of(context)!.upstreamServers,
-          ),
+        const QueriesServersTabContent()
       ], 
       errorGenerator: () =>  SizedBox(
         width: double.maxFinite,
@@ -131,8 +70,134 @@ class QueriesServersTab extends StatelessWidget {
           ],
         ),
       ), 
-      loadStatus: serversProvider.getStatusLoading, 
+      loadStatus: statusProvider.getStatusLoading, 
       onRefresh: onRefresh
+    );
+  }
+}
+
+class QueriesServersTabContent extends StatelessWidget {
+  const QueriesServersTabContent({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final statusProvider = Provider.of<StatusProvider>(context);
+
+    final width = MediaQuery.of(context).size.width;
+
+    return Column(
+      children: [
+        statusProvider.getRealtimeStatus!.queryTypes.isEmpty == false
+          ? Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 10),
+              child: Column(
+                children: [
+                  SectionLabel(
+                    label: AppLocalizations.of(context)!.queryTypes,
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      left: 16,
+                      bottom: 24
+                    ),
+                  ),
+                  if (width > 700) Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 200,
+                            maxHeight: 200
+                          ),
+                          child: CustomPieChart(
+                            data: statusProvider.getRealtimeStatus!.queryTypes,
+                          ),
+                        )
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: PieChartLegend(
+                          data: statusProvider.getRealtimeStatus!.queryTypes,
+                          dataUnit: '%',
+                        ),
+                      )
+                    ],
+                  ),
+                  if (width <= 700) ...[
+                    SizedBox(
+                      width: width-40,
+                      child: CustomPieChart(
+                        data: statusProvider.getRealtimeStatus!.queryTypes,
+                      )
+                    ),
+                    const SizedBox(height: 20),
+                    PieChartLegend(
+                      data: statusProvider.getRealtimeStatus!.queryTypes,
+                      dataUnit: '%',
+                    )
+                  ]
+                ]
+              ),
+            )
+          : NoDataChart(
+            topLabel: AppLocalizations.of(context)!.queryTypes,
+          ),
+        statusProvider.getRealtimeStatus!.forwardDestinations.isEmpty == false
+          ? Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 10),
+              child: Column(
+                children: [
+                  SectionLabel(
+                    label: AppLocalizations.of(context)!.upstreamServers,
+                    padding: const EdgeInsets.only(
+                      top: 16,
+                      left: 16,
+                      bottom: 24
+                    ),
+                  ),
+                  if (width > 700) Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 200,
+                            maxHeight: 200
+                          ),
+                          child: CustomPieChart(
+                            data: statusProvider.getRealtimeStatus!.forwardDestinations,
+                          )
+                        )
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: PieChartLegend(
+                          data: statusProvider.getRealtimeStatus!.forwardDestinations,
+                          dataUnit: '%',
+                        ),
+                      )
+                    ],
+                  ),
+                  if (width <= 700) ...[
+                    SizedBox(
+                      width: width-40,
+                      child: CustomPieChart(
+                        data: statusProvider.getRealtimeStatus!.forwardDestinations,
+                      )
+                    ),
+                    const SizedBox(height: 20),
+                    PieChartLegend(
+                      data: statusProvider.getRealtimeStatus!.forwardDestinations,
+                      dataUnit: '%',
+                    )
+                  ]
+                ] 
+              ),
+            )
+          : NoDataChart(
+            topLabel: AppLocalizations.of(context)!.upstreamServers,
+          ),
+      ],
     );
   }
 }

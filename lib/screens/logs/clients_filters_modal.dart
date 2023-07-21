@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,12 +8,14 @@ class ClientsFiltersModal extends StatefulWidget {
   final double statusBarHeight;
   final double bottomNavBarHeight;
   final List<String> selectedClients;
+  final bool window;
 
   const ClientsFiltersModal({
     Key? key,
     required this.statusBarHeight,
     required this.bottomNavBarHeight,
     required this.selectedClients,
+    required this.window
   }) : super(key: key);
 
   @override
@@ -49,8 +49,6 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
   @override
   Widget build(BuildContext context) {
     final filtersProvider = Provider.of<FiltersProvider>(context);
-
-    final mediaQuery = MediaQuery.of(context);
 
     void updateList() {
       filtersProvider.setSelectedClients(_selectedClients);
@@ -96,58 +94,43 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
       }
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(28),
-          topRight: Radius.circular(28)
-        ),
-        color: Theme.of(context).dialogBackgroundColor,
-      ),
-      height: mediaQuery.size.height >= (Platform.isIOS ? 999 : 979) 
-        ? (Platform.isIOS ? 999 : 979) 
-        : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight)+1,
-      child: Column(
+    Widget content() {
+      return Wrap(
+        alignment: WrapAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 24),
-            child: Icon(
-              Icons.phone_android_rounded,
-              size: 24,
-              color: Theme.of(context).colorScheme.secondary,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height*0.8
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 24,
-              bottom: 24
-            ),
-            child: Text(
-              AppLocalizations.of(context)!.clients,
-              style: const TextStyle(
-                fontSize: 24
-              ),
-            ),
-          ),
-          Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: mediaQuery.size.height >= (Platform.isIOS ? 1017 : 989) 
-                  ? (Platform.isIOS ? 819 : 799)
-                  : (Platform.isIOS 
-                    ? mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+238)
-                    : mediaQuery.size.height-(widget.statusBarHeight+widget.bottomNavBarHeight+219)
+            child: ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Icon(
+                    Icons.phone_android_rounded,
+                    size: 24,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
-                child: ListView.builder(
-                  itemCount: filtersProvider.totalClients.length,
-                  itemBuilder: (context, index) => _listItem(
-                    label: filtersProvider.totalClients[index], 
-                    value:filtersProvider.totalClients[index], 
-                  )
-                )
-              ),
-            ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 24,
+                    bottom: 24
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.clients,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 24
+                    ),
+                  ),
+                ),
+                ...filtersProvider.totalClients.map((e) => _listItem(
+                  label: e, 
+                  value: e, 
+                )),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(20),
@@ -189,7 +172,30 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
             ),
           ),
         ],
-      ),
-    );
+      );
+    }
+
+    if (widget.window == true) {
+      return Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 500
+          ),
+          child: content()
+        ),
+      );
+    }
+    else {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(28),
+            topRight: Radius.circular(28)
+          ),
+          color: Theme.of(context).dialogBackgroundColor,
+        ),
+        child: content()
+      );
+    }
   }
 }

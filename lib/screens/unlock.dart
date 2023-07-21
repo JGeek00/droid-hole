@@ -1,14 +1,13 @@
-import 'package:droid_hole/widgets/fingerprint_unlock_modal.dart';
-import 'package:droid_hole/widgets/shake_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/fingerprint_unlock_modal.dart';
 import 'package:droid_hole/widgets/numeric_pad.dart';
+import 'package:droid_hole/widgets/shake_animation.dart';
 
 import 'package:droid_hole/providers/app_config_provider.dart';
-import 'package:droid_hole/providers/servers_provider.dart';
 
 class Unlock extends StatefulWidget {
   const Unlock({
@@ -124,6 +123,7 @@ class _UnlockState extends State<Unlock> {
                   onInput: (newCode) => _code.length < 4
                     ? updateCode(newCode)
                     : {}, 
+                  window: false,
                 )
               ],
             ),

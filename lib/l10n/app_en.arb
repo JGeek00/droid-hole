@@ -315,5 +315,6 @@
     "searchDomains": "Search domains",
     "all": "All",
     "allowed": "Allowed",
-    "advancedStatusFiltering": "Advanced status filtering"
+    "advancedStatusFiltering": "Advanced status filtering",
+    "selectOptionLeftColumn": "Select an option from the left column."
 }

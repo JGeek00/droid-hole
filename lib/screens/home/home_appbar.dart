@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -9,20 +8,28 @@ import 'package:droid_hole/screens/home/switch_server_modal.dart';
 import 'package:droid_hole/screens/servers/servers.dart';
 
 import 'package:droid_hole/models/server.dart';
+import 'package:droid_hole/functions/open_url.dart';
 import 'package:droid_hole/config/system_overlay_style.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
+import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
-class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
-  const HomeAppBar({Key? key}) : super(key: key);
+class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final bool innerBoxIsScrolled;
+
+  const HomeAppBar({
+    Key? key,
+    required this.innerBoxIsScrolled
+  }) : super(key: key);
 
   @override
-  PreferredSizeWidget build(BuildContext context) {
+  Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
+    final statusProvider = Provider.of<StatusProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
     final width = MediaQuery.of(context).size.width;
@@ -38,13 +45,13 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
         serversProvider.updateselectedServerStatus(
           result['data'].status == 'enabled' ? true : false
         );
-        serversProvider.setIsServerConnected(true);
-        serversProvider.setRealtimeStatus(result['data']);
+        statusProvider.setIsServerConnected(true);
+        statusProvider.setRealtimeStatus(result['data']);
       }
       else {
-        serversProvider.setIsServerConnected(false);
-        if (serversProvider.getStatusLoading == LoadStatus.loading) {
-          serversProvider.setStatusLoading(LoadStatus.error);
+        statusProvider.setIsServerConnected(false);
+        if (statusProvider.getStatusLoading == LoadStatus.loading) {
+          statusProvider.setStatusLoading(LoadStatus.error);
         }
         showSnackBar(
           context: context, 
@@ -63,47 +70,31 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       });
     }
 
-    void openWebPanel() {
-      if (serversProvider.isServerConnected == true) {
-        FlutterWebBrowser.openWebPage(
-          url: '${serversProvider.selectedServer!.address}/admin/',
-          customTabsOptions: const CustomTabsOptions(
-            instantAppsEnabled: true,
-            showTitle: true,
-            urlBarHidingEnabled: false,
-          ),
-          safariVCOptions: const SafariViewControllerOptions(
-            barCollapsingEnabled: true,
-            dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
-            modalPresentationCapturesStatusBarAppearance: true,
-          )
-        );
-      }
-    }
-
     void connectToServer(Server server) async {
       Future connectSuccess(result) async {
-        serversProvider.setselectedServer(Server(
-          address: server.address,
-          alias: server.alias,
-          token: server.token!,
-          defaultServer: server.defaultServer,
-          enabled: result['status'] == 'enabled' ? true : false
-        ));
+        serversProvider.setselectedServer(
+          server: Server(
+            address: server.address,
+            alias: server.alias,
+            token: server.token!,
+            defaultServer: server.defaultServer,
+            enabled: result['status'] == 'enabled' ? true : false
+          )
+        );
         final statusResult = await realtimeStatus(server);
         if (statusResult['result'] == 'success') {
-          serversProvider.setRealtimeStatus(statusResult['data']);
+          statusProvider.setRealtimeStatus(statusResult['data']);
         }
         final overtimeDataResult = await fetchOverTimeData(server);
         if (overtimeDataResult['result'] == 'success') {
-          serversProvider.setOvertimeData(overtimeDataResult['data']);
-          serversProvider.setOvertimeDataLoadingStatus(1);
+          statusProvider.setOvertimeData(overtimeDataResult['data']);
+          statusProvider.setOvertimeDataLoadingStatus(1);
         }
         else {
-          serversProvider.setOvertimeDataLoadingStatus(2);
+          statusProvider.setOvertimeDataLoadingStatus(2);
         }
-        serversProvider.setIsServerConnected(true);
-        serversProvider.setRefreshServerStatus(true);
+        statusProvider.setIsServerConnected(true);
+        statusProvider.setRefreshServerStatus(true);
       }
 
       final ProcessModal process = ProcessModal(context: context);
@@ -133,71 +124,61 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       );
     }
 
-    return AppBar(
+    return SliverAppBar.large(
       systemOverlayStyle: systemUiOverlayStyleConfig(context),
-      toolbarHeight: 70,
+      pinned: true,
+      floating: true,
+      centerTitle: false,
+      forceElevated: innerBoxIsScrolled,
+      leading: Icon(
+        statusProvider.isServerConnected == true 
+          ? serversProvider.selectedServer!.enabled == true 
+            ? Icons.verified_user_rounded
+            : Icons.gpp_bad_rounded
+          : Icons.shield_rounded,
+        size: 30,
+        color: statusProvider.isServerConnected == true 
+          ? serversProvider.selectedServer!.enabled == true
+            ? Colors.green
+            : Colors.red
+          : Colors.grey
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
             onTap: openSwitchServerModal,
-            child: Row(
-              children: serversProvider.selectedServer != null 
-                ? [
-                    Icon(
-                      serversProvider.isServerConnected == true 
-                        ? serversProvider.selectedServer!.enabled == true 
-                          ? Icons.verified_user_rounded
-                          : Icons.gpp_bad_rounded
-                        : Icons.shield_rounded,
-                      size: 30,
-                      color: serversProvider.isServerConnected == true 
-                        ? serversProvider.selectedServer!.enabled == true
-                          ? Colors.green
-                          : Colors.red
-                        : Colors.grey
-                    ),
-                    const SizedBox(width: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          serversProvider.selectedServer!.alias,
-                          style: const TextStyle(
-                            fontSize: 20
-                          ),
-                        ),
-                        Text(
-                          serversProvider.selectedServer!.address,
-                          style: TextStyle(
-                            color: Theme.of(context).listTileTheme.textColor,
-                            fontSize: 14
-                          )
-                        )
-                      ],
-                    ),
-                  ]
-                : [
-                  const Icon(
-                    Icons.shield,
-                    color: Colors.grey,
-                    size: 30,
-                  ),
-                  const SizedBox(width: 20),
-                  SizedBox(
-                    width: width - 128,
-                    child: Text(
-                      AppLocalizations.of(context)!.noServerSelected,
-                      overflow: TextOverflow.ellipsis,
+            child: serversProvider.selectedServer != null 
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      serversProvider.selectedServer!.alias,
                       style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontSize: 20
                       ),
                     ),
+                    Text(
+                      serversProvider.selectedServer!.address,
+                      style: TextStyle(
+                        color: Theme.of(context).listTileTheme.textColor,
+                        fontSize: 14
+                      )
+                    )
+                  ],
+                )
+              : SizedBox(
+                  width: width - 128,
+                  child: Text(
+                    AppLocalizations.of(context)!.noServerSelected,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ]
-            ),
-          ),
+                ),
+          )
         ],
       ),
       actions: [
@@ -205,7 +186,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
           splashRadius: 20,
           itemBuilder: (context) => 
             serversProvider.selectedServer != null 
-              ? serversProvider.isServerConnected == true 
+              ? statusProvider.isServerConnected == true 
                 ? [
                     PopupMenuItem(
                       onTap: refresh,
@@ -218,7 +199,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
                       )
                     ),
                     PopupMenuItem(
-                      onTap: openWebPanel,
+                      onTap: () => openUrl('${serversProvider.selectedServer!.address}/admin/'),
                       child: Row(
                         children: [
                           const Icon(Icons.web),

@@ -1,31 +1,24 @@
 import 'dart:async';
-
-import 'package:droid_hole/constants/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
 
+import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/models/overtime_data.dart';
-import 'package:droid_hole/models/realtime_status.dart';
+import 'package:droid_hole/services/database/queries.dart';
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/server.dart';
 
 class ServersProvider with ChangeNotifier {
+  AppConfigProvider? _appConfigProvider;
+
+  update(AppConfigProvider? provider) {
+    _appConfigProvider = provider;
+  }
+
   List<Server> _serversList = [];
   Database? _dbInstance;
 
   Server? _selectedServer;
-  bool? _isServerConnected;
-  String? _phpSessId;
-  bool _refreshServerStatus = false;
-
-  LoadStatus _statusLoading = LoadStatus.loading;
-  RealtimeStatus? _realtimeStatus;
-
-  int _overtimeDataLoading = 0;
-  OverTimeData? _overtimeData;
-
-  bool _startAutoRefresh = false;
 
   List<Server> get getServersList {
     return _serversList;
@@ -35,60 +28,8 @@ class ServersProvider with ChangeNotifier {
     return _selectedServer;
   }
 
-  String? get phpSessId {
-    return _phpSessId;
-  }
-
-  bool? get isServerConnected {
-    return _isServerConnected;
-  }
-
-  RealtimeStatus? get getRealtimeStatus {
-    return _realtimeStatus;
-  }
-
-  LoadStatus get getStatusLoading {
-    return _statusLoading;
-  }
-
-  OverTimeData? get getOvertimeData {
-    return _overtimeData;
-  }
-
-  Map<String, dynamic>? get getOvertimeDataJson {
-    if (_overtimeData != null) {
-      return _overtimeData!.toJson();
-    }
-    else {
-      return null;
-    }
-  }
-
-  int get getOvertimeDataLoadStatus {
-    return _overtimeDataLoading;
-  }
-
-  bool get getRefreshServerStatus {
-    return _refreshServerStatus;
-  }
-  
-  bool get startAutoRefresh {
-    return _startAutoRefresh;
-  }
-
-  void setStartAutoRefresh(bool value) {
-    _startAutoRefresh = value;
-  }
-
-  void setRefreshServerStatus(bool status) {
-    _refreshServerStatus = status;
-    if (status == true) {
-      notifyListeners();
-    }
-  }
-
   Future<bool> addServer(Server server) async {
-    final saved = await saveToDb(server);
+    final saved = await saveServerQuery(_dbInstance!, server);
     if (saved == true) {
       if (server.defaultServer == true) {
         final defaultServer = await setDefaultServer(server);
@@ -113,7 +54,7 @@ class ServersProvider with ChangeNotifier {
   }
 
   Future<bool> editServer(Server server) async {
-    final result = await editServerDb(server);
+    final result = await editServerQuery(_dbInstance!, server);
     if (result == true) {
       List<Server> newServers = _serversList.map((s) {
         if (s.address == server.address) {
@@ -133,7 +74,7 @@ class ServersProvider with ChangeNotifier {
   }
 
   Future<bool> removeServer(String serverAddress) async {
-    final result = await removeFromDb(serverAddress);
+    final result = await removeServerQuery(_dbInstance!, serverAddress);
     if (result == true) {
       _selectedServer = null;
       List<Server> newServers = _serversList.where((server) => server.address != serverAddress).toList();
@@ -147,7 +88,7 @@ class ServersProvider with ChangeNotifier {
   }
 
   Future<bool> setDefaultServer(Server server) async {
-    final updated = await setDefaultServerDb(server.address);
+    final updated = await setDefaultServerQuery(_dbInstance!, server.address);
     if (updated == true) {
       List<Server> newServers = _serversList.map((s) {
         if (s.address == server.address) {
@@ -168,61 +109,28 @@ class ServersProvider with ChangeNotifier {
     }
   }
 
-  void setStatusLoading(LoadStatus status) {
-    _statusLoading = status;
-    notifyListeners();
-  }
-
-  void setRealtimeStatus(RealtimeStatus realtimeStatus) {
-    _realtimeStatus = realtimeStatus;
-    _statusLoading = LoadStatus.loaded;
-    notifyListeners();
-  }
-
-  void setPhpSessId(String value) {
-    _phpSessId = value;
-    notifyListeners();
-  }
-
-  void setIsServerConnected(bool status) {
-    _isServerConnected = status;
-    notifyListeners();
-  }
-
-  void setOvertimeDataLoadingStatus(int status) {
-    _overtimeDataLoading = status;
-    notifyListeners();
-  }
-
-  void setOvertimeData(OverTimeData value) {
-    _overtimeData = value;
-    notifyListeners();
-  }
-
-  Future<bool> settoken(Server server) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawInsert(
-          'UPDATE servers SET token = "${server.token}" WHERE address = "${server.address}"',
-        );
-        _serversList = _serversList.map((s) {
-          if (s.address == server.address) {
-            return server;
-          }
-          else {
-            return s;
-          }
-        }).toList();
-        notifyListeners();
-        return true;
-      });
-    } catch (e) {
+  Future<bool> setToken(Server server) async {
+    final result = await setServerTokenQuery(_dbInstance!, server.token, server.address);
+    if (result == true) {
+      _serversList = _serversList.map((s) {
+        if (s.address == server.address) {
+          return server;
+        }
+        else {
+          return s;
+        }
+      }).toList();
+      notifyListeners();
+      return true;
+    }
+    else {
       return false;
     }
   }
 
   Future saveFromDb(List<Map<String, dynamic>>? servers, bool connect) async {
    if (servers != null) {
+      Server? defaultServer;
       for (var server in servers) {
         final Server serverObj = Server(
           address: server['address'], 
@@ -234,122 +142,45 @@ class ServersProvider with ChangeNotifier {
         );
         _serversList.add(serverObj);
         if (convertFromIntToBool(server['isDefaultServer']) == true) {
-          _selectedServer = serverObj;
+          defaultServer = serverObj;
         }
+
+        if (defaultServer != null) {
+          _selectedServer = defaultServer;
+        }
+
+        notifyListeners();
       }
     }
-    notifyListeners();
+    else {
+      notifyListeners();
+    }
   }
 
   Future<bool> login(Server serverObj) async {
     final result = await loginQuery(serverObj);
     if (result['result'] == 'success') {
       _selectedServer = serverObj;
-      _realtimeStatus = result['realtimeStatus'];
-      _phpSessId = result['phpSessId'];
-      _isServerConnected = true;
-      _statusLoading = LoadStatus.loaded;
       notifyListeners();
       return true;
     }
     else {
-      _isServerConnected = false;
       _selectedServer = serverObj;
-      _statusLoading = LoadStatus.error;
       notifyListeners();
-      return false;
-    }
-  }
-
-  Future<bool> saveToDb(Server server) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawInsert(
-          'INSERT INTO servers (address, alias, token, isDefaultServer, basicAuthUser, basicAuthPassword) VALUES ("${server.address}", "${server.alias}", "${server.token}", 0, "${server.basicAuthUser}", "${server.basicAuthPassword}")',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> editServerDb(Server server) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE servers SET alias = "${server.alias}", token = "${server.token}", isDefaultServer = ${convertFromBoolToInt(server.defaultServer)}, basicAuthUser = "${server.basicAuthUser}", basicAuthPassword = "${server.basicAuthPassword}" WHERE address = "${server.address}"',
-        );
-        return true;
-      });
-    } catch (e) {
       return false;
     }
   }
 
   FutureOr<Map<String, dynamic>> checkUrlExists(String url) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        final result = await txn.rawQuery(
-          'SELECT count(address) as quantity FROM servers WHERE address = "$url"',
-        );
-        if (result[0]['quantity'] == 0) {
-          return {
-            'result': 'success',
-            'exists': false
-          };
-        }
-        else {
-          return {
-            'result': 'success',
-            'exists': true
-          };
-        }
-      });
-    } catch (e) {
-      return {
-        'result': 'fail'
-      };
-    }
+    return await checkUrlExistsQuery(_dbInstance!, url);
   }
 
-  Future<bool> setDefaultServerDb(String url) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawUpdate(
-          'UPDATE servers SET isDefaultServer = 0 WHERE isDefaultServer = 1',
-        );
-        await txn.rawUpdate(
-          'UPDATE servers SET isDefaultServer = 1 WHERE address = "$url"',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> removeFromDb(String address) async {
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawDelete(
-          'DELETE FROM servers WHERE address = "$address"',
-        );
-        return true;
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
-  void setselectedServer(Server? server) {
+  void setselectedServer({
+    required Server? server, 
+    bool? toHomeTab
+  }) {
     _selectedServer = server;
-    if (server != null) {
-      _isServerConnected = true;
-    }
-    else {
-      _isServerConnected = false;
-    }
+    if (toHomeTab == true) _appConfigProvider!.setSelectedTab(0);
     notifyListeners();
   }
 
@@ -365,18 +196,14 @@ class ServersProvider with ChangeNotifier {
   }
 
   Future<bool> deleteDbData() async {
-    _serversList = [];
-    _isServerConnected = false;
-    _selectedServer = null;
-    _phpSessId = null;
-    try {
-      return await _dbInstance!.transaction((txn) async {
-        await txn.rawDelete(
-          'DELETE FROM servers',
-        );
-        return true;
-      });
-    } catch (e) {
+    final result = await deleteServersDataQuery(_dbInstance!);
+    if (result == true) {
+      _serversList = [];
+      _selectedServer = null;
+      notifyListeners();
+      return true;
+    }
+    else {
       return false;
     }
   }
