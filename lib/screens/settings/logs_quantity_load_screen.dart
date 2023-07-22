@@ -76,7 +76,6 @@ class _LogsQuantityLoadScreenState extends State<LogsQuantityLoadScreen> {
     final result = await Provider.of<AppConfigProvider>(context, listen: false).setLogsPerQuery(_getTime());
     if (result == true) {
         showSnackBar(
-        context: context, 
         appConfigProvider: Provider.of<AppConfigProvider>(context, listen: false),
         label: AppLocalizations.of(context)!.logsPerQueryUpdated,
         color: Colors.green
@@ -84,7 +83,6 @@ class _LogsQuantityLoadScreenState extends State<LogsQuantityLoadScreen> {
     }
     else {
       showSnackBar(
-        context: context, 
         appConfigProvider: Provider.of<AppConfigProvider>(context, listen: false),
         label: AppLocalizations.of(context)!.cantUpdateLogsPerQuery,
         color: Colors.green

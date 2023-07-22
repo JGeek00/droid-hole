@@ -21,9 +21,12 @@ class _ResetModalState extends State<ResetModal> {
 
   @override
   void initState() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) => {
-      if (_timeRemaining > 0) {
-        setState(() => _timeRemaining--)
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted && _timeRemaining > 0) {
+        setState(() => _timeRemaining--);
+      }
+      else if (!mounted) {
+        _timer.cancel();
       }
     });
     super.initState();

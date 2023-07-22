@@ -32,7 +32,6 @@ Future refreshServerStatus(BuildContext context) async {
       statusProvider.setStatusLoading(LoadStatus.error);
     }
     showSnackBar(
-      context: context, 
       appConfigProvider: appConfigProvider,
       label: AppLocalizations.of(context)!.sslErrorShort, 
       color: Colors.red
@@ -44,7 +43,6 @@ Future refreshServerStatus(BuildContext context) async {
       statusProvider.setStatusLoading(LoadStatus.error);
     }
     showSnackBar(
-      context: context, 
       appConfigProvider: appConfigProvider,
       label: AppLocalizations.of(context)!.couldNotConnectServer, 
       color: Colors.red

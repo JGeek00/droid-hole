@@ -95,7 +95,6 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                 }
                 else {
                   showSnackBar(
-                    context: context, 
                     appConfigProvider: appConfigProvider,
                     label: AppLocalizations.of(context)!.biometricUnlockNotActivated,
                     color: Colors.red
@@ -109,7 +108,6 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
         }
         else {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.noAvailableBiometrics,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -120,7 +118,6 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
         final result = await appConfigProvider.setUseBiometrics(false);
         if (result == false) {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.biometricUnlockNotDisabled,
             color: Colors.red

@@ -85,7 +85,6 @@ class _DomainsListState extends State<DomainsList> {
         domainsListProvider.removeDomainFromList(domain);
         Navigator.pop(context);
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.domainRemoved,
           color: Colors.green
@@ -93,7 +92,6 @@ class _DomainsListState extends State<DomainsList> {
       }
       else if (result['result'] == 'error' && result['message'] != null && result['message'] == 'not_exists') {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.domainNotExists,
           color: Colors.red
@@ -101,7 +99,6 @@ class _DomainsListState extends State<DomainsList> {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.errorRemovingDomain,
           color: Colors.red
@@ -123,7 +120,6 @@ class _DomainsListState extends State<DomainsList> {
       if (result['result'] == 'success') {
         domainsListProvider.fetchDomainsList(serversProvider.selectedServer!);
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.domainAdded,
           color: Colors.green
@@ -131,7 +127,6 @@ class _DomainsListState extends State<DomainsList> {
       }
       else if (result['result'] == 'already_added') {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.domainAlreadyAdded,
           color: Colors.orange
@@ -139,7 +134,6 @@ class _DomainsListState extends State<DomainsList> {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.cannotAddDomain,
           color: Colors.red

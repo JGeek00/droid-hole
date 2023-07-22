@@ -191,7 +191,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           isConnecting = false;
         });
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.cannotCheckUrlSaved,
           color: Colors.red
@@ -228,7 +227,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           });
           if (result['result'] == 'socket') {
             showSnackBar(
-              context: context, 
               appConfigProvider: appConfigProvider,
               label: AppLocalizations.of(context)!.checkAddress,
               color: Colors.red
@@ -237,7 +235,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           }
           else if (result['result'] == 'timeout') {
             showSnackBar(
-              context: context, 
               appConfigProvider: appConfigProvider,
               label: AppLocalizations.of(context)!.connectionTimeout,
               color: Colors.red
@@ -246,7 +243,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           }
           else if (result['result'] == 'no_connection') {
             showSnackBar(
-              context: context, 
               appConfigProvider: appConfigProvider,
               label: AppLocalizations.of(context)!.cantReachServer,
               color: Colors.red
@@ -255,7 +251,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           }
           else if (result['result'] == 'auth_error') {
             showSnackBar(
-              context: context, 
               appConfigProvider: appConfigProvider,
               label: AppLocalizations.of(context)!.tokenNotValid,
               color: Colors.red
@@ -264,7 +259,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           }
           else if (result['result'] == 'ssl_error') {
             showSnackBar(
-              context: context, 
               appConfigProvider: appConfigProvider,
               label: AppLocalizations.of(context)!.sslErrorLong,
               color: Colors.red
@@ -273,7 +267,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           }
           else {
             showSnackBar(
-              context: context, 
               appConfigProvider: appConfigProvider,
               label: AppLocalizations.of(context)!.unknownError,
               color: Colors.red
@@ -318,7 +311,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
             isConnecting = false;
           });
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.cantSaveConnectionData,
             color: Colors.red
@@ -331,7 +323,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         });
         if (result['result'] == 'socket') {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.checkAddress,
             color: Colors.red
@@ -339,7 +330,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         }
         else if (result['result'] == 'timeout') {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.connectionTimeout,
             color: Colors.red
@@ -347,7 +337,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         }
         else if (result['result'] == 'no_connection') {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.cantReachServer,
             color: Colors.red
@@ -355,7 +344,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         }
         else if (result['result'] == 'auth_error') {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.tokenNotValid,
             color: Colors.red
@@ -363,7 +351,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         }
         else if (result['result'] == 'ssl_error') {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.sslErrorLong,
             color: Colors.red
@@ -371,7 +358,6 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         }
         else {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.unknownError,
             color: Colors.red

@@ -23,7 +23,6 @@ void enableServer(BuildContext context) async {
   if (result['result'] == 'success') {
     serversProvider.updateselectedServerStatus(true);
     showSnackBar(
-      context: context, 
       appConfigProvider: appConfigProvider,
       label: AppLocalizations.of(context)!.serverEnabled, 
       color: Colors.green
@@ -31,7 +30,6 @@ void enableServer(BuildContext context) async {
   }
   else {
     showSnackBar(
-      context: context, 
       appConfigProvider: appConfigProvider,
       label: AppLocalizations.of(context)!.couldntEnableServer, 
       color: Colors.red
@@ -53,7 +51,6 @@ void disableServer(int time, BuildContext context) async {
   if (result['result'] == 'success') {
     serversProvider.updateselectedServerStatus(false);
     showSnackBar(
-      context: context, 
       appConfigProvider: appConfigProvider,
       label: AppLocalizations.of(context)!.serverDisabled, 
       color: Colors.green
@@ -61,7 +58,6 @@ void disableServer(int time, BuildContext context) async {
   }
   else {
     showSnackBar(
-      context: context, 
       appConfigProvider: appConfigProvider,
       label: AppLocalizations.of(context)!.couldntDisableServer, 
       color: Colors.red

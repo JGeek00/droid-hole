@@ -34,7 +34,6 @@ class AdvancedOptions extends StatelessWidget {
       final result = await appConfigProvider.setOverrideSslCheck(newStatus);
       if (result == true) {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.restartAppTakeEffect, 
           color: Colors.green
@@ -42,7 +41,6 @@ class AdvancedOptions extends StatelessWidget {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.cannotUpdateSettings, 
           color: Colors.red
@@ -54,7 +52,6 @@ class AdvancedOptions extends StatelessWidget {
       final result = await appConfigProvider.setOneColumnLegend(newStatus);
       if (result == true) {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.settingsUpdatedSuccessfully, 
           color: Colors.green
@@ -62,7 +59,6 @@ class AdvancedOptions extends StatelessWidget {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.cannotUpdateSettings, 
           color: Colors.red
@@ -74,7 +70,6 @@ class AdvancedOptions extends StatelessWidget {
       final result = await appConfigProvider.setReducedDataCharts(newStatus);
       if (result == true) {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.settingsUpdatedSuccessfully, 
           color: Colors.green
@@ -82,7 +77,6 @@ class AdvancedOptions extends StatelessWidget {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.cannotUpdateSettings, 
           color: Colors.red
@@ -94,7 +88,6 @@ class AdvancedOptions extends StatelessWidget {
       final result = await appConfigProvider.setHideZeroValues(newStatus);
       if (result == true) {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.settingsUpdatedSuccessfully, 
           color: Colors.green
@@ -102,7 +95,6 @@ class AdvancedOptions extends StatelessWidget {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.cannotUpdateSettings, 
           color: Colors.green

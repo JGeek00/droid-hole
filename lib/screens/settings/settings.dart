@@ -128,7 +128,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             final result = await appConfigProvider.setLogsPerQuery(time);
             if (result == true) {
                 showSnackBar(
-                context: context, 
                 appConfigProvider: appConfigProvider,
                 label: AppLocalizations.of(context)!.logsPerQueryUpdated,
                 color: Colors.green
@@ -136,7 +135,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             }
             else {
               showSnackBar(
-                context: context, 
                 appConfigProvider: appConfigProvider,
                 label: AppLocalizations.of(context)!.cantUpdateLogsPerQuery,
                 color: Colors.green

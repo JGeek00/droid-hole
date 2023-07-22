@@ -31,6 +31,7 @@ import 'package:droid_hole/config/theme.dart';
 import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/providers/filters_provider.dart';
 import 'package:droid_hole/functions/status_updater.dart';
+import 'package:droid_hole/config/globals.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -240,6 +241,7 @@ class _DroidHoleState extends State<DroidHole> {
             Locale('es', ''),
             Locale('de', '')
           ],
+          scaffoldMessengerKey: scaffoldMessengerKey,
           builder: (context, child) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(

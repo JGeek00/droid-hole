@@ -54,7 +54,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           statusProvider.setStatusLoading(LoadStatus.error);
         }
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.notConnectServer, 
           color: Colors.red
@@ -107,7 +106,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.cannotConnect,
           color: Colors.red

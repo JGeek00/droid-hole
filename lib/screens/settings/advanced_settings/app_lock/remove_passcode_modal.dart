@@ -23,7 +23,6 @@ class RemovePasscodeModal extends StatelessWidget {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.connectionCannotBeRemoved,
           color: Colors.red

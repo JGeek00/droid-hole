@@ -86,7 +86,6 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
         domainsListProvider.removeDomainFromList(domain);
 
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.domainRemoved,
           color: Colors.green
@@ -94,7 +93,6 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
       }
       else if (result['result'] == 'error' && result['message'] != null && result['message'] == 'not_exists') {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.domainNotExists,
           color: Colors.red
@@ -102,7 +100,6 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.errorRemovingDomain,
           color: Colors.red

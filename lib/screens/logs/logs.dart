@@ -242,7 +242,6 @@ class _LogsState extends State<Logs> {
       if (result['result'] == 'success') {
         if (result['data']['message'].toString().contains('Added')) {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: list == 'white'
               ? AppLocalizations.of(context)!.addedWhitelist
@@ -252,7 +251,6 @@ class _LogsState extends State<Logs> {
         }
         else {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: list == 'white'
               ? AppLocalizations.of(context)!.alreadyWhitelist
@@ -263,7 +261,6 @@ class _LogsState extends State<Logs> {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: list == 'white'
             ? AppLocalizations.of(context)!.couldntAddWhitelist

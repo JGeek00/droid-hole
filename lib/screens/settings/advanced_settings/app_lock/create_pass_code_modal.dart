@@ -40,7 +40,6 @@ class _CreatePassCodeModalState extends State<CreatePassCodeModal> {
         }
         else {
           showSnackBar(
-            context: context, 
             appConfigProvider: appConfigProvider,
             label: AppLocalizations.of(context)!.passCodeNotSaved,
             color: Colors.red
@@ -49,7 +48,6 @@ class _CreatePassCodeModalState extends State<CreatePassCodeModal> {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.passcodesDontMatch,
           color: Colors.red

@@ -27,7 +27,6 @@ class DeleteModal extends StatelessWidget {
       Navigator.pop(context);
       if (deleted == true) {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.connectionRemoved,
           color: Colors.green
@@ -35,7 +34,6 @@ class DeleteModal extends StatelessWidget {
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.connectionCannotBeRemoved,
           color: Colors.red

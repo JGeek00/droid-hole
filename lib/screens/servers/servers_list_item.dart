@@ -147,7 +147,6 @@ class _ServersListItemState extends State<ServersListItem> with SingleTickerProv
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.cannotConnect,
           color: Colors.red
@@ -159,7 +158,6 @@ class _ServersListItemState extends State<ServersListItem> with SingleTickerProv
       final result = await serversProvider.setDefaultServer(server);
       if (result == true) {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.connectionDefaultSuccessfully,
           color: Colors.green
@@ -167,7 +165,6 @@ class _ServersListItemState extends State<ServersListItem> with SingleTickerProv
       }
       else {
         showSnackBar(
-          context: context, 
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.connectionDefaultFailed,
           color: Colors.red
