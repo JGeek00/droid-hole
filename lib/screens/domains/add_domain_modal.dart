@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:droid_hole/widgets/custom_list_tile.dart';
+
 class AddDomainModal extends StatefulWidget {
   final String selectedlist;
   final void Function(Map<String, dynamic>) addDomain;
@@ -57,8 +59,7 @@ class _AddDomainModalState extends State<AddDomainModal> {
 
   void validateDomain(String? value) {
     if (value != null && value != '') {
-      // Possible regexp with support for *. and one letter domain: ^(\*\.)?([a-zA-Z0-9-_]+\.)*([a-zA-Z0-9-_])+\.[a-z]+$
-      RegExp subrouteRegexp = RegExp(r'^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\.[a-zA-Z]{2,3})$');
+      final RegExp subrouteRegexp = RegExp(r'^([a-z0-9]+(?:[._-][a-z0-9]+)*)([a-z0-9]+(?:[.-][a-z0-9]+)*\.[a-z]{2,})$');
       if (subrouteRegexp.hasMatch(value) == true) {
         setState(() {
           domainError = null;
@@ -156,18 +157,16 @@ class _AddDomainModalState extends State<AddDomainModal> {
             ),
           ),
           const Padding(padding: EdgeInsets.all(8)),
-          SwitchListTile(
-            title: Text(
-              AppLocalizations.of(context)!.addAsWildcard,
-              style: const TextStyle(
-                fontWeight: FontWeight.normal
-              ),
+          CustomListTile(
+            label: AppLocalizations.of(context)!.addAsWildcard,
+            onTap: () => setState(() => wildcard = !wildcard),
+            trailing: Switch(
+              value: wildcard, 
+              onChanged: (value) => {
+                setState((() => wildcard = value))
+              },
             ),
-            value: wildcard, 
-            onChanged: (value) => {
-              setState((() => wildcard = value))
-            },
-            activeColor: Theme.of(context).colorScheme.primary,
+            padding: const EdgeInsets.all(8),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),
