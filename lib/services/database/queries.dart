@@ -1,6 +1,7 @@
+import 'package:sqflite/sqflite.dart';
+
 import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/models/server.dart';
-import 'package:sqflite/sqflite.dart';
 
 Future<dynamic> saveServerQuery(Database db, Server server) async {
   try {
@@ -114,10 +115,14 @@ Future<bool> deleteServersDataQuery(Database db) async {
 Future<Map<String, dynamic>> checkUrlExistsQuery(Database db, String url) async {
   try {
     return await db.transaction((txn) async {
-      final result = await txn.rawQuery(
-        'SELECT count(address) as quantity FROM servers WHERE address = "$url"',
+      final res = await txn.query(
+        "servers",
+        columns: ["count(address) as quantity"],
+        where: "address = ?",
+        whereArgs: [url]
       );
-      if (result[0]['quantity'] == 0) {
+
+      if (res[0]['quantity'] == 0) {
         return {
           'result': 'success',
           'exists': false
@@ -130,7 +135,7 @@ Future<Map<String, dynamic>> checkUrlExistsQuery(Database db, String url) async 
         };
       }
     });
-  } catch (e) {
+  } catch (e) {;
     return {
       'result': 'fail'
     };
