@@ -191,7 +191,7 @@ class _DomainsListState extends State<DomainsList> {
           ), 
           itemsCount: widget.domainsList.length,
           contentWidget: (index) => Padding(
-            padding: index == 0 
+            padding: index == 0 && MediaQuery.of(context).size.width > 900
               ? const EdgeInsets.only(top: 16) 
               : const EdgeInsets.all(0),
             child: DomainTile(
