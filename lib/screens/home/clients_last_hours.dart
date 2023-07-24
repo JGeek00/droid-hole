@@ -25,7 +25,6 @@ class ClientsLastHours extends StatelessWidget {
       gridData: FlGridData(
         show: true,
         drawVerticalLine: false,
-        horizontalInterval: (data['topPoint']/5).toDouble(),
         getDrawingHorizontalLine: (value) => FlLine(
           color: selectedTheme == ThemeMode.light
             ? Colors.black12

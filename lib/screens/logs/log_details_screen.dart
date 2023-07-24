@@ -129,7 +129,7 @@ class LogDetailsScreen extends StatelessWidget {
           CustomListTile(
             leadingIcon: Icons.system_update_alt_outlined, 
             label: AppLocalizations.of(context)!.reply, 
-            description: "${log.replyType} (${(log.replyTime/10)} ms)",
+            description: "${log.replyType} (${(log.replyTime/BigInt.from(10))} ms)",
           ),
         ],
       ),

@@ -5,6 +5,15 @@ Domain domainFromJson(String str) => Domain.fromJson(json.decode(str));
 String domainToJson(Domain data) => json.encode(data.toJson());
 
 class Domain {
+  int id;
+  int type;
+  String domain;
+  int enabled;
+  DateTime dateAdded;
+  DateTime dateModified;
+  String? comment;
+  List<int> groups;
+
   Domain({
     required this.id,
     required this.type,
@@ -15,15 +24,6 @@ class Domain {
     required this.comment,
     required this.groups,
   });
-
-  int id;
-  int type;
-  String domain;
-  int enabled;
-  DateTime dateAdded;
-  DateTime dateModified;
-  String comment;
-  List<int> groups;
 
   factory Domain.fromJson(Map<String, dynamic> json) => Domain(
     id: json["id"],
