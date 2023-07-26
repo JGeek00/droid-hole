@@ -115,7 +115,7 @@ class _ServersTileItemState extends State<ServersTileItem> with SingleTickerProv
       if (result['result'] == 'success') {
         await connectSuccess(result);
       }
-      else {
+      else if (mounted) {
         showSnackBar(
           appConfigProvider: appConfigProvider,
           label: AppLocalizations.of(context)!.cannotConnect,

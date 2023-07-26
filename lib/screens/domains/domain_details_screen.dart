@@ -91,12 +91,12 @@ class DomainDetailsScreen extends StatelessWidget {
           Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: domain.comment != "" 
+              onTap: domain.comment != null && domain.comment != "" 
                 ? () => {
                   showModal(
                     context: context, 
                     builder: (context) => DomainCommentModal(
-                      comment: domain.comment
+                      comment: domain.comment!
                     )
                   )
                 } : null,

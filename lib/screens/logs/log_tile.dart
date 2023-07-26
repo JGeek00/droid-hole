@@ -46,7 +46,7 @@ class LogTile extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        LogStatus(status: log.status, showIcon: true),
+                        if (log.status != null) LogStatus(status: log.status!, showIcon: true),
                         const SizedBox(height: 10),
                         SizedBox(
                           child: Text(
@@ -102,7 +102,7 @@ class LogTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      LogStatus(status: log.status, showIcon: true),
+                      if (log.status != null) LogStatus(status: log.status!, showIcon: true),
                       const SizedBox(height: 10),
                       SizedBox(
                         child: Text(

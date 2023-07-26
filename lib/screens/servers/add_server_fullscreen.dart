@@ -222,9 +222,14 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           ));
         }
         else {
-          setState(() {
+          if (mounted) {
+            setState(() {
+              isConnecting = false;
+            });
+          }
+          else {
             isConnecting = false;
-          });
+          }
           if (result['result'] == 'socket') {
             showSnackBar(
               appConfigProvider: appConfigProvider,
