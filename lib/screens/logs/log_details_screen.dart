@@ -116,10 +116,10 @@ class LogDetailsScreen extends StatelessWidget {
             label: AppLocalizations.of(context)!.time, 
             description: formatTimestamp(log.dateTime, 'HH:mm:ss'),
           ),
-          item(
+          if (log.status != null) item(
             Icons.shield_outlined, 
             AppLocalizations.of(context)!.status, 
-            LogStatus(status: log.status, showIcon: false)
+            LogStatus(status: log.status!, showIcon: false)
           ),
           if (log.status == '2' && log.answeredBy != null) CustomListTile(
             leadingIcon: Icons.domain, 

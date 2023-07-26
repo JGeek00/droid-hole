@@ -3,7 +3,7 @@ class Log {
   final String type;
   final String url;
   final String device;
-  final String status;
+  final String? status;
   final String replyType;
   final BigInt replyTime;
   final String? answeredBy;

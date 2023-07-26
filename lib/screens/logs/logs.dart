@@ -136,7 +136,7 @@ class _LogsState extends State<Logs> {
     List<Log> tempLogs = logs != null ? [...logs] : [...logsList];
 
     tempLogs = tempLogs.where((log) {
-      if (statusSelected.contains(int.parse(log.status))) {
+      if (log.status != null && statusSelected.contains(int.parse(log.status!))) {
         return true;
       }
       else {
