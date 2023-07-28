@@ -130,7 +130,6 @@ class _UnlockState extends State<Unlock> {
                   onInput: (newCode) => _code.length < 4
                     ? updateCode(newCode)
                     : {}, 
-                  window: false,
                 )
               ],
             ),

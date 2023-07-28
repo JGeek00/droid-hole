@@ -54,23 +54,10 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
     final mediaQuery = MediaQuery.of(context);
 
     void openPassCodeDialog() {
-      if (mediaQuery.size.width > 700) {
-        showDialog(
-          context: context, 
-          builder: (BuildContext context) => const CreatePassCodeModal(
-            window: true
-          ),
-          barrierDismissible: false
-        );
-      }
-      else {
-        Navigator.push(context, MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (BuildContext context) => const CreatePassCodeModal(
-            window: false
-          )
-        ));
-      }
+      Navigator.push(context, MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (BuildContext context) => const CreatePassCodeModal()
+      ));
     }
 
     void openRemovePasscode() {
@@ -333,9 +320,11 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
           constraints: const BoxConstraints(
             maxWidth: 400
           ),
-          child: Wrap(
-            alignment: WrapAlignment.center,
-            children: content(),
+          child: SingleChildScrollView(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              children: content(),
+            ),
           ),
         ),
       );

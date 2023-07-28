@@ -10,14 +10,12 @@ class NumericPad extends StatelessWidget {
   final GlobalKey? shakeKey;
   final String code;
   final void Function(String) onInput;
-  final bool window;
 
   const NumericPad({
     Key? key,
     this.shakeKey,
     required this.code,
     required this.onInput,
-    required this.window
   }) : super(key: key);
 
   @override
@@ -131,7 +129,7 @@ class NumericPad extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
-              vertical: height*0.05
+              vertical: height > 700 ? height*0.05 : height*0.02
             ),
             child: ShakeAnimation(
               key: shakeKey,
@@ -152,7 +150,9 @@ class NumericPad extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: height > 700 
+                ? const EdgeInsets.all(16)
+                : const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   Expanded(

@@ -10,12 +10,7 @@ import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 
 class CreatePassCodeModal extends StatefulWidget {
-  final bool window;
-
-  const CreatePassCodeModal({
-    Key? key,
-    required this.window
-  }) : super(key: key);
+  const CreatePassCodeModal({Key? key}) : super(key: key);
 
   @override
   State<CreatePassCodeModal> createState() => _CreatePassCodeModalState();
@@ -55,140 +50,59 @@ class _CreatePassCodeModalState extends State<CreatePassCodeModal> {
       }
     }
 
-    if (widget.window == true) {
-      return Dialog(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 400
-          ),
-          child: Wrap(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () => Navigator.pop(context), 
-                          icon: const Icon(Icons.clear_rounded)
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          _step == 0
-                            ? AppLocalizations.of(context)!.enterPasscode
-                            : AppLocalizations.of(context)!.repeatPasscode,
-                          style: const TextStyle(
-                            fontSize: 22
-                          ),
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: _step == 0
-                        ? _code.length == 4
-                          ? () => setState(() => _step = 1)
-                          : null
-                        : _repeatedCode.length == 4
-                          ? _finish
-                          : null, 
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all(
-                          _step == 0
-                          ? _code.length == 4
-                            ? Theme.of(context).colorScheme.primary
-                            : Colors.grey
-                          : _repeatedCode.length == 4
-                            ? Theme.of(context).colorScheme.primary
-                            : Colors.grey
-                        ),
-                      ),
-                      child: Text(
-                        _step == 0 
-                          ? AppLocalizations.of(context)!.next
-                          : AppLocalizations.of(context)!.finish
-                      )
-                    )
-                  ],
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(16)),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  NumericPad(
-                    code: _step == 0 ? _code : _repeatedCode,
-                    onInput: (newCode) => _step == 0
-                      ? setState(() => _code = newCode)
-                      : setState(() => _repeatedCode = newCode), 
-                    window: widget.window
-                  )
-                ],
-              ),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _step == 0
+            ? AppLocalizations.of(context)!.enterPasscode
+            : AppLocalizations.of(context)!.repeatPasscode
         ),
-      );
-    }
-    else {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _step == 0
-              ? AppLocalizations.of(context)!.enterPasscode
-              : AppLocalizations.of(context)!.repeatPasscode
-          ),
-          elevation: 5,
-          actions: [
-            TextButton(
-              onPressed: _step == 0
+        elevation: 5,
+        actions: [
+          TextButton(
+            onPressed: _step == 0
+              ? _code.length == 4
+                ? () => setState(() => _step = 1)
+                : null
+              : _repeatedCode.length == 4
+                ? _finish
+                : null, 
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(
+                _step == 0
                 ? _code.length == 4
-                  ? () => setState(() => _step = 1)
-                  : null
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey
                 : _repeatedCode.length == 4
-                  ? _finish
-                  : null, 
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all(
-                  _step == 0
-                  ? _code.length == 4
-                    ? Theme.of(context).colorScheme.primary
-                    : Colors.grey
-                  : _repeatedCode.length == 4
-                    ? Theme.of(context).colorScheme.primary
-                    : Colors.grey
-                ),
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey
               ),
-              child: Text(
-                _step == 0 
-                  ? AppLocalizations.of(context)!.next
-                  : AppLocalizations.of(context)!.finish
-              )
+            ),
+            child: Text(
+              _step == 0 
+                ? AppLocalizations.of(context)!.next
+                : AppLocalizations.of(context)!.finish
+            )
+          )
+        ],
+      ),
+      body: SizedBox(
+        height: height-60,
+        width: double.maxFinite,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            NumericPad(
+              code: _step == 0 ? _code : _repeatedCode,
+              onInput: (newCode) => _step == 0
+                ? setState(() => _code = newCode)
+                : setState(() => _repeatedCode = newCode), 
             )
           ],
-        ),
-        body: SizedBox(
-          height: height-60,
-          width: double.maxFinite,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              NumericPad(
-                code: _step == 0 ? _code : _repeatedCode,
-                onInput: (newCode) => _step == 0
-                  ? setState(() => _code = newCode)
-                  : setState(() => _repeatedCode = newCode), 
-                window: widget.window
-              )
-            ],
-          )
-        ),
-      );
-    }
+        )
+      ),
+    );
   }
 }
