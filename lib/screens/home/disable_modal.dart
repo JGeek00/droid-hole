@@ -311,22 +311,24 @@ class _DisableModalState extends State<DisableModal> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SingleChildScrollView(
-                  child: Wrap(
-                    children: [
-                      ExpandableNotifier(
-                        controller: expandableController,
-                        child: Expandable(
-                          collapsed: options(),
-                          expanded: Column(
-                            children: [
-                              options(),
-                              inputField()
-                            ],
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      children: [
+                        ExpandableNotifier(
+                          controller: expandableController,
+                          child: Expandable(
+                            collapsed: options(),
+                            expanded: Column(
+                              children: [
+                                options(),
+                                inputField()
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
@@ -376,22 +378,24 @@ class _DisableModalState extends State<DisableModal> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SingleChildScrollView(
-                child: Wrap(
-                  children: [
-                    ExpandableNotifier(
-                      controller: expandableController,
-                      child: Expandable(
-                        collapsed: options(),
-                        expanded: Column(
-                          children: [
-                            options(),
-                            inputField()
-                          ],
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    children: [
+                      ExpandableNotifier(
+                        controller: expandableController,
+                        child: Expandable(
+                          collapsed: options(),
+                          expanded: Column(
+                            children: [
+                              options(),
+                              inputField()
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Padding(

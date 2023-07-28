@@ -142,7 +142,7 @@ class _DomainsListState extends State<DomainsList> {
     }
 
     void openModalAddDomainToList() {
-      if (MediaQuery.of(context).size.width > 900) {
+      if (MediaQuery.of(context).size.width > 700) {
         showDialog(
           context: context,
           builder: (ctx) => AddDomainModal(
