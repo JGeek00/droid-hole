@@ -39,6 +39,44 @@ This is an unofficial application. The Pi-hole team and the development of the P
 ## Recommended lists
 On [this repository](https://github.com/JuanRodenas/Pihole_list) you can find some recommended lists. Thanks to [JuanRodenas](https://github.com/JuanRodenas).
 
+
+## Prepare the development environment
+1. Clone the repository
+2. Run ``flutter pub get``
+3. Clone the ``.env.sample`` file and name it ``.env``
+4. On the ``SENTRY_DSN`` variable assign it's value
+5. Inside the ``android`` folder, clone the ``key.properties.sample`` file and name it ``key.properties``
+6. Open the file and fill the variables with the corresponding values
+7. Store your ``keystore.jks`` file inside ``android/app``
+
+
+## Compile the production build
+##### Android
+1. Run ``flutter clean``
+2. Run ``flutter pub get``
+3. Run ``flutter build apk --release`` to build the .apk file
+4. Run ``flutter build appbundle --release`` to build the .aab file
+
+##### macOS
+1. Run ``flutter clean``
+2. Run ``flutter pub get``
+3. Run ``flutter build macos --release`` to build the .app file
+
+##### Linux
+1. Run ``flutter clean``
+2. Run ``flutter pub get``
+3. Run ``flutter build linux --release`` to build the Linux executable
+4. If you want to build also the .deb file do this:
+  4.1. Run ``dart pub global activate flutter_to_debian`` to install the utility that will build the .deb file
+  4.2. Run ``flutter_to_debian``
+
+##### Windows
+1. Run ``flutter clean``
+2. Run ``flutter pub get``
+3. Run ``flutter build windows --release`` to build the Windows executable
+4. Install the [InnoSetup](https://jrsoftware.org/isdl.php) software you don't have it
+5. Run ``iscc /Q windows/innosetup_installer_builder.iss`` to generate the Windows installer
+
 ## Third party libraries
 - [provider](https://pub.dev/packages/provider)
 - [sqflite](https://pub.dev/packages/sqflite)
@@ -62,11 +100,18 @@ On [this repository](https://github.com/JuanRodenas/Pihole_list) you can find so
 - [permission handler](https://pub.dev/packages/permission_handler)
 - [dynamic color](https://pub.dev/packages/dynamic_color)
 - [device info](https://pub.dev/packages/device_info)
-- [flutter local auth invisible](https://pub.dev/packages/flutter_local_auth_invisible)
 - [vibration](https://pub.dev/packages/vibration)
 - [url launcher](https://pub.dev/packages/url_launcher)
 - [percent indicator](https://pub.dev/packages/percent_indicator)
 - [flutter app lock](https://pub.dev/packages/flutter_app_lock)
+- [sqlite3 flutter libs](https://pub.dev/packages/sqlite3_flutter_libs)
+- [sqflite common ffi](https://pub.dev/packages/sqflite_common_ffi)
+- [sentry flutter](https://pub.dev/packages/sentry_flutter)
+- [flutter dotenv](https://pub.dev/packages/flutter_dotenv)
+- [contextmenu](https://pub.dev/packages/contextmenu)
+- [window size](https://github.com/google/flutter-desktop-embedding)
+- [flutter split view](https://github.com/TerminalStudio/flutter_split_view)
+- [local auth](https://pub.dev/packages/local_auth)
 
 <br>
 

@@ -318,5 +318,6 @@
     "all": "Todos",
     "allowed": "Permitidos",
     "advancedStatusFiltering": "Filtros de estado avanzados",
-    "selectOptionLeftColumn": "Selecciona una opción de la columna de la izquierda."
+    "selectOptionLeftColumn": "Selecciona una opción de la columna de la izquierda.",
+    "unlockWithFingerprint": "Desbloquea la app con tu huella dactilar"
 }

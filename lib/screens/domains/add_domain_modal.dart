@@ -99,74 +99,83 @@ class _AddDomainModalState extends State<AddDomainModal> {
   @override
   Widget build(BuildContext context) {
     Widget content() {
-      return Wrap(
-        alignment: WrapAlignment.center,
+      return Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            children: [
-               Icon(
-                Icons.domain_add_rounded,
-                size: 24,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  AppLocalizations.of(context)!.addDomain,
-                  style: const TextStyle(
-                    fontSize: 24
+          Flexible(
+            child: SingleChildScrollView(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Icon(
+                        Icons.domain_add_rounded,
+                        size: 24,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(
+                          AppLocalizations.of(context)!.addDomain,
+                          style: const TextStyle(
+                            fontSize: 24
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    width: double.maxFinite,
+                    child: SegmentedButton<ListType>(
+                      segments: const [
+                        ButtonSegment(
+                          value: ListType.whitelist,
+                          label: Text("Whitelist")
+                        ),
+                        ButtonSegment(
+                          value: ListType.blacklist,
+                          label: Text("Blacklist")
+                        ),
+                      ], 
+                      selected: <ListType>{selectedType},
+                      onSelectionChanged: (value) => setState(() => selectedType = value.first),
+                    ),
+                  ),
+                  Container(
+                    width: double.maxFinite,
+                    padding: const EdgeInsets.only(top: 20),
+                    child: TextField(
+                      controller: domainController,
+                      onChanged: (value) => validateDomain(value),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.domain_rounded),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10)
+                          )
+                        ),
+                        labelText: AppLocalizations.of(context)!.domain,
+                        errorText: domainError
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(8)),
+                  CustomListTile(
+                    label: AppLocalizations.of(context)!.addAsWildcard,
+                    onTap: () => setState(() => wildcard = !wildcard),
+                    trailing: Switch(
+                      value: wildcard, 
+                      onChanged: (value) => {
+                        setState((() => wildcard = value))
+                      },
+                    ),
+                    padding: const EdgeInsets.all(8),
+                  ),
+                ],
               ),
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            width: double.maxFinite,
-            child: SegmentedButton<ListType>(
-              segments: const [
-                ButtonSegment(
-                  value: ListType.whitelist,
-                  label: Text("Whitelist")
-                ),
-                ButtonSegment(
-                  value: ListType.blacklist,
-                  label: Text("Blacklist")
-                ),
-              ], 
-              selected: <ListType>{selectedType},
-              onSelectionChanged: (value) => setState(() => selectedType = value.first),
             ),
-          ),
-          Container(
-            width: double.maxFinite,
-            padding: const EdgeInsets.only(top: 20),
-            child: TextField(
-              controller: domainController,
-              onChanged: (value) => validateDomain(value),
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.domain_rounded),
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10)
-                  )
-                ),
-                labelText: AppLocalizations.of(context)!.domain,
-                errorText: domainError
-              ),
-            ),
-          ),
-          const Padding(padding: EdgeInsets.all(8)),
-          CustomListTile(
-            label: AppLocalizations.of(context)!.addAsWildcard,
-            onTap: () => setState(() => wildcard = !wildcard),
-            trailing: Switch(
-              value: wildcard, 
-              onChanged: (value) => {
-                setState((() => wildcard = value))
-              },
-            ),
-            padding: const EdgeInsets.all(8),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),

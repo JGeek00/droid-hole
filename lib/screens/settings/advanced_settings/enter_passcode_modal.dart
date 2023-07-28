@@ -96,7 +96,6 @@ class _EnterPasscodeModalState extends State<EnterPasscodeModal> {
                 shakeKey: _shakeKey,
                 code: _code,
                 onInput: (newCode) => setState(() => _code = newCode), 
-                window: widget.window
               )
             ],
           ),
@@ -138,7 +137,6 @@ class _EnterPasscodeModalState extends State<EnterPasscodeModal> {
                 shakeKey: _shakeKey,
                 code: _code,
                 onInput: (newCode) => setState(() => _code = newCode), 
-                window: widget.window
               )
             ],
           )

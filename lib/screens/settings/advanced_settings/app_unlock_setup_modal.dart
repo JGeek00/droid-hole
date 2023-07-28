@@ -1,11 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_local_auth_invisible/flutter_local_auth_invisible.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/fingerprint_unlock_modal.dart';
 import 'package:droid_hole/screens/settings/advanced_settings/app_lock/remove_passcode_modal.dart';
 import 'package:droid_hole/screens/settings/advanced_settings/app_lock/create_pass_code_modal.dart';
 
@@ -34,7 +33,8 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
 
   void checkAvailableBiometrics() async {
     try {
-      final List<BiometricType> biometrics = await LocalAuthentication.getAvailableBiometrics();
+      final auth = LocalAuthentication();
+      final List<BiometricType> biometrics = await auth.getAvailableBiometrics();
       setState(() => availableBiometrics = biometrics);
     } catch (_) {
       // NO BIOMETRICS //
@@ -53,27 +53,14 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
 
     final mediaQuery = MediaQuery.of(context);
 
-    void _openPassCodeDialog() {
-      if (mediaQuery.size.width > 700) {
-        showDialog(
-          context: context, 
-          builder: (BuildContext context) => const CreatePassCodeModal(
-            window: true
-          ),
-          barrierDismissible: false
-        );
-      }
-      else {
-        Navigator.push(context, MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (BuildContext context) => const CreatePassCodeModal(
-            window: false
-          )
-        ));
-      }
+    void openPassCodeDialog() {
+      Navigator.push(context, MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (BuildContext context) => const CreatePassCodeModal()
+      ));
     }
 
-    void _openRemovePasscode() {
+    void openRemovePasscode() {
       showDialog(
         context: context, 
         builder: (context) => const RemovePasscodeModal(),
@@ -81,30 +68,28 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
       );
     }
 
-    void _enableDisableBiometricsUnlock(bool status) async {
+    void enableDisableBiometricsUnlock(bool status) async {
       if (status == true) {
-        if (availableBiometrics.contains(BiometricType.fingerprint)) {
-          showModalBottomSheet(
-            context: context, 
-            builder: (ctx)  => FingerprintUnlockModal(
-              topBarHeight: widget.topBarHeight,
-              onSuccess: () async {
-                final result = await appConfigProvider.setUseBiometrics(true);
-                if (result == true) {
-                  Navigator.pop(ctx);
-                }
-                else {
-                  showSnackBar(
-                    appConfigProvider: appConfigProvider,
-                    label: AppLocalizations.of(context)!.biometricUnlockNotActivated,
-                    color: Colors.red
-                  );
-                }
-              },
+        final auth = LocalAuthentication();
+        final biometrics = await auth.getAvailableBiometrics();
+        if (biometrics.isNotEmpty) {
+          final bool didAuthenticate = await auth.authenticate(
+            localizedReason: 'Unlock the app',
+            options: const AuthenticationOptions(
+              biometricOnly: true,
+              stickyAuth: true,
             ),
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent
           );
+          if (didAuthenticate == true) {
+            final result = await appConfigProvider.setUseBiometrics(true);
+            if (result == false) {
+              showSnackBar(
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.biometricUnlockNotActivated,
+                color: Colors.red
+              );
+            }
+          }
         }
         else {
           showSnackBar(
@@ -220,7 +205,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: _openPassCodeDialog,
+                        onPressed: openPassCodeDialog,
                         style: ButtonStyle(
                           shadowColor: MaterialStateProperty.all(Colors.transparent)
                         ), 
@@ -239,7 +224,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: _openRemovePasscode,
+                        onPressed: openRemovePasscode,
                         style: ButtonStyle(
                           shadowColor: MaterialStateProperty.all(Colors.transparent)
                         ), 
@@ -259,7 +244,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
           : Padding(
               padding: const EdgeInsets.all(20),
               child: ElevatedButton.icon(
-                onPressed: _openPassCodeDialog,
+                onPressed: openPassCodeDialog,
                 style: ButtonStyle(
                   shadowColor: MaterialStateProperty.all(Colors.transparent)
                 ), 
@@ -271,7 +256,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
           color: Colors.transparent,
           child: InkWell(
             onTap: appConfigProvider.passCode != null
-              ? () => _enableDisableBiometricsUnlock(!appConfigProvider.useBiometrics)
+              ? () => enableDisableBiometricsUnlock(!appConfigProvider.useBiometrics)
               : null,
             child: Padding(
               padding: const EdgeInsets.only(
@@ -305,9 +290,8 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                   ),
                   Switch(
                     value: appConfigProvider.useBiometrics, 
-                    activeColor: Theme.of(context).colorScheme.primary,
                     onChanged: appConfigProvider.passCode != null
-                      ? (value) => _enableDisableBiometricsUnlock(value)
+                      ? (value) => enableDisableBiometricsUnlock(value)
                       : null
                   )
                 ],
@@ -336,9 +320,11 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
           constraints: const BoxConstraints(
             maxWidth: 400
           ),
-          child: Wrap(
-            alignment: WrapAlignment.center,
-            children: content(),
+          child: SingleChildScrollView(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              children: content(),
+            ),
           ),
         ),
       );

@@ -84,7 +84,7 @@ class HomeCharts extends StatelessWidget {
         return Wrap(
           children: [
             FractionallySizedBox(
-              widthFactor: width > 1000 ? 0.5 : 1,
+              widthFactor: width > 700 ? 0.5 : 1,
               child: checkExistsData(statusProvider.getOvertimeDataJson!['domains_over_time']) && checkExistsData(statusProvider.getOvertimeDataJson!['ads_over_time'])
                 ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +139,7 @@ class HomeCharts extends StatelessWidget {
                   ),
             ),
             FractionallySizedBox(
-              widthFactor: width > 1000 ? 0.5 : 1,
+              widthFactor: width > 700 ? 0.5 : 1,
               child: statusProvider.getOvertimeDataJson!['over_time'].keys.length > 0 &&
                 statusProvider.getOvertimeDataJson!['clients'].length > 0 
                   ? Column(

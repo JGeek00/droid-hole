@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
               runSpacing: 16,
               children: [
                 FractionallySizedBox(
-                  widthFactor: width > 1000 ? 0.25 : 0.5,
+                  widthFactor: width > 700 ? 0.25 : 0.5,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: HomeTile(
@@ -105,7 +105,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 FractionallySizedBox(
-                  widthFactor: width > 1000 ? 0.25 : 0.5,
+                  widthFactor: width > 700 ? 0.25 : 0.5,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: HomeTile(
@@ -118,7 +118,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 FractionallySizedBox(
-                  widthFactor: width > 1000 ? 0.25 : 0.5,
+                  widthFactor: width > 700 ? 0.25 : 0.5,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: HomeTile(
@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 FractionallySizedBox(
-                  widthFactor: width > 1000 ? 0.25 : 0.5,
+                  widthFactor: width > 700 ? 0.25 : 0.5,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: HomeTile(

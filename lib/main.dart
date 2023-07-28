@@ -7,13 +7,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:vibration/vibration.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:flutter_local_auth_invisible/flutter_local_auth_invisible.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -71,8 +71,9 @@ void main() async {
 
   try {
     if (Platform.isAndroid || Platform.isIOS) {
-      final bool canAuthenticateWithBiometrics = await LocalAuthentication.canCheckBiometrics;
-      List<BiometricType> availableBiometrics = await LocalAuthentication.getAvailableBiometrics();
+      final auth = LocalAuthentication();
+      final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+      List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
       configProvider.setBiometricsSupport(canAuthenticateWithBiometrics);
       
       if (

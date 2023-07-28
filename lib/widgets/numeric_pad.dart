@@ -10,14 +10,12 @@ class NumericPad extends StatelessWidget {
   final GlobalKey? shakeKey;
   final String code;
   final void Function(String) onInput;
-  final bool window;
 
   const NumericPad({
     Key? key,
     this.shakeKey,
     required this.code,
     required this.onInput,
-    required this.window
   }) : super(key: key);
 
   @override
@@ -125,125 +123,80 @@ class NumericPad extends StatelessWidget {
       );
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: height*0.05
-          ),
-          child: ShakeAnimation(
-            key: shakeKey,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                _number(code.isNotEmpty ? code[0] : null),
-                const SizedBox(width: 20),
-                _number(code.length >= 2 ? code[1] : null),
-                const SizedBox(width: 20),
-                _number(code.length >= 3 ? code[2] : null),
-                const SizedBox(width: 20),
-                _number(code.length >= 4 ? code[3] : null),
-              ],
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: height > 700 ? height*0.05 : height*0.02
+            ),
+            child: ShakeAnimation(
+              key: shakeKey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  _number(code.isNotEmpty ? code[0] : null),
+                  const SizedBox(width: 20),
+                  _number(code.length >= 2 ? code[1] : null),
+                  const SizedBox(width: 20),
+                  _number(code.length >= 3 ? code[2] : null),
+                  const SizedBox(width: 20),
+                  _number(code.length >= 4 ? code[3] : null),
+                ],
+              ),
             ),
           ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(16),
-          height: width <= 700 
-            ? height-((height*0.1)+40)-60 
-            : height-((height*0.1)+40)-200,
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    gridItem(number: 1),
-                    gridItem(number: 2),
-                    gridItem(number: 3)
-                  ],
-                ),
+          Expanded(
+            child: Container(
+              padding: height > 700 
+                ? const EdgeInsets.all(16)
+                : const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        gridItem(number: 1),
+                        gridItem(number: 2),
+                        gridItem(number: 3)
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        gridItem(number: 4),
+                        gridItem(number: 5),
+                        gridItem(number: 6)
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        gridItem(number: 7),
+                        gridItem(number: 8),
+                        gridItem(number: 9)
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const Expanded(flex: 1, child: SizedBox()),
+                        gridItem(number: 0),
+                        backButton()
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: Row(
-                  children: [
-                    gridItem(number: 4),
-                    gridItem(number: 5),
-                    gridItem(number: 6)
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    gridItem(number: 7),
-                    gridItem(number: 8),
-                    gridItem(number: 9)
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Expanded(flex: 1, child: SizedBox()),
-                    gridItem(number: 0),
-                    backButton()
-                  ],
-                ),
-              ),
-            ],
-          ),
-        )
-        // Column(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         _numberButton(number: "1"),
-        //         const SizedBox(width: 30),
-        //         _numberButton(number: "2"),
-        //         const SizedBox(width: 30),
-        //         _numberButton(number: "3"),
-        //       ],
-        //     ),
-        //     const SizedBox(height: 20),
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         _numberButton(number: "4"),
-        //         const SizedBox(width: 30),
-        //         _numberButton(number: "5"),
-        //         const SizedBox(width: 30),
-        //         _numberButton(number: "6"),
-        //       ],
-        //     ),
-        //     const SizedBox(height: 20),
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         _numberButton(number: "7"),
-        //         const SizedBox(width: 30),
-        //         _numberButton(number: "8"),
-        //          const SizedBox(width: 30),
-        //         _numberButton(number: "9"),
-        //       ],
-        //     ),
-        //     const SizedBox(height: 20),
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         SizedBox(width: window == false ? ((width-160)/3+10) : 100),
-        //         _numberButton(number: "0"),
-        //         const SizedBox(width: 30),
-        //         _backButton()
-        //       ],
-        //     ),
-        //     const SizedBox(height: 20),
-        //   ],
-        // )
-      ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
