@@ -199,7 +199,7 @@ class _DomainsListState extends State<DomainsList> {
               isDomainSelected: widget.selectedDomain == widget.domainsList[index],
               showDomainDetails: (domain) {
                 widget.onDomainSelected(widget.domainsList[index]);
-                if (MediaQuery.of(context).size.width <= 900) {
+                if (MediaQuery.of(context).size.width <= 900 && widget.domainsList.length > index) {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) => DomainDetailsScreen(
                         domain: widget.domainsList[index], 

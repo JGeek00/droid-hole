@@ -1,9 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:flutter_app_lock/flutter_app_lock.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:droid_hole/widgets/fingerprint_unlock_modal.dart';
 import 'package:droid_hole/widgets/numeric_pad.dart';
 import 'package:droid_hole/widgets/shake_animation.dart';
 
@@ -26,10 +28,37 @@ class _UnlockState extends State<Unlock> {
 
   final GlobalKey<ShakeAnimationState> _shakeKey = GlobalKey<ShakeAnimationState>();
 
+  void checkBiometrics() async {
+    final appConfigProvider = Provider.of<AppConfigProvider>(context, listen: false);
+    
+    final LocalAuthentication auth = LocalAuthentication();
+    final biometrics = await auth.getAvailableBiometrics();
+    if (appConfigProvider.useBiometrics == true && biometrics.isNotEmpty) {
+      final bool didAuthenticate = await auth.authenticate(
+        localizedReason: AppLocalizations.of(context)!.unlockWithFingerprint,
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          stickyAuth: true,
+        )
+      );
+      if (didAuthenticate == true && mounted) {
+        AppLock.of(context)!.didUnlock();
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkBiometrics();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final topBarHeight = MediaQuery.of(context).viewPadding.top;
 
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
@@ -46,29 +75,6 @@ class _UnlockState extends State<Unlock> {
       }
     }
 
-    if (firstLoad == true) {
-      if (appConfigProvider.useBiometrics == true) {
-        Future.delayed(const Duration(milliseconds: 0), () {
-          showModalBottomSheet(
-            context: context, 
-            builder: (ctx)  => FingerprintUnlockModal(
-              topBarHeight: topBarHeight,
-              onSuccess: () async {
-                setState(() {
-                  isLoading = true;
-                });
-                Navigator.pop(ctx);
-                AppLock.of(context)!.didUnlock();
-              },
-            ),
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent
-          );
-        });
-      }
-      firstLoad = false;
-    }
-
     return Scaffold(
       body: Stack(
         children: [
@@ -78,6 +84,7 @@ class _UnlockState extends State<Unlock> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                const SizedBox(height: 16),
                 height-180 >= 426 
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,

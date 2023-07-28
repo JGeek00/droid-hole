@@ -48,7 +48,7 @@ class ClientsLastHours extends StatelessWidget {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: (data['topPoint']/5).toDouble(),
+            interval: (data['topPoint']/5).toDouble() > 0 ? (data['topPoint']/5).toDouble() : data['topPoint'].toDouble(),
             reservedSize: 35,
             getTitlesWidget: (value, widget) => Text(
               value.toInt().toString(),

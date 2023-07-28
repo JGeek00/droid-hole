@@ -226,57 +226,57 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
             setState(() {
               isConnecting = false;
             });
+            if (result['result'] == 'socket') {
+              showSnackBar(
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.checkAddress,
+                color: Colors.red
+              );
+              appConfigProvider.addLog(result['log']);
+            }
+            else if (result['result'] == 'timeout') {
+              showSnackBar(
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.connectionTimeout,
+                color: Colors.red
+              );
+              appConfigProvider.addLog(result['log']);
+            }
+            else if (result['result'] == 'no_connection') {
+              showSnackBar(
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.cantReachServer,
+                color: Colors.red
+              );
+              appConfigProvider.addLog(result['log']);
+            }
+            else if (result['result'] == 'auth_error') {
+              showSnackBar(
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.tokenNotValid,
+                color: Colors.red
+              );
+              appConfigProvider.addLog(result['log']);
+            }
+            else if (result['result'] == 'ssl_error') {
+              showSnackBar(
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.sslErrorLong,
+                color: Colors.red
+              );
+              appConfigProvider.addLog(result['log']);
+            }
+            else {
+              showSnackBar(
+                appConfigProvider: appConfigProvider,
+                label: AppLocalizations.of(context)!.unknownError,
+                color: Colors.red
+              );
+              appConfigProvider.addLog(result['log']);
+            }
           }
           else {
             isConnecting = false;
-          }
-          if (result['result'] == 'socket') {
-            showSnackBar(
-              appConfigProvider: appConfigProvider,
-              label: AppLocalizations.of(context)!.checkAddress,
-              color: Colors.red
-            );
-            appConfigProvider.addLog(result['log']);
-          }
-          else if (result['result'] == 'timeout') {
-            showSnackBar(
-              appConfigProvider: appConfigProvider,
-              label: AppLocalizations.of(context)!.connectionTimeout,
-              color: Colors.red
-            );
-            appConfigProvider.addLog(result['log']);
-          }
-          else if (result['result'] == 'no_connection') {
-            showSnackBar(
-              appConfigProvider: appConfigProvider,
-              label: AppLocalizations.of(context)!.cantReachServer,
-              color: Colors.red
-            );
-            appConfigProvider.addLog(result['log']);
-          }
-          else if (result['result'] == 'auth_error') {
-            showSnackBar(
-              appConfigProvider: appConfigProvider,
-              label: AppLocalizations.of(context)!.tokenNotValid,
-              color: Colors.red
-            );
-            appConfigProvider.addLog(result['log']);
-          }
-          else if (result['result'] == 'ssl_error') {
-            showSnackBar(
-              appConfigProvider: appConfigProvider,
-              label: AppLocalizations.of(context)!.sslErrorLong,
-              color: Colors.red
-            );
-            appConfigProvider.addLog(result['log']);
-          }
-          else {
-            showSnackBar(
-              appConfigProvider: appConfigProvider,
-              label: AppLocalizations.of(context)!.unknownError,
-              color: Colors.red
-            );
-            appConfigProvider.addLog(result['log']);
           }
         }
       }
@@ -323,50 +323,55 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
         }
       }
       else {
-        setState(() {
-          isConnecting = false;
-        });
-        if (result['result'] == 'socket') {
-          showSnackBar(
-            appConfigProvider: appConfigProvider,
-            label: AppLocalizations.of(context)!.checkAddress,
-            color: Colors.red
-          );
-        }
-        else if (result['result'] == 'timeout') {
-          showSnackBar(
-            appConfigProvider: appConfigProvider,
-            label: AppLocalizations.of(context)!.connectionTimeout,
-            color: Colors.red
-          );
-        }
-        else if (result['result'] == 'no_connection') {
-          showSnackBar(
-            appConfigProvider: appConfigProvider,
-            label: AppLocalizations.of(context)!.cantReachServer,
-            color: Colors.red
-          );
-        }
-        else if (result['result'] == 'auth_error') {
-          showSnackBar(
-            appConfigProvider: appConfigProvider,
-            label: AppLocalizations.of(context)!.tokenNotValid,
-            color: Colors.red
-          );
-        }
-        else if (result['result'] == 'ssl_error') {
-          showSnackBar(
-            appConfigProvider: appConfigProvider,
-            label: AppLocalizations.of(context)!.sslErrorLong,
-            color: Colors.red
-          );
+        if (mounted) {
+          setState(() {
+            isConnecting = false;
+          });
+          if (result['result'] == 'socket') {
+            showSnackBar(
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.checkAddress,
+              color: Colors.red
+            );
+          }
+          else if (result['result'] == 'timeout') {
+            showSnackBar(
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.connectionTimeout,
+              color: Colors.red
+            );
+          }
+          else if (result['result'] == 'no_connection') {
+            showSnackBar(
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.cantReachServer,
+              color: Colors.red
+            );
+          }
+          else if (result['result'] == 'auth_error') {
+            showSnackBar(
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.tokenNotValid,
+              color: Colors.red
+            );
+          }
+          else if (result['result'] == 'ssl_error') {
+            showSnackBar(
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.sslErrorLong,
+              color: Colors.red
+            );
+          }
+          else {
+            showSnackBar(
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.unknownError,
+              color: Colors.red
+            );
+          }
         }
         else {
-          showSnackBar(
-            appConfigProvider: appConfigProvider,
-            label: AppLocalizations.of(context)!.unknownError,
-            color: Colors.red
-          );
+          isConnecting = false;
         }
       }
     }

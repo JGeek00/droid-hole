@@ -316,5 +316,6 @@
     "all": "All",
     "allowed": "Allowed",
     "advancedStatusFiltering": "Advanced status filtering",
-    "selectOptionLeftColumn": "Select an option from the left column."
+    "selectOptionLeftColumn": "Select an option from the left column.",
+    "unlockWithFingerprint": "Unlock the app with your fingerprint"
 }

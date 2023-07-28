@@ -350,15 +350,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  flutter_local_auth_invisible:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: update-intl
-      resolved-ref: "7ef684ea691c916cdc95c39f5573f9ae9e4c4b4f"
-      url: "https://github.com/JGeek00/flutter_local_auth_invisible"
-    source: git
-    version: "2.2.1"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -527,6 +518,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  local_auth:
+    dependency: "direct main"
+    description:
+      name: local_auth
+      sha256: "0cf238be2bfa51a6c9e7e9cfc11c05ea39f2a3a4d3e5bb255d0ebc917da24401"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.6"
+  local_auth_android:
+    dependency: transitive
+    description:
+      name: local_auth_android
+      sha256: "36a78898198386d36d4e152b8cb46059b18f0e2017f813a0e833e216199f8950"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.32"
+  local_auth_ios:
+    dependency: transitive
+    description:
+      name: local_auth_ios
+      sha256: edc2977c5145492f3451db9507a2f2f284ee4f408950b3e16670838726761940
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.3"
+  local_auth_platform_interface:
+    dependency: transitive
+    description:
+      name: local_auth_platform_interface
+      sha256: "9e160d59ef0743e35f1b50f4fb84dc64f55676b1b8071e319ef35e7f3bc13367"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
+  local_auth_windows:
+    dependency: transitive
+    description:
+      name: local_auth_windows
+      sha256: "5af808e108c445d0cf702a8c5f8242f1363b7970320334f82e6e1e8ad0b0d7d4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.9"
   logging:
     dependency: transitive
     description:
@@ -687,14 +718,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.2"
-  platform:
-    dependency: transitive
-    description:
-      name: platform
-      sha256: "4a451831508d7d6ca779f7ac6e212b4023dd5a7d08a27a63da33756410e32b76"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -1063,4 +1086,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=3.0.0 <4.0.0"
-  flutter: ">=3.4.0-17.0.pre"
+  flutter: ">=3.10.0"

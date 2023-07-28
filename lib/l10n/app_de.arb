@@ -316,5 +316,6 @@
   "all": "Alle",
   "allowed": "Erlaubt",
   "advancedStatusFiltering": "Erweiterte Statusfilterung",
-  "selectOptionLeftColumn": "Wählen Sie eine Option aus der linken Spalte aus."
+  "selectOptionLeftColumn": "Wählen Sie eine Option aus der linken Spalte aus.",
+  "unlockWithFingerprint": "Entsperren Sie die App mit Ihrem Fingerabdruck"
 }
