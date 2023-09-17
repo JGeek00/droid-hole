@@ -475,11 +475,13 @@ class _LogsState extends State<Logs> {
                     _showSearchBar = false;
                     _searchController.text = "";
                   });
-                  _scrollController.animateTo(
-                    0, 
-                    duration: const Duration(milliseconds: 250), 
-                    curve: Curves.easeInOut
-                  );
+                  if (_scrollController.positions.isNotEmpty) {
+                    _scrollController.animateTo(
+                      0, 
+                      duration: const Duration(milliseconds: 250), 
+                      curve: Curves.easeInOut
+                    );
+                  }
                 },
                 icon: const Icon(Icons.arrow_back),
                 splashRadius: 20,
@@ -488,11 +490,13 @@ class _LogsState extends State<Logs> {
                 IconButton(     
                   onPressed: () {
                     setState(() => _searchController.text = "");
-                    _scrollController.animateTo(
-                      0, 
-                      duration: const Duration(milliseconds: 250), 
-                      curve: Curves.easeInOut
-                    );
+                    if (_scrollController.positions.isNotEmpty) {
+                      _scrollController.animateTo(
+                        0, 
+                        duration: const Duration(milliseconds: 250), 
+                        curve: Curves.easeInOut
+                      );
+                    }
                   }, 
                   icon: const Icon(Icons.clear_rounded),
                   splashRadius: 20,
@@ -506,6 +510,7 @@ class _LogsState extends State<Logs> {
                   child: TextField(
                     controller: _searchController,
                     onChanged: searchLogs,
+                    autofocus: true,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.normal
