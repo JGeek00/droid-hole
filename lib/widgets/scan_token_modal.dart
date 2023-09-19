@@ -33,15 +33,17 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
     }
     else {
       final PermissionStatus status = await Permission.camera.request();
-      if (status.isGranted == false) {
-        setState(() {
-          permission = 2;
-        });
-      }
-      else {
-        setState(() {
-          permission = 1;
-        });
+      if (mounted) {
+        if (status.isGranted == false) {
+          setState(() {
+            permission = 2;
+          });
+        }
+        else {
+          setState(() {
+            permission = 1;
+          });
+        }
       }
     }
   } 

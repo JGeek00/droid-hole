@@ -9,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/widgets/numeric_pad.dart';
 import 'package:droid_hole/widgets/shake_animation.dart';
 
+import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class Unlock extends StatefulWidget {
@@ -34,15 +35,33 @@ class _UnlockState extends State<Unlock> {
     final LocalAuthentication auth = LocalAuthentication();
     final biometrics = await auth.getAvailableBiometrics();
     if (appConfigProvider.useBiometrics == true && biometrics.isNotEmpty) {
-      final bool didAuthenticate = await auth.authenticate(
-        localizedReason: AppLocalizations.of(context)!.unlockWithFingerprint,
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          stickyAuth: true,
-        )
-      );
-      if (didAuthenticate == true && mounted) {
-        AppLock.of(context)!.didUnlock();
+      auth.stopAuthentication();
+      try {
+        final bool didAuthenticate = await auth.authenticate(
+          localizedReason: AppLocalizations.of(context)!.unlockWithFingerprint,
+          options: const AuthenticationOptions(
+            biometricOnly: true,
+            stickyAuth: true,
+          )
+        );
+        if (didAuthenticate == true && mounted) {
+          AppLock.of(context)!.didUnlock();
+        }
+      } catch (e) {
+        if (e.toString().contains('LockedOut')) {
+          showSnackBar(
+            appConfigProvider: appConfigProvider, 
+            label: AppLocalizations.of(context)!.fingerprintAuthUnavailableAttempts, 
+            color: Colors.red
+          );
+        }
+        else {
+          showSnackBar(
+            appConfigProvider: appConfigProvider, 
+            label: AppLocalizations.of(context)!.fingerprintAuthUnavailable, 
+            color: Colors.red
+          );
+        }
       }
     }
   }

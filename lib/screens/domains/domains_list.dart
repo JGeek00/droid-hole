@@ -13,7 +13,6 @@ import 'package:droid_hole/widgets/tab_content_list.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
 import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/services/http_requests.dart';
-import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
@@ -21,18 +20,14 @@ import 'package:droid_hole/models/domain.dart';
 
 class DomainsList extends StatefulWidget {
   final String type;
-  final LoadStatus loadStatus;
   final ScrollController scrollController;
-  final List<Domain> domainsList;
   final void Function(Domain) onDomainSelected;
   final Domain? selectedDomain;
 
   const DomainsList({
     Key? key,
     required this.type,
-    required this.loadStatus,
     required this.scrollController,
-    required this.domainsList,
     required this.onDomainSelected,
     required this.selectedDomain
   }) : super(key: key);
@@ -69,6 +64,10 @@ class _DomainsListState extends State<DomainsList> {
     final serversProvider = Provider.of<ServersProvider>(context);
     final domainsListProvider = Provider.of<DomainsListProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
+
+    final domainsList = widget.type == 'blacklist'  
+      ? domainsListProvider.blacklistDomains
+      : domainsListProvider.whitelistDomains;
 
     void removeDomain(Domain domain) async {
       final ProcessModal process = ProcessModal(context: context);
@@ -189,29 +188,31 @@ class _DomainsListState extends State<DomainsList> {
               ],
             ),
           ), 
-          itemsCount: widget.domainsList.length,
-          contentWidget: (index) => Padding(
-            padding: index == 0 && MediaQuery.of(context).size.width > 900
-              ? const EdgeInsets.only(top: 16) 
-              : const EdgeInsets.all(0),
-            child: DomainTile(
-              domain:  widget.domainsList[index],
-              isDomainSelected: widget.selectedDomain == widget.domainsList[index],
-              showDomainDetails: (domain) {
-                widget.onDomainSelected(widget.domainsList[index]);
-                if (MediaQuery.of(context).size.width <= 900 && widget.domainsList.length > index) {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => DomainDetailsScreen(
-                        domain: widget.domainsList[index], 
-                        remove: removeDomain,
+          itemsCount: domainsList.length,
+          contentWidget: (index) {
+            final thisDomain = domainsList[index];
+            return Padding(
+              padding: index == 0 && MediaQuery.of(context).size.width > 900
+                ? const EdgeInsets.only(top: 16) 
+                : const EdgeInsets.all(0),
+              child: DomainTile(
+                domain: thisDomain,
+                isDomainSelected: widget.selectedDomain == thisDomain,
+                showDomainDetails: (d) {
+                  widget.onDomainSelected(d);
+                  if (MediaQuery.of(context).size.width <= 900) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => DomainDetailsScreen(
+                          domain: d, 
+                          remove: removeDomain,
+                        )
                       )
-                    )
-                  );
-                }
-              },  
-          
-            ),
-          ),
+                    );
+                  }
+                },  
+              ),
+            );
+          },
           noData:  Container(
             height: double.maxFinite,
             padding: const EdgeInsets.all(20),
@@ -250,7 +251,7 @@ class _DomainsListState extends State<DomainsList> {
               ],
             ),
           ), 
-          loadStatus: widget.loadStatus, 
+          loadStatus: domainsListProvider.loadingStatus, 
           onRefresh: () async => await domainsListProvider.fetchDomainsList(serversProvider.selectedServer!)
         ),
         AnimatedPositioned(
