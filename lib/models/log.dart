@@ -4,7 +4,7 @@ class Log {
   final String url;
   final String device;
   final String? status;
-  final String replyType;
+  final String? replyType;
   final BigInt replyTime;
   final String? answeredBy;
 
@@ -42,7 +42,7 @@ class Log {
     url: data[2],
     device: data[3],
     status: data[4],
-    replyType: replyTypes[int.parse(data[6])],
+    replyType: data[6] != null ? replyTypes[int.parse(data[6])] : null,
     replyTime: BigInt.parse(data[7]),
     answeredBy: data[4] == '2' ? data.length >= 10 ? data[10] : null : null
   );

@@ -188,17 +188,13 @@ class _DomainListsWidgetState extends State<DomainListsWidget> with TickerProvid
             children: [
               DomainsList(
                 type: 'whitelist',
-                loadStatus: domainsListProvider.loadingStatus,
                 scrollController: scrollController,
-                domainsList: domainsListProvider.filteredWhitelistDomains,
                 onDomainSelected: (d) => setState(() => selectedDomain = d),
                 selectedDomain: selectedDomain,
               ),
               DomainsList(
                 type: 'blacklist',
-                loadStatus: domainsListProvider.loadingStatus,
                 scrollController: scrollController,
-                domainsList: domainsListProvider.filteredBlacklistDomains,
                 onDomainSelected: (d) => setState(() => selectedDomain = d),
                 selectedDomain: selectedDomain,
               )

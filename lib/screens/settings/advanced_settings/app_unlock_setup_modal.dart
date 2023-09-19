@@ -73,19 +73,37 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
         final auth = LocalAuthentication();
         final biometrics = await auth.getAvailableBiometrics();
         if (biometrics.isNotEmpty) {
-          final bool didAuthenticate = await auth.authenticate(
-            localizedReason: 'Unlock the app',
-            options: const AuthenticationOptions(
-              biometricOnly: true,
-              stickyAuth: true,
-            ),
-          );
-          if (didAuthenticate == true) {
-            final result = await appConfigProvider.setUseBiometrics(true);
-            if (result == false) {
+          auth.stopAuthentication();
+          try {
+            final bool didAuthenticate = await auth.authenticate(
+              localizedReason: 'Unlock the app',
+              options: const AuthenticationOptions(
+                biometricOnly: true,
+                stickyAuth: true,
+              ),
+            );
+            if (didAuthenticate == true) {
+              final result = await appConfigProvider.setUseBiometrics(true);
+              if (result == false) {
+                showSnackBar(
+                  appConfigProvider: appConfigProvider,
+                  label: AppLocalizations.of(context)!.biometricUnlockNotActivated,
+                  color: Colors.red
+                );
+              }
+            }
+          } catch (e) {
+            if (e.toString().contains('LockedOut')) {
               showSnackBar(
-                appConfigProvider: appConfigProvider,
-                label: AppLocalizations.of(context)!.biometricUnlockNotActivated,
+                appConfigProvider: appConfigProvider, 
+                label: AppLocalizations.of(context)!.fingerprintAuthUnavailableAttempts, 
+                color: Colors.red
+              );
+            }
+            else {
+              showSnackBar(
+                appConfigProvider: appConfigProvider, 
+                label: AppLocalizations.of(context)!.fingerprintAuthUnavailable, 
                 color: Colors.red
               );
             }

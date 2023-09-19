@@ -317,5 +317,7 @@
   "allowed": "Erlaubt",
   "advancedStatusFiltering": "Erweiterte Statusfilterung",
   "selectOptionLeftColumn": "Wählen Sie eine Option aus der linken Spalte aus.",
-  "unlockWithFingerprint": "Entsperren Sie die App mit Ihrem Fingerabdruck"
+  "unlockWithFingerprint": "Entsperren Sie die App mit Ihrem Fingerabdruck",
+  "fingerprintAuthUnavailableAttempts": "Fingerabdruck-Authentifizierung aufgrund vieler Fehlversuche nicht verfügbar.",
+  "fingerprintAuthUnavailable": "Fingerabdruck-Authentifizierung nicht verfügbar."
 }
