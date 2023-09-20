@@ -209,6 +209,7 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           basicAuthPassword: basicAuthPassword.text
         );
         final result = await loginQuery(serverObj);
+        if (!mounted) return;
         if (result['result'] == 'success') {
           Navigator.pop(context);
           serversProvider.addServer(Server(
@@ -308,18 +309,20 @@ class _AddServerFullscreenState extends State<AddServerFullscreen> {
           basicAuthPassword: basicAuthPassword.text
         );
         final result = await serversProvider.editServer(server);
-        if (result == true) {
-          Navigator.pop(context);
-        }
-        else {
-          setState(() {
-            isConnecting = false;
-          });
-          showSnackBar(
-            appConfigProvider: appConfigProvider,
-            label: AppLocalizations.of(context)!.cantSaveConnectionData,
-            color: Colors.red
-          );
+        if (mounted) {
+          if (result == true) {
+            Navigator.pop(context);
+          }
+          else {
+            setState(() {
+              isConnecting = false;
+            });
+            showSnackBar(
+              appConfigProvider: appConfigProvider,
+              label: AppLocalizations.of(context)!.cantSaveConnectionData,
+              color: Colors.red
+            );
+          }
         }
       }
       else {

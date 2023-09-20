@@ -319,5 +319,7 @@
     "allowed": "Permitidos",
     "advancedStatusFiltering": "Filtros de estado avanzados",
     "selectOptionLeftColumn": "Selecciona una opción de la columna de la izquierda.",
-    "unlockWithFingerprint": "Desbloquea la app con tu huella dactilar"
+    "unlockWithFingerprint": "Desbloquea la app con tu huella dactilar",
+    "fingerprintAuthUnavailableAttempts": "Autenticación con huella no disponible por múltiples intentos fallidos.",
+    "fingerprintAuthUnavailable": "Autenticación con huella no disponible."
 }
