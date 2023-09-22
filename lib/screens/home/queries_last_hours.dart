@@ -16,11 +16,16 @@ class QueriesLastHours extends StatelessWidget {
   }) : super(key: key);
 
   LineChartData mainData(Map<String, dynamic> data, ThemeMode selectedTheme) {
+    final double interval = (data['topPoint']/5).toDouble() > 0
+      ? (data['topPoint']/5).toDouble()
+      : data['topPoint'].toDouble() > 0
+        ? data['topPoint'].toDouble()
+        : 1.0;
     return LineChartData(
       gridData: FlGridData(
         show: true,
         drawVerticalLine: false,
-        horizontalInterval: (data['topPoint']/5).toDouble(),
+        horizontalInterval: interval,
         getDrawingHorizontalLine: (value) => FlLine(
           color: selectedTheme == ThemeMode.light
             ? Colors.black12
