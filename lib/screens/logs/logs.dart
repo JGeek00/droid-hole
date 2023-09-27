@@ -241,6 +241,7 @@ class _LogsState extends State<Logs> {
       loading.close();
       if (result['result'] == 'success') {
         if (result['data']['message'].toString().contains('Added')) {
+          if (!mounted) return;
           showSnackBar(
             appConfigProvider: appConfigProvider,
             label: list == 'white'

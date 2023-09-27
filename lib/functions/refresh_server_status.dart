@@ -19,6 +19,7 @@ Future refreshServerStatus(BuildContext context) async {
   final result = await realtimeStatus(
     serversProvider.selectedServer!
   );
+  if (!context.mounted) return;
   if (result['result'] == "success") {
     serversProvider.updateselectedServerStatus(
       result['data'].status == 'enabled' ? true : false
