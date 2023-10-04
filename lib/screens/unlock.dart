@@ -48,6 +48,7 @@ class _UnlockState extends State<Unlock> {
           AppLock.of(context)!.didUnlock();
         }
       } catch (e) {
+        if (!mounted) return;
         if (e.toString().contains('LockedOut')) {
           showSnackBar(
             appConfigProvider: appConfigProvider, 

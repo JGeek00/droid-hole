@@ -48,6 +48,7 @@ void disableServer(int time, BuildContext context) async {
     time
   );
   process.close();
+  if (!context.mounted) return;
   if (result['result'] == 'success') {
     serversProvider.updateselectedServerStatus(false);
     showSnackBar(

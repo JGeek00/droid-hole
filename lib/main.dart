@@ -240,7 +240,8 @@ class _DroidHoleState extends State<DroidHole> {
           supportedLocales: const [
             Locale('en', ''),
             Locale('es', ''),
-            Locale('de', '')
+            Locale('de', ''),
+            Locale('pl', ''),
           ],
           scaffoldMessengerKey: scaffoldMessengerKey,
           builder: (context, child) {

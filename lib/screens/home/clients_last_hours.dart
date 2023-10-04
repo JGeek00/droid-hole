@@ -21,11 +21,11 @@ class ClientsLastHours extends StatelessWidget {
   }) : super(key: key);
 
   LineChartData mainData(Map<String, dynamic> data, ThemeMode selectedTheme) {
-    final interval = (data['topPoint']/5).toDouble() > 0
+    final double interval = (data['topPoint']/5).toDouble() > 0
       ? (data['topPoint']/5).toDouble()
       : data['topPoint'].toDouble() > 0
         ? data['topPoint'].toDouble()
-        : 1;
+        : 1.0;
     return LineChartData(
       gridData: FlGridData(
         show: true,
