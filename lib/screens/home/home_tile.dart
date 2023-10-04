@@ -45,27 +45,31 @@ class HomeTile extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      label,
-                      textAlign: TextAlign.end,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          label,
+                          textAlign: TextAlign.end,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      value,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500
-                      ),
-                    )
-                  ],
+                      Text(
+                        value,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),
