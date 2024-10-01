@@ -240,7 +240,10 @@ class _AddDomainModalState extends State<AddDomainModal> {
               topRight: Radius.circular(28)
             )
           ),
-          child: content()
+          child: SafeArea(
+            bottom: true,
+            child: content()
+          )
         ),
       );
     }

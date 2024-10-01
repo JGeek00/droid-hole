@@ -375,57 +375,60 @@ class _DisableModalState extends State<DisableModal> {
               topRight: Radius.circular(28)
             ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Wrap(
-                    children: [
-                      ExpandableNotifier(
-                        controller: expandableController,
-                        child: Expandable(
-                          collapsed: options(),
-                          expanded: Column(
-                            children: [
-                              options(),
-                              inputField()
-                            ],
+          child: SafeArea(
+            bottom: true,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      children: [
+                        ExpandableNotifier(
+                          controller: expandableController,
+                          child: Expandable(
+                            collapsed: options(),
+                            expanded: Column(
+                              children: [
+                                options(),
+                                inputField()
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context), 
-                      child: Text(AppLocalizations.of(context)!.cancel),
-                    ),
-                    const SizedBox(width: 20),
-                    TextButton(
-                      onPressed: _selectionIsValid() == true 
-                        ? () {
-                            Navigator.pop(context);
-                            widget.onDisable(_getTime());
-                          }
-                        : null,
-                      style: ButtonStyle(
-                        foregroundColor: _selectionIsValid() == true 
-                          ? MaterialStateProperty.all(Theme.of(context).colorScheme.primary)
-                          : MaterialStateProperty.all(Colors.grey)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context), 
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
-                      child: Text(AppLocalizations.of(context)!.accept),
-                    )
-                  ]
-                ),
-              )
-            ],
+                      const SizedBox(width: 20),
+                      TextButton(
+                        onPressed: _selectionIsValid() == true 
+                          ? () {
+                              Navigator.pop(context);
+                              widget.onDisable(_getTime());
+                            }
+                          : null,
+                        style: ButtonStyle(
+                          foregroundColor: _selectionIsValid() == true 
+                            ? MaterialStateProperty.all(Theme.of(context).colorScheme.primary)
+                            : MaterialStateProperty.all(Colors.grey)
+                        ),
+                        child: Text(AppLocalizations.of(context)!.accept),
+                      )
+                    ]
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       );

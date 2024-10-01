@@ -272,7 +272,10 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
           ),
           color: Theme.of(context).dialogBackgroundColor,
         ),
-        child: content()
+        child: SafeArea(
+          bottom: true,
+          child: content(),
+        )
       );
     }
   }

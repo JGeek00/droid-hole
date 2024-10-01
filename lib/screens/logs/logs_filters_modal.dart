@@ -524,7 +524,10 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
             topRight: Radius.circular(24)
           )
         ),
-        child: content()
+        child: SafeArea(
+          bottom: true,
+          child: content(),
+        )
       );
     }
   }

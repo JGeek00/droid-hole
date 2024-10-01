@@ -31,6 +31,7 @@ class Statistics extends StatelessWidget {
                     centerTitle: false,
                     forceElevated: innerBoxIsScrolled,
                     bottom: TabBar(
+                      tabAlignment: TabAlignment.start,
                       isScrollable: true,
                       tabs: [
                         Tab(
