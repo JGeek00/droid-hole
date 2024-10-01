@@ -99,28 +99,14 @@ jobs:
       - run: flutter clean
       - run: flutter pub get
       - run: flutter build macos --release
-      - name: Install the Apple certificate and sign the application
-        env:
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PWD: ${{ secrets.APPLE_CERTIFICATE_PWD }}
-          APPLE_KEYCHAIN_PWD: ${{ secrets.APPLE_KEYCHAIN_PWD }}
-          APPLE_IDENTITY_ID: ${{ secrets.APPLE_IDENTITY_ID }}
-        run: |
-          echo "$APPLE_CERTIFICATE" | base64 --decode > certificate.p12
-          security create-keychain -p $APPLE_KEYCHAIN_PWD build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p $APPLE_KEYCHAIN_PWD build.keychain
-          security import certificate.p12 -k build.keychain -P $APPLE_CERTIFICATE_PWD -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $APPLE_KEYCHAIN_PWD build.keychain
-          /usr/bin/codesign --force -s "$APPLE_IDENTITY_ID" $MACOS_APP_RELEASE_PATH/AdGuard\ Home\ Manager.app -v
       - name: Create folder to build dmg
-        run: mkdir $MACOS_APP_RELEASE_PATH/AdGuard\ Home\ Manager
+        run: mkdir $MACOS_APP_RELEASE_PATH/DroidHole
       - name: Copy app into folder
-        run: cp -r $MACOS_APP_RELEASE_PATH/AdGuard\ Home\ Manager.app $MACOS_APP_RELEASE_PATH/AdGuard\ Home\ Manager/AdGuard\ Home\ Manager.app
+        run: cp -r $MACOS_APP_RELEASE_PATH/DroidHole.app $MACOS_APP_RELEASE_PATH/DroidHole/DroidHole.app
       - name: Generate symbolic link to Applications dir
-        run: ln -s /Applications $MACOS_APP_RELEASE_PATH/AdGuard\ Home\ Manager
+        run: ln -s /Applications $MACOS_APP_RELEASE_PATH/DroidHole
       - name: Generate dmg
-        run: hdiutil create -srcfolder $MACOS_APP_RELEASE_PATH/AdGuard\ Home\ Manager $MACOS_APP_RELEASE_PATH/DroidHole_${{ env.VERSION_NAME }}_macOS_Universal.dmg
+        run: hdiutil create -srcfolder $MACOS_APP_RELEASE_PATH/DroidHole $MACOS_APP_RELEASE_PATH/DroidHole_${{ env.VERSION_NAME }}_macOS_Universal.dmg
       - name: Copy dmg to project root
         run: cp $MACOS_APP_RELEASE_PATH/DroidHole_${{ env.VERSION_NAME }}_macOS_Universal.dmg DroidHole_${{ env.VERSION_NAME }}_macOS_Universal.dmg
       - name: Upload artifact
@@ -180,7 +166,7 @@ jobs:
           files: |
             ./data
             ./lib
-            ./AdGuardHomeManager
+            ./DroidHole
           outPath: DroidHole_${{ env.VERSION_NAME }}_Linux.tar.gz
       - name: Upload artifact
         uses: actions/upload-artifact@v3
