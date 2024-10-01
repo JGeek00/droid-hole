@@ -103,141 +103,41 @@ class _ContactMeModalState extends State<ContactMeModal> {
               ),
             ),
           ),
-          ExpandableNotifier(
-            controller: expandableController,
-            child: Expandable(
-              collapsed: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => expandableController.toggle(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10, 
-                      horizontal: 20
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.email_rounded,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Email",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).colorScheme.onSurface
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            SizedBox(
-                              width: width-164,
-                              child: Text(
-                                AppLocalizations.of(context)!.writeEmail,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant
-                                ),
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => openUrl('https://appsupport.jgeek00.com'),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10, 
+                  horizontal: 20
                 ),
-              ),
-              expanded: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => expandableController.toggle(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10, 
-                      horizontal: 20
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.email_rounded,
-                              size: 24,
+                child: Row(
+                  children: [
+                    Icon(Icons.question_mark_rounded),
+                    const SizedBox(width: 20),
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.supportForm,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).colorScheme.onSurface
                             ),
-                            const SizedBox(width: 20),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Email",
-                                  style: TextStyle(
-                                    fontSize: 16
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                SizedBox(
-                                  width: width-164,
-                                  child: Text(
-                                    AppLocalizations.of(context)!.writeEmail,
-                                    style: TextStyle(
-                                      color: Theme.of(context).colorScheme.onSurfaceVariant
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.primary
-                            )
                           ),
-                          child: Column(
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)!.writeEmailDetails,
-                                textAlign: TextAlign.justify,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: _sendEmail, 
-                                    style: ButtonStyle(
-                                      elevation: MaterialStateProperty.all(0),
-                                      backgroundColor: MaterialStateProperty.all(
-                                        Theme.of(context).colorScheme.primary
-                                      ),
-                                      foregroundColor: MaterialStateProperty.all(
-                                        Theme.of(context).dialogBackgroundColor
-                                      ),
-                                      overlayColor: MaterialStateProperty.all(
-                                        Theme.of(context).dialogBackgroundColor.withOpacity(0.1)
-                                      ),
-                                      
-                                    ),
-                                    child: Text(AppLocalizations.of(context)!.contactEmail)
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                          const SizedBox(height: 5),
+                          Text(
+                            AppLocalizations.of(context)!.supportFormDescription,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),

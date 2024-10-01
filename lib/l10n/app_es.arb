@@ -321,5 +321,7 @@
     "selectOptionLeftColumn": "Selecciona una opción de la columna de la izquierda.",
     "unlockWithFingerprint": "Desbloquea la app con tu huella dactilar",
     "fingerprintAuthUnavailableAttempts": "Autenticación con huella no disponible por múltiples intentos fallidos.",
-    "fingerprintAuthUnavailable": "Autenticación con huella no disponible."
+    "fingerprintAuthUnavailable": "Autenticación con huella no disponible.",
+    "supportForm": "Formulario de soporte",
+    "supportFormDescription": "Enviar una petición de soporte usando el formulario de soporte."
 }

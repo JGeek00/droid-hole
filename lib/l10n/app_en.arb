@@ -319,5 +319,7 @@
     "selectOptionLeftColumn": "Select an option from the left column.",
     "unlockWithFingerprint": "Unlock the app with your fingerprint",
     "fingerprintAuthUnavailableAttempts": "Fingerprint authentication unavailable due to many failed attempts.",
-    "fingerprintAuthUnavailable": "Fingerprint authentication unavailable."
+    "fingerprintAuthUnavailable": "Fingerprint authentication unavailable.",
+    "supportForm": "Support form",
+    "supportFormDescription": "Send a support request using the support form."
 }
