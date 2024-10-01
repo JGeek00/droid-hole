@@ -98,7 +98,7 @@ class _HomeState extends State<Home> {
                     child: HomeTile(
                       icon: Icons.public, 
                       iconColor: const Color.fromARGB(255, 64, 146, 66), 
-                      color: Colors.green, 
+                      color: Colors.blue, 
                       label: AppLocalizations.of(context)!.totalQueries, 
                       value: intFormat(statusProvider.getRealtimeStatus!.dnsQueriesToday,Platform.localeName),
                     ),
@@ -111,7 +111,7 @@ class _HomeState extends State<Home> {
                     child: HomeTile(
                       icon: Icons.block, 
                       iconColor: const Color.fromARGB(255, 28, 127, 208), 
-                      color: Colors.blue, 
+                      color: Colors.red, 
                       label: AppLocalizations.of(context)!.queriesBlocked, 
                       value: intFormat(statusProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
                     ),
@@ -137,7 +137,7 @@ class _HomeState extends State<Home> {
                     child: HomeTile(
                       icon: Icons.list, 
                       iconColor: const Color.fromARGB(255, 211, 58, 47), 
-                      color: Colors.red, 
+                      color: Colors.green, 
                       label: AppLocalizations.of(context)!.domainsAdlists, 
                       value: intFormat(statusProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),
                     ),
