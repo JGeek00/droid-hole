@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:local_auth/local_auth.dart';
@@ -36,6 +37,7 @@ import 'package:droid_hole/providers/servers_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     setWindowMinSize(const Size(500, 500));
@@ -224,18 +226,11 @@ class _DroidHoleState extends State<DroidHole> {
           ],
           scaffoldMessengerKey: scaffoldMessengerKey,
           builder: (context, child) {
-            return MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaleFactor: !(Platform.isAndroid || Platform.isIOS) 
-                  ? 0.9
-                  : 1.0
-              ),
-              child: AppLock(
-                builder: (_, __) => child!, 
-                lockScreen: const Unlock(),
-                enabled: appConfigProvider.passCode != null ? true : false,
-                backgroundLockLatency: const Duration(seconds: 0),
-              )
+            return AppLock(
+              builder: (_, __) => child!, 
+              lockScreenBuilder: (context) => const Unlock(),
+              enabled: appConfigProvider.passCode != null ? true : false,
+              backgroundLockLatency: const Duration(seconds: 0),
             );
           },
           home: const Base()
