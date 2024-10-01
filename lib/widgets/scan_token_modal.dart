@@ -1,16 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ScanTokenModal extends StatefulWidget {
   final void Function(String) qrScanned;
     
   const ScanTokenModal({
-    Key? key,
+    super.key,
     required this.qrScanned
-  }) : super(key: key);
+  });
 
   @override
   State<ScanTokenModal> createState() => _ScanTokenModalState();
@@ -20,8 +19,6 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
   bool scanQr = false;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  // QRViewController? qrViewController;
-  // Barcode? result;
   int permission = 0;
 
   Future managePermission() async {
@@ -48,16 +45,6 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
   } 
 
   @override
-  void reassemble() {
-    super.reassemble();
-    // if (Platform.isAndroid) {
-    //   qrViewController!.pauseCamera();
-    // } else if (Platform.isIOS) {
-    //   qrViewController!.resumeCamera();
-    // }
-  }
-
-  @override
   void initState() {
     managePermission();
     super.initState();
@@ -67,23 +54,14 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    // void _onQrViewCreated(QRViewController controller) async {
-    //   setState(() {
-    //     qrViewController = controller;
-    //   });
+    void handleBarcode(BarcodeCapture codes) {
+      if (codes.barcodes.isNotEmpty && codes.barcodes[0].rawValue != null) {
+        widget.qrScanned(codes.barcodes[0].rawValue!);
+        Navigator.pop(context);
+      }
+    }
 
-    //   qrViewController?.resumeCamera();
-
-    //   controller.scannedDataStream.listen((scanData) {
-    //     qrViewController!.dispose();
-    //     if (scanData.code != null) {
-    //       widget.qrScanned(scanData.code!);
-    //       Navigator.pop(context);
-    //     }
-    //   });
-    // }
-
-    Widget _getPermissionStatus() {
+    Widget getPermissionStatus() {
       switch (permission) {
         case 0:
           return SizedBox(
@@ -107,20 +85,16 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
           );
 
         case 1:
-        return SizedBox();
-          // return SizedBox(
-          //   height: width*0.6,
-          //   child: ClipRRect(
-          //     borderRadius: BorderRadius.circular(28),
-          //     child: QRView(
-          //       key: qrKey, 
-          //       onQRViewCreated: _onQrViewCreated,
-          //       formatsAllowed: const [
-          //         BarcodeFormat.qrcode
-          //       ],
-          //     ),
-          //   ),
-          // );
+          return SizedBox(
+            width: width,
+            height: width,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(28),
+              child: MobileScanner(
+                onDetect: handleBarcode,
+              ),
+            ),
+          );
 
         case 2: 
           return Container(
@@ -180,7 +154,7 @@ class _ScanTokenModalState extends State<ScanTokenModal> {
           ),
         ],
       ),
-      content: _getPermissionStatus(),
+      content: getPermissionStatus(),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context), 
