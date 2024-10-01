@@ -194,7 +194,10 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
           ),
           color: Theme.of(context).dialogBackgroundColor,
         ),
-        child: content()
+        child: SafeArea(
+          bottom: true,
+          child: content()
+        )
       );
     }
   }

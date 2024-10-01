@@ -97,7 +97,7 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: HomeTile(
                       icon: Icons.public, 
-                      iconColor: const Color.fromARGB(255, 64, 146, 66), 
+                      iconColor: const Color.fromARGB(255, 27, 124, 203), 
                       color: Colors.blue, 
                       label: AppLocalizations.of(context)!.totalQueries, 
                       value: intFormat(statusProvider.getRealtimeStatus!.dnsQueriesToday,Platform.localeName),
@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: HomeTile(
                       icon: Icons.block, 
-                      iconColor: const Color.fromARGB(255, 28, 127, 208), 
+                      iconColor: const Color.fromARGB(255, 206, 56, 45), 
                       color: Colors.red, 
                       label: AppLocalizations.of(context)!.queriesBlocked, 
                       value: intFormat(statusProvider.getRealtimeStatus!.adsBlockedToday, Platform.localeName),
@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: HomeTile(
                       icon: Icons.pie_chart, 
-                      iconColor: const Color.fromARGB(255, 219, 131, 0), 
+                      iconColor: const Color.fromARGB(255, 211, 127, 0), 
                       color: Colors.orange, 
                       label: AppLocalizations.of(context)!.percentageBlocked, 
                       value: "${formatPercentage(statusProvider.getRealtimeStatus!.adsPercentageToday, Platform.localeName)}%",
@@ -136,7 +136,7 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: HomeTile(
                       icon: Icons.list, 
-                      iconColor: const Color.fromARGB(255, 211, 58, 47), 
+                      iconColor: const Color.fromARGB(255, 61, 142, 64), 
                       color: Colors.green, 
                       label: AppLocalizations.of(context)!.domainsAdlists, 
                       value: intFormat(statusProvider.getRealtimeStatus!.domainsBeingBlocked, Platform.localeName),

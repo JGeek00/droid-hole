@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:local_auth/local_auth.dart';
@@ -12,8 +13,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:vibration/vibration.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -38,6 +37,7 @@ import 'package:droid_hole/providers/servers_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     setWindowMinSize(const Size(500, 500));
@@ -156,6 +156,20 @@ void main() async {
       (options) {
         options.dsn = dotenv.env['SENTRY_DSN'];
         options.sendDefaultPii = false;
+        options.beforeSend = (event, hint) {
+          if (event.throwable is HttpException) {
+            return null;
+          }
+
+          if (
+            event.message?.formatted.contains("Unexpected character") ?? false ||
+            (event.throwable != null && event.throwable!.toString().contains("Unexpected character"))
+          ) {
+            return null; // Exclude this event
+          }
+
+          return event;
+        };
       },
       appRunner: () => startApp()
     );
@@ -177,30 +191,11 @@ class DroidHole extends StatefulWidget {
 }
 
 class _DroidHoleState extends State<DroidHole> {
-  List<DisplayMode> modes = <DisplayMode>[];
-  DisplayMode? active;
-  DisplayMode? preferred;
-
-  Future<void> displayMode() async {
-    try {
-      modes = await FlutterDisplayMode.supported;
-      preferred = await FlutterDisplayMode.preferred;
-      active = await FlutterDisplayMode.active;
-      await FlutterDisplayMode.setHighRefreshRate();
-      setState(() {});
-    } catch (_) {
-      // ---- //
-    }
-  }
-
   final StatusUpdater statusUpdater = StatusUpdater();
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      displayMode();
-    });
   }
 
   @override
@@ -245,18 +240,11 @@ class _DroidHoleState extends State<DroidHole> {
           ],
           scaffoldMessengerKey: scaffoldMessengerKey,
           builder: (context, child) {
-            return MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaleFactor: !(Platform.isAndroid || Platform.isIOS) 
-                  ? 0.9
-                  : 1.0
-              ),
-              child: AppLock(
-                builder: (_, __) => child!, 
-                lockScreen: const Unlock(),
-                enabled: appConfigProvider.passCode != null ? true : false,
-                backgroundLockLatency: const Duration(seconds: 0),
-              )
+            return AppLock(
+              builder: (_, __) => child!, 
+              lockScreenBuilder: (context) => const Unlock(),
+              enabled: appConfigProvider.passCode != null ? true : false,
+              backgroundLockLatency: const Duration(seconds: 0),
             );
           },
           home: const Base()
