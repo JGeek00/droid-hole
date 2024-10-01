@@ -16,7 +16,7 @@ class ContactMeModal extends StatefulWidget {
 class _ContactMeModalState extends State<ContactMeModal> {
   final expandableController = ExpandableController();
 
-  void _sendEmail() {
+  void sendEmail() {
     String? encodeQueryParameters(Map<String, String> params) {
       return params.entries.map((MapEntry<String, String> e) => 
         '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}').join('&');
@@ -35,8 +35,6 @@ class _ContactMeModalState extends State<ContactMeModal> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-
     return AlertDialog(
       scrollable: true,
       contentPadding: const EdgeInsets.all(0),
