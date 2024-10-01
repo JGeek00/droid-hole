@@ -32,8 +32,9 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 33
-    ndkVersion flutter.ndkVersion
+    namespace "com.jgeek00.droid_hole"
+    compileSdkVersion 35
+    ndkVersion "26.1.10909125"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -51,7 +52,7 @@ android {
     defaultConfig {
         applicationId "com.jgeek00.droid_hole"
         minSdkVersion 26
-        targetSdkVersion 33
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

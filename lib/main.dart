@@ -12,8 +12,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:vibration/vibration.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -177,30 +175,11 @@ class DroidHole extends StatefulWidget {
 }
 
 class _DroidHoleState extends State<DroidHole> {
-  List<DisplayMode> modes = <DisplayMode>[];
-  DisplayMode? active;
-  DisplayMode? preferred;
-
-  Future<void> displayMode() async {
-    try {
-      modes = await FlutterDisplayMode.supported;
-      preferred = await FlutterDisplayMode.preferred;
-      active = await FlutterDisplayMode.active;
-      await FlutterDisplayMode.setHighRefreshRate();
-      setState(() {});
-    } catch (_) {
-      // ---- //
-    }
-  }
-
   final StatusUpdater statusUpdater = StatusUpdater();
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      displayMode();
-    });
   }
 
   @override
