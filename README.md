@@ -39,6 +39,14 @@ This is an unofficial application. The Pi-hole team and the development of the P
 ## Recommended lists
 On [this repository](https://github.com/JuanRodenas/Pihole_list) you can find some recommended lists. Thanks to [JuanRodenas](https://github.com/JuanRodenas).
 
+## Donations
+If you like the project and you want to contribute with the development, you can [become a sponsor on GitHub](https://github.com/sponsors/JGeek00), or you can donate using PayPal.
+
+<div align="center">
+  <a href="https://www.paypal.com/donate/?hosted_button_id=T63UK6AVL3MG8">
+    <img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" alt="Donate with PayPal" height="100" />
+  </a>
+</div>
 
 ## Prepare the development environment
 1. Clone the repository
@@ -85,8 +93,6 @@ On [this repository](https://github.com/JuanRodenas/Pihole_list) you can find so
 - [flutter web browser](https://pub.dev/packages/flutter_web_browser)
 - [package info plus](https://pub.dev/packages/package_info_plus)
 - [flutter phoenix](https://pub.dev/packages/flutter_phoenix)
-- [flutter displaymode](https://pub.dev/packages/flutter_displaymode)
-- [qr code scanner](https://pub.dev/packages/qr_code_scanner)
 - [flutter launcher icons](https://pub.dev/packages/flutter_launcher_icons)
 - [flutter native splash](https://pub.dev/packages/flutter_native_splash)
 - [intl](https://pub.dev/packages/intl)
@@ -96,7 +102,7 @@ On [this repository](https://github.com/JuanRodenas/Pihole_list) you can find so
 - [flutter svg](https://pub.dev/packages/flutter_svg)
 - [fl chart](https://pub.dev/packages/fl_chart)
 - [animations](https://pub.dev/packages/animations)
-- [qr code scanner](https://pub.dev/packages/qr_code_scanner)
+- [mobile scanner](https://pub.dev/packages/mobile_scanner)
 - [permission handler](https://pub.dev/packages/permission_handler)
 - [dynamic color](https://pub.dev/packages/dynamic_color)
 - [device info](https://pub.dev/packages/device_info)
@@ -112,6 +118,7 @@ On [this repository](https://github.com/JuanRodenas/Pihole_list) you can find so
 - [window size](https://github.com/google/flutter-desktop-embedding)
 - [flutter split view](https://github.com/TerminalStudio/flutter_split_view)
 - [local auth](https://pub.dev/packages/local_auth)
+- [flutter custom tabs](https://pub.dev/packages/flutter_custom_tabs)
 
 <br>
 
