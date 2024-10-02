@@ -111,6 +111,7 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     final domainsListProvider = Provider.of<DomainsListProvider>(context, listen: false);
 
     final width = MediaQuery.of(context).size.width;
+    final systemGestureInsets = MediaQuery.of(context).systemGestureInsets;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -121,7 +122,13 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
         statusBarIconBrightness: Theme.of(context).brightness == Brightness.light
           ? Brightness.dark
           : Brightness.light,
-        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
+        systemNavigationBarColor: systemGestureInsets.left > 0  // If true gestures navigation
+          ? Colors.transparent
+          : ElevationOverlay.applySurfaceTint(
+              Theme.of(context).colorScheme.surface, 
+              Theme.of(context).colorScheme.surfaceTint, 
+              3
+            ),
         systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light
           ? Brightness.dark
           : Brightness.light,
