@@ -17,7 +17,7 @@ import 'package:droid_hole/providers/servers_provider.dart';
 import 'package:droid_hole/providers/domains_list_provider.dart';
 
 class DomainLists extends StatelessWidget {
-  const DomainLists({Key? key}) : super(key: key);
+  const DomainLists({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +36,10 @@ class DomainListsWidget extends StatefulWidget {
   final DomainsListProvider domainsListProvider;
 
   const DomainListsWidget({
-    Key? key,
+    super.key,
     required this.server,
     required this.domainsListProvider,
-  }) : super(key: key);
+  });
 
   @override
   State<DomainListsWidget> createState() => _DomainListsWidgetState();

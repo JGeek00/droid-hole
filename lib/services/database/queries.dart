@@ -135,7 +135,7 @@ Future<Map<String, dynamic>> checkUrlExistsQuery(Database db, String url) async 
         };
       }
     });
-  } catch (e) {;
+  } catch (e) {
     return {
       'result': 'fail'
     };

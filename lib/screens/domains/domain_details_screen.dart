@@ -14,10 +14,10 @@ class DomainDetailsScreen extends StatelessWidget {
   final void Function(Domain) remove;
 
   const DomainDetailsScreen({
-    Key? key,
+    super.key,
     required this.domain,
     required this.remove
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

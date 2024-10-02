@@ -11,12 +11,12 @@ class ClientsFiltersModal extends StatefulWidget {
   final bool window;
 
   const ClientsFiltersModal({
-    Key? key,
+    super.key,
     required this.statusBarHeight,
     required this.bottomNavBarHeight,
     required this.selectedClients,
     required this.window
-  }) : super(key: key);
+  });
 
   @override
   State<ClientsFiltersModal> createState() => _ClientsFiltersModalState();
@@ -54,7 +54,7 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
       filtersProvider.setSelectedClients(_selectedClients);
     }
 
-    Widget _listItem({
+    Widget listItem({
       required String label,
       required String value,
     }) {
@@ -81,7 +81,7 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
       );
     }
 
-    void _checkUncheckAll() {
+    void checkUncheckAll() {
       if (_selectedClients.length < filtersProvider.totalClients.length) {
         setState(() {
           _selectedClients = filtersProvider.totalClients;
@@ -125,7 +125,7 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
                     ),
                   ),
                 ),
-                ...filtersProvider.totalClients.map((e) => _listItem(
+                ...filtersProvider.totalClients.map((e) => listItem(
                   label: e, 
                   value: e, 
                 )),
@@ -138,7 +138,7 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: _checkUncheckAll, 
+                  onPressed: checkUncheckAll, 
                   child: _selectedClients.length == filtersProvider.totalClients.length 
                     ? Text(AppLocalizations.of(context)!.uncheckAll) 
                     : Text(AppLocalizations.of(context)!.checkAll) 
@@ -159,10 +159,10 @@ class _ClientsFiltersModalState extends State<ClientsFiltersModal> {
                           }
                         : null,
                       style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all(
+                        foregroundColor: WidgetStateProperty.all(
                           _selectedClients.isNotEmpty ? Theme.of(context).colorScheme.primary : Colors.grey
                         ),
-                        overlayColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary.withOpacity(0.1))
+                        overlayColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary.withOpacity(0.1))
                       ), 
                       child: Text(AppLocalizations.of(context)!.apply),
                     ),

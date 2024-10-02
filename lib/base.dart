@@ -27,7 +27,7 @@ import 'package:droid_hole/providers/servers_provider.dart';
 
 
 class Base extends StatefulWidget {
-  const Base({Key? key}) : super(key: key); 
+  const Base({super.key}); 
 
   @override
   State<Base> createState() => _BaseState();

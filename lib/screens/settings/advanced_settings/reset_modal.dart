@@ -7,9 +7,9 @@ class ResetModal extends StatefulWidget {
   final void Function() onConfirm;
 
   const ResetModal({
-    Key? key,
+    super.key,
     required this.onConfirm,
-  }) : super(key: key);
+  });
 
   @override
   State<ResetModal> createState() => _ResetModalState();
@@ -76,9 +76,9 @@ class _ResetModalState extends State<ResetModal> {
                 : null,
               style: ButtonStyle(
                 foregroundColor: _timeRemaining == 0 
-                  ? MaterialStateProperty.all(Colors.red)
-                  : MaterialStateProperty.all(Colors.grey),
-                overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1)),
+                  ? WidgetStateProperty.all(Colors.red)
+                  : WidgetStateProperty.all(Colors.grey),
+                overlayColor: WidgetStateProperty.all(Colors.red.withOpacity(0.1)),
               ), 
               child: Text(
                 _timeRemaining > 0 
@@ -99,9 +99,9 @@ class _ResetModalState extends State<ResetModal> {
                       : null,
                     style: ButtonStyle(
                       foregroundColor: _timeRemaining == 0 
-                        ? MaterialStateProperty.all(Colors.red)
-                        : MaterialStateProperty.all(Colors.grey),
-                      overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.1)),
+                        ? WidgetStateProperty.all(Colors.red)
+                        : WidgetStateProperty.all(Colors.grey),
+                      overlayColor: WidgetStateProperty.all(Colors.red.withOpacity(0.1)),
                     ), 
                     child: Text(
                       _timeRemaining > 0 

@@ -6,7 +6,7 @@ import 'package:droid_hole/providers/app_config_provider.dart';
 
 
 class StatisticsVisualizationScreen extends StatelessWidget {
-  const StatisticsVisualizationScreen({Key? key}) : super(key: key);
+  const StatisticsVisualizationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

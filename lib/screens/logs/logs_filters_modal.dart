@@ -19,12 +19,12 @@ class LogsFiltersModal extends StatefulWidget {
   final bool window;
 
   const LogsFiltersModal({
-    Key? key,
+    super.key,
     required this.statusBarHeight,
     required this.bottomNavBarHeight,
     required this.filterLogs,
     required this.window
-  }) : super(key: key);
+  });
 
   @override
   State<LogsFiltersModal> createState() => _LogsFiltersModalState();
@@ -485,12 +485,12 @@ class _LogsFiltersModalState extends State<LogsFiltersModal> {
                               }
                             : null,
                           style: ButtonStyle(
-                            foregroundColor: MaterialStateProperty.all(
+                            foregroundColor: WidgetStateProperty.all(
                               isFilteringValid() == true
                                 ? Theme.of(context).colorScheme.primary
                                 : Colors.grey
                             ),
-                            overlayColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary.withOpacity(0.1))
+                            overlayColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary.withOpacity(0.1))
                           ), 
                           child: Text(AppLocalizations.of(context)!.apply),
                         )

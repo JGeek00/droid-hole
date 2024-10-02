@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class ImportantInfoModal extends StatelessWidget {
-  const ImportantInfoModal({Key? key}) : super(key: key);
+  const ImportantInfoModal({super.key});
 
   @override
   Widget build(BuildContext context) {

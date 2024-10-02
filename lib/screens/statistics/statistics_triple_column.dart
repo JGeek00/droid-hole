@@ -9,7 +9,7 @@ import 'package:droid_hole/constants/enums.dart';
 import 'package:droid_hole/providers/status_provider.dart';
 
 class StatisticsTripleColumn extends StatelessWidget {
-  const StatisticsTripleColumn({Key? key}) : super(key: key);
+  const StatisticsTripleColumn({super.key});
 
   @override
   Widget build(BuildContext context) {

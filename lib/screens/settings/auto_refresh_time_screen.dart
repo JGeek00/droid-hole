@@ -10,7 +10,7 @@ import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class AutoRefreshTimeScreen extends StatefulWidget {
-  const AutoRefreshTimeScreen({Key? key}) : super(key: key);
+  const AutoRefreshTimeScreen({super.key});
 
   @override
   State<AutoRefreshTimeScreen> createState() => _AutoRefreshTimeScreenState();

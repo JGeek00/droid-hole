@@ -9,15 +9,15 @@ class CustomNavigationRail extends StatelessWidget {
   final Function(int) onChange;
 
   const CustomNavigationRail({
-    Key? key,
+    super.key,
     required this.screens,
     required this.selectedScreen,
     required this.onChange,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    String _getStringLocalization(String name) {
+    String getStringLocalization(String name) {
       switch (name) {
         case 'home':
           return AppLocalizations.of(context)!.home;
@@ -47,7 +47,7 @@ class CustomNavigationRail extends StatelessWidget {
       onDestinationSelected: onChange,
       destinations: screens.map((screen) => NavigationRailDestination(
         icon: screen.icon,
-        label: Text(_getStringLocalization(screen.name))
+        label: Text(getStringLocalization(screen.name))
       )).toList(),
       labelType: NavigationRailLabelType.all,
       useIndicator: true,

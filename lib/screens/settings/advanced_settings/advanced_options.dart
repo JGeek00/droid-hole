@@ -20,7 +20,7 @@ import 'package:droid_hole/classes/process_modal.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class AdvancedOptions extends StatelessWidget {
-  const AdvancedOptions({Key? key}) : super(key: key);
+  const AdvancedOptions({super.key});
 
   @override
   Widget build(BuildContext context) {

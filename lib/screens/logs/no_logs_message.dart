@@ -10,9 +10,9 @@ class NoLogsMessage extends StatelessWidget {
   final double logsPerQuery;
 
   const NoLogsMessage({
-    Key? key,
+    super.key,
     required this.logsPerQuery
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

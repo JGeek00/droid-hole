@@ -8,9 +8,9 @@ class AppLogDetailsModal extends StatefulWidget {
   final AppLog log;
 
   const AppLogDetailsModal({
-    Key? key,
+    super.key,
     required this.log
-  }) : super(key: key);
+  });
 
   @override
   State<AppLogDetailsModal> createState() => _AppLogDetailsModalState();

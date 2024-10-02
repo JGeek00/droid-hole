@@ -14,7 +14,7 @@ import 'package:droid_hole/models/overtime_data.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class HomeCharts extends StatelessWidget {
-  const HomeCharts({Key? key}) : super(key: key);
+  const HomeCharts({super.key});
 
   bool checkExistsData(Map<String, dynamic> data) {
     bool exists = false;

@@ -13,16 +13,16 @@ class DeleteModal extends StatelessWidget {
   final Server serverToDelete;
 
   const DeleteModal({
-    Key? key,
+    super.key,
     required this.serverToDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final serversProvider = Provider.of<ServersProvider>(context);
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    void _removeServer() async {
+    void removeServer() async {
       final deleted = await serversProvider.removeServer(serverToDelete.address);
       Navigator.pop(context);
       if (deleted == true) {
@@ -91,7 +91,7 @@ class DeleteModal extends StatelessWidget {
           child: Text(AppLocalizations.of(context)!.cancel)
         ),
         TextButton(
-          onPressed: _removeServer,
+          onPressed: removeServer,
           child: Text(AppLocalizations.of(context)!.remove),
         ),
       ],

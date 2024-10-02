@@ -1,3 +1,4 @@
+
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
@@ -17,11 +18,11 @@ class AppUnlockSetupModal extends StatefulWidget {
   final bool window;
 
   const AppUnlockSetupModal({
-    Key? key,
+    super.key,
     required this.topBarHeight,
     required this.useBiometrics,
     required this.window
-  }) : super(key: key);
+  });
 
   @override
   State<AppUnlockSetupModal> createState() => _AppUnlockSetupModalState();
@@ -225,7 +226,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                       ElevatedButton(
                         onPressed: openPassCodeDialog,
                         style: ButtonStyle(
-                          shadowColor: MaterialStateProperty.all(Colors.transparent)
+                          shadowColor: WidgetStateProperty.all(Colors.transparent)
                         ), 
                         child: Row(
                           children: [
@@ -244,7 +245,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
                       ElevatedButton(
                         onPressed: openRemovePasscode,
                         style: ButtonStyle(
-                          shadowColor: MaterialStateProperty.all(Colors.transparent)
+                          shadowColor: WidgetStateProperty.all(Colors.transparent)
                         ), 
                         child: Row(
                           children: [
@@ -264,7 +265,7 @@ class _AppUnlockSetupModalState extends State<AppUnlockSetupModal> {
               child: ElevatedButton.icon(
                 onPressed: openPassCodeDialog,
                 style: ButtonStyle(
-                  shadowColor: MaterialStateProperty.all(Colors.transparent)
+                  shadowColor: WidgetStateProperty.all(Colors.transparent)
                 ), 
                 icon: const Icon(Icons.pin_outlined),
                 label: Text(AppLocalizations.of(context)!.setPassCode),

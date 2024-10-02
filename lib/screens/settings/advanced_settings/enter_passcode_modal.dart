@@ -14,10 +14,10 @@ class EnterPasscodeModal extends StatefulWidget {
   final bool window;
 
   const EnterPasscodeModal({
-    Key? key,
+    super.key,
     required this.onConfirm,
     required this.window,
-  }) : super(key: key);
+  });
 
   @override
   State<EnterPasscodeModal> createState() => _EnterPasscodeModalState();
@@ -34,7 +34,7 @@ class _EnterPasscodeModalState extends State<EnterPasscodeModal> {
 
     final height = MediaQuery.of(context).size.height;
 
-    void _finish() async {
+    void finish() async {
       if (appConfigProvider.passCode == _code) {
         Navigator.pop(context);
         widget.onConfirm();
@@ -76,9 +76,9 @@ class _EnterPasscodeModalState extends State<EnterPasscodeModal> {
                       ],
                     ),
                     TextButton(
-                      onPressed: _code.length == 4 ? _finish : null, 
+                      onPressed: _code.length == 4 ? finish : null, 
                       style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all(
+                        foregroundColor: WidgetStateProperty.all(
                           _code.length == 4
                             ? Theme.of(context).colorScheme.primary
                             : Colors.grey
@@ -111,9 +111,9 @@ class _EnterPasscodeModalState extends State<EnterPasscodeModal> {
           elevation: 5,
           actions: [
             TextButton(
-              onPressed: _code.length == 4 ? _finish : null, 
+              onPressed: _code.length == 4 ? finish : null, 
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all(
+                foregroundColor: WidgetStateProperty.all(
                   _code.length == 4
                     ? Theme.of(context).colorScheme.primary
                     : Colors.grey

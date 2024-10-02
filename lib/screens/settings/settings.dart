@@ -27,7 +27,7 @@ import 'package:droid_hole/providers/status_provider.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class Settings extends StatelessWidget {
-  const Settings({Key? key}) : super(key: key);
+  const Settings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class Settings extends StatelessWidget {
 }
 
 class SettingsWidget extends StatefulWidget {
-  const SettingsWidget({Key? key}) : super(key: key);
+  const SettingsWidget({super.key});
 
   @override
   State<SettingsWidget> createState() => _SettingsWidgetState();

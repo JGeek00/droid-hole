@@ -184,7 +184,7 @@ Future<PackageInfo> loadAppInfo() async {
 } 
 
 class DroidHole extends StatefulWidget {
-  const DroidHole({Key? key}) : super(key: key);
+  const DroidHole({super.key});
 
   @override
   State<DroidHole> createState() => _DroidHoleState();

@@ -5,9 +5,9 @@ class DomainCommentModal extends StatelessWidget {
   final String comment;
 
   const DomainCommentModal({
-    Key? key,
+    super.key,
     required this.comment
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

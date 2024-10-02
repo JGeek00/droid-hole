@@ -25,12 +25,12 @@ class DomainsList extends StatefulWidget {
   final Domain? selectedDomain;
 
   const DomainsList({
-    Key? key,
+    super.key,
     required this.type,
     required this.scrollController,
     required this.onDomainSelected,
     required this.selectedDomain
-  }) : super(key: key);
+  });
 
   @override
   State<DomainsList> createState() => _DomainsListState();

@@ -7,7 +7,7 @@ import 'package:droid_hole/widgets/custom_radio.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class ThemeScreen extends StatefulWidget {
-  const ThemeScreen({Key? key}) : super(key: key);
+  const ThemeScreen({super.key});
 
   @override
   State<ThemeScreen> createState() => _ThemeScreenState();

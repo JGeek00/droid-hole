@@ -10,7 +10,7 @@ import 'package:droid_hole/functions/snackbar.dart';
 import 'package:droid_hole/providers/app_config_provider.dart';
 
 class LogsQuantityLoadScreen extends StatefulWidget {
-  const LogsQuantityLoadScreen({Key? key}) : super(key: key);
+  const LogsQuantityLoadScreen({super.key});
 
   @override
   State<LogsQuantityLoadScreen> createState() => _LogsQuantityLoadScreenState();

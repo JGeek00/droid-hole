@@ -10,10 +10,10 @@ class QueriesLastHours extends StatelessWidget {
   final bool reducedData;
 
   const QueriesLastHours({
-    Key? key,
+    super.key,
     required this.data,
     required this.reducedData,
-  }) : super(key: key);
+  });
 
   LineChartData mainData(Map<String, dynamic> data, ThemeMode selectedTheme) {
     final double interval = (data['topPoint']/5).toDouble() > 0

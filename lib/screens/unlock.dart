@@ -14,8 +14,8 @@ import 'package:droid_hole/providers/app_config_provider.dart';
 
 class Unlock extends StatefulWidget {
   const Unlock({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<Unlock> createState() => _UnlockState();

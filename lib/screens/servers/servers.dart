@@ -19,9 +19,9 @@ class ServersPage extends StatefulWidget {
   final bool? isFromBase;
 
   const ServersPage({
-    Key? key,
+    super.key,
     this.isFromBase,
-  }) : super(key: key);
+  });
 
   @override
   State<ServersPage> createState() => _ServersPageState();

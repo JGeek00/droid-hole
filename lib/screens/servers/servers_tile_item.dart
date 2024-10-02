@@ -22,12 +22,12 @@ class ServersTileItem extends StatefulWidget {
   final double breakingWidth;
 
   const ServersTileItem({
-    Key? key,
+    super.key,
     required this.server,
     required this.index,
     required this.onChange,
     required this.breakingWidth
-  }) : super(key: key);
+  });
 
   @override
   State<ServersTileItem> createState() => _ServersTileItemState();

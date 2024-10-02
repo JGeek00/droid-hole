@@ -20,11 +20,11 @@ class StatisticsList extends StatelessWidget {
   final Future<void> Function() onRefresh;
 
   const StatisticsList({
-    Key? key,
+    super.key,
     required this.countLabel,
     required this.type,
     required this.onRefresh
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +89,10 @@ class StatisticsListContent extends StatelessWidget {
   final String countLabel;
 
   const StatisticsListContent({
-    Key? key,
+    super.key,
     required this.type,
     required this.countLabel
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -173,14 +173,14 @@ class StatisticsListContent extends StatelessWidget {
                         percent: (item['value']/totalHits).toDouble(),
                         barRadius: const Radius.circular(5),
                         progressColor: Theme.of(context).colorScheme.primary,
-                        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          )).toList()
+          ))
         ],
       );
     }

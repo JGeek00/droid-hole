@@ -9,15 +9,15 @@ class BottomNavBar extends StatelessWidget {
   final Function(int) onChange;
 
   const BottomNavBar({
-    Key? key,
+    super.key,
     required this.screens,
     required this.selectedScreen,
     required this.onChange,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    String _getStringLocalization(String name) {
+    String getStringLocalization(String name) {
       switch (name) {
         case 'home':
           return AppLocalizations.of(context)!.home;
@@ -47,7 +47,7 @@ class BottomNavBar extends StatelessWidget {
       onDestinationSelected: onChange,
       destinations: screens.map((screen) => NavigationDestination(
           icon: screen.icon,
-          label: _getStringLocalization(screen.name)
+          label: getStringLocalization(screen.name)
         )
       ).toList(),
     );

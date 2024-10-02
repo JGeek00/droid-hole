@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart'
 import 'package:droid_hole/functions/open_url.dart';
 
 class ContactMeModal extends StatefulWidget {
-  const ContactMeModal({Key? key}) : super(key: key);
+  const ContactMeModal({super.key});
 
   @override
   State<ContactMeModal> createState() => _ContactMeModalState();

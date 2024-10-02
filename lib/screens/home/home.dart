@@ -21,7 +21,7 @@ import 'package:droid_hole/functions/conversions.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();

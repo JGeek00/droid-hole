@@ -9,11 +9,11 @@ class AddDomainModal extends StatefulWidget {
   final bool window;
 
   const AddDomainModal({
-    Key? key,
+    super.key,
     required this.selectedlist,
     required this.addDomain,
     required this.window,
-  }) : super(key: key);
+  });
 
   @override
   State<AddDomainModal> createState() => _AddDomainModalState();
@@ -200,7 +200,7 @@ class _AddDomainModalState extends State<AddDomainModal> {
                       } 
                     : null,
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(
+                    foregroundColor: WidgetStateProperty.all(
                       allDataValid == true
                         ? null
                         : Colors.grey
