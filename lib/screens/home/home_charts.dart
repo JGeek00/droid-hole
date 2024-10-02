@@ -60,23 +60,27 @@ class HomeCharts extends StatelessWidget {
 
     switch (statusProvider.getOvertimeDataLoadStatus) {
       case 0:
-        return SizedBox(
-          width: double.maxFinite,
-          height: 280,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 50),
-              Text(
-                AppLocalizations.of(context)!.loadingCharts,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 22
-                ),
-              )
-            ],
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SizedBox(
+            width: double.maxFinite,
+            height: 280,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context)!.loadingCharts,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 22
+                  ),
+                )
+              ],
+            ),
           ),
         );
 
@@ -222,27 +226,31 @@ class HomeCharts extends StatelessWidget {
         );
 
       case 2: 
-        return SizedBox(
-          width: double.maxFinite,
-          height: 280,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error,
-                size: 50,
-                color: Colors.red,
-              ),
-              const SizedBox(height: 50),
-              Text(
-                AppLocalizations.of(context)!.chartsNotLoaded,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 22
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SizedBox(
+            width: double.maxFinite,
+            height: 280,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error,
+                  size: 50,
+                  color: Colors.red,
                 ),
-              )
-            ],
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context)!.chartsNotLoaded,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 22
+                  ),
+                )
+              ],
+            ),
           ),
         );
 
