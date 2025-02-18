@@ -1,0 +1,2 @@
+/Users/juan/Proyectos/droid-hole/android/app/.cxx/RelWithDebInfo/2x405v6s/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/juan/Proyectos/droid-hole/android/app/.cxx/RelWithDebInfo/2x405v6s/armeabi-v7a/CMakeFiles/rebuild_cache.dir
