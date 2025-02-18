@@ -13,7 +13,7 @@ import 'package:droid_hole/screens/settings/settings.dart';
 import 'package:droid_hole/screens/domains/domains.dart';
 import 'package:droid_hole/screens/statistics/statistics.dart';
 
-import 'package:droid_hole/widgets/start_warning_modal.dart';
+import 'package:droid_hole/widgets/pihole_v6_notice.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/models/server.dart';
@@ -85,10 +85,10 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final appConfigProvider = Provider.of<AppConfigProvider>(context, listen: false);
-      if (appConfigProvider.importantInfoReaden == false) {
+      if (appConfigProvider.piholeV6InfoReaden == false) {
         await showDialog<String>(
           context: context,
-          builder: (BuildContext context) => const ImportantInfoModal()
+          builder: (BuildContext context) => const PiholeV6Notice()
         );
       }
     });

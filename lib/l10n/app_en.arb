@@ -321,5 +321,8 @@
     "fingerprintAuthUnavailableAttempts": "Fingerprint authentication unavailable due to many failed attempts.",
     "fingerprintAuthUnavailable": "Fingerprint authentication unavailable.",
     "supportForm": "Support form",
-    "supportFormDescription": "Send a support request using the support form."
+    "supportFormDescription": "Send a support request using the support form.",
+    "piholeV6Support": "Pi-hole v6 support",
+    "piholeV6SupportDescription": "Pi-hole v6 introduced a new API that breaks compatibility with DroidHole. This application does not support Pi-hole v6 and later versions and it won't be updated to support it.\nMaybe in the future I release a completely new app to support Pi-hole v6, but that's not secure because I stopped using Pi-hole a long time ago. All new information will be published on the repository readme.\nThank you for using DroidHole during this years.",
+    "droidHoleRepository": "DroidHole repository"
 }

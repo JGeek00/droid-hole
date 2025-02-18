@@ -24,6 +24,7 @@ class AppConfigProvider with ChangeNotifier {
   bool _appUnlocked = true;
   bool _validVibrator = false;
   int _importantInfoReaden = 0;
+  int _piholeV6InfoReaden = 0;
   int _hideZeroValues = 0;
   int _statisticsVisualizationMode = 0;
   int? _selectedSettingsScreen;
@@ -120,6 +121,10 @@ class AppConfigProvider with ChangeNotifier {
 
   bool get importantInfoReaden {
     return _importantInfoReaden == 0 ? false : true;
+  }
+
+  bool get piholeV6InfoReaden {
+    return _piholeV6InfoReaden == 0 ? false : true;
   }
 
   bool get hideZeroValues {
@@ -222,6 +227,22 @@ class AppConfigProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> setPiholeV6InfoReaden(bool status) async {
+    final updated = await updateConfigQuery(
+      db: _dbInstance!,
+      column: 'piholeV6InfoReaden',
+      value: status == true ? 1 : 0
+    );
+    if (updated == true) {
+      _piholeV6InfoReaden = status == true ? 1 : 0;
+      notifyListeners();
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   Future<bool> setPassCode(String? code) async {
     if (_useBiometrics == 1) {
       final updated = await updateConfigQuery(
@@ -310,6 +331,7 @@ class AppConfigProvider with ChangeNotifier {
     _importantInfoReaden = dbData['importantInfoReaden'];
     _hideZeroValues = dbData['hideZeroValues'];
     _statisticsVisualizationMode = dbData['statisticsVisualizationMode'];
+    _piholeV6InfoReaden = dbData['piholeV6InfoReaden'];
     _dbInstance = dbInstance;
 
     if (dbData['passCode'] != null) {
@@ -429,6 +451,7 @@ class AppConfigProvider with ChangeNotifier {
       _importantInfoReaden = 0;
       _hideZeroValues = 0;
       _statisticsVisualizationMode = 0;
+      _piholeV6InfoReaden = 0;
 
       notifyListeners();
 

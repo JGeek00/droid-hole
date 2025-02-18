@@ -11,6 +11,24 @@
     client developed with Flutter.</b>
 </h5>
 
+<br>
+<br>
+
+<p align="center">
+  <b>⚠️ WARNING ⚠️</b>
+  <br>
+  <span>
+    This application is DEPRECATED and it won't receive more updates.
+  </span>
+  <br>
+  <span>
+    This application is not compatible with Pi-hole v6. For now I don't have planned to update this app or to release a new app with compatibility with v6. If that changes in the future, it will update this readme.
+  </span>
+</p>
+
+<br>
+<br>
+
 <p align="center">
   <a href="https://play.google.com/store/apps/details?id=com.jgeek00.droid_hole" target="_blank" rel="noopener noreferrer">
     <img src="/assets/other/get_google_play.png" width="300px">
