@@ -7,12 +7,12 @@ import 'package:flutter_split_view/flutter_split_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:droid_hole/screens/settings/logs_quantity_load_screen.dart';
+import 'package:droid_hole/widgets/pihole_v6_notice.dart';
 import 'package:droid_hole/screens/settings/advanced_settings/advanced_options.dart';
 import 'package:droid_hole/screens/settings/theme_screen.dart';
 import 'package:droid_hole/screens/settings/auto_refresh_time_screen.dart';
 import 'package:droid_hole/screens/servers/servers.dart';
 import 'package:droid_hole/screens/settings/contact_me_modal.dart';
-import 'package:droid_hole/widgets/start_warning_modal.dart';
 import 'package:droid_hole/screens/settings/logs_quantity_load_modal.dart';
 import 'package:droid_hole/widgets/custom_list_tile.dart';
 import 'package:droid_hole/widgets/custom_settings_tile.dart';
@@ -156,7 +156,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     void openImportantInformationModal() {
       showDialog(
         context: context, 
-        builder: (context) => const ImportantInfoModal()
+        builder: (context) => const PiholeV6Notice()
       );
     }
 
@@ -256,8 +256,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       label: AppLocalizations.of(context)!.about, 
                     ),
                     CustomListTile(
-                      label: AppLocalizations.of(context)!.importantInformation, 
-                      description: AppLocalizations.of(context)!.readIssues, 
+                      label: AppLocalizations.of(context)!.piholeV6Support, 
+                      description: AppLocalizations.of(context)!.piholeV6SupportInfo, 
                       onTap: openImportantInformationModal
                     ),
                     CustomListTile(
