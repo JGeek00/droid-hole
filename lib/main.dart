@@ -143,40 +143,7 @@ void main() async {
     )
   );
 
-  if (
-    (
-      kReleaseMode &&
-      (dotenv.env['SENTRY_DSN'] != null && dotenv.env['SENTRY_DSN'] != "")
-    ) || (
-      dotenv.env['ENABLE_SENTRY'] == "true" &&
-      (dotenv.env['SENTRY_DSN'] != null && dotenv.env['SENTRY_DSN'] != "")
-    )
-  ) {
-    SentryFlutter.init(
-      (options) {
-        options.dsn = dotenv.env['SENTRY_DSN'];
-        options.sendDefaultPii = false;
-        options.beforeSend = (event, hint) {
-          if (event.throwable is HttpException) {
-            return null;
-          }
-
-          if (
-            event.message?.formatted.contains("Unexpected character") ?? false ||
-            (event.throwable != null && event.throwable!.toString().contains("Unexpected character"))
-          ) {
-            return null; // Exclude this event
-          }
-
-          return event;
-        };
-      },
-      appRunner: () => startApp()
-    );
-  }
-  else {
-    startApp();
-  }
+  startApp();
 }
 
 Future<PackageInfo> loadAppInfo() async {
