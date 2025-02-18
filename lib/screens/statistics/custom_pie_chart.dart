@@ -8,9 +8,9 @@ class CustomPieChart extends StatelessWidget {
   final Map<String, double> data;
 
   const CustomPieChart({
-    Key? key,
+    super.key,
     required this.data,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

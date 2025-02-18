@@ -9,10 +9,10 @@ class DisableModal extends StatefulWidget {
   final bool window;
 
   const DisableModal({
-    Key? key,
+    super.key,
     required this.onDisable,
     required this.window
-  }) : super(key: key);
+  });
 
   @override
   State<DisableModal> createState() => _DisableModalState();
@@ -350,8 +350,8 @@ class _DisableModalState extends State<DisableModal> {
                           : null,
                         style: ButtonStyle(
                           foregroundColor: _selectionIsValid() == true 
-                            ? MaterialStateProperty.all(Theme.of(context).colorScheme.primary)
-                            : MaterialStateProperty.all(Colors.grey)
+                            ? WidgetStateProperty.all(Theme.of(context).colorScheme.primary)
+                            : WidgetStateProperty.all(Colors.grey)
                         ),
                         child: Text(AppLocalizations.of(context)!.accept),
                       )
@@ -419,8 +419,8 @@ class _DisableModalState extends State<DisableModal> {
                           : null,
                         style: ButtonStyle(
                           foregroundColor: _selectionIsValid() == true 
-                            ? MaterialStateProperty.all(Theme.of(context).colorScheme.primary)
-                            : MaterialStateProperty.all(Colors.grey)
+                            ? WidgetStateProperty.all(Theme.of(context).colorScheme.primary)
+                            : WidgetStateProperty.all(Colors.grey)
                         ),
                         child: Text(AppLocalizations.of(context)!.accept),
                       )

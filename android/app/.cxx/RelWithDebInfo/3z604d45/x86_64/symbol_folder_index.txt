@@ -1,0 +1,1 @@
+/Users/juan/Proyectos/droid-hole/build/app/intermediates/cxx/RelWithDebInfo/3z604d45/obj/x86_64

@@ -11,10 +11,10 @@ class AutoRefreshTimeModal extends StatefulWidget {
   final void Function(int) onChange;
 
   const AutoRefreshTimeModal({
-    Key? key,
+    super.key,
     required this.time,
     required this.onChange,
-  }) : super(key: key);
+  });
 
   @override
   State<AutoRefreshTimeModal> createState() => _AutoRefreshTimeModalState();
@@ -402,10 +402,10 @@ class _AutoRefreshTimeModalState extends State<AutoRefreshTimeModal> {
                             }
                             : null,
                           style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.all(
+                            overlayColor: WidgetStateProperty.all(
                               Theme.of(context).colorScheme.primary.withOpacity(0.1)
                             ),
-                            foregroundColor: MaterialStateProperty.all(
+                            foregroundColor: WidgetStateProperty.all(
                               _selectionIsValid() == true 
                                 ? Theme.of(context).colorScheme.primary
                                 : Colors.grey,

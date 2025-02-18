@@ -8,7 +8,7 @@ import 'package:droid_hole/screens/statistics/statistics_queries_servers_tab.dar
 import 'package:droid_hole/functions/refresh_server_status.dart';
 
 class Statistics extends StatelessWidget {
-  const Statistics({Key? key}) : super(key: key);
+  const Statistics({super.key});
 
   @override
   Widget build(BuildContext context) {

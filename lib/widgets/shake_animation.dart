@@ -6,9 +6,9 @@ class ShakeAnimation extends StatefulWidget {
   final Widget child;
 
   const ShakeAnimation({
-    Key? key,
+    super.key,
     required this.child
-  }) : super(key: key);
+  });
 
   @override
   State<ShakeAnimation> createState() => ShakeAnimationState();

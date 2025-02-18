@@ -1,0 +1,2 @@
+/Users/juan/Proyectos/droid-hole/android/app/.cxx/Debug/5f3k1g4i/x86/CMakeFiles/edit_cache.dir
+/Users/juan/Proyectos/droid-hole/android/app/.cxx/Debug/5f3k1g4i/x86/CMakeFiles/rebuild_cache.dir

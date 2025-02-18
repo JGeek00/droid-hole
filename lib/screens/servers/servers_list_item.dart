@@ -23,12 +23,12 @@ class ServersListItem extends StatefulWidget {
   final void Function(int) onChange;
 
   const ServersListItem({
-    Key? key,
+    super.key,
     required this.expandableController,
     required this.server,
     required this.index,
     required this.onChange
-  }) : super(key: key);
+  });
 
   @override
   State<ServersListItem> createState() => _ServersListItemState();
@@ -377,7 +377,7 @@ class _ServersListItemState extends State<ServersListItem> with SingleTickerProv
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Theme.of(context).colorScheme.surfaceVariant,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             width: 1
           )
         )

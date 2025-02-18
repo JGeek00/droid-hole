@@ -10,9 +10,9 @@ class SwitchServerModal extends StatelessWidget {
   final void Function(Server) onServerSelect;
 
   const SwitchServerModal({
-    Key? key,
+    super.key,
     required this.onServerSelect
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

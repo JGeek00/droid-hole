@@ -9,11 +9,11 @@ class DomainTile extends StatelessWidget {
   final bool? isDomainSelected;
 
   const DomainTile({
-    Key? key,
+    super.key,
     required this.domain,
     required this.showDomainDetails,
     this.isDomainSelected
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

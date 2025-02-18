@@ -10,13 +10,13 @@ class CustomTabContent extends StatelessWidget {
   final Future<void> Function() onRefresh;
 
   const CustomTabContent({
-    Key? key,
+    super.key,
     required this.loadingGenerator,
     required this.contentGenerator,
     required this.errorGenerator,
     required this.loadStatus,
     required this.onRefresh,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

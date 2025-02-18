@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:droid_hole/functions/refresh_server_status.dart';
 
 class SelectedServerDisconnected extends StatelessWidget {
-  const SelectedServerDisconnected({Key? key}) : super(key: key);
+  const SelectedServerDisconnected({super.key});
 
   @override
   Widget build(BuildContext context) {

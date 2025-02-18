@@ -11,11 +11,11 @@ class LogTile extends StatelessWidget {
   final bool? isLogSelected;
 
   const LogTile({
-    Key? key,
+    super.key,
     required this.log,
     required this.showLogDetails,
     this.isLogSelected
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ import local_auth_darwin
 import mobile_scanner
 import package_info_plus
 import sentry_flutter
-import sqflite
+import sqflite_darwin
 import sqlite3_flutter_libs
 import url_launcher_macos
 import window_size

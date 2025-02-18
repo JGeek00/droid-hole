@@ -7,12 +7,12 @@ class OptionBox extends StatelessWidget {
   final void Function(dynamic) onTap;
 
   const OptionBox({
-    Key? key,
+    super.key,
     required this.child,
     required this.optionsValue,
     required this.itemValue,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

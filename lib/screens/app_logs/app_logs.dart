@@ -12,7 +12,7 @@ import 'package:droid_hole/screens/app_logs/app_log_details_modal.dart';
 
 
 class AppLogs extends StatelessWidget {
-  const AppLogs({Key? key}) : super(key: key);
+  const AppLogs({super.key});
 
   @override
   Widget build(BuildContext context) {

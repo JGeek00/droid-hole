@@ -9,14 +9,14 @@ import 'package:droid_hole/providers/app_config_provider.dart';
 
 class RemovePasscodeModal extends StatelessWidget {
   const RemovePasscodeModal({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final appConfigProvider = Provider.of<AppConfigProvider>(context);
 
-    void _removePasscode() async {
+    void removePasscode() async {
       final deleted = await appConfigProvider.setPassCode(null);
       if (deleted == true) {
         Navigator.pop(context);
@@ -60,7 +60,7 @@ class RemovePasscodeModal extends StatelessWidget {
           child: Text(AppLocalizations.of(context)!.cancel)
         ),
         TextButton(
-          onPressed: _removePasscode,
+          onPressed: removePasscode,
           child: Text(AppLocalizations.of(context)!.remove),
         ),
       ],

@@ -21,7 +21,7 @@ import 'package:droid_hole/services/http_requests.dart';
 import 'package:droid_hole/providers/servers_provider.dart';
 
 class Logs extends StatefulWidget {
-  const Logs({Key? key}) : super(key: key);
+  const Logs({super.key});
 
   @override
   State<Logs> createState() => _LogsState();

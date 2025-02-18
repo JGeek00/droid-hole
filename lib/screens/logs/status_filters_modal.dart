@@ -11,12 +11,12 @@ class StatusFiltersModal extends StatefulWidget {
   final bool window;
 
   const StatusFiltersModal({
-    Key? key,
+    super.key,
     required this.statusBarHeight,
     required this.bottomNavBarHeight,
     required this.statusSelected,
     required this.window
-  }) : super(key: key);
+  });
 
   @override
   State<StatusFiltersModal> createState() => _StatusFiltersModalState();
@@ -56,7 +56,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
       filtersProvider.setStatusSelected(_statusSelected);
     }
 
-    Widget _listItem({
+    Widget listItem({
       required IconData icon,
       required String label,
       required int value,
@@ -85,7 +85,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
       );
     }
 
-    void _checkUncheckAll() {
+    void checkUncheckAll() {
       if (_statusSelected.length < 14) {
         setState(() {
           _statusSelected = [
@@ -135,72 +135,72 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                     ),
                   ],
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "Blocked (gravity)", 
                   value: 1
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.verified_user_rounded, 
                   label: "OK (forwarded)", 
                   value: 2
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.verified_user_rounded, 
                   label: "OK (cache)", 
                   value: 3
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "Blocked (regex blacklist", 
                   value: 4
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "Blocked (exact blacklist)", 
                   value: 5
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "Blocked (external, IP)", 
                   value: 6
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "Blocked (external, NULL)", 
                   value: 7
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "Blocked (external, NXRA)", 
                   value: 8
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "Blocked (gravity, CNAME)", 
                   value: 9
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "Blocked (regex blacklist, CNAME)", 
                   value: 10
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "Blocked (exact blacklist, CNAME)", 
                   value: 11
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.refresh_rounded, 
                   label: "Retried", 
                   value: 12
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.refresh_rounded, 
                   label: "Retried (ignored)", 
                   value: 13
                 ),
-                _listItem(
+                listItem(
                   icon: Icons.gpp_bad_rounded, 
                   label: "OK (already forwarded)", 
                   value: 14
@@ -214,7 +214,7 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: _checkUncheckAll, 
+                  onPressed: checkUncheckAll, 
                   child: Text(
                     _statusSelected.length == 14 
                       ? AppLocalizations.of(context)!.uncheckAll
@@ -237,10 +237,10 @@ class _StatusFiltersModalState extends State<StatusFiltersModal> {
                           }
                         : null,
                       style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all(
+                        foregroundColor: WidgetStateProperty.all(
                           _statusSelected.isNotEmpty ? Theme.of(context).colorScheme.primary : Colors.grey
                         ),
-                        overlayColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary.withOpacity(0.1))
+                        overlayColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary.withOpacity(0.1))
                       ), 
                       child: Text(AppLocalizations.of(context)!.apply),
                     ),

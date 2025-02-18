@@ -13,7 +13,7 @@ import 'package:droid_hole/screens/settings/settings.dart';
 import 'package:droid_hole/screens/domains/domains.dart';
 import 'package:droid_hole/screens/statistics/statistics.dart';
 
-import 'package:droid_hole/widgets/start_warning_modal.dart';
+import 'package:droid_hole/widgets/pihole_v6_notice.dart';
 import 'package:droid_hole/widgets/bottom_nav_bar.dart';
 
 import 'package:droid_hole/models/server.dart';
@@ -27,7 +27,7 @@ import 'package:droid_hole/providers/servers_provider.dart';
 
 
 class Base extends StatefulWidget {
-  const Base({Key? key}) : super(key: key); 
+  const Base({super.key}); 
 
   @override
   State<Base> createState() => _BaseState();
@@ -85,10 +85,10 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final appConfigProvider = Provider.of<AppConfigProvider>(context, listen: false);
-      if (appConfigProvider.importantInfoReaden == false) {
+      if (appConfigProvider.piholeV6InfoReaden == false) {
         await showDialog<String>(
           context: context,
-          builder: (BuildContext context) => const ImportantInfoModal()
+          builder: (BuildContext context) => const PiholeV6Notice()
         );
       }
     });
@@ -111,6 +111,7 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
     final domainsListProvider = Provider.of<DomainsListProvider>(context, listen: false);
 
     final width = MediaQuery.of(context).size.width;
+    final systemGestureInsets = MediaQuery.of(context).systemGestureInsets;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -121,7 +122,13 @@ class _BaseState extends State<Base> with WidgetsBindingObserver {
         statusBarIconBrightness: Theme.of(context).brightness == Brightness.light
           ? Brightness.dark
           : Brightness.light,
-        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
+        systemNavigationBarColor: systemGestureInsets.left > 0  // If true gestures navigation
+          ? Colors.transparent
+          : ElevationOverlay.applySurfaceTint(
+              Theme.of(context).colorScheme.surface, 
+              Theme.of(context).colorScheme.surfaceTint, 
+              3
+            ),
         systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light
           ? Brightness.dark
           : Brightness.light,

@@ -10,7 +10,7 @@ import 'package:droid_hole/providers/app_config_provider.dart';
 import 'package:droid_hole/functions/snackbar.dart';
 
 class CreatePassCodeModal extends StatefulWidget {
-  const CreatePassCodeModal({Key? key}) : super(key: key);
+  const CreatePassCodeModal({super.key});
 
   @override
   State<CreatePassCodeModal> createState() => _CreatePassCodeModalState();
@@ -27,7 +27,7 @@ class _CreatePassCodeModalState extends State<CreatePassCodeModal> {
 
     final height = MediaQuery.of(context).size.height;
 
-    void _finish() async {
+    void finish() async {
       if (_code == _repeatedCode) {
         final result = await appConfigProvider.setPassCode(_repeatedCode);
         if (result == true) {
@@ -65,10 +65,10 @@ class _CreatePassCodeModalState extends State<CreatePassCodeModal> {
                 ? () => setState(() => _step = 1)
                 : null
               : _repeatedCode.length == 4
-                ? _finish
+                ? finish
                 : null, 
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all(
+              foregroundColor: WidgetStateProperty.all(
                 _step == 0
                 ? _code.length == 4
                   ? Theme.of(context).colorScheme.primary

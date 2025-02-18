@@ -12,11 +12,11 @@ class NumericPad extends StatelessWidget {
   final void Function(String) onInput;
 
   const NumericPad({
-    Key? key,
+    super.key,
     this.shakeKey,
     required this.code,
     required this.onInput,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class NumericPad extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    Widget _number(String? value) {
+    Widget number(String? value) {
       return SizedBox(
         width: 40,
         height: 40,
@@ -77,7 +77,7 @@ class NumericPad extends StatelessWidget {
                   }
                 : () => {},
               style: ButtonStyle(
-                shadowColor: MaterialStateProperty.all(Colors.transparent)
+                shadowColor: WidgetStateProperty.all(Colors.transparent)
               ),
               child: Text(
                 number.toString(),
@@ -111,7 +111,7 @@ class NumericPad extends StatelessWidget {
                   }
                 : () {},
               style: ButtonStyle(
-                shadowColor: MaterialStateProperty.all(Colors.transparent)
+                shadowColor: WidgetStateProperty.all(Colors.transparent)
               ),
               child: Icon(
                 Icons.backspace,
@@ -137,13 +137,13 @@ class NumericPad extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  _number(code.isNotEmpty ? code[0] : null),
+                  number(code.isNotEmpty ? code[0] : null),
                   const SizedBox(width: 20),
-                  _number(code.length >= 2 ? code[1] : null),
+                  number(code.length >= 2 ? code[1] : null),
                   const SizedBox(width: 20),
-                  _number(code.length >= 3 ? code[2] : null),
+                  number(code.length >= 3 ? code[2] : null),
                   const SizedBox(width: 20),
-                  _number(code.length >= 4 ? code[3] : null),
+                  number(code.length >= 4 ? code[3] : null),
                 ],
               ),
             ),

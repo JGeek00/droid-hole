@@ -21,10 +21,10 @@ class AddServerFullscreen extends StatefulWidget {
   final bool window;
 
   const AddServerFullscreen({
-    Key? key,
+    super.key,
     this.server,
     required this.window
-  }) : super(key: key);
+  });
 
   @override
   State<AddServerFullscreen> createState() => _AddServerFullscreenState();

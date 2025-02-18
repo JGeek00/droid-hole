@@ -22,9 +22,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool innerBoxIsScrolled;
 
   const HomeAppBar({
-    Key? key,
+    super.key,
     required this.innerBoxIsScrolled
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

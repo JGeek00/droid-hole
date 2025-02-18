@@ -1,0 +1,1 @@
+/Users/juan/Proyectos/droid-hole/build/app/intermediates/cxx/RelWithDebInfo/2x405v6s/obj/armeabi-v7a

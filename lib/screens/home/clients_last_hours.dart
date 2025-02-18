@@ -13,12 +13,12 @@ class ClientsLastHours extends StatelessWidget {
   final bool hideZeroValues;
 
   const ClientsLastHours({
-    Key? key,
+    super.key,
     required this.realtimeListIps,
     required this.data,
     required this.reducedData,
     required this.hideZeroValues
-  }) : super(key: key);
+  });
 
   LineChartData mainData(Map<String, dynamic> data, ThemeMode selectedTheme) {
     final double interval = (data['topPoint']/5).toDouble() > 0

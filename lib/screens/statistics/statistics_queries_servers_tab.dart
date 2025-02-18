@@ -14,9 +14,9 @@ class QueriesServersTab extends StatelessWidget {
   final Future<void> Function() onRefresh;
 
   const QueriesServersTab({
-    Key? key,
+    super.key,
     required this.onRefresh
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class QueriesServersTab extends StatelessWidget {
 }
 
 class QueriesServersTabContent extends StatelessWidget {
-  const QueriesServersTabContent({Key? key}) : super(key: key);
+  const QueriesServersTabContent({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,9 +5,9 @@ class NoDataChart extends StatelessWidget {
   final String topLabel;
 
   const NoDataChart({
-    Key? key,
+    super.key,
     required this.topLabel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

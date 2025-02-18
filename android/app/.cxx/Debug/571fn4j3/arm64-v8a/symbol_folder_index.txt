@@ -1,0 +1,1 @@
+/Users/juan/Proyectos/droid-hole/build/app/intermediates/cxx/Debug/571fn4j3/obj/arm64-v8a

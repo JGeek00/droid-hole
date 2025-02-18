@@ -10,11 +10,11 @@ class PieChartLegend extends StatelessWidget {
   final void Function(String)? onValueTap;
   
   const PieChartLegend({
-    Key? key,
+    super.key,
     required this.data,
     this.dataUnit,
     this.onValueTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) { 
