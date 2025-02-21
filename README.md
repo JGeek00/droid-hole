@@ -30,9 +30,6 @@
 <br>
 
 <p align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.jgeek00.droid_hole" target="_blank" rel="noopener noreferrer">
-    <img src="/assets/other/get_google_play.png" width="300px">
-  </a>
   <a href="https://github.com/JGeek00/droid-hole/releases" target="_blank" rel="noopener noreferrer">
     <img src="/assets/other/get-github.png" width="300px">
   </a>
@@ -47,9 +44,6 @@
 <p>▶ Manage your domain lists. Add and remove domains to the whitelist or blacklist.</p>
 <p>▶ Material You interface with dynamic theming (only Android 12+)</p>
 <p>Requires Android 8.0+</p>
-
-## Privacy policy
-Check the privacy policy [here](https://github.com/JGeek00/droid-hole/wiki/Privacy-policy).
 
 ## Disclaimer
 This is an unofficial application. The Pi-hole team and the development of the Pi-hole software is not related in any way with this application.
